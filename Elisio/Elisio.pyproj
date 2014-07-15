@@ -28,7 +28,19 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Elisio\exceptions.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\models.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\tests\Test_Letter.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\tests\Test_Syllable.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\tests\Test_Word.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\tests\Test_Verse.py">

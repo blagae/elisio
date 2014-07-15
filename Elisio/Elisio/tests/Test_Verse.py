@@ -1,6 +1,7 @@
 import unittest
 from Elisio.models import Verse, Word
 
+typical_verse = "Arma virumque cano, Troiae qui primus ab oris"
 words = ['Arma', 'virumque', 'cano', 'Troiae', 'qui', 'primus', 'ab', 'oris']
 expected_word_list = []
 for word in words:
@@ -13,7 +14,7 @@ class Test_Verse(unittest.TestCase):
     commit 1 (blagae): BLI 9
     reason: creation
     """
-    def constructVerse(self, text = "Arma virumque cano, Troiae qui primus ab oris"):
+    def constructVerse(self, text = typical_verse):
         """ Construct a verse object from a given text """
         constructedVerse = Verse(text)
         return constructedVerse
@@ -23,7 +24,9 @@ class Test_Verse(unittest.TestCase):
         self.assertTrue(isinstance(self.constructVerse(), Verse))
 
     def test_eqVerse(self):
-        """ Two separate verses are equal if they carry the exact same text """
+        """ Two separate verses are equal if they carry the exact same text
+        even if one is split and the other isn't
+        """
         verse1 = self.constructVerse()
         verse2 = self.constructVerse()
         verse1.split()
