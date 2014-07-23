@@ -34,6 +34,9 @@
     <Compile Include="Elisio\models.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\tests\Test_Sound.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\tests\Test_Letter.py">
       <SubType>Code</SubType>
     </Compile>
@@ -44,6 +47,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\tests\Test_Verse.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\tests\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="manage.py" />
