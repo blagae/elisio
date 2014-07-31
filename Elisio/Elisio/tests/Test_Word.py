@@ -1,5 +1,5 @@
 import unittest
-from Elisio.models import Word, Syllable, WEIGHTS
+from Elisio.engine import Word, Syllable, WEIGHTS
 from Elisio.exceptions import ScansionException
 
 typical_word = "recentia"

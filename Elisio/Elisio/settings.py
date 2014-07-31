@@ -1,24 +1,27 @@
 # Django settings for Elisio project.
+from tkinter.messagebox import *
 
-DEBUG = True
+
+data = None
+admins = ()
+debug = False
+try:
+    from Elisio.local import DATABASE_SETTINGS, ADMIN_LIST, DEBUG_SETTING
+    data = DATABASE_SETTINGS
+    admins = ADMIN_LIST
+    debug = DEBUG_SETTING
+except ImportError:
+    showwarning("Deployment issue", "You should create a local.py file with the required settings")
+    pass
+
+DEBUG = debug
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-)
+ADMINS = admins
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
-}
+DATABASES = data
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -27,7 +30,7 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/Brussels'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html

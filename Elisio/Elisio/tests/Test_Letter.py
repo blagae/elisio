@@ -1,5 +1,5 @@
 import unittest
-from Elisio.models import Letter
+from Elisio.engine import Letter
 from Elisio.exceptions import ScansionException
 
 class Test_Letter(unittest.TestCase):
@@ -48,19 +48,19 @@ class Test_Letter(unittest.TestCase):
         self.assertEqual(letter1, letter2)
         
     def test_LetterIsVowel(self):
-        from Elisio.models import vowels
+        from Elisio.engine import vowels
         for vowel in vowels:
             letter = Letter(vowel)
             self.assertTrue(letter.isVowel())
 
     def test_LetterIsSemivowel(self):
-        from Elisio.models import semivowels
+        from Elisio.engine import semivowels
         for semivowel in semivowels:
             letter = Letter(semivowel)
             self.assertTrue(letter.isSemivowel())
 
     def test_LetterIsConsonant(self):
-        from Elisio.models import consonants
+        from Elisio.engine import consonants
         for consonant in consonants:
             letter = Letter(consonant)
             self.assertTrue(letter.isConsonant())

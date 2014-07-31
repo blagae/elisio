@@ -1,5 +1,5 @@
 import unittest
-from Elisio.models import Syllable, Letter
+from Elisio.engine import Syllable, Letter
 from Elisio.exceptions import ScansionException
 
 class Test_Syllable(unittest.TestCase):

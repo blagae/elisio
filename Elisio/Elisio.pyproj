@@ -4,6 +4,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>Elisio</Name>
     <RootNamespace>Elisio</RootNamespace>
+    <WebBrowserPort>9000</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -29,6 +30,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Elisio\exceptions.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\engine.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\models.py">

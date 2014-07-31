@@ -1,5 +1,5 @@
 import unittest
-from Elisio.models import Verse, Word
+from Elisio.engine import Verse, Word
 from Elisio.exceptions import ScansionException
 
 typical_verse = "Arma virumque cano, Troiae qui primus ab oris"
