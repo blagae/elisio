@@ -1,6 +1,5 @@
 # Django settings for Elisio project.
-from tkinter.messagebox import *
-
+from tkinter.messagebox import showwarning
 
 data = None
 admins = ()
@@ -121,6 +120,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'Elisio'
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:

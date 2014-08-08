@@ -1,11 +1,11 @@
 import unittest
-from Elisio.engine import Word, Syllable, WEIGHTS
+from Elisio.engine import Word, Syllable, Weights
 from Elisio.exceptions import ScansionException
 
 typical_word = "recentia"
 syllables = ['re', 'cen', 'ti', 'a']
 expected_syllable_list = []
-expected_weights = [WEIGHTS.Anceps, WEIGHTS.Heavy, WEIGHTS.Light, WEIGHTS.Light]
+expected_weights = [Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT, Weights.LIGHT]
 for syllable in syllables:
     expected_syllable_list.append(Syllable(syllable))
 
@@ -74,7 +74,7 @@ class Test_Word(unittest.TestCase):
         
     def test_WordSplitInitialSemivowels(self):
         word = self.constructWord('uilis')
-        syllable_list = [Syllable('vi'), Syllable('lis')]
+        syllable_list = [Syllable('ui'), Syllable('lis')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
@@ -84,15 +84,33 @@ class Test_Word(unittest.TestCase):
         word.split()
         self.assertEqual(word.syllables, syllable_list)
     
-    def test_WordSplitGeminateOrDiphthong(self):
+    def test_WordSplitGeminate(self):
         word = self.constructWord('eius')
-        syllable_list = [Syllable('ei'), Syllable('us')]
+        syllable_list = [Syllable('e'), Syllable('ius')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
         
     def test_WordSplitGeminateOrRareDiphthong(self):
         word = self.constructWord('cuius')
-        syllable_list = [Syllable('cui'), Syllable('us')]
+        syllable_list = [Syllable('cu'), Syllable('ius')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+        
+    def test_WordSplitLexicalException(self):
+        word = self.constructWord('cui')
+        syllable_list = [Syllable('cui', False)]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+        
+    def test_WordSplitLexicalExceptionBis(self):
+        word = self.constructWord('huic')
+        syllable_list = [Syllable('huic', False)]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_WordSplitNotALexicalException(self):
+        word = self.constructWord('prout')
+        syllable_list = [Syllable('pro'), Syllable('ut')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
         
@@ -101,10 +119,22 @@ class Test_Word(unittest.TestCase):
         syllable_list = [Syllable('mor'), Syllable('tu'), Syllable('us')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
-
+        
     def test_WordSplitWithQ(self):
         word = self.constructWord('antiquus')
         syllable_list = [Syllable('an'), Syllable('ti'), Syllable('quus')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_WordSplitWithH(self):
+        word = self.constructWord('pathos')
+        syllable_list = [Syllable('pa'), Syllable('thos')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_WordSplitWithMutaCumLiquida(self):
+        word = self.constructWord('patris')
+        syllable_list = [Syllable('pa'), Syllable('tris')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
         
@@ -115,43 +145,68 @@ class Test_Word(unittest.TestCase):
 
     def test_WordScansionClosedSemivowels(self):
         word = self.constructWord('iurgus')
-        weights = [WEIGHTS.Heavy, WEIGHTS.Heavy]
+        weights = [Weights.HEAVY, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
         
     def test_WordScansionInitialClusters(self):
         word = self.constructWord('sphrostrum')
-        weights = [WEIGHTS.Heavy, WEIGHTS.Heavy]
+        weights = [Weights.HEAVY, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
     
     def test_WordScansionOpenSemivowels(self):
         word = self.constructWord('imus')
-        weights = [WEIGHTS.Anceps, WEIGHTS.Heavy]
+        weights = [Weights.ANCEPS, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
         
     def test_WordScansionInitialSemivowels(self):
         word = self.constructWord('uilis')
-        weights = [WEIGHTS.Anceps, WEIGHTS.Heavy]
+        weights = [Weights.ANCEPS, Weights.HEAVY]
+        word.split()
+        self.assertEqual(word.getSyllableStructure(), weights)
+
+    def test_WordScansionInitialShortEndVowelClosed(self):
+        word = self.constructWord('uiles')
+        weights = [Weights.ANCEPS, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
 
     def test_WordScansionShortenedSemivowels(self):
         word = self.constructWord('pius')
-        weights = [WEIGHTS.Light, WEIGHTS.Heavy]
+        weights = [Weights.LIGHT, Weights.HEAVY]
+        word.split()
+        self.assertEqual(word.getSyllableStructure(), weights)
+        
+    def test_WordScansionAncepsH(self):
+        word = self.constructWord('pathos')
+        weights = [Weights.ANCEPS, Weights.HEAVY]
+        word.split()
+        self.assertEqual(word.getSyllableStructure(), weights)
+
+    def test_WordScansionShortenedH(self):
+        word = self.constructWord('maher')
+        weights = [Weights.LIGHT, Weights.HEAVY]
+        word.split()
+        self.assertEqual(word.getSyllableStructure(), weights)
+
+        
+    def test_WordScansionMutaCumLiquidaAnceps(self):
+        word = self.constructWord('patris')
+        weights = [Weights.ANCEPS, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
 
     def test_WordScansionSamevowels(self):
         word = self.constructWord('mortuus')
-        weights = [WEIGHTS.Heavy, WEIGHTS.Light, WEIGHTS.Heavy]
+        weights = [Weights.HEAVY, Weights.LIGHT, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
 
     def test_WordScansionWithQ(self):
         word = self.constructWord('antiquus')
-        weights = [WEIGHTS.Heavy, WEIGHTS.Anceps, WEIGHTS.Heavy]
+        weights = [Weights.HEAVY, Weights.ANCEPS, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
         

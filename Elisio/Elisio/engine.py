@@ -2,6 +2,12 @@ import re
 import copy
 from Elisio.exceptions import ScansionException
 
+import os
+if not 'DJANGO_SETTINGS_MODULE' in os.environ or os.environ['DJANGO_SETTINGS_MODULE'] != 'Elisio.settings':
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'Elisio.settings'
+
+from django_enumfield import enum
+
 vowels = ['a','e','o','y']
 semivowels = ['i', 'u', 'j', 'v']
 consonants = ['b','c','d','f','g','h','k','l','m','n','p','q','r','s','t']
@@ -9,12 +15,18 @@ heavyMakers = ['x','z']
 shortEndVowels = ['a','e']
 longEndVowels = ['i', 'o', 'u']
 
+class Weights(enum.Enum):
+    NONE = 0
+    LIGHT = 1
+    HEAVY = 2
+    ANCEPS = 3
 
-def enum(**enums):
-    # http://stackoverflow.com/questions/36932/how-can-i-represent-an-enum-in-python
-    return type('Enum', (), enums)
-
-WEIGHTS = enum(Light='Light', Heavy='Heavy', Anceps='Anceps')
+    labels = {
+        NONE: 'None',
+        LIGHT: 'Light',
+        HEAVY: 'Heavy',
+        ANCEPS: 'Anceps'
+    }
 
 class Verse(object):
     """ Verse class
@@ -60,14 +72,21 @@ class Word(object):
 
     def split(self):
         """ splits a word into syllables by using a few static methods from the Syllable class """
+        if self.splitFromDeviantWord():
+            return
         sounds = self.findSounds()
         temporarySyllables = Word.joinIntoSyllables(sounds)
         self.syllables = Word.redistribute(temporarySyllables)
+        # TODO: delete ?
         sounds = self.syllables[0].sounds
-        # temporary solution
-        if sounds[0] == Sound('u', 'i'):
-            sounds[0] = Sound('v')
-            sounds.insert(1, Sound('i'))
+
+    def splitFromDeviantWord(self):
+        """ if the word can be found the repository of Deviant Words, we should use that instead """
+        from Elisio.models import Deviant_Word
+        deviant = Deviant_Word.find(self.text)
+        if deviant:
+            self.syllables = deviant.getSyllables()
+            return True
 
     def findSounds(self):
         """ find the sequence of sounds from the textual representation of the word """
@@ -153,8 +172,10 @@ class Syllable(object):
     """
     syllable = ""
     sounds = []
-    def __init__(self, syllable, test = True):
+    weight = None
+    def __init__(self, syllable, test = True, weight = None):
         """ construct a Syllable by its contents """
+        self.weight = weight
         self.syllable = syllable
         self.sounds = Word.findSoundsForText(syllable)
         if test and not self.isValid():
@@ -168,7 +189,7 @@ class Syllable(object):
 
     def isValid(self):
         """ a syllable is valid if it contains:
-        * at most one consonant after the vocalic sound, and
+            * at most one consonant after the vocalic sound, and
             * a single vowel or semivowel
             * a semivowel and a vowel in that order
         """
@@ -208,7 +229,7 @@ class Syllable(object):
         an initial semivowel is only vocalic if it is the syllable's only sound
         or if it is followed directly by a consonant
         """
-        return self.sounds[0].isVowel() or (self.sounds[0].isSemivowel() and (len(self.sounds) == 1 or self.sounds[1].isConsonant()))
+        return self.sounds[0].isVowel() or self.sounds[0].isH() or (self.sounds[0].isSemivowel() and (len(self.sounds) == 1 or self.sounds[1].isConsonant()))
     
     def startsWithConsonant(self):
         """ first sound of the syllable is consonantal 
@@ -249,16 +270,16 @@ class Syllable(object):
         if nextSyllable and isinstance(nextSyllable, Syllable):
             return ((self.endsWithConsonant() or nextSyllable.makesPreviousHeavy()) or
                     (not self.isLight(nextSyllable) and vowel.isDiphthong()))
-        return vowel.isDiphthong() or vowel.letters[0] in longEndVowels
+        return self.endsWithConsonant() or vowel.isDiphthong() or vowel.letters[0] in longEndVowels
 
     def isLight(self, nextSyllable = None):
         """ determines whether the syllable is inherently light or not
         a syllable is always light if it is followed by a vowel in the next syllable
-        final syllables are usually short if they are A or E
+        final vowels are usually short if they are A or E
         """
         if nextSyllable and isinstance(nextSyllable, Syllable):
             return self.endsWithVowel() and nextSyllable.startsWithVowel()
-        return self.getVowel().letters[0] in shortEndVowels
+        return self.endsWithVowel() and self.getVowel().letters[0] in shortEndVowels
 
     def addSound(self, sound):
         """ add a sound to a syllable if the syllable stays valid by the addition """
@@ -271,14 +292,24 @@ class Syllable(object):
 
     def getWeight(self, nextSyllable = None):
         """ try to determine the weight of the syllable, in the light of the next syllable
-        if this doesn't succeed, assign the weight Anceps = undetermined
+        if this doesn't succeed, assign the weight ANCEPS = undetermined
         """
+        if self.weight:
+            return self.weight
         if self.isLight(nextSyllable):
-            return WEIGHTS.Light
+            return Weights.LIGHT
         elif self.isHeavy(nextSyllable):
-            return WEIGHTS.Heavy
+            return Weights.HEAVY
         else:
-            return WEIGHTS.Anceps
+            return Weights.ANCEPS
+
+    @classmethod
+    def createFromDatabase(cls, syll):
+        from Elisio.models import Deviant_Syllable
+        if not isinstance(syll, Deviant_Syllable):
+            raise ScansionException
+        result = Syllable(syll.contents, False, syll.weight)
+        return result
 
 class Sound(object):
     """ Sound class
@@ -316,30 +347,42 @@ class Sound(object):
     def isValidDoubleSound(self):
         """ the fixed list of combinations
         * QU
+        * muta cum liquida
         * an aspirated voiceless stop
         * a diphthong
         """
+        if len(self.letters) < 2:
+            return False
         first = self.letters[0]
         second = self.letters[1]
         return ((first == 'q' and second == 'u') or
+                self.isMutaCumLiquida() or
                ((first == 't' or first == 't' or first == 't' ) and second == 'h') or
                self.isDiphthong())
+
+    def isMutaCumLiquida(self):
+        if len(self.letters) < 2:
+            return False
+        first = self.letters[0]
+        second = self.letters[1]
+        return ((second == 'r' or second == 'l') and
+                (first == 't' or first == 'd' or first == 'p' or first == 'b' or first == 'c' or first == 'g')
+               )
+
 
     def isDiphthong(self):
         """ the possible diphthongs
         AE AU
         EI EU
-        OE OU
-        UI
+        OE
         """
         if len(self.letters) == 1:
             return False
         first = self.letters[0]
         second = self.letters[1]
         return ((first == 'a' and (second == 'e' or second == 'u')) or
-                (first == 'e' and (second == 'i' or second == 'u')) or
-                (first == 'o' and (second == 'e' or second == 'u')) or
-                (first == 'u' and second == 'i'))
+                (first == 'e' and second == 'u') or
+                (first == 'o' and second == 'e'))
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
@@ -377,6 +420,8 @@ class Sound(object):
     def isHeavyMaking(self):
         """ does a sound contain a cluster-forming consonant letter """
         return self.letters[0].isHeavyMaking()
+    def isH(self):
+        return self.letters[0] == Letter('h')
 
 class Letter(object):
     """ Letter class
@@ -389,6 +434,10 @@ class Letter(object):
         if not (len(letter) == 1 and isinstance(letter, str) and letter.isalpha()):
             raise ScansionException
         self.letter = letter.lower()
+        if self.letter == 'v':
+            self.letter = 'u'
+        elif self.letter == 'j':
+            self.letter = 'i'
         if not self.isValidLetter():
             raise ScansionException
 
@@ -415,6 +464,9 @@ class Letter(object):
     def isSemivowel(self):
         """ specifically non-semivowel letters """
         return self.letter in semivowels
+    def isVocalic(self):
+        """ all potentially vocalic letters """
+        return self.isVowel() or self.isSemivowel()
     def isConsonant(self):
         """ all single consonantal letters """
         return self.letter in consonants or self.isHeavyMaking()

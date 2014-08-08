@@ -19,10 +19,14 @@ class Test_Letter(unittest.TestCase):
     def test_LetterFailTooShort(self):
         with self.assertRaises(ScansionException):
             self.constructLetter('')
+            
+    def test_LetterFailNonExistentUpperCase(self):
+        with self.assertRaises(ScansionException):
+            self.constructLetter('W')
 
     def test_LetterFailNonExistent(self):
         with self.assertRaises(ScansionException):
-            self.constructLetter('W')
+            self.constructLetter('w')
             
     def test_LetterFailSpace(self):
         with self.assertRaises(ScansionException):
@@ -58,11 +62,23 @@ class Test_Letter(unittest.TestCase):
         for semivowel in semivowels:
             letter = Letter(semivowel)
             self.assertTrue(letter.isSemivowel())
-
+            
     def test_LetterIsConsonant(self):
         from Elisio.engine import consonants
         for consonant in consonants:
             letter = Letter(consonant)
+            self.assertTrue(letter.isConsonant())
+            
+    def test_LetterIsHeavyMaker(self):
+        from Elisio.engine import heavyMakers
+        for heavyMaker in heavyMakers:
+            letter = Letter(heavyMaker)
+            self.assertTrue(letter.isHeavyMaking())
+
+    def test_LetterHeavyMakerIsConsonant(self):
+        from Elisio.engine import heavyMakers
+        for heavyMaker in heavyMakers:
+            letter = Letter(heavyMaker)
             self.assertTrue(letter.isConsonant())
 
 if __name__ == '__main__':

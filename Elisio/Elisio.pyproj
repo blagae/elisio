@@ -35,9 +35,13 @@
     <Compile Include="Elisio\engine.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\fixtures\initial_data.xml">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\models.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\local.py" />
     <Compile Include="Elisio\tests\Test_Sound.py">
       <SubType>Code</SubType>
     </Compile>
@@ -67,6 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elisio\" />
+    <Folder Include="Elisio\fixtures\" />
+    <Folder Include="Elisio\static\" />
     <Folder Include="Elisio\tests\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />

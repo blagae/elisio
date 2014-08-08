@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<django-objects version="1.0">
+  <object pk="1" model="Elisio.Deviant_Word">
+    <field type="CharField" name="stem">^Aene[ai].*$</field>
+  </object>
+  <object pk="2" model="Elisio.Deviant_Word">
+    <field type="CharField" name="stem">^cui$</field>
+  </object>
+  <object pk="3" model="Elisio.Deviant_Word">
+    <field type="CharField" name="stem">^huic$</field>
+  </object>
+  <object pk="1" model="Elisio.Deviant_Syllable">
+    <field type="CharField" name="contents">cui</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">2</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="2" model="Elisio.Deviant_Syllable">
+    <field type="CharField" name="contents">huic</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">3</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+</django-objects>
