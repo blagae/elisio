@@ -1,5 +1,6 @@
 import unittest
-from Elisio.engine import Verse, Word
+from Elisio.engine import Verse, Word, Weights
+from Elisio.models import Db_Verse
 from Elisio.exceptions import ScansionException
 
 typical_verse = "Arma virumque cano, Troiae qui primus ab oris"
@@ -62,6 +63,38 @@ class Test_Verse(unittest.TestCase):
         verse.split()
         self.assertEqual(verse.words, expected_word_list)
 
+    def test_VerseScansionElision(self):
+        fail()
+
+    def test_VerseScansionFull(self):
+        """ A regular verse must get all relevant scansion information immediately
+        Example:
+        arma virumque cano troiae qui primus ab oris
+        _  u  x _   u  x _   x _    _   x x  x  x _
+        Note that this archetypical verse does not test for a lot
+        """
+        verse = self.constructVerse()
+        expected_result = [[Weights.HEAVY, Weights.LIGHT,],
+                           [Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT,],
+                           [Weights.ANCEPS, Weights.HEAVY,],
+                           [Weights.ANCEPS, Weights.HEAVY,],
+                           [Weights.HEAVY,],
+                           [Weights.ANCEPS, Weights.ANCEPS,],
+                           [Weights.ANCEPS,],
+                           [Weights.ANCEPS, Weights.HEAVY]]
+        verse.split()
+        verse.calculateKnownSyllables()
+        self.assertEqual(verse.getSyllableLengths(), expected_result)
+
+
+    def test_VerseDatabase(self):
+        """ Checks to see if a database object exists
+        Expects there to be a Database Verse object with primary key 1
+        ==> PLEASE CHECK FIXTURES
+        """
+        db_verse = Db_Verse.objects.get(pk=1)
+        verse = db_verse.getVerse()
+        self.assertTrue(isinstance(verse, Verse))
 
 if __name__ == '__main__':
     unittest.main()

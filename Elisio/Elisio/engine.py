@@ -1,7 +1,6 @@
 import re
 import copy
 from Elisio.exceptions import ScansionException
-
 import os
 if not 'DJANGO_SETTINGS_MODULE' in os.environ or os.environ['DJANGO_SETTINGS_MODULE'] != 'Elisio.settings':
     os.environ['DJANGO_SETTINGS_MODULE'] = 'Elisio.settings'
@@ -53,6 +52,15 @@ class Verse(object):
         """ Verses are equal if they have exactly the same characters """
         return self.__dict__ == other.__dict__
 
+    def calculateKnownSyllables(self):
+        pass
+
+    def getSyllableLengths(self):
+        result = []
+        for word in self.words:
+            result.append(word.getSyllableStructure())
+        return result
+
 class Word(object):
     """ Word class
     A word is the representation of the Latin word
@@ -101,6 +109,8 @@ class Word(object):
     def getSyllableStructure(self):
         """ get the list of syllable weights based on the syllable list """
         ss = []
+        if self.syllables == []:
+            self.split()
         for count, syllable in enumerate(self.syllables):
             try:
                 ss.append(syllable.getWeight(self.syllables[count+1]))
