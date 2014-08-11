@@ -47,18 +47,23 @@ class Verse(object):
         for word in array:
             if word.isalpha():
                 self.words.append(Word(word))
+                
+    def __repr__(self):
+        return self.words
+    def __str__(self):
+        return self.words
 
     def __eq__(self, other): 
         """ Verses are equal if they have exactly the same characters """
         return self.__dict__ == other.__dict__
 
-    def calculateKnownSyllables(self):
-        pass
-
     def getSyllableLengths(self):
         result = []
-        for word in self.words:
-            result.append(word.getSyllableStructure())
+        for count, word in enumerate(self.words):
+            try:
+                result.append(word.getSyllableStructure(self.words[count+1]))
+            except IndexError:
+                result.append(word.getSyllableStructure())
         return result
 
 class Word(object):
@@ -76,6 +81,8 @@ class Word(object):
         self.text = text.lower()
         
     def __repr__(self):
+        return self.syllables
+    def __str__(self):
         return self.syllables
 
     def split(self):
@@ -106,7 +113,7 @@ class Word(object):
         """
         return self.__dict__ == other.__dict__
 
-    def getSyllableStructure(self):
+    def getSyllableStructure(self, nextWord = None):
         """ get the list of syllable weights based on the syllable list """
         ss = []
         if self.syllables == []:
@@ -116,6 +123,22 @@ class Word(object):
                 ss.append(syllable.getWeight(self.syllables[count+1]))
             except IndexError:
                 ss.append(syllable.getWeight())
+        if nextWord and isinstance(nextWord, Word):
+        # new functionality: word contact
+            lastSyllable = self.syllables[-1]
+            nextWord.split()
+            firstSyllable = nextWord.syllables[0]
+            # to delete for intellisense
+            #lastSyllable = firstSyllable = Syllable('a')
+            if lastSyllable.canElideIfFinal() and firstSyllable.startsWithVowel():
+                # elision
+                ss[-1] = Weights.NONE
+            elif lastSyllable.endsWithConsonant() and firstSyllable.startsWithVowel():
+                # consonant de facto redistributed
+                ss[-1] = Weights.ANCEPS
+            elif lastSyllable.endsWithVowel() and firstSyllable.startsWithConsonantCluster():
+                ss[-1] = Weights.HEAVY
+                pass
         return ss
 
     
@@ -229,6 +252,12 @@ class Syllable(object):
         """ last sound of the syllable is consonantal """
         return self.sounds[-1].isConsonant()
 
+    def canElideIfFinal(self):
+        return (self.endsWithVowel() or
+                (self.sounds[-1] == Sound('m') and 
+                (self.sounds[-2].isVowel() or self.sounds[-2].isSemivowel()))
+               )
+
     def endsWithVowel(self):
         """ last sound of the syllable is vocalic
         a final semivowel is always vocalic """
@@ -239,8 +268,11 @@ class Syllable(object):
         an initial semivowel is only vocalic if it is the syllable's only sound
         or if it is followed directly by a consonant
         """
-        return self.sounds[0].isVowel() or self.sounds[0].isH() or (self.sounds[0].isSemivowel() and (len(self.sounds) == 1 or self.sounds[1].isConsonant()))
-    
+        return (self.sounds[0].isVowel() or
+                self.sounds[0].isH() or 
+                (self.sounds[0].isSemivowel() and 
+                 (len(self.sounds) == 1 or self.sounds[1].isConsonant()))
+               )
     def startsWithConsonant(self):
         """ first sound of the syllable is consonantal 
         an initial semivowel is consonantal if it is followed by a consonant
@@ -249,7 +281,11 @@ class Syllable(object):
 
     def startsWithConsonantCluster(self):
         """ first sounds of the syllable are all consonants """
-        return self.startsWithConsonant() and len(self.sounds) > 1 and self.sounds[1].isConsonant()
+        return (self.startsWithConsonant() and
+                ((len(self.sounds) > 1 and self.sounds[1].isConsonant()) or
+                 self.makesPreviousHeavy()
+                )
+               )
 
     def makesPreviousHeavy(self):
         """ first sound of the syllable is one of the double consonant letters """
@@ -258,7 +294,7 @@ class Syllable(object):
     def getVowel(self):
         """ get the vocalic sound from a syllable """
         semivowel = None
-        for sound in self.sounds:
+        for sound in reversed(self.sounds):
             if sound.isVowel():
                 return sound
             if sound.isSemivowel():
@@ -289,7 +325,10 @@ class Syllable(object):
         """
         if nextSyllable and isinstance(nextSyllable, Syllable):
             return self.endsWithVowel() and nextSyllable.startsWithVowel()
-        return self.endsWithVowel() and self.getVowel().letters[0] in shortEndVowels
+        return (self.endsWithVowel() and
+                not self.getVowel().isDiphthong() and
+                self.getVowel().letters[0] in shortEndVowels
+                )
 
     def addSound(self, sound):
         """ add a sound to a syllable if the syllable stays valid by the addition """
@@ -367,7 +406,7 @@ class Sound(object):
         second = self.letters[1]
         return ((first == 'q' and second == 'u') or
                 self.isMutaCumLiquida() or
-               ((first == 't' or first == 't' or first == 't' ) and second == 'h') or
+               ((first == 't' or first == 'p' or first == 'c' ) and second == 'h') or
                self.isDiphthong())
 
     def isMutaCumLiquida(self):

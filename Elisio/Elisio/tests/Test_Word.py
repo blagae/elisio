@@ -95,6 +95,12 @@ class Test_Word(unittest.TestCase):
         syllable_list = [Syllable('cu'), Syllable('ius')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
+
+    def test_WordSplitWeirdWord(self):
+        word = self.constructWord('troiae')
+        syllable_list = [Syllable('tro'), Syllable('iae')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
         
     def test_WordSplitLexicalException(self):
         word = self.constructWord('cui')
@@ -152,6 +158,18 @@ class Test_Word(unittest.TestCase):
     def test_WordScansionInitialClusters(self):
         word = self.constructWord('sphrostrum')
         weights = [Weights.HEAVY, Weights.HEAVY]
+        word.split()
+        self.assertEqual(word.getSyllableStructure(), weights)
+
+    def test_WordScansionWithH(self):
+        word = self.constructWord('zephyrus')
+        weights = [Weights.ANCEPS, Weights.ANCEPS, Weights.HEAVY]
+        word.split()
+        self.assertEqual(word.getSyllableStructure(), weights)
+
+    def test_WordScansionWeirdWord(self):
+        word = self.constructWord('troiae')
+        weights = [Weights.ANCEPS, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
     

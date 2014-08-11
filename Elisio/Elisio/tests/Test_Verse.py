@@ -62,9 +62,62 @@ class Test_Verse(unittest.TestCase):
         verse = self.constructVerse("""      Arma\tvirumque\rcano\nTroiae\r\nqui\n\rprimus  \b \r   ab    oris.  """)
         verse.split()
         self.assertEqual(verse.words, expected_word_list)
+        
+    def test_VerseScansionElisionRegular(self):
+        verse = self.constructVerse('multo ille')
+        expected_result = [[Weights.HEAVY, Weights.NONE],
+                           [Weights.HEAVY, Weights.LIGHT]]
+        verse.split()
+        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        
+    def test_VerseScansionElisionOnM(self):
+        verse = self.constructVerse('multum ille')
+        expected_result = [[Weights.HEAVY, Weights.NONE],
+                           [Weights.HEAVY, Weights.LIGHT]]
+        verse.split()
+        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        
+    def test_VerseScansionElisionWithH(self):
+        verse = self.constructVerse('multo hille')
+        expected_result = [[Weights.HEAVY, Weights.NONE],
+                           [Weights.HEAVY, Weights.LIGHT]]
+        verse.split()
+        self.assertEqual(verse.getSyllableLengths(), expected_result)
 
-    def test_VerseScansionElision(self):
-        fail()
+    def test_VerseScansionElisionSemivowelWithH(self):
+        verse = self.constructVerse('multu hille')
+        expected_result = [[Weights.HEAVY, Weights.NONE],
+                           [Weights.HEAVY, Weights.LIGHT]]
+        verse.split()
+        self.assertEqual(verse.getSyllableLengths(), expected_result)
+
+    def test_VerseScansionElisionOnMWithH(self):
+        verse = self.constructVerse('multum hille')
+        expected_result = [[Weights.HEAVY, Weights.NONE],
+                           [Weights.HEAVY, Weights.LIGHT]]
+        verse.split()
+        self.assertEqual(verse.getSyllableLengths(), expected_result)
+
+    def test_VerseScansionFinalAnceps(self):
+        verse = self.constructVerse('multus ille')
+        expected_result = [[Weights.HEAVY, Weights.ANCEPS],
+                           [Weights.HEAVY, Weights.LIGHT]]
+        verse.split()
+        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        
+    def test_VerseScansionHeavyMaker(self):
+        verse = self.constructVerse('esse Zephyrumque')
+        expected_result = [[Weights.HEAVY, Weights.HEAVY],
+                           [Weights.ANCEPS, Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT]]
+        verse.split()
+        self.assertEqual(verse.getSyllableLengths(), expected_result)
+
+    def test_VerseScansionHeavyMakingCluster(self):
+        verse = self.constructVerse('esse strabo')
+        expected_result = [[Weights.HEAVY, Weights.HEAVY],
+                           [Weights.ANCEPS, Weights.HEAVY]]
+        verse.split()
+        self.assertEqual(verse.getSyllableLengths(), expected_result)
 
     def test_VerseScansionFull(self):
         """ A regular verse must get all relevant scansion information immediately
@@ -83,7 +136,6 @@ class Test_Verse(unittest.TestCase):
                            [Weights.ANCEPS,],
                            [Weights.ANCEPS, Weights.HEAVY]]
         verse.split()
-        verse.calculateKnownSyllables()
         self.assertEqual(verse.getSyllableLengths(), expected_result)
 
 
