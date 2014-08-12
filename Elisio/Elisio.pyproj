@@ -60,6 +60,9 @@
     <Compile Include="Elisio\tests\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\views.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="manage.py" />
     <Compile Include="Elisio\__init__.py" />
     <Compile Include="Elisio\settings.py" />
@@ -67,11 +70,21 @@
     <Compile Include="Elisio\wsgi.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Elisio\static\indexScripts.js" />
+    <Content Include="Elisio\static\scripts.js" />
+    <Content Include="Elisio\static\styles.css" />
+    <Content Include="Elisio\templates\base.html" />
+    <Content Include="Elisio\templates\about.html" />
+    <Content Include="Elisio\templates\batch.html" />
+    <Content Include="Elisio\templates\faq.html" />
+    <Content Include="Elisio\templates\help.html" />
+    <Content Include="Elisio\templates\index.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elisio\" />
     <Folder Include="Elisio\fixtures\" />
+    <Folder Include="Elisio\templates\" />
     <Folder Include="Elisio\static\" />
     <Folder Include="Elisio\tests\" />
   </ItemGroup>

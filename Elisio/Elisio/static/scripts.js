@@ -1,0 +1,3 @@
+﻿if (false) {
+    alert('omg');
+}

@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en"> {% load staticfiles %}
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Elisio{% endblock %}</title>
+        <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{% static 'styles.css' %}" />
+        {% block extra_styles %}{% endblock %}
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="{% static 'scripts.js' %}"></script>
+        {% block extra_scripts %}{% endblock %}
+    </head>
+    <body>
+        <section id="menu">
+            <div id="menu_wrapper">
+                <nav>
+                    <ul>
+                        <li><a href="/" class="scroll">Index</a></li>
+                        <li><a href="/about/" class="scroll">About</a></li>
+                        <li><a href="/faq/" class="scroll">FAQ</a></li>
+                        <li><a href="/batch/" class="scroll">Batch tool</a></li>
+                        <li><a href="/help/" class="scroll">Help us</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </section>
+        {% block content %}
+        {% endblock %}
+        <section id="colofon">
+            <p>Made by Benoit and Martijn in 2014.</p>
+        </section>
+    </body>
+</html>

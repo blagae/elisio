@@ -1,0 +1,36 @@
+﻿{% extends "base.html" %}
+{% load staticfiles %}
+{% block extra_scripts %}
+        <script src="{% static 'indexScripts.js' %}"></script>{% endblock %}
+{% block content %}
+<section id="welcome">
+    <h3>Welcome</h3>
+    <p>Hi and welcome to the Elisio website. We look forward to being your favorite Latin verse scanning solution &lt;3</p>
+    <p>Browse the site for more information, and don't forget to scan !</p>
+</section>
+<section id="scantool">
+    <form id="verseFinder" method="get">
+        <span class="superscript">Author</span>
+        <select name="author" id="author">
+            {% for author in authors %}
+            <option value="{{ author.id }}">{{ author.short_name }}</option>
+            {% endfor %}
+        </select>
+        <span class="superscript">Opus</span>
+        <select name="opus" id="opus">
+        </select>
+        <span class="superscript">Book</span>
+        <select name="book" id="book">
+        </select>
+        <span class="superscript">Poem</span>
+        <select name="poem" id="poem">
+        </select>
+        <span class="superscript">Verse</span>
+        <input name="verseNumber" id="verseNumber" />
+    </form>
+    <form id="verseScanner" method="post">
+        <input type="text" name="verse" />
+        <input type="submit" name="submit" value="Scan" />
+    </form>
+</section>
+{% endblock %}
