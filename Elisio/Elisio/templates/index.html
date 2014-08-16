@@ -9,7 +9,7 @@
     <p>Browse the site for more information, and don't forget to scan !</p>
 </section>
 <section id="scantool">
-    <form id="verseFinder" method="get">
+    <form id="verseScanner" method="post">
         <span class="superscript">Author</span>
         <select name="author" id="author">
             {% for author in authors %}
@@ -27,9 +27,8 @@
         </select>
         <span class="superscript">Verse</span>
         <input name="verseNumber" id="verseNumber" />
-    </form>
-    <form id="verseScanner" method="post">
-        <input type="text" name="verse" />
+        <p id="warning"></p>
+        <input type="text" name="verse" id="verse" />
         <input type="submit" name="submit" value="Scan" />
     </form>
 </section>

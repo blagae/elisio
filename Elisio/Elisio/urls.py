@@ -12,7 +12,8 @@ urlpatterns = patterns('',
     url(r'^faq/$', views.faq),
     url(r'^help/$', views.help),
     url(r'^about/$', views.about),
-    url(r'^json/([a-zA-Z]+)/([0-9]+)$', views.json),
+    url(r'^json/([a-zA-Z]+)/([0-9]+)$', views.jsonList),
+    url(r'^json/verse/([0-9]+)/([0-9]+)$', views.jsonVerse),
     
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),

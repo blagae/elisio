@@ -5,6 +5,8 @@
     <Name>Elisio</Name>
     <RootNamespace>Elisio</RootNamespace>
     <WebBrowserPort>9000</WebBrowserPort>
+    <InterpreterId>{019c69ce-e55c-46ea-94fd-03bcfe672809}</InterpreterId>
+    <InterpreterVersion>3.3</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -51,6 +53,9 @@
     <Compile Include="Elisio\tests\Test_Syllable.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\tests\Test_Web.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\tests\Test_Word.py">
       <SubType>Code</SubType>
     </Compile>
@@ -87,6 +92,19 @@
     <Folder Include="Elisio\templates\" />
     <Folder Include="Elisio\static\" />
     <Folder Include="Elisio\tests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="elisio_env\">
+      <Id>{019c69ce-e55c-46ea-94fd-03bcfe672809}</Id>
+      <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
+      <Version>3.3</Version>
+      <Description>elisio_env (Python 3.3)</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <LibraryPath>Lib\</LibraryPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X86</Architecture>
+    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

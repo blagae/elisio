@@ -1,7 +1,11 @@
 import unittest
-from Elisio.engine import Verse, Word, Weights
+from Elisio.engine import *
+
+setDjango()
+
 from Elisio.models import Db_Verse
 from Elisio.exceptions import ScansionException
+
 
 typical_verse = "Arma virumque cano, Troiae qui primus ab oris"
 words = ['Arma', 'virumque', 'cano', 'Troiae', 'qui', 'primus', 'ab', 'oris']
@@ -23,6 +27,7 @@ class Test_Verse(unittest.TestCase):
 
     def test_VerseConstruct(self):
         """ constructing a Verse must work """
+        self.assertTrue(isinstance(self.constructVerse(), Verse))
         self.assertTrue(isinstance(self.constructVerse(), Verse))
 
     def test_VerseFail(self):
@@ -148,5 +153,39 @@ class Test_Verse(unittest.TestCase):
         verse = db_verse.getVerse()
         self.assertTrue(isinstance(verse, Verse))
 
-if __name__ == '__main__':
-    unittest.main()
+class Test_Hexameter(unittest.TestCase):
+    
+    def constructHexameter(self, text = typical_verse):
+        """ Construct a Hexameter object from a given text """
+        constructedVerse = Hexameter(text)
+
+        return constructedVerse
+
+    
+    def test_HexameterConstruct(self):
+        """ constructing a Hexameter must work """
+        self.assertTrue(isinstance(self.constructHexameter(), Verse))
+        self.assertTrue(isinstance(self.constructHexameter(), Hexameter))
+
+    def test_HexameterScanBasicCase(self):
+        expected_feet = [Feet.DACTYLUS, Feet.DACTYLUS, Feet.SPONDAEUS, Feet.SPONDAEUS, Feet.DACTYLUS, Feet.SPONDAEUS]
+        verse = self.constructHexameter()
+        verse.split()
+        verse.scan()
+        self.assertEqual(verse.feet, expected_feet)
+
+    def test_HexameterScanAllLolol(self):
+        """ frivolous check to see how many verses work """
+        dbverses = Db_Verse.objects.all()
+        worked = 0
+        failed = 0
+        fails = ''
+        for dbverse in dbverses:
+            try:
+                verse = Hexameter(dbverse.contents)
+                verse.split()
+                verse.scan()
+                worked += 1
+            except ScansionException:
+                failed += 1
+        self.fail(str(worked) + " worked, " + str(failed) + " failed")

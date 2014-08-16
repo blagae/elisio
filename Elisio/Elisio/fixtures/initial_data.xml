@@ -209,12 +209,21 @@
     <field type="ForeignKey" name="opus">6</field>
     <field type="IntegerField" name="number">3</field>
   </object>
+  <object pk="4" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">5</field>
+    <field type="IntegerField" name="number">1</field>
+  </object>
 
   <!-- Poems -->
   <object pk="1" model="Elisio.Poem">
     <field type="ForeignKey" name="book">1</field>
     <field type="IntegerField" name="number">1</field>
     <field type="IntegerField" name="nickname">Arma virumque cano</field>
+  </object>
+  <object pk="2" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">4</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">Tityre tu patulae</field>
   </object>
 
   <!-- Verses -->

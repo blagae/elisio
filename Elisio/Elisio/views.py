@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.core import serializers
 from Elisio.models import *
+import json
 
 context = {}
 
@@ -21,7 +22,7 @@ def help(request):
 def about(request):
     return render(request, 'about.html', context)
 
-def json(request, type, key):
+def jsonList(request, type, key):
     pk = int(key)
     if type == 'author':
         objects = Opus.objects.filter(author=pk)
@@ -30,11 +31,15 @@ def json(request, type, key):
     elif type == 'book':
         objects = Poem.objects.filter(book=pk)
     elif type == 'poem':
-        pass
-    elif type == 'verse':
-        # requires info from poem, too ?
-        pass
+        return HttpResponse(Db_Verse.getMaximumVerseNumber(poem=pk))
     else:
         raise Http404
     data = serializers.serialize('json', objects)
+    return HttpResponse(data, mimetype='application/json')
+
+def jsonVerse(request, poem, verse):
+    pk = int(verse)
+    poemPk = int(poem)
+    object = Db_Verse.getVerseFromDb(poemPk, pk)
+    data = json.dumps(object)
     return HttpResponse(data, mimetype='application/json')

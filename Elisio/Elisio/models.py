@@ -1,8 +1,7 @@
 from django.db import models
 from Elisio.engine import Weights, Syllable, Verse
-from django.core import validators
 from Elisio.exceptions import ScansionException
-from django_enumfield import enum
+from enumfields import EnumField
 import re
 
 class Deviant_Word(models.Model):
@@ -33,7 +32,7 @@ class Deviant_Word(models.Model):
     
 class Deviant_Syllable(models.Model):
     word = models.ForeignKey(Deviant_Word)
-    weight = enum.EnumField(Weights, default=Weights.ANCEPS)
+    weight = EnumField(Weights)
     contents = models.CharField(max_length=8)
     sequence = models.IntegerField()
     index_together = [["word", "sequence"]]
@@ -83,3 +82,14 @@ class Db_Verse(models.Model):
 
     def getVerse(self):
         return Verse(self.contents)
+    
+    @classmethod
+    def getMaximumVerseNumber(cls, poem):
+        from django.db.models import Max
+        return Db_Verse.objects.all().aggregate(Max('number'))['number__max']
+
+    @classmethod
+    def getVerseFromDb(cls, poem, verse):
+        """ django.core.serializers requires this return value to be iterable (i.e. a resultset) """
+        result = Db_Verse.objects.get(poem=poem, number=verse)
+        return result.contents

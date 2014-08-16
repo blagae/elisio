@@ -3,3 +3,5 @@ class ScansionException(Exception):
     pass
 
 
+class HexameterException(ScansionException):
+    pass

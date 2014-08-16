@@ -1,5 +1,5 @@
 import unittest
-from Elisio.engine import Word, Syllable, Weights
+from Elisio.engine import Word, Syllable, Weights, setDjango
 from Elisio.exceptions import ScansionException
 
 typical_word = "recentia"
@@ -8,6 +8,8 @@ expected_syllable_list = []
 expected_weights = [Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT, Weights.LIGHT]
 for syllable in syllables:
     expected_syllable_list.append(Syllable(syllable))
+
+setDjango()
 
 class Test_Word(unittest.TestCase):
 
@@ -221,10 +223,16 @@ class Test_Word(unittest.TestCase):
         weights = [Weights.HEAVY, Weights.LIGHT, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
-
+        
     def test_WordScansionWithQ(self):
         word = self.constructWord('antiquus')
         weights = [Weights.HEAVY, Weights.ANCEPS, Weights.HEAVY]
+        word.split()
+        self.assertEqual(word.getSyllableStructure(), weights)
+
+    def test_WordScansionSemivowelInternal(self):
+        word = self.constructWord('italiam')
+        weights = [Weights.ANCEPS, Weights.ANCEPS, Weights.LIGHT, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
         
