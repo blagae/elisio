@@ -77,7 +77,7 @@ class Verse(object):
 
     def __eq__(self, other): 
         """ Verses are equal if they have exactly the same characters """
-        return self.__dict__ == other.__dict__
+        return self.text == other.text
 
     def getSyllableLengths(self):
         result = []
@@ -106,7 +106,8 @@ class Hexameter(Verse):
         layeredList = self.getSyllableLengths()
         for word in layeredList:
             for weight in word:
-                self.flatList.append(weight)
+                if weight != Weights.NONE:
+                    self.flatList.append(weight)
 
     def scan(self):
         self.preparse()
@@ -149,22 +150,24 @@ class Hexameter(Verse):
         if len(self.flatList) != self.min_syllables + 1:
             """ avoid wrong use """
             raise HexameterException
-        
+        dact = False
+        for count, weight in enumerate(self.flatList):
+            if count > 0 and count < 9 and weight == Weights.LIGHT:
+                self.feet[(count-1)//2] = Feet.DACTYLUS
+                dact = True
+                break
+        if dact:
+            self.fillOtherFeet(Feet.DACTYLUS, Feet.SPONDAEUS)
+        else:
+            heavies = 0
             for count, weight in enumerate(self.flatList):
-                if weight == Weights.LIGHT:
-                    dact = (count-1)/2
-            if dact:
-                self.fillOtherFeet(Feet.DACTYLUS, Feet.SPONDAEUS)
+                if count > 0 and count < 9 and weight == Weights.HEAVY:
+                    self.feet[(count-1)//2] = Feet.SPONDAEUS
+                    heavies += 1
+            if heavies == 3:
+                self.fillOtherFeet(Feet.SPONDAEUS, Feet.DACTYLUS)
             else:
-                heavies = 0
-                for count, weight in enumerate(self.flatList):
-                    if weight == Weights.HEAVY:
-                        self.feet[(count-1)/2] == Feet.SPONDAEUS
-                        heavies += 1
-                if heavies == 3:
-                    self.fillOtherFeet(Feet.SPONDAEUS, Feet.DACTYLUS)
-                else:
-                    raise HexameterException
+                raise HexameterException
 
     def findOnlySpondaeus(self):
         if len(self.flatList) != self.max_syllables - 1:
@@ -208,6 +211,9 @@ class Hexameter(Verse):
 
 
     def findSickAlgorithm(self):
+        if len(self.flatList) != self.max_syllables - 2:
+            """ avoid wrong use """
+            raise HexameterException
         if self.flatList[3] == Weights.HEAVY and self.flatList[5] == Weights.HEAVY and self.flatList[7] == Weights.HEAVY:
             self.feet[0] = Feet.DACTYLUS
             self.feet[1] = Feet.SPONDAEUS
@@ -389,10 +395,9 @@ class Hexameter(Verse):
 
 
     def fillOtherFeet(self, fromFoot, toFoot):
-        for foot in self.feet:
-            if foot != fromFoot:
-                foot = toFoot
-                return
+        for count, foot in enumerate(self.feet):
+            if count < 4 and foot != fromFoot:
+                self.feet[count] = toFoot
 
 
 class Word(object):
@@ -421,8 +426,7 @@ class Word(object):
         sounds = self.findSounds()
         temporarySyllables = Word.joinIntoSyllables(sounds)
         self.syllables = Word.redistribute(temporarySyllables)
-        # TODO: delete ?
-        sounds = self.syllables[0].sounds
+        self.checkConsistency()
 
     def splitFromDeviantWord(self):
         """ if the word can be found the repository of Deviant Words, we should use that instead """
@@ -457,8 +461,6 @@ class Word(object):
             lastSyllable = self.syllables[-1]
             nextWord.split()
             firstSyllable = nextWord.syllables[0]
-            # to delete for intellisense
-            #lastSyllable = firstSyllable = Syllable('a')
             if lastSyllable.canElideIfFinal() and firstSyllable.startsWithVowel():
                 # elision
                 ss[-1] = Weights.NONE
@@ -467,9 +469,17 @@ class Word(object):
                 ss[-1] = Weights.ANCEPS
             elif lastSyllable.endsWithVowel() and firstSyllable.startsWithConsonantCluster():
                 ss[-1] = Weights.HEAVY
-                pass
         return ss
 
+    def checkConsistency(self):
+        for syllable in self.syllables:
+            if not syllable.isValid():
+                word = Word(syllable.getText())
+                word.split()
+                index = self.syllables.index(syllable)
+                self.syllables.remove(syllable)
+                for syll in reversed(word.syllables):
+                    self.syllables.insert(index, syll)
     
     @classmethod
     def findSoundsForText(cls, text):
@@ -509,7 +519,8 @@ class Word(object):
         for count in range(len(syllables)-1):
             if syllables[count].endsWithVowel() and syllables[count+1].startsWithConsonantCluster():
                 Word.switchSound(syllables[count], syllables[count+1], True)
-            elif syllables[count].endsWithConsonant() and syllables[count+1].startsWithVowel():
+            elif syllables[count].endsWithConsonant() and syllables[count+1].startsWithVowel(False):
+                # TODO: problem if same letter multiple times in one: 'memo' becomes 'em-mo' instead of 'me-mo'
                 Word.switchSound(syllables[count], syllables[count+1], False)
         return syllables
 
@@ -525,7 +536,10 @@ class Word(object):
             syllable1.sounds.append(givenSound)
         else:
             givenSound = syllable1.sounds[-1]
+            # TODO: check experiment
+            syllable1.sounds.reverse()
             syllable1.sounds.remove(givenSound)
+            syllable1.sounds.reverse()
             syllable2.sounds.insert(0, givenSound)
 
 class Syllable(object):
@@ -548,6 +562,12 @@ class Syllable(object):
     
     def __repr__(self):
         return str(self.sounds)
+
+    def getText(self):
+        result = ""
+        for sound in self.sounds:
+            result += sound.getText()
+        return result
 
     def isValid(self):
         """ a syllable is valid if it contains:
@@ -592,7 +612,7 @@ class Syllable(object):
         a final semivowel is always vocalic """
         return self.sounds[-1].isVowel() or self.sounds[-1].isSemivowel()
     
-    def startsWithVowel(self):
+    def startsWithVowel(self, initial=True):
         """ first sound of the syllable is vocalic
         an initial semivowel is only vocalic if it is the syllable's only sound
         or if it is followed directly by a consonant
@@ -600,7 +620,7 @@ class Syllable(object):
         return (self.sounds[0].isVowel() or
                 self.sounds[0].isH() or 
                 (self.sounds[0].isSemivowel() and 
-                 (len(self.sounds) == 1 or self.sounds[1].isConsonant()))
+                 (not initial or len(self.sounds) == 1 or self.sounds[1].isConsonant()))
                )
     def startsWithConsonant(self):
         """ first sound of the syllable is consonantal 
@@ -708,7 +728,12 @@ class Sound(object):
                     self.letters.append(Letter(letter))
         if not self.isValidSound():
             raise ScansionException
-        #TODO: do we need a more specific Exception ?
+
+    def getText(self):
+        result = ""
+        for letter in self.letters:
+            result += letter.__str__()
+        return result
 
     def isValidSound(self):
         """ is a given sound a valid sound

@@ -187,5 +187,11 @@ class Test_Hexameter(unittest.TestCase):
                 verse.scan()
                 worked += 1
             except ScansionException:
+                try:
+                    verse = Hexameter(dbverse.contents)
+                    verse.split()
+                    verse.scan()
+                except ScansionException:
+                    pass
                 failed += 1
         self.fail(str(worked) + " worked, " + str(failed) + " failed")

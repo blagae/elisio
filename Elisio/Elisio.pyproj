@@ -5,8 +5,8 @@
     <Name>Elisio</Name>
     <RootNamespace>Elisio</RootNamespace>
     <WebBrowserPort>9000</WebBrowserPort>
-    <InterpreterId>{019c69ce-e55c-46ea-94fd-03bcfe672809}</InterpreterId>
-    <InterpreterVersion>3.3</InterpreterVersion>
+    <InterpreterId>{0b4e2207-6e6c-41bf-83f3-31a8b956b871}</InterpreterId>
+    <InterpreterVersion>3.4</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -95,10 +95,10 @@
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="elisio_env\">
-      <Id>{019c69ce-e55c-46ea-94fd-03bcfe672809}</Id>
+      <Id>{0b4e2207-6e6c-41bf-83f3-31a8b956b871}</Id>
       <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
-      <Version>3.3</Version>
-      <Description>elisio_env (Python 3.3)</Description>
+      <Version>3.4</Version>
+      <Description>elisio_env (Python 3.4)</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <LibraryPath>Lib\</LibraryPath>

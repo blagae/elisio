@@ -145,6 +145,12 @@ class Test_Word(unittest.TestCase):
         syllable_list = [Syllable('pa'), Syllable('tris')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
+
+    def test_WordSplitSemivowelInternalConsonantal(self):
+        word = self.constructWord('lavus')
+        syllable_list = [Syllable('la'), Syllable('vus')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
         
     def test_WordScansion(self):
         word = self.constructWord()
@@ -233,6 +239,12 @@ class Test_Word(unittest.TestCase):
     def test_WordScansionSemivowelInternal(self):
         word = self.constructWord('italiam')
         weights = [Weights.ANCEPS, Weights.ANCEPS, Weights.LIGHT, Weights.HEAVY]
+        word.split()
+        self.assertEqual(word.getSyllableStructure(), weights)
+        
+    def test_WordScansionSemivowelInternalConsonantal(self):
+        word = self.constructWord('lavus')
+        weights = [Weights.ANCEPS, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
         
