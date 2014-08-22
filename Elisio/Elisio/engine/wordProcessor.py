@@ -124,6 +124,10 @@ class Word(object):
                 syllables.append(currentSyllable)
                 currentSyllable = Syllable("", False)
                 currentSyllable.addSound(sound)
+        # TODO: 'invalid' final syllable with multiple final consonants fails
+        # example: Urbs
+        # maybe delete consonant restriction in syllable.isValid
+        # and redo redistribution (as a recursive algorithm ?)
         syllables.append(currentSyllable)
         return syllables
 
@@ -192,7 +196,8 @@ class Syllable(object):
         for count, sound in enumerate(self.sounds):
             if sound.isConsonant():
                 if containsFinalConsonant:
-                    return False
+                    pass
+                    #return False
                 if containsVowel or containsSemivowel:
                     containsFinalConsonant = True
             elif sound.isVowel():
@@ -352,7 +357,7 @@ class Sound(object):
         in case that number is 2, it must be one of a fixed list of combinations
         """
         if len(self.letters) < 1 or len(self.letters) > 2:
-            raise ScansionException("incorrect number of letters in "+self.letters)
+            raise ScansionException("incorrect number of letters in "+str(self.letters))
         elif len(self.letters) == 1:
             return True
         else:

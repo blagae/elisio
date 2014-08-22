@@ -64,8 +64,8 @@ class Test_Word(unittest.TestCase):
         self.assertEqual(word.syllables, syllable_list)
         
     def test_WordSplitInitialClusters(self):
-        word = self.constructWord('sphrostrum')
-        syllable_list = [Syllable('sphros'), Syllable('trum')]
+        word = self.constructWord('sphrostrurbs')
+        syllable_list = [Syllable('sphros'), Syllable('trurbs', False)]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
     
@@ -138,6 +138,12 @@ class Test_Word(unittest.TestCase):
     def test_WordSplitWithH(self):
         word = self.constructWord('pathos')
         syllable_list = [Syllable('pa'), Syllable('thos')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_WordSplitLotsOfConsonants(self):
+        word = self.constructWord('Urbs')
+        syllable_list = [Syllable('urbs', False)]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 

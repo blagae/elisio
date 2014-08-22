@@ -43,7 +43,7 @@ class Verse(object):
         s = self.text.strip()
         if self.words != []:
             return
-        array = re.split('\W+', s)
+        array = re.split('[^a-zA-Z]+', s)
         for word in array:
             if word.isalpha():
                 self.words.append(Word(word))

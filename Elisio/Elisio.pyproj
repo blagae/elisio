@@ -5,7 +5,7 @@
     <Name>Elisio</Name>
     <RootNamespace>Elisio</RootNamespace>
     <WebBrowserPort>9000</WebBrowserPort>
-    <InterpreterId>{0b4e2207-6e6c-41bf-83f3-31a8b956b871}</InterpreterId>
+    <InterpreterId>{3a065cd1-95ee-4aa8-b561-062c985cd55a}</InterpreterId>
     <InterpreterVersion>3.4</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -49,7 +49,6 @@
     <Compile Include="Elisio\models.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Elisio\local.py" />
     <Compile Include="Elisio\tests\Test_Sound.py">
       <SubType>Code</SubType>
     </Compile>
@@ -102,15 +101,15 @@
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="elisio_env\">
-      <Id>{0b4e2207-6e6c-41bf-83f3-31a8b956b871}</Id>
-      <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
+      <Id>{3a065cd1-95ee-4aa8-b561-062c985cd55a}</Id>
+      <BaseInterpreter>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</BaseInterpreter>
       <Version>3.4</Version>
-      <Description>elisio_env (Python 3.4)</Description>
+      <Description>elisio_env (Python 64-bit 3.4)</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <LibraryPath>Lib\</LibraryPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>X86</Architecture>
+      <Architecture>Amd64</Architecture>
     </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
