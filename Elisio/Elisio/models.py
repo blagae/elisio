@@ -1,5 +1,6 @@
 from django.db import models
-from Elisio.engine import Weights, Syllable, Verse
+from Elisio.engine.wordProcessor import Weights, Syllable
+from Elisio.engine.verseProcessor import Verse
 from Elisio.exceptions import ScansionException
 from enumfields import EnumField
 import re

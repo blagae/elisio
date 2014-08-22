@@ -1,5 +1,5 @@
 import unittest
-from Elisio.engine import Word, Sound, Letter
+from Elisio.engine.wordProcessor import Word, Sound, Letter
 from Elisio.exceptions import ScansionException
 
 class Test_Sound(unittest.TestCase):

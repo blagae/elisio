@@ -1,5 +1,5 @@
 import unittest
-from Elisio.engine import Letter
+from Elisio.engine.wordProcessor import Letter
 from Elisio.exceptions import ScansionException
 
 class Test_Letter(unittest.TestCase):
@@ -51,35 +51,18 @@ class Test_Letter(unittest.TestCase):
         letter2 = self.constructLetter('A')
         self.assertEqual(letter1, letter2)
         
-    def test_LetterIsVowel(self):
-        from Elisio.engine import vowels
-        for vowel in vowels:
-            letter = Letter(vowel)
-            self.assertTrue(letter.isVowel())
-
-    def test_LetterIsSemivowel(self):
-        from Elisio.engine import semivowels
-        for semivowel in semivowels:
-            letter = Letter(semivowel)
-            self.assertTrue(letter.isSemivowel())
+    def test_LetterIsValid(self):
+        for letter in Letter.validLetters:
+            obj = Letter(letter)
+            self.assertTrue(obj.isValidLetter())
             
-    def test_LetterIsConsonant(self):
-        from Elisio.engine import consonants
-        for consonant in consonants:
-            letter = Letter(consonant)
-            self.assertTrue(letter.isConsonant())
+    def test_LetterVIsValid(self):
+        obj = Letter('v')
+        self.assertTrue(obj.isValidLetter())
+
+    def test_LetterJIsValid(self):
+        obj = Letter('J')
+        self.assertTrue(obj.isValidLetter())
             
-    def test_LetterIsHeavyMaker(self):
-        from Elisio.engine import heavyMakers
-        for heavyMaker in heavyMakers:
-            letter = Letter(heavyMaker)
-            self.assertTrue(letter.isHeavyMaking())
-
-    def test_LetterHeavyMakerIsConsonant(self):
-        from Elisio.engine import heavyMakers
-        for heavyMaker in heavyMakers:
-            letter = Letter(heavyMaker)
-            self.assertTrue(letter.isConsonant())
-
 if __name__ == '__main__':
     unittest.main()

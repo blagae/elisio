@@ -1,5 +1,5 @@
 import unittest
-from Elisio.engine import setDjango
+from Elisio.engine.verseProcessor import setDjango
 
 setDjango()
 

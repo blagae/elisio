@@ -1,5 +1,6 @@
 import unittest
-from Elisio.engine import *
+from Elisio.engine.verseProcessor import *
+from Elisio.engine.wordProcessor import *
 
 setDjango()
 
@@ -61,12 +62,23 @@ class Test_Verse(unittest.TestCase):
         verse = self.constructVerse("""(Arma'virumque,%cano.!Troiae^$qui";primus/ab oris)""")
         verse.split()
         self.assertEqual(verse.words, expected_word_list)
-
+        
     def test_VerseSplitSpaces(self):
         """ A verse with unusual and heavy spacing must be split into words correctly """
         verse = self.constructVerse("""      Arma\tvirumque\rcano\nTroiae\r\nqui\n\rprimus  \b \r   ab    oris.  """)
         verse.split()
         self.assertEqual(verse.words, expected_word_list)
+
+        
+    def test_VerseSplitUnusualCharacter(self):
+        """ A verse with unusual characters (diacritics) must be split into words correctly """
+        # TODO: aena should have a diaeresis
+        """
+        verse = self.constructVerse("litore aena locant alii flammasque ministrant.")
+        verse.split()
+        expected_list = ["litore","aena","locant","alii","flammasque","ministrant."]
+        self.assertEqual(verse.words, expected_list)
+        """
         
     def test_VerseScansionElisionRegular(self):
         verse = self.constructVerse('multo ille')
@@ -128,11 +140,11 @@ class Test_Verse(unittest.TestCase):
         """ A regular verse must get all relevant scansion information immediately
         Example:
         arma virumque cano troiae qui primus ab oris
-        _  u  x _   u  x _   x _    _   x x  x  x _
+        _  x  x _   u  x _   x _    _   x x  x  x _
         Note that this archetypical verse does not test for a lot
         """
         verse = self.constructVerse()
-        expected_result = [[Weights.HEAVY, Weights.LIGHT,],
+        expected_result = [[Weights.HEAVY, Weights.ANCEPS,],
                            [Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT,],
                            [Weights.ANCEPS, Weights.HEAVY,],
                            [Weights.ANCEPS, Weights.HEAVY,],
@@ -152,6 +164,22 @@ class Test_Verse(unittest.TestCase):
         db_verse = Db_Verse.objects.get(pk=1)
         verse = db_verse.getVerse()
         self.assertTrue(isinstance(verse, Verse))
+
+    def test_VerseLetterFrequencies(self):
+        letterList = {}
+        db_verses = Db_Verse.objects.all()
+        for db_verse in db_verses:
+            verse = db_verse.getVerse()
+            verse.split()
+            for word in verse.words:
+                for letter in word.text:
+                    if not letter in letterList:
+                        if not letter in Letter.validLetters:
+                            letter = letter
+                        letterList[letter] = 0
+                    else:
+                        letterList[letter] += 1
+        letterList = None
 
 class Test_Hexameter(unittest.TestCase):
     
@@ -182,16 +210,13 @@ class Test_Hexameter(unittest.TestCase):
         fails = ''
         for dbverse in dbverses:
             try:
+                if dbverse.number == 777:
+                    worked = worked
                 verse = Hexameter(dbverse.contents)
                 verse.split()
                 verse.scan()
                 worked += 1
-            except ScansionException:
-                try:
-                    verse = Hexameter(dbverse.contents)
-                    verse.split()
-                    verse.scan()
-                except ScansionException:
-                    pass
+            except ScansionException as se:
                 failed += 1
+                print("ScansionException({0}: {1}): {2}".format(dbverse.number, verse.text, se))
         self.fail(str(worked) + " worked, " + str(failed) + " failed")

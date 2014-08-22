@@ -1,11 +1,12 @@
 import unittest
-from Elisio.engine import Word, Syllable, Weights, setDjango
+from Elisio.engine.verseProcessor import *
+from Elisio.engine.wordProcessor import *
 from Elisio.exceptions import ScansionException
 
 typical_word = "recentia"
 syllables = ['re', 'cen', 'ti', 'a']
 expected_syllable_list = []
-expected_weights = [Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT, Weights.LIGHT]
+expected_weights = [Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT, Weights.ANCEPS]
 for syllable in syllables:
     expected_syllable_list.append(Syllable(syllable))
 
@@ -145,10 +146,16 @@ class Test_Word(unittest.TestCase):
         syllable_list = [Syllable('pa'), Syllable('tris')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
-
+        
     def test_WordSplitSemivowelInternalConsonantal(self):
         word = self.constructWord('lavus')
         syllable_list = [Syllable('la'), Syllable('vus')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_WordSplitMultipleIdenticalSounds(self):
+        word = self.constructWord('memor')
+        syllable_list = [Syllable('me'), Syllable('mor')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
         
@@ -244,6 +251,12 @@ class Test_Word(unittest.TestCase):
         
     def test_WordScansionSemivowelInternalConsonantal(self):
         word = self.constructWord('lavus')
+        weights = [Weights.ANCEPS, Weights.HEAVY]
+        word.split()
+        self.assertEqual(word.getSyllableStructure(), weights)
+        
+    def test_WordScansionMultipleIdenticalSounds(self):
+        word = self.constructWord('memor')
         weights = [Weights.ANCEPS, Weights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)

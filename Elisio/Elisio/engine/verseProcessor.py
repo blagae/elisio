@@ -1,0 +1,381 @@
+import re
+import enum
+from Elisio.exceptions import ScansionException, HexameterException
+from Elisio.engine.wordProcessor import *
+
+def setDjango():
+    import os
+    if not 'DJANGO_SETTINGS_MODULE' in os.environ or os.environ['DJANGO_SETTINGS_MODULE'] != 'Elisio.settings':
+        os.environ['DJANGO_SETTINGS_MODULE'] = 'Elisio.settings'
+
+class Feet(enum.Enum):
+    DACTYLUS = 0
+    SPONDAEUS = 1
+    TROCHAEUS = 2
+    UNKNOWN = 3
+
+    def getLength(self):
+        return len(self.getStructure())
+
+    def getStructure(self):
+        if self == Feet.DACTYLUS:
+            return [Weights.HEAVY, Weights.LIGHT, Weights.LIGHT]
+        elif self == Feet.SPONDAEUS:
+            return [Weights.HEAVY, Weights.HEAVY]
+        elif self == Feet.TROCHAEUS:
+            return [Weights.HEAVY, Weights.LIGHT]
+        raise ScansionException("currently illegal foot structure: " + self)
+
+class Verse(object):
+    """ Verse class
+    A verse is the representation of the Latin text of a verse
+    It has no knowledge of its surroundings or context
+    """
+    def __init__(self, text):
+        """ construct a Verse by its contents """
+        if not isinstance(text, str):
+            raise ScansionException("Verse must be initialized with text data")
+        self.text = text
+        self.words = []
+
+    def split(self):
+        """ Split a Verse into Words, remembering only the letter characters """
+        s = self.text.strip()
+        if self.words != []:
+            return
+        array = re.split('\W+', s)
+        for word in array:
+            if word.isalpha():
+                self.words.append(Word(word))
+                
+    def __repr__(self):
+        return self.words
+    def __str__(self):
+        return self.words
+
+    def __eq__(self, other): 
+        """ Verses are equal if they have exactly the same characters """
+        return self.text == other.text
+
+    def getSyllableLengths(self):
+        result = []
+        for count, word in enumerate(self.words):
+            try:
+                result.append(word.getSyllableStructure(self.words[count+1]))
+            except IndexError:
+                result.append(word.getSyllableStructure())
+        return result
+
+
+class Hexameter(Verse):
+    # CONSTANTS
+    MAX_SYLL = 17
+    MIN_SYLL = 12
+
+    def __init__(self, text):
+        super().__init__(text)
+        self.max_syllables = Hexameter.MAX_SYLL
+        self.min_syllables = Hexameter.MIN_SYLL
+        self.feet = [None]*6
+        self.flatList = []
+
+    def preparse(self):
+        layeredList = self.getSyllableLengths()
+        for word in layeredList:
+            for weight in word:
+                if weight != Weights.NONE:
+                    self.flatList.append(weight)
+
+    def scan(self):
+        self.preparse()
+        if self.flatList[-3] == Weights.HEAVY or self.flatList[-4] == Weights.HEAVY or self.flatList[-5] == Weights.LIGHT:
+            self.feet[4] = Feet.SPONDAEUS
+            self.max_syllables -= 1
+        else:
+            self.feet[4] = Feet.DACTYLUS
+            self.min_syllables += 1
+        if self.flatList[-1] == Weights.HEAVY:
+            self.feet[5] = Feet.SPONDAEUS
+        else:
+            self.feet[5] = Feet.TROCHAEUS
+        if len(self.flatList) == self.min_syllables:
+            for i in range (0, 4):
+                self.feet[i] = Feet.SPONDAEUS
+        elif len(self.flatList) == self.min_syllables + 1:
+            self.findOnlyDactylus()
+        elif len(self.flatList) == self.max_syllables - 2:
+            self.findSickAlgorithm()
+        elif len(self.flatList) == self.max_syllables - 1:
+            self.findOnlySpondaeus()
+        elif len(self.flatList) == self.max_syllables:
+            for i in range (0, 4):
+                self.feet[i] = Feet.DACTYLUS
+        else:
+            raise HexameterException("illegal number of syllables in Hexameter")
+        # control mechanism and syllable filler
+        start = 0
+        for foot in self.feet:
+            if foot is None:
+                raise ScansionException("impossible to determine a foot number")
+            for count, weight in enumerate(foot.getStructure()):
+                if weight != Weights.ANCEPS and self.flatList[count+start] != Weights.ANCEPS and weight != self.flatList[count+start]:
+                    raise ScansionException("weight was already "+str(weight)+", tried to assign"+str(self.flatList[count+start]))
+                self.flatList[count+start] = weight
+            start += foot.getLength()
+
+    def findOnlyDactylus(self):
+        if len(self.flatList) != self.min_syllables + 1:
+            """ avoid wrong use """
+            raise HexameterException("cannot have exactly one dactylus in foot 1-4")
+        dact = False
+        for count, weight in enumerate(self.flatList):
+            if count > 0 and count < 9 and weight == Weights.LIGHT:
+                self.feet[(count-1)//2] = Feet.DACTYLUS
+                dact = True
+                break
+        if dact:
+            self.fillOtherFeet(Feet.DACTYLUS, Feet.SPONDAEUS)
+        else:
+            
+            for count, weight in enumerate(self.flatList):
+                if count > 0 and count < 9 and weight == Weights.HEAVY:
+                    self.feet[(count-1)//2] = Feet.SPONDAEUS
+            heavies = 0
+            for i in range (0, 4):
+                if self.feet[i] == Feet.SPONDAEUS:
+                    heavies += 1
+            if heavies == 3:
+                self.fillOtherFeet(Feet.SPONDAEUS, Feet.DACTYLUS)
+            else:
+                raise HexameterException("cannot determine full foot structure of single dactylus verse")
+
+    def findOnlySpondaeus(self):
+        if len(self.flatList) != self.max_syllables - 1:
+            """ avoid wrong use """
+            raise HexameterException("cannot have exactly one spondaeus in foot 1-4")
+        if self.flatList[1] == Weights.HEAVY or self.flatList[2] == Weights.HEAVY or self.flatList[3] == Weights.LIGHT:
+            self.feet[0] = Feet.SPONDAEUS
+        elif self.flatList[4] == Weights.HEAVY:
+            self.feet[1] = Feet.SPONDAEUS
+        elif self.flatList[7] == Weights.HEAVY:
+            self.feet[2] = Feet.SPONDAEUS
+        elif self.flatList[9] == Weights.HEAVY or self.flatList[10] == Weights.HEAVY or self.flatList[8] == Weights.LIGHT:
+            self.feet[3] = Feet.SPONDAEUS
+        for i in range (0, 4):
+            if self.feet[i] == Feet.SPONDAEUS:
+                self.fillOtherFeet(Feet.SPONDAEUS, Feet.DACTYLUS)
+                return
+        dactyls = 0
+        if self.flatList[1] == Weights.LIGHT or self.flatList[2] == Weights.LIGHT or self.flatList[3] == Weights.HEAVY:
+            self.feet[0] = Feet.DACTYLUS
+        if self.flatList[4] == Weights.LIGHT:
+            self.feet[1] = Feet.DACTYLUS
+        if self.flatList[7] == Weights.LIGHT:
+            self.feet[2] = Feet.DACTYLUS
+        if self.flatList[9] == Weights.LIGHT or self.flatList[10] == Weights.LIGHT or self.flatList[8] == Weights.HEAVY:
+            self.feet[3] = Feet.DACTYLUS
+        if self.flatList[5] == Weights.LIGHT or self.flatList[6] == Weights.HEAVY:
+            self.feet[0] = Feet.DACTYLUS
+            self.feet[1] = Feet.DACTYLUS
+        if self.flatList[5] == Weights.HEAVY or self.flatList[6] == Weights.LIGHT:
+            self.feet[1] = Feet.DACTYLUS
+            self.feet[2] = Feet.DACTYLUS
+        for i in range (0, 4):
+            if self.feet[i] == Feet.DACTYLUS:
+                dactyls += 1
+        if dactyls == 3:
+            self.fillOtherFeet(Feet.DACTYLUS, Feet.SPONDAEUS)
+        else:
+            raise HexameterException("cannot determine full foot structure of single spondaeus verse")
+
+
+
+    def findSickAlgorithm(self):
+        if len(self.flatList) != self.max_syllables - 2:
+            """ avoid wrong use """
+            raise HexameterException("cannot have exactly two spondaei in foot 1-4")
+        if self.flatList[3] == Weights.HEAVY and self.flatList[5] == Weights.HEAVY and self.flatList[7] == Weights.HEAVY:
+            self.feet[0] = Feet.DACTYLUS
+            self.feet[1] = Feet.SPONDAEUS
+            self.feet[2] = Feet.SPONDAEUS
+            self.feet[3] = Feet.DACTYLUS
+            return
+        if self.flatList[1] == Weights.HEAVY or self.flatList[2] == Weights.HEAVY:
+            self.feet[0] = Feet.SPONDAEUS
+        elif self.flatList[1] == Weights.LIGHT or self.flatList[2] == Weights.LIGHT:
+            self.feet[0] = Feet.DACTYLUS
+        if self.flatList[3] == Weights.LIGHT:
+            self.feet[0] = Feet.SPONDAEUS
+            self.feet[1] = Feet.DACTYLUS
+        if self.flatList[4] == Weights.LIGHT:
+            self.feet[1] = Feet.DACTYLUS
+        elif self.flatList[4] == Weights.HEAVY:
+            self.feet[1] = Feet.SPONDAEUS
+        if self.flatList[6] == Weights.LIGHT:
+            self.feet[2] = Feet.DACTYLUS
+        elif self.flatList[6] == Weights.HEAVY:
+            self.feet[2] = Feet.SPONDAEUS
+        if self.flatList[7] == Weights.LIGHT:
+            self.feet[2] = Feet.DACTYLUS
+            self.feet[3] = Feet.SPONDAEUS
+        if self.flatList[8] == Weights.HEAVY or self.flatList[9] == Weights.HEAVY:
+            self.feet[3] = Feet.SPONDAEUS
+        elif self.flatList[8] == Weights.LIGHT or self.flatList[9] == Weights.LIGHT:
+            self.feet[3] = Feet.DACTYLUS
+        dactyls = 0
+        spondees = 0
+        for i in range (0, 4):
+            if self.feet[i] == Feet.SPONDAEUS:
+                spondees += 1
+            if self.feet[i] == Feet.DACTYLUS:
+                dactyls += 1
+        if spondees > 2 or dactyls > 2:
+            raise HexameterException("too many spondaei or dactyli in 2-2 verse")
+        if spondees == 2 and dactyls == 2:
+            return
+        if spondees == 2:
+            self.fillOtherFeet(Feet.SPONDAEUS, Feet.DACTYLUS)
+        elif dactyls == 2:
+            self.fillOtherFeet(Feet.DACTYLUS, Feet.SPONDAEUS)
+            
+        elif (self.flatList[3] == Weights.HEAVY and self.flatList[5] == Weights.HEAVY and self.flatList[7] == Weights.HEAVY):
+            self.feet[0] = Feet.DACTYLUS
+            self.feet[1] = Feet.SPONDAEUS
+            self.feet[2] = Feet.SPONDAEUS
+            self.feet[3] = Feet.DACTYLUS
+        elif ((self.feet[0] == Feet.SPONDAEUS or self.feet[1] == Feet.SPONDAEUS or
+                self.feet[2] == Feet.DACTYLUS or self.feet[3] == Feet.DACTYLUS) and
+               self.flatList[5] == Weights.LIGHT):
+            self.feet[0] = Feet.SPONDAEUS
+            self.feet[1] = Feet.SPONDAEUS
+            self.feet[2] = Feet.DACTYLUS
+            self.feet[3] = Feet.DACTYLUS
+     
+        elif ((self.feet[0] == Feet.DACTYLUS or self.feet[1] == Feet.DACTYLUS or
+                self.feet[2] == Feet.SPONDAEUS or self.feet[3] == Feet.SPONDAEUS)
+               and self.flatList[5] == Weights.LIGHT):
+            self.feet[0] = Feet.DACTYLUS
+            self.feet[1] = Feet.DACTYLUS
+            self.feet[2] = Feet.SPONDAEUS
+            self.feet[3] = Feet.SPONDAEUS
+
+        elif spondees == 1 and dactyls == 1:
+            # sdxx, dsxx
+            if (self.flatList[3] == Weights.HEAVY):
+                self.feet[0] = Feet.DACTYLUS
+                self.feet[1] = Feet.SPONDAEUS
+    
+            # xxsd,    xxds
+            elif (self.feet[0] == Feet.SPONDAEUS and self.feet[2] == Feet.DACTYLUS):
+                if (self.flatList[3] == Weights.HEAVY or self.flatList[7] == Weights.HEAVY):
+                    self.feet[1] = Feet.SPONDAEUS
+                    self.feet[3] = Feet.DACTYLUS
+    
+                elif (self.flatList[5] == Weights.HEAVY):
+                    self.feet[1] = Feet.DACTYLUS
+                    self.feet[3] = Feet.SPONDAEUS
+    
+                # sxdx
+            elif (self.feet[0] == Feet.SPONDAEUS and self.feet[3] == Feet.DACTYLUS):
+                if (self.flatList[3] == Weights.HEAVY):
+                    self.feet[1] = Feet.SPONDAEUS
+                    self.feet[2] = Feet.DACTYLUS
+    
+                elif (self.flatList[5] == Weights.HEAVY):
+                    self.feet[1] = Feet.DACTYLUS
+                    self.feet[2] = Feet.SPONDAEUS
+    
+                # sxxd
+            elif (self.feet[1] == Feet.SPONDAEUS and self.feet[2] == Feet.DACTYLUS):
+                if (self.flatList[7] == Weights.HEAVY):
+                    self.feet[0] = Feet.SPONDAEUS
+                    self.feet[3] = Feet.DACTYLUS
+    
+                elif (self.flatList[5] == Weights.HEAVY):
+                    self.feet[0] = Feet.DACTYLUS
+                    self.feet[3] = Feet.SPONDAEUS
+    
+                # xsdx
+            elif (self.feet[1] == Feet.SPONDAEUS and self.feet[3] == Feet.DACTYLUS):
+                if (self.flatList[5] == Weights.HEAVY):
+                    self.feet[0] = Feet.DACTYLUS
+                    self.feet[2] = Feet.SPONDAEUS
+    
+                # xsxd
+            elif (self.feet[0] == Feet.DACTYLUS and self.feet[2] == Feet.SPONDAEUS):
+                if (self.flatList[5] == Weights.HEAVY):
+                    self.feet[1] = Feet.SPONDAEUS
+                    self.feet[3] = Feet.DACTYLUS
+    
+                # dxsx
+            elif (self.feet[0] == Feet.DACTYLUS and self.feet[3] == Feet.SPONDAEUS):
+                if (self.flatList[7] == Weights.HEAVY):
+                    self.feet[1] = Feet.DACTYLUS
+                    self.feet[2] = Feet.SPONDAEUS
+    
+                elif (self.flatList[5] == Weights.HEAVY):
+                    self.feet[1] = Feet.SPONDAEUS
+                    self.feet[2] = Feet.DACTYLUS
+    
+                # dxxs
+            elif (self.feet[1] == Feet.DACTYLUS and self.feet[2] == Feet.SPONDAEUS):
+                if (self.flatList[3] == Weights.HEAVY):
+                    self.feet[0] = Feet.DACTYLUS
+                    self.feet[3] = Feet.SPONDAEUS
+    
+                elif (self.flatList[5] == Weights.HEAVY):
+                    self.feet[0] = Feet.SPONDAEUS
+                    self.feet[3] = Feet.DACTYLUS
+    
+                # xdsx
+            elif (self.feet[1] == Feet.DACTYLUS and self.feet[3] == Feet.SPONDAEUS):
+                if (self.flatList[3] == Weights.HEAVY or self.flatList[7] == Weights.HEAVY):
+                    self.feet[0] = Feet.DACTYLUS
+                    self.feet[2] = Feet.SPONDAEUS
+    
+                elif (self.flatList[5] == Weights.HEAVY):
+                    self.feet[0] = Feet.SPONDAEUS
+                    self.feet[2] = Feet.DACTYLUS
+    
+                # xdxs
+        elif (dactyls+spondees == 1):
+            if ((self.feet[0] == Feet.SPONDAEUS and self.flatList[3] == Weights.HEAVY) or
+                (self.feet[2] == Feet.DACTYLUS and self.flatList[7] == Weights.HEAVY)):
+                self.feet[0] = Feet.SPONDAEUS
+                self.feet[1] = Feet.SPONDAEUS
+                self.feet[2] = Feet.DACTYLUS
+                self.feet[3] = Feet.DACTYLUS
+
+            elif ((self.feet[1] == Feet.DACTYLUS and self.flatList[3] == Weights.HEAVY) or
+                  (self.feet[3] == Feet.SPONDAEUS and self.flatList[7] == Weights.HEAVY)):
+                self.feet[0] = Feet.DACTYLUS
+                self.feet[1] = Feet.DACTYLUS
+                self.feet[2] = Feet.SPONDAEUS
+                self.feet[3] = Feet.SPONDAEUS
+
+            elif (self.flatList[5] == Weights.HEAVY):
+                if ((self.feet[2] == Feet.DACTYLUS or self.feet[3] == Feet.SPONDAEUS) and self.flatList[3] == Weights.HEAVY):
+                    self.feet[0] = Feet.DACTYLUS
+                    self.feet[1] = Feet.SPONDAEUS
+                    self.feet[2] = Feet.DACTYLUS
+                    self.feet[3] = Feet.SPONDAEUS
+    
+                elif ((self.feet[0] == Feet.SPONDAEUS or self.feet[1] == Feet.DACTYLUS) and self.flatList[5] == Weights.HEAVY):
+                    self.feet[0] = Feet.SPONDAEUS
+                    self.feet[1] = Feet.DACTYLUS
+                    self.feet[2] = Feet.SPONDAEUS
+                    self.feet[3] = Feet.DACTYLUS
+    
+                elif (((self.feet[2] == Feet.SPONDAEUS or self.feet[3] == Feet.DACTYLUS) and self.flatList[3] == Weights.HEAVY) or
+                      ((self.feet[0] == Feet.DACTYLUS or self.feet[1] == Feet.SPONDAEUS) and self.flatList[7] == Weights.HEAVY)):
+                    self.feet[0] = Feet.DACTYLUS
+                    self.feet[1] = Feet.SPONDAEUS
+                    self.feet[2] = Feet.SPONDAEUS
+                    self.feet[3] = Feet.DACTYLUS
+
+
+    def fillOtherFeet(self, fromFoot, toFoot):
+        for count, foot in enumerate(self.feet):
+            if count < 4 and foot != fromFoot:
+                self.feet[count] = toFoot
+

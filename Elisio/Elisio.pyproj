@@ -31,10 +31,16 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Elisio\engine\wordProcessor.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\engine\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\exceptions.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Elisio\engine.py">
+    <Compile Include="Elisio\engine\verseProcessor.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\fixtures\initial_data.xml">
@@ -89,6 +95,7 @@
   <ItemGroup>
     <Folder Include="Elisio\" />
     <Folder Include="Elisio\fixtures\" />
+    <Folder Include="Elisio\engine\" />
     <Folder Include="Elisio\templates\" />
     <Folder Include="Elisio\static\" />
     <Folder Include="Elisio\tests\" />
