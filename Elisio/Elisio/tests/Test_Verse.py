@@ -1,12 +1,11 @@
 import unittest
 from Elisio.engine.verseProcessor import *
 from Elisio.engine.wordProcessor import *
+from Elisio.exceptions import ScansionException
 
 setDjango()
 
 from Elisio.models import Db_Verse
-from Elisio.exceptions import ScansionException
-
 
 typical_verse = "Arma virumque cano, Troiae qui primus ab oris"
 words = ['Arma', 'virumque', 'cano', 'Troiae', 'qui', 'primus', 'ab', 'oris']
@@ -21,6 +20,7 @@ class Test_Verse(unittest.TestCase):
     commit 1 (blagae): BLI 9
     reason: creation
     """
+
     def constructVerse(self, text = typical_verse):
         """ Construct a verse object from a given text """
         constructedVerse = Verse(text)
@@ -82,57 +82,57 @@ class Test_Verse(unittest.TestCase):
         
     def test_VerseScansionElisionRegular(self):
         verse = self.constructVerse('multo ille')
-        expected_result = [[Weights.HEAVY, Weights.NONE],
-                           [Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.NONE],
+                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
         verse.split()
         self.assertEqual(verse.getSyllableLengths(), expected_result)
         
     def test_VerseScansionElisionOnM(self):
         verse = self.constructVerse('multum ille')
-        expected_result = [[Weights.HEAVY, Weights.NONE],
-                           [Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.NONE],
+                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
         verse.split()
         self.assertEqual(verse.getSyllableLengths(), expected_result)
         
     def test_VerseScansionElisionWithH(self):
         verse = self.constructVerse('multo hille')
-        expected_result = [[Weights.HEAVY, Weights.NONE],
-                           [Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.NONE],
+                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
         verse.split()
         self.assertEqual(verse.getSyllableLengths(), expected_result)
 
     def test_VerseScansionElisionSemivowelWithH(self):
         verse = self.constructVerse('multu hille')
-        expected_result = [[Weights.HEAVY, Weights.NONE],
-                           [Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.NONE],
+                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
         verse.split()
         self.assertEqual(verse.getSyllableLengths(), expected_result)
 
     def test_VerseScansionElisionOnMWithH(self):
         verse = self.constructVerse('multum hille')
-        expected_result = [[Weights.HEAVY, Weights.NONE],
-                           [Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.NONE],
+                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
         verse.split()
         self.assertEqual(verse.getSyllableLengths(), expected_result)
 
     def test_VerseScansionFinalAnceps(self):
         verse = self.constructVerse('multus ille')
-        expected_result = [[Weights.HEAVY, Weights.ANCEPS],
-                           [Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.ANCEPS],
+                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
         verse.split()
         self.assertEqual(verse.getSyllableLengths(), expected_result)
         
     def test_VerseScansionHeavyMaker(self):
         verse = self.constructVerse('esse Zephyrumque')
-        expected_result = [[Weights.HEAVY, Weights.HEAVY],
-                           [Weights.ANCEPS, Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.HEAVY],
+                           [SyllableWeights.ANCEPS, SyllableWeights.ANCEPS, SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
         verse.split()
         self.assertEqual(verse.getSyllableLengths(), expected_result)
 
     def test_VerseScansionHeavyMakingCluster(self):
         verse = self.constructVerse('esse strabo')
-        expected_result = [[Weights.HEAVY, Weights.HEAVY],
-                           [Weights.ANCEPS, Weights.HEAVY]]
+        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.HEAVY],
+                           [SyllableWeights.ANCEPS, SyllableWeights.HEAVY]]
         verse.split()
         self.assertEqual(verse.getSyllableLengths(), expected_result)
 
@@ -144,14 +144,14 @@ class Test_Verse(unittest.TestCase):
         Note that this archetypical verse does not test for a lot
         """
         verse = self.constructVerse()
-        expected_result = [[Weights.HEAVY, Weights.ANCEPS,],
-                           [Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT,],
-                           [Weights.ANCEPS, Weights.HEAVY,],
-                           [Weights.ANCEPS, Weights.HEAVY,],
-                           [Weights.HEAVY,],
-                           [Weights.ANCEPS, Weights.ANCEPS,],
-                           [Weights.ANCEPS,],
-                           [Weights.ANCEPS, Weights.HEAVY]]
+        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.ANCEPS,],
+                           [SyllableWeights.ANCEPS, SyllableWeights.HEAVY, SyllableWeights.LIGHT,],
+                           [SyllableWeights.ANCEPS, SyllableWeights.HEAVY,],
+                           [SyllableWeights.ANCEPS, SyllableWeights.HEAVY,],
+                           [SyllableWeights.HEAVY,],
+                           [SyllableWeights.ANCEPS, SyllableWeights.ANCEPS,],
+                           [SyllableWeights.ANCEPS,],
+                           [SyllableWeights.ANCEPS, SyllableWeights.HEAVY]]
         verse.split()
         self.assertEqual(verse.getSyllableLengths(), expected_result)
 
@@ -174,8 +174,6 @@ class Test_Verse(unittest.TestCase):
             for word in verse.words:
                 for letter in word.text:
                     if not letter in letterList:
-                        if not letter in Letter.validLetters:
-                            letter = letter
                         letterList[letter] = 0
                     else:
                         letterList[letter] += 1
@@ -210,13 +208,14 @@ class Test_Hexameter(unittest.TestCase):
         fails = ''
         for dbverse in dbverses:
             try:
-                if dbverse.number == 246:
+                if dbverse.number == 50:
                     worked = worked
                 verse = Hexameter(dbverse.contents)
                 verse.split()
                 verse.scan()
-                worked += 1
             except ScansionException as se:
                 failed += 1
-                print("ScansionException({0}: {1}): {2}".format(dbverse.number, verse.text, se))
+                print("{3}({0}: {1}): {2}".format(dbverse.number, verse.text, se, type(se)))
+            else:
+                worked += 1
         self.fail(str(worked) + " worked, " + str(failed) + " failed")

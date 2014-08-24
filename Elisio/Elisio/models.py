@@ -1,5 +1,5 @@
 from django.db import models
-from Elisio.engine.wordProcessor import Weights, Syllable
+from Elisio.engine.wordProcessor import SyllableWeights, Syllable
 from Elisio.engine.verseProcessor import Verse
 from Elisio.exceptions import ScansionException
 from enumfields import EnumField
@@ -33,7 +33,7 @@ class Deviant_Word(models.Model):
     
 class Deviant_Syllable(models.Model):
     word = models.ForeignKey(Deviant_Word)
-    weight = EnumField(Weights)
+    weight = EnumField(SyllableWeights)
     contents = models.CharField(max_length=8)
     sequence = models.IntegerField()
     index_together = [["word", "sequence"]]

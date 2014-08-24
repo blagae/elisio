@@ -19,3 +19,7 @@ class Test_Web(unittest.TestCase):
         client = Client()
         response = client.get('/')
         self.assertEqual(response.status_code, 200)
+
+    def test_createXML(self):
+        from Elisio.batchjob import fillTree
+        fillTree()

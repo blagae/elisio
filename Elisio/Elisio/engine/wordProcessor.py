@@ -2,7 +2,13 @@ import copy
 import enum
 from Elisio.exceptions import ScansionException
 
-class Weights(enum.Enum):
+class LetterType(enum.Enum):
+    VOWEL = 0
+    CONSONANT = 1
+    SEMIVOWEL = 2
+    HEAVYMAKER = 3
+
+class SyllableWeights(enum.Enum):
     NONE = 0
     LIGHT = 1
     HEAVY = 2
@@ -50,6 +56,7 @@ class Word(object):
         deviant = Deviant_Word.find(self.text)
         if deviant:
             self.syllables = deviant.getSyllables()
+            # This might be problematic because there is no content given for the syllables
             return True
 
     def findSounds(self):
@@ -79,12 +86,12 @@ class Word(object):
             firstSyllable = nextWord.syllables[0]
             if lastSyllable.canElideIfFinal() and firstSyllable.startsWithVowel():
                 # elision
-                ss[-1] = Weights.NONE
+                ss[-1] = SyllableWeights.NONE
             elif lastSyllable.endsWithConsonant() and firstSyllable.startsWithVowel():
                 # consonant de facto redistributed
-                ss[-1] = Weights.ANCEPS
+                ss[-1] = SyllableWeights.ANCEPS
             elif lastSyllable.endsWithVowel() and firstSyllable.startsWithConsonantCluster():
-                ss[-1] = Weights.HEAVY
+                ss[-1] = SyllableWeights.HEAVY
         return ss
 
     def checkConsistency(self):
@@ -137,6 +144,8 @@ class Word(object):
         in order to use the correct syllables, not the longest possible
         """
         for count in range(len(syllables)-1):
+            if count == len(syllables)-2 and syllables[count+1] == Syllable('ve'):
+                continue
             if syllables[count].endsWithVowel() and syllables[count+1].startsWithConsonantCluster():
                 Word.switchSound(syllables[count], syllables[count+1], True)
             elif syllables[count].endsWithConsonant() and syllables[count+1].startsWithVowel(False):
@@ -194,18 +203,19 @@ class Syllable(object):
         containsFinalConsonant = containsVowel = containsSemivowel = False
         onlyConsonants = True
         for count, sound in enumerate(self.sounds):
-            if sound.isConsonant():
+            type = sound.getType()
+            if type == LetterType.CONSONANT:
                 if containsFinalConsonant:
                     pass
                     #return False
                 if containsVowel or containsSemivowel:
                     containsFinalConsonant = True
-            elif sound.isVowel():
+            elif type == LetterType.VOWEL:
                 if containsVowel or (containsFinalConsonant and containsSemivowel):
                     return False
                 containsVowel = True
                 onlyConsonants = False
-            elif sound.isSemivowel():
+            elif type == LetterType.SEMIVOWEL:
                 if containsVowel or (containsFinalConsonant and containsSemivowel):
                     return False
                 if count > 0:
@@ -312,11 +322,11 @@ class Syllable(object):
         if self.weight:
             return self.weight
         if self.isLight(nextSyllable):
-            return Weights.LIGHT
+            return SyllableWeights.LIGHT
         elif self.isHeavy(nextSyllable):
-            return Weights.HEAVY
+            return SyllableWeights.HEAVY
         else:
-            return Weights.ANCEPS
+            return SyllableWeights.ANCEPS
 
     @classmethod
     def createFromDatabase(cls, syll):
@@ -385,7 +395,10 @@ class Sound(object):
         first = self.letters[0]
         second = self.letters[1]
         return ((second == 'r' or second == 'l') and
-                (first == 't' or first == 'd' or first == 'p' or first == 'b' or first == 'c' or first == 'g')
+                (first == 't' or first == 'd' or 
+                 first == 'p' or first == 'b' or 
+                 first == 'c' or first == 'g' or
+                 first == 'f')
                )
 
 
@@ -426,32 +439,55 @@ class Sound(object):
     
     def isVowel(self):
         """ determine whether a sound is unambiguously vocalic """
-        return self.isDiphthong() or self.letters[0] in Letter.vowels
+        return Letter.letters[self.letters[0].letter] == LetterType.VOWEL
     def isSemivowel(self):
         """ it is impossible to determine on the sound level
         whether or not a semivowel is vocalic or consonantal
         therefore we keep the semivowel category separate
         """
-        return self.letters[0] in Letter.semivowels
+        return Letter.letters[self.letters[0].letter] == LetterType.SEMIVOWEL
     def isConsonant(self):
         """ does a sound contain a consonantal letter """
-        return self.letters[0] in Letter.consonants or self.isHeavyMaking()
+        return Letter.letters[self.letters[0].letter] == LetterType.CONSONANT or self.isHeavyMaking()
     def isHeavyMaking(self):
         """ does a sound contain a cluster-forming consonant letter """
-        return self.letters[0] in Letter.heavyMakers
+        return Letter.letters[self.letters[0].letter] == LetterType.HEAVYMAKER
     def isH(self):
         return self.letters[0] == Letter('h')
+    def getType(self):
+        return Letter.letters[self.letters[0].letter]
 
 class Letter(object):
-    vowels = ['e','a','o','y']
-    semivowels = ['i', 'u']
-    consonants = ['t','s','r','n','m','c','l','p','d','q','b','g','f','h','k']
-    heavyMakers = ['x','z']
-    validLetters = vowels + semivowels + consonants + heavyMakers
     """ Letter class
     commit 1 (blagae): BLI 10
     reason: creation of stub for interaction with Word
     """
+    letters = {
+        'e' : LetterType.VOWEL,
+        'a' : LetterType.VOWEL,
+        'i' : LetterType.SEMIVOWEL,
+        'u' : LetterType.SEMIVOWEL,
+        't' : LetterType.CONSONANT,
+        's' : LetterType.CONSONANT,
+        'r' : LetterType.CONSONANT,
+        'n' : LetterType.CONSONANT,
+        'o' : LetterType.VOWEL,
+        'm' : LetterType.CONSONANT,
+        'c' : LetterType.CONSONANT,
+        'l' : LetterType.CONSONANT,
+        'p' : LetterType.CONSONANT,
+        'd' : LetterType.CONSONANT,
+        'q' : LetterType.CONSONANT,
+        'b' : LetterType.CONSONANT,
+        'g' : LetterType.CONSONANT,
+        'f' : LetterType.CONSONANT,
+        'h' : LetterType.CONSONANT,
+        'x' : LetterType.HEAVYMAKER,
+        'y' : LetterType.VOWEL,
+        'k' : LetterType.CONSONANT,
+        'z' : LetterType.HEAVYMAKER
+        }
+
     def __init__(self, letter):
         """ construct a Letter by its contents """
         if not (len(letter) == 1 and isinstance(letter, str) and letter.isalpha()):
@@ -476,8 +512,8 @@ class Letter(object):
         return self.letter
 
     def isValidLetter(self):
-        """ a letter is only valid if it figures in one of the lists of legal characters
+        """ a letter is only valid if it figures in the list of legal characters
         currently the only invalid (Roman) letters are W, V and J
-        but V and J are replaced by their consonantal values U and I in the constructor
+        but V and J are replaced by their vocalic values U and I in the constructor
         """
-        return self.letter in Letter.validLetters
+        return self.letter in Letter.letters

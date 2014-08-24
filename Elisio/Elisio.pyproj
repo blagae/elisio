@@ -5,7 +5,7 @@
     <Name>Elisio</Name>
     <RootNamespace>Elisio</RootNamespace>
     <WebBrowserPort>9000</WebBrowserPort>
-    <InterpreterId>{3a065cd1-95ee-4aa8-b561-062c985cd55a}</InterpreterId>
+    <InterpreterId>{136de0cc-575b-40cf-991c-336fdf5c3fe1}</InterpreterId>
     <InterpreterVersion>3.4</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -31,6 +31,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Elisio\batchjob.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\engine\wordProcessor.py">
       <SubType>Code</SubType>
     </Compile>
@@ -100,6 +103,17 @@
     <Folder Include="Elisio\tests\" />
   </ItemGroup>
   <ItemGroup>
+    <Interpreter Include="elisio_env32\">
+      <Id>{136de0cc-575b-40cf-991c-336fdf5c3fe1}</Id>
+      <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
+      <Version>3.4</Version>
+      <Description>elisio_env32 (Python 3.4)</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <LibraryPath>Lib\</LibraryPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X86</Architecture>
+    </Interpreter>
     <Interpreter Include="elisio_env\">
       <Id>{3a065cd1-95ee-4aa8-b561-062c985cd55a}</Id>
       <BaseInterpreter>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</BaseInterpreter>

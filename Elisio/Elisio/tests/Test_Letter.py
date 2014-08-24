@@ -52,7 +52,7 @@ class Test_Letter(unittest.TestCase):
         self.assertEqual(letter1, letter2)
         
     def test_LetterIsValid(self):
-        for letter in Letter.validLetters:
+        for letter in Letter.letters:
             obj = Letter(letter)
             self.assertTrue(obj.isValidLetter())
             

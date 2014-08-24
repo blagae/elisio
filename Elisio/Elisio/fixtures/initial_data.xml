@@ -13,6 +13,9 @@
   <object pk="4" model="Elisio.Deviant_Word">
     <field type="CharField" name="stem">^e$</field>
   </object>
+  <object pk="5" model="Elisio.Deviant_Word">
+    <field type="CharField" name="stem">^tro[i]?a.?$</field>
+  </object>
   
   <!-- Deviant syllables -->
   <object pk="1" model="Elisio.Deviant_Syllable">
@@ -28,22 +31,40 @@
     <field type="enum.EnumField" name="weight">2</field>
   </object>
   <object pk="3" model="Elisio.Deviant_Syllable">
+    <field type="CharField" name="contents"></field>
+    <field type="IntegerField" name="sequence">3</field>
+    <field type="ForeignKey" name="word">1</field>
+    <field type="enum.EnumField" name="weight">3</field>
+  </object>
+  <object pk="4" model="Elisio.Deviant_Syllable">
     <field type="CharField" name="contents">cui</field>
     <field type="IntegerField" name="sequence">1</field>
     <field type="ForeignKey" name="word">2</field>
     <field type="enum.EnumField" name="weight">2</field>
   </object>
-  <object pk="4" model="Elisio.Deviant_Syllable">
+  <object pk="5" model="Elisio.Deviant_Syllable">
     <field type="CharField" name="contents">huic</field>
     <field type="IntegerField" name="sequence">1</field>
     <field type="ForeignKey" name="word">3</field>
     <field type="enum.EnumField" name="weight">2</field>
   </object>
-  <object pk="5" model="Elisio.Deviant_Syllable">
+  <object pk="6" model="Elisio.Deviant_Syllable">
     <field type="CharField" name="contents">e</field>
     <field type="IntegerField" name="sequence">1</field>
     <field type="ForeignKey" name="word">4</field>
     <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="7" model="Elisio.Deviant_Syllable">
+    <field type="CharField" name="contents">tro</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">5</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="8" model="Elisio.Deviant_Syllable">
+    <field type="CharField" name="contents"></field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">5</field>
+    <field type="enum.EnumField" name="weight">3</field>
   </object>
 
   <!-- Periods -->
