@@ -140,14 +140,14 @@ class Test_Verse(unittest.TestCase):
         """ A regular verse must get all relevant scansion information immediately
         Example:
         arma virumque cano troiae qui primus ab oris
-        _  x  x _   u  x _   x _    _   x x  x  x _
+        _  x  x _   u  x _   _ _    _   x x  x  x _
         Note that this archetypical verse does not test for a lot
         """
         verse = self.constructVerse()
         expected_result = [[SyllableWeights.HEAVY, SyllableWeights.ANCEPS,],
                            [SyllableWeights.ANCEPS, SyllableWeights.HEAVY, SyllableWeights.LIGHT,],
                            [SyllableWeights.ANCEPS, SyllableWeights.HEAVY,],
-                           [SyllableWeights.ANCEPS, SyllableWeights.HEAVY,],
+                           [SyllableWeights.HEAVY, SyllableWeights.HEAVY,],
                            [SyllableWeights.HEAVY,],
                            [SyllableWeights.ANCEPS, SyllableWeights.ANCEPS,],
                            [SyllableWeights.ANCEPS,],
@@ -208,7 +208,7 @@ class Test_Hexameter(unittest.TestCase):
         fails = ''
         for dbverse in dbverses:
             try:
-                if dbverse.number == 50:
+                if dbverse.number == 9:
                     worked = worked
                 verse = Hexameter(dbverse.contents)
                 verse.split()

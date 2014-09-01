@@ -7,7 +7,7 @@ class Test_Sound(unittest.TestCase):
         letters = []
         for text in texts:
             letters.append(text)
-        sound = Sound(*letters)
+        sound = Sound.create(*letters)
         return sound
     
     def test_SoundConstructRegular(self):
@@ -42,11 +42,8 @@ class Test_Sound(unittest.TestCase):
     
     def test_SoundConstructFromText(self):
         sound = Sound.createFromText('A')
-        self.assertTrue(isinstance(sound, Sound))
-
-    def test_SoundFailConstructFromTextLength(self):
-        with self.assertRaises(ScansionException):
-            sound = Sound.createFromText('aeu')
+        self.assertTrue(isinstance(sound[0], Sound))
+        self.assertEqual(len(sound), 1)
             
     def test_SoundFailConstructFromTextSpace(self):
         with self.assertRaises(ScansionException):
@@ -54,39 +51,41 @@ class Test_Sound(unittest.TestCase):
             
     def test_SoundFailConstructTooRare(self):
         sound = Sound.createFromText('ui')
-        self.assertEqual(sound, Sound('u'))
+        self.assertEqual(sound[0], Sound.create('u'))
+        self.assertEqual(len(sound), 1)
 
     def test_SoundFailConstructNonExistent(self):
         sound = Sound.createFromText('ou')
-        self.assertEqual(sound, Sound('o'))
+        self.assertEqual(sound[0], Sound.create('o'))
+        self.assertEqual(len(sound), 1)
     
             
     def test_SoundEqual(self):
-        sound1 = Sound('r')
-        sound2 = Sound('r')
+        sound1 = Sound.create('r')
+        sound2 = Sound.create('r')
         self.assertEqual(sound1, sound2)
 
 
     def test_SoundEqualCaseInsensitive(self):
-        sound1 = Sound('a')
-        sound2 = Sound('A')
+        sound1 = Sound.create('a')
+        sound2 = Sound.create('A')
         self.assertEqual(sound1, sound2)
         
     def test_SoundEqualSemivowel(self):
-        sound1 = Sound('u')
-        sound2 = Sound('v')
+        sound1 = Sound.create('u')
+        sound2 = Sound.create('v')
         self.assertEqual(sound1, sound2)
 
     def test_SoundEqualOtherSemivowel(self):
-        sound1 = Sound('i')
-        sound2 = Sound('j')
+        sound1 = Sound.create('i')
+        sound2 = Sound.create('j')
         self.assertEqual(sound1, sound2)
 
     def test_SoundFinder(self):
-        sound1 = Sound('f')
-        sound2 = Sound('o')
-        sound3 = Sound('r')
-        sound4 = Sound('s')
+        sound1 = Sound.create('f')
+        sound2 = Sound.create('o')
+        sound3 = Sound.create('r')
+        sound4 = Sound.create('s')
         expected_sounds = []
         expected_sounds.append(sound1)
         expected_sounds.append(sound2)
@@ -96,8 +95,8 @@ class Test_Sound(unittest.TestCase):
         self.assertEqual(sounds, expected_sounds)
         
     def test_SoundFinderDigraphs(self):
-        sound1 = Sound('qu')
-        sound2 = Sound('ae')
+        sound1 = Sound.create('qu')
+        sound2 = Sound.create('ae')
         expected_sounds = []
         expected_sounds.append(sound1)
         expected_sounds.append(sound2)

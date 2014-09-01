@@ -30,6 +30,7 @@
         <p id="warning"></p>
         <input type="text" name="verse" id="verse" />
         <input type="submit" name="submit" value="Scan" />
+        {% csrf_token %}
     </form>
 </section>
 {% endblock %}

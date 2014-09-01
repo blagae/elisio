@@ -204,13 +204,13 @@ class Test_Word(unittest.TestCase):
         
     def test_WordScansionWeirdWord(self):
         word = self.constructWord('troiae')
-        weights = [SyllableWeights.ANCEPS, SyllableWeights.HEAVY]
+        weights = [SyllableWeights.HEAVY, SyllableWeights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
 
     def test_WordScansionWeirdWordTwo(self):
         word = self.constructWord('troas')
-        weights = [SyllableWeights.HEAVY, SyllableWeights.ANCEPS]
+        weights = [SyllableWeights.HEAVY, SyllableWeights.HEAVY]
         word.split()
         self.assertEqual(word.getSyllableStructure(), weights)
     

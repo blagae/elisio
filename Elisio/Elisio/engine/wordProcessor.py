@@ -1,8 +1,9 @@
 import copy
 import enum
+import re
 from Elisio.exceptions import ScansionException
 
-class LetterType(enum.Enum):
+class LetterTypes(enum.Enum):
     VOWEL = 0
     CONSONANT = 1
     SEMIVOWEL = 2
@@ -41,9 +42,9 @@ class Word(object):
     def __str__(self):
         return self.syllables
 
-    def split(self):
+    def split(self, testDeviant = True):
         """ splits a word into syllables by using a few static methods from the Syllable class """
-        if self.splitFromDeviantWord():
+        if testDeviant and self.splitFromDeviantWord():
             return
         sounds = self.findSounds()
         temporarySyllables = Word.joinIntoSyllables(sounds)
@@ -56,7 +57,16 @@ class Word(object):
         deviant = Deviant_Word.find(self.text)
         if deviant:
             self.syllables = deviant.getSyllables()
-            # This might be problematic because there is no content given for the syllables
+            txt = self.text
+            for syll in self.syllables:
+                if len(syll.syllable) >= 1:
+                    txt = txt.replace(syll.getText(), '', 1)
+            if len(txt) > 0:
+                wrd = Word(txt)
+                wrd.split(False)
+                for sl in wrd.syllables:
+                    self.syllables.append(sl)
+            # TODO This might be problematic because there is no content given for the final syllables
             return True
 
     def findSounds(self):
@@ -111,9 +121,10 @@ class Word(object):
         i = 0
         sounds = []
         while i < len(text):
-            sound = Sound.createFromText(text[i:i+2])
-            i += len(sound.letters)
-            sounds.append(sound)
+            addedSounds=Sound.createFromText(text[i:i+3])
+            for sound in addedSounds:
+                sounds.append(sound)
+                i += len(sound.letters)
         return sounds
 
     @classmethod
@@ -131,10 +142,6 @@ class Word(object):
                 syllables.append(currentSyllable)
                 currentSyllable = Syllable("", False)
                 currentSyllable.addSound(sound)
-        # TODO: 'invalid' final syllable with multiple final consonants fails
-        # example: Urbs
-        # maybe delete consonant restriction in syllable.isValid
-        # and redo redistribution (as a recursive algorithm ?)
         syllables.append(currentSyllable)
         return syllables
 
@@ -149,7 +156,6 @@ class Word(object):
             if syllables[count].endsWithVowel() and syllables[count+1].startsWithConsonantCluster():
                 Word.switchSound(syllables[count], syllables[count+1], True)
             elif syllables[count].endsWithConsonant() and syllables[count+1].startsWithVowel(False):
-                # TODO: problem if same letter multiple times in one: 'memo' becomes 'em-mo' instead of 'me-mo'
                 Word.switchSound(syllables[count], syllables[count+1], False)
         return syllables
 
@@ -203,19 +209,18 @@ class Syllable(object):
         containsFinalConsonant = containsVowel = containsSemivowel = False
         onlyConsonants = True
         for count, sound in enumerate(self.sounds):
-            type = sound.getType()
-            if type == LetterType.CONSONANT:
+            if isinstance(sound, ConsonantSound):
                 if containsFinalConsonant:
                     pass
                     #return False
                 if containsVowel or containsSemivowel:
                     containsFinalConsonant = True
-            elif type == LetterType.VOWEL:
+            elif isinstance(sound, VowelSound):
                 if containsVowel or (containsFinalConsonant and containsSemivowel):
                     return False
                 containsVowel = True
                 onlyConsonants = False
-            elif type == LetterType.SEMIVOWEL:
+            elif isinstance(sound, SemivowelSound):
                 if containsVowel or (containsFinalConsonant and containsSemivowel):
                     return False
                 if count > 0:
@@ -230,7 +235,7 @@ class Syllable(object):
 
     def canElideIfFinal(self):
         return (self.endsWithVowel() or
-                (self.sounds[-1] == Sound('m') and 
+                (self.sounds[-1] == Sound.create('m') and 
                 (self.sounds[-2].isVowel() or self.sounds[-2].isSemivowel()))
                )
 
@@ -353,7 +358,49 @@ class Sound(object):
                 else:
                     self.letters.append(Letter(letter))
         if not self.isValidSound():
-            raise ScansionException("not a valid sound given in constructor")
+            raise ScansionException("not a valid sound given in constructor"+str(self.letters))
+        
+    @classmethod
+    def create(cls, *letters):
+        letterList = []
+        for item in letters:
+            if isinstance(item, Letter):
+                letterList.append(item)
+            else:
+                for char in item:
+                    letterList.append(Letter(char))
+
+        return Sound.factory(letterList)
+
+    @classmethod
+    def factory(cls, letterList):
+        isFirst = True
+        for item in letterList:
+            if isFirst:
+                type = Letter.letters[item.letter]
+
+                if type == LetterTypes.VOWEL:
+                    sound = VowelSound(item)
+                elif type == LetterTypes.CONSONANT:
+                    sound = ConsonantSound(item)
+                elif type == LetterTypes.SEMIVOWEL:
+                    sound = SemivowelSound(item)
+                elif type == LetterTypes.HEAVYMAKER:
+                    sound = HeavyMakerSound(item)
+                else:
+                    raise ScansionException("not a valid letter"+str(item))
+            
+                isFirst = False
+            else:
+                if sound.isVowel():
+                    sound = Diphthong(sound.letters[0], item)
+                if sound.isConsonant():
+                    sound.letters.append(item)
+
+        
+        if not sound.isValidSound():
+            raise ScansionException("not a valid sound given in factory method")
+        return sound
 
     def getText(self):
         result = ""
@@ -366,55 +413,7 @@ class Sound(object):
         this is determined by the number of letters
         in case that number is 2, it must be one of a fixed list of combinations
         """
-        if len(self.letters) < 1 or len(self.letters) > 2:
-            raise ScansionException("incorrect number of letters in "+str(self.letters))
-        elif len(self.letters) == 1:
-            return True
-        else:
-            return self.isValidDoubleSound()
-
-    def isValidDoubleSound(self):
-        """ the fixed list of combinations
-        * QU
-        * muta cum liquida
-        * an aspirated voiceless stop
-        * a diphthong
-        """
-        if len(self.letters) < 2:
-            return False
-        first = self.letters[0]
-        second = self.letters[1]
-        return ((first == 'q' and second == 'u') or
-                self.isMutaCumLiquida() or
-               ((first == 't' or first == 'p' or first == 'c' ) and second == 'h') or
-               self.isDiphthong())
-
-    def isMutaCumLiquida(self):
-        if len(self.letters) < 2:
-            return False
-        first = self.letters[0]
-        second = self.letters[1]
-        return ((second == 'r' or second == 'l') and
-                (first == 't' or first == 'd' or 
-                 first == 'p' or first == 'b' or 
-                 first == 'c' or first == 'g' or
-                 first == 'f')
-               )
-
-
-    def isDiphthong(self):
-        """ the possible diphthongs
-        AE AU
-        EI EU
-        OE
-        """
-        if len(self.letters) == 1:
-            return False
-        first = self.letters[0]
-        second = self.letters[1]
-        return ((first == 'a' and (second == 'e' or second == 'u')) or
-                (first == 'e' and second == 'u') or
-                (first == 'o' and second == 'e'))
+        return True
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
@@ -427,35 +426,134 @@ class Sound(object):
 
     @classmethod
     def createFromText(cls, text):
-        """ try to create a Sound from given text string of maximally 2 syllables
+        """ try to create a Sound from given text string of maximally 3 letters
         """
-        if len(text) > 2:
+        # TODO: look at exceptions for ^ius$ ? see old application
+        if len(text) > 3:
             raise ScansionException("too many letters in this text sample")
+        elif len(text) == 3 and re.match("^[aeijouvy][ijuv][aeijouvy]$", text):
+            sounds = []
+            for i in text:
+                s = Sound.create(i)
+                sounds.append(s)
+            return sounds
         try:
-            sound = Sound(text[0:2])
+            sound = Sound.create(text[0:2])
         except ScansionException:
-            sound = Sound(text[0])
-        return sound
+            sound = Sound.create(text[0])
+        return [sound]
     
     def isVowel(self):
         """ determine whether a sound is unambiguously vocalic """
-        return Letter.letters[self.letters[0].letter] == LetterType.VOWEL
+        return False
     def isSemivowel(self):
         """ it is impossible to determine on the sound level
         whether or not a semivowel is vocalic or consonantal
         therefore we keep the semivowel category separate
         """
-        return Letter.letters[self.letters[0].letter] == LetterType.SEMIVOWEL
+        return False
     def isConsonant(self):
         """ does a sound contain a consonantal letter """
-        return Letter.letters[self.letters[0].letter] == LetterType.CONSONANT or self.isHeavyMaking()
+        return False
+    def isDiphthong(self):
+        return False
     def isHeavyMaking(self):
         """ does a sound contain a cluster-forming consonant letter """
-        return Letter.letters[self.letters[0].letter] == LetterType.HEAVYMAKER
+        return False
     def isH(self):
-        return self.letters[0] == Letter('h')
+        return False
     def getType(self):
         return Letter.letters[self.letters[0].letter]
+    
+class VowelSound(Sound):
+    def __init__(self, *letters):
+        super(VowelSound, self).__init__(*letters)
+    def isVowel(self):
+        return True
+    def isValidSound(self):
+        if len(self.letters) != 1:
+            return False
+        first = self.letters[0].letter
+        return Letter.letters[first] == LetterTypes.VOWEL
+
+class Diphthong(VowelSound):
+    def __init__(self, *letters):
+        super(Diphthong, self).__init__(*letters)
+    def isDiphthong(self):
+        return True
+    def isValidSound(self):
+        """ the possible diphthongs
+        AU
+        AE OE
+        """
+        if len(self.letters) == 1:
+            return False
+        first = self.letters[0].letter
+        second = self.letters[1].letter
+        return ((second == 'u' and first == 'a') or
+                (second == 'e' and (first == 'a' or first == 'o')))
+            
+class SemivowelSound(Sound):
+    def __init__(self, *letters):
+        super(SemivowelSound, self).__init__(*letters)
+    def isSemivowel(self):
+        return True
+    def isValidSound(self):
+        if len(self.letters) != 1:
+            return False
+        first = self.letters[0].letter
+        return Letter.letters[first] == LetterTypes.SEMIVOWEL
+
+class ConsonantSound(Sound):
+    def __init__(self, *letters):
+        super(ConsonantSound, self).__init__(*letters)
+    def isConsonant(self):
+        return True
+    def isValidSound(self):
+        if len(self.letters) != 1:
+            return self.isValidDoubleSound()
+        first = self.letters[0].letter
+        return Letter.letters[first] == LetterTypes.CONSONANT
+
+    def isH(self):
+        return self.letters[0] == 'h'
+    
+    def isMutaCumLiquida(self):
+        if len(self.letters) < 2:
+            return False
+        first = self.letters[0].letter
+        second = self.letters[1]
+        return ((second == 'r' or second == 'l') and
+                (first == 't' or first == 'd' or 
+                 first == 'p' or first == 'b' or 
+                 first == 'c' or first == 'g' or
+                 first == 'f')
+               )
+    def isValidDoubleSound(self):
+        """ the fixed list of combinations
+        * QU
+        * muta cum liquida
+        * an aspirated consonant
+        * a diphthong
+        """
+        if len(self.letters) != 2:
+            return False
+        first = self.letters[0].letter
+        second = self.letters[1]
+        return ((first == 'q' and second == 'u') or
+                self.isMutaCumLiquida() or
+               ((first == 't' or first == 'p' or first == 'c' or first == 'r') and second == 'h'))
+
+class HeavyMakerSound(ConsonantSound):
+    def __init__(self, *letters):
+        super(HeavyMakerSound, self).__init__(*letters)
+    def isHeavyMaking(self):
+        return True
+    def isValidSound(self):
+        if len(self.letters) != 1:
+            return False
+        first = self.letters[0].letter
+        return Letter.letters[first] == LetterTypes.HEAVYMAKER
 
 class Letter(object):
     """ Letter class
@@ -463,29 +561,29 @@ class Letter(object):
     reason: creation of stub for interaction with Word
     """
     letters = {
-        'e' : LetterType.VOWEL,
-        'a' : LetterType.VOWEL,
-        'i' : LetterType.SEMIVOWEL,
-        'u' : LetterType.SEMIVOWEL,
-        't' : LetterType.CONSONANT,
-        's' : LetterType.CONSONANT,
-        'r' : LetterType.CONSONANT,
-        'n' : LetterType.CONSONANT,
-        'o' : LetterType.VOWEL,
-        'm' : LetterType.CONSONANT,
-        'c' : LetterType.CONSONANT,
-        'l' : LetterType.CONSONANT,
-        'p' : LetterType.CONSONANT,
-        'd' : LetterType.CONSONANT,
-        'q' : LetterType.CONSONANT,
-        'b' : LetterType.CONSONANT,
-        'g' : LetterType.CONSONANT,
-        'f' : LetterType.CONSONANT,
-        'h' : LetterType.CONSONANT,
-        'x' : LetterType.HEAVYMAKER,
-        'y' : LetterType.VOWEL,
-        'k' : LetterType.CONSONANT,
-        'z' : LetterType.HEAVYMAKER
+        'e' : LetterTypes.VOWEL,
+        'a' : LetterTypes.VOWEL,
+        'i' : LetterTypes.SEMIVOWEL,
+        'u' : LetterTypes.SEMIVOWEL,
+        't' : LetterTypes.CONSONANT,
+        's' : LetterTypes.CONSONANT,
+        'r' : LetterTypes.CONSONANT,
+        'n' : LetterTypes.CONSONANT,
+        'o' : LetterTypes.VOWEL,
+        'm' : LetterTypes.CONSONANT,
+        'c' : LetterTypes.CONSONANT,
+        'l' : LetterTypes.CONSONANT,
+        'p' : LetterTypes.CONSONANT,
+        'd' : LetterTypes.CONSONANT,
+        'q' : LetterTypes.CONSONANT,
+        'b' : LetterTypes.CONSONANT,
+        'g' : LetterTypes.CONSONANT,
+        'f' : LetterTypes.CONSONANT,
+        'h' : LetterTypes.CONSONANT,
+        'x' : LetterTypes.HEAVYMAKER,
+        'y' : LetterTypes.VOWEL,
+        'k' : LetterTypes.CONSONANT,
+        'z' : LetterTypes.HEAVYMAKER
         }
 
     def __init__(self, letter):
