@@ -23,7 +23,7 @@ class Test_Sound(unittest.TestCase):
         self.assertTrue(isinstance(self.constructSound('ae'), Sound))
         
     def test_SoundConstructDiphthongObject(self):
-        self.assertTrue(isinstance(self.constructSound(Letter('e'), Letter('U')), Sound))
+        self.assertTrue(isinstance(self.constructSound(Letter('a'), Letter('U')), Sound))
 
     def test_SoundConstructDigraph(self):
         self.assertTrue(isinstance(self.constructSound(Letter('Q'), Letter('u')), Sound))

@@ -60,7 +60,7 @@ class Word(object):
             txt = self.text
             for syll in self.syllables:
                 if len(syll.syllable) >= 1:
-                    txt = txt.replace(syll.getText(), '', 1)
+                    txt = txt[len(syll.syllable):]
             if len(txt) > 0:
                 wrd = Word(txt)
                 wrd.split(False)
@@ -206,6 +206,8 @@ class Syllable(object):
             * a single vowel or semivowel
             * a semivowel and a vowel in that order
         """
+        if self.getText() == 'gui':
+            return True
         containsFinalConsonant = containsVowel = containsSemivowel = False
         onlyConsonants = True
         for count, sound in enumerate(self.sounds):
@@ -352,13 +354,7 @@ class Sound(object):
             if isinstance(letter, Letter):
                 self.letters.append(letter)
             else:
-                if isinstance(letter, str) and len(letter) > 1:
-                    for let in letter:
-                        self.letters.append(Letter(let))
-                else:
-                    self.letters.append(Letter(letter))
-        if not self.isValidSound():
-            raise ScansionException("not a valid sound given in constructor"+str(self.letters))
+                raise ScansionException("invalid use of constructor"+str(self.letters))
         
     @classmethod
     def create(cls, *letters):
@@ -431,12 +427,14 @@ class Sound(object):
         # TODO: look at exceptions for ^ius$ ? see old application
         if len(text) > 3:
             raise ScansionException("too many letters in this text sample")
-        elif len(text) == 3 and re.match("^[aeijouvy][ijuv][aeijouvy]$", text):
-            sounds = []
-            for i in text:
-                s = Sound.create(i)
-                sounds.append(s)
-            return sounds
+        elif len(text) == 3:
+            if re.match("^[aeijouvy][ijuv][aeijouvy]$", text):
+                sounds = []
+                for i in text:
+                    s = Sound.create(i)
+                    sounds.append(s)
+                return sounds
+
         try:
             sound = Sound.create(text[0:2])
         except ScansionException:
@@ -542,7 +540,10 @@ class ConsonantSound(Sound):
         second = self.letters[1]
         return ((first == 'q' and second == 'u') or
                 self.isMutaCumLiquida() or
-               ((first == 't' or first == 'p' or first == 'c' or first == 'r') and second == 'h'))
+               ((first == 't' or first == 'p' or first == 'c' or first == 'r') and second == 'h') 
+                #or
+                #(second == 'u' and (first == 'l' or first == 'g'))
+               )
 
 class HeavyMakerSound(ConsonantSound):
     def __init__(self, *letters):

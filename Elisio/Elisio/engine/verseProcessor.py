@@ -73,7 +73,7 @@ class Hexameter(Verse):
     MIN_SYLL = 12
 
     def __init__(self, text):
-        super().__init__(text)
+        super(Hexameter, self).__init__(text)
         self.max_syllables = Hexameter.MAX_SYLL
         self.min_syllables = Hexameter.MIN_SYLL
         self.feet = [None]*6
@@ -99,19 +99,24 @@ class Hexameter(Verse):
         else:
             self.feet[5] = Feet.TROCHAEUS
         if len(self.flatList) == self.min_syllables:
-            for i in range (0, 4):
-                self.feet[i] = Feet.SPONDAEUS
+            self.hex = SpondaicHexameter(self.text)
         elif len(self.flatList) == self.min_syllables + 1:
-            self.findOnlyDactylus()
+            self.hex = SpondaicDominantHexameter(self.text)
         elif len(self.flatList) == self.max_syllables - 2:
-            self.findSickAlgorithm()
+            self.hex = BalancedHexameter(self.text)
         elif len(self.flatList) == self.max_syllables - 1:
-            self.findOnlySpondaeus()
+            self.hex = DactylicDominantHexameter(self.text)
         elif len(self.flatList) == self.max_syllables:
-            for i in range (0, 4):
-                self.feet[i] = Feet.DACTYLUS
+            self.hex = DactylicHexameter(self.text)
         else:
             raise HexameterException("{0} is an illegal number of syllables in a Hexameter".format(len(self.flatList)))
+        # TODO: not a very elegant solution
+        self.hex.flatList = self.flatList
+        self.hex.max_syllables = self.max_syllables
+        self.hex.min_syllables = self.min_syllables
+        self.hex.feet = self.feet
+        self.hex.scanForReal()
+        self.feet = self.hex.feet
         # control mechanism and syllable filler
         start = 0
         for feetNum, foot in enumerate(self.feet):
@@ -123,7 +128,33 @@ class Hexameter(Verse):
                 self.flatList[count+start] = weight
             start += foot.getLength()
 
-    def findOnlyDactylus(self):
+    def fillOtherFeet(self, fromFoot, toFoot):
+        for count, foot in enumerate(self.feet):
+            if count < 4 and foot != fromFoot:
+                self.feet[count] = toFoot
+
+    #TO OVERRIDE
+    def scanForReal(self):
+        pass
+
+class SpondaicHexameter(Hexameter):
+    def __init__(self, text):
+        super(SpondaicHexameter, self).__init__(text)
+    def scanForReal(self):
+        for i in range (0, 4):
+            self.feet[i] = Feet.SPONDAEUS
+
+class DactylicHexameter(Hexameter):
+    def __init__(self, text):
+        super(DactylicHexameter, self).__init__(text)
+    def scanForReal(self):
+        for i in range (0, 4):
+            self.feet[i] = Feet.DACTYLUS
+
+class SpondaicDominantHexameter(Hexameter):
+    def __init__(self, text):
+        super(SpondaicDominantHexameter, self).__init__(text)
+    def scanForReal(self):
         if len(self.flatList) != self.min_syllables + 1:
             """ avoid wrong use """
             raise HexameterException("a verse of {0} syllables cannot have exactly one dactylus in foot 1-4".format(len(self.flatList)))
@@ -149,7 +180,10 @@ class Hexameter(Verse):
             else:
                 raise HexameterException("cannot determine full foot structure of single dactylus verse")
 
-    def findOnlySpondaeus(self):
+class DactylicDominantHexameter(Hexameter):
+    def __init__(self, text):
+        super(DactylicDominantHexameter, self).__init__(text)
+    def scanForReal(self):
         if len(self.flatList) != self.max_syllables - 1:
             """ avoid wrong use """
             raise HexameterException("a verse of {0} syllables cannot have exactly one spondaeus in foot 1-4".format(len(self.flatList)))
@@ -165,7 +199,6 @@ class Hexameter(Verse):
             if self.feet[i] == Feet.SPONDAEUS:
                 self.fillOtherFeet(Feet.SPONDAEUS, Feet.DACTYLUS)
                 return
-        dactyls = 0
         if self.flatList[1] == SyllableWeights.LIGHT or self.flatList[2] == SyllableWeights.LIGHT or self.flatList[3] == SyllableWeights.HEAVY:
             self.feet[0] = Feet.DACTYLUS
         if self.flatList[4] == SyllableWeights.LIGHT:
@@ -180,6 +213,7 @@ class Hexameter(Verse):
         if self.flatList[5] == SyllableWeights.HEAVY or self.flatList[6] == SyllableWeights.LIGHT:
             self.feet[1] = Feet.DACTYLUS
             self.feet[2] = Feet.DACTYLUS
+        dactyls = 0
         for i in range (0, 4):
             if self.feet[i] == Feet.DACTYLUS:
                 dactyls += 1
@@ -189,8 +223,10 @@ class Hexameter(Verse):
             raise HexameterException("cannot determine full foot structure of single spondaeus verse")
 
 
-
-    def findSickAlgorithm(self):
+class BalancedHexameter(Hexameter):
+    def __init__(self, text):
+        super(BalancedHexameter, self).__init__(text)
+    def scanForReal(self):
         if len(self.flatList) != self.max_syllables - 2:
             """ avoid wrong use """
             raise HexameterException("a verse of {0} syllables cannot be balanced in foot 1-4".format(len(self.flatList)))
@@ -222,22 +258,9 @@ class Hexameter(Verse):
             self.feet[3] = Feet.SPONDAEUS
         elif self.flatList[8] == SyllableWeights.LIGHT or self.flatList[9] == SyllableWeights.LIGHT:
             self.feet[3] = Feet.DACTYLUS
-        dactyls = 0
-        spondees = 0
-        for i in range (0, 4):
-            if self.feet[i] == Feet.SPONDAEUS:
-                spondees += 1
-            if self.feet[i] == Feet.DACTYLUS:
-                dactyls += 1
-        if spondees > 2 or dactyls > 2:
-            raise HexameterException("{0} spondaei and {1} dactyli in balanced verse".format(spondees, dactyls))
-        if spondees == 2 and dactyls == 2:
-            return
-        if spondees == 2:
-            self.fillOtherFeet(Feet.SPONDAEUS, Feet.DACTYLUS)
-        elif dactyls == 2:
-            self.fillOtherFeet(Feet.DACTYLUS, Feet.SPONDAEUS)
             
+        if self.calculate():
+            return
         elif (self.flatList[3] == SyllableWeights.HEAVY and self.flatList[5] == SyllableWeights.HEAVY and self.flatList[7] == SyllableWeights.HEAVY):
             self.feet[0] = Feet.DACTYLUS
             self.feet[1] = Feet.SPONDAEUS
@@ -259,7 +282,7 @@ class Hexameter(Verse):
             self.feet[2] = Feet.SPONDAEUS
             self.feet[3] = Feet.SPONDAEUS
 
-        elif spondees == 1 and dactyls == 1:
+        elif self.spondees == 1 and self.dactyls == 1:
             # sdxx, dsxx
             if (self.flatList[3] == SyllableWeights.HEAVY):
                 self.feet[0] = Feet.DACTYLUS
@@ -338,7 +361,7 @@ class Hexameter(Verse):
                     self.feet[2] = Feet.DACTYLUS
     
                 # xdxs
-        elif (dactyls+spondees == 1):
+        elif (self.dactyls+self.spondees == 1):
             if ((self.feet[0] == Feet.SPONDAEUS and self.flatList[3] == SyllableWeights.HEAVY) or
                 (self.feet[2] == Feet.DACTYLUS and self.flatList[7] == SyllableWeights.HEAVY)):
                 self.feet[0] = Feet.SPONDAEUS
@@ -372,10 +395,24 @@ class Hexameter(Verse):
                     self.feet[1] = Feet.SPONDAEUS
                     self.feet[2] = Feet.SPONDAEUS
                     self.feet[3] = Feet.DACTYLUS
+        self.calculate()
 
-
-    def fillOtherFeet(self, fromFoot, toFoot):
-        for count, foot in enumerate(self.feet):
-            if count < 4 and foot != fromFoot:
-                self.feet[count] = toFoot
+    def calculate(self):
+        self.dactyls = 0
+        self.spondees = 0
+        for i in range (0, 4):
+            if self.feet[i] == Feet.SPONDAEUS:
+                self.spondees += 1
+            if self.feet[i] == Feet.DACTYLUS:
+                self.dactyls += 1
+        if self.spondees > 2 or self.dactyls > 2:
+            raise HexameterException("{0} spondaei and {1} dactyli in balanced verse".format(self.spondees, self.dactyls))
+        if self.spondees == 2 and self.dactyls == 2:
+            return True
+        if self.spondees == 2:
+            self.fillOtherFeet(Feet.SPONDAEUS, Feet.DACTYLUS)
+            return True
+        if self.dactyls == 2:
+            self.fillOtherFeet(Feet.DACTYLUS, Feet.SPONDAEUS)
+            return True
 

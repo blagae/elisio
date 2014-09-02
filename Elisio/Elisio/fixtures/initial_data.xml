@@ -16,6 +16,12 @@
   <object pk="5" model="Elisio.Deviant_Word">
     <field type="CharField" name="stem">^tro[i]?a.?$</field>
   </object>
+  <object pk="6" model="Elisio.Deviant_Word">
+    <field type="CharField" name="stem">^laviniaque$</field>
+  </object>
+  <object pk="7" model="Elisio.Deviant_Word">
+    <field type="CharField" name="stem">^aeol.*$</field>
+  </object>
   
   <!-- Deviant syllables -->
   <object pk="1" model="Elisio.Deviant_Syllable">
@@ -53,6 +59,36 @@
     <field type="IntegerField" name="sequence">1</field>
     <field type="ForeignKey" name="word">5</field>
     <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="7" model="Elisio.Deviant_Syllable">
+    <field type="CharField" name="contents">la</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">6</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="8" model="Elisio.Deviant_Syllable">
+    <field type="CharField" name="contents">vin</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">6</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="9" model="Elisio.Deviant_Syllable">
+    <field type="CharField" name="contents">ia</field>
+    <field type="IntegerField" name="sequence">3</field>
+    <field type="ForeignKey" name="word">6</field>
+    <field type="enum.EnumField" name="weight">1</field>
+  </object>
+  <object pk="10" model="Elisio.Deviant_Syllable">
+    <field type="CharField" name="contents">ae</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">7</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="11" model="Elisio.Deviant_Syllable">
+    <field type="CharField" name="contents">o</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">7</field>
+    <field type="enum.EnumField" name="weight">1</field>
   </object>
 
   <!-- Periods -->
