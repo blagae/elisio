@@ -82,6 +82,7 @@ class Hexameter(Verse):
     def preparse(self):
         layeredList = self.getSyllableLengths()
         for word in layeredList:
+            # TODO: open monosyllables ? se me ne are all heavy
             for weight in word:
                 if weight != SyllableWeights.NONE:
                     self.flatList.append(weight)

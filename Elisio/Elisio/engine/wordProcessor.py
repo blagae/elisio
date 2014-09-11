@@ -28,7 +28,10 @@ class Word(object):
     A word is the representation of the Latin word
     It has extensive knowledge of its sounds, which it can join into syllables
     """
-    shortEndVowels = ['e']
+    # TODO: this breaks a lot of verses with final long e
+    # and the Verse tests where e$ is scheduled to be light
+    # proposed solution: find deviant word ?
+    shortEndVowels = ['e'] # []
     longEndVowels = ['i', 'o', 'u']
     def __init__(self, text):
         """ construct a Word by its contents """
@@ -66,7 +69,6 @@ class Word(object):
                 wrd.split(False)
                 for sl in wrd.syllables:
                     self.syllables.append(sl)
-            # TODO This might be problematic because there is no content given for the final syllables
             return True
 
     def findSounds(self):
@@ -424,7 +426,6 @@ class Sound(object):
     def createFromText(cls, text):
         """ try to create a Sound from given text string of maximally 3 letters
         """
-        # TODO: look at exceptions for ^ius$ ? see old application
         if len(text) > 3:
             raise ScansionException("too many letters in this text sample")
         elif len(text) == 3:
