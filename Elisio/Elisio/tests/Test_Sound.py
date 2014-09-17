@@ -41,21 +41,21 @@ class Test_Sound(unittest.TestCase):
             sound = self.constructSound(Letter(' '))
     
     def test_SoundConstructFromText(self):
-        sound = Sound.createFromText('A')
+        sound = Sound.create_sounds_from_text('A')
         self.assertTrue(isinstance(sound[0], Sound))
         self.assertEqual(len(sound), 1)
             
     def test_SoundFailConstructFromTextSpace(self):
         with self.assertRaises(ScansionException):
-            sound = Sound.createFromText([' ', 'c'])
+            sound = Sound.create_sounds_from_text([' ', 'c'])
             
     def test_SoundFailConstructTooRare(self):
-        sound = Sound.createFromText('ui')
+        sound = Sound.create_sounds_from_text('ui')
         self.assertEqual(sound[0], Sound.create('u'))
         self.assertEqual(len(sound), 1)
 
     def test_SoundFailConstructNonExistent(self):
-        sound = Sound.createFromText('ou')
+        sound = Sound.create_sounds_from_text('ou')
         self.assertEqual(sound[0], Sound.create('o'))
         self.assertEqual(len(sound), 1)
     
@@ -91,7 +91,7 @@ class Test_Sound(unittest.TestCase):
         expected_sounds.append(sound2)
         expected_sounds.append(sound3)
         expected_sounds.append(sound4)
-        sounds = Word.findSoundsForText('fors')
+        sounds = Word.find_sounds_for_text('fors')
         self.assertEqual(sounds, expected_sounds)
         
     def test_SoundFinderDigraphs(self):
@@ -100,7 +100,7 @@ class Test_Sound(unittest.TestCase):
         expected_sounds = []
         expected_sounds.append(sound1)
         expected_sounds.append(sound2)
-        sounds = Word.findSoundsForText('quae')
+        sounds = Word.find_sounds_for_text('quae')
         self.assertEqual(sounds, expected_sounds)
 
 if __name__ == '__main__':

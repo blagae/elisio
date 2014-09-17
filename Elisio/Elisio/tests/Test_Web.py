@@ -1,7 +1,7 @@
 import unittest
-from Elisio.engine.verseProcessor import setDjango
+from Elisio.engine.verseProcessor import set_django
 
-setDjango()
+set_django()
 
 from django.test import Client
 

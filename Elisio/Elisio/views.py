@@ -1,45 +1,54 @@
+""" standard Django views module for back-end logic """
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.core import serializers
-from Elisio.models import *
+from Elisio.models import Author, Book, Opus, Poem, Db_Verse
+#from Elisio.models import *
 import json
 
-context = {}
+CONTEXT = {}
 
 def index(request):
-    context['authors'] = Author.objects.all()
-    return render(request, 'index.html', context)
+    """ return index page """
+    CONTEXT['authors'] = Author.objects.all()
+    return render(request, 'index.html', CONTEXT)
 
 def batch(request):
-    return render(request, 'batch.html', context)
+    """ return batch page """
+    return render(request, 'batch.html', CONTEXT)
 
 def faq(request):
-    return render(request, 'faq.html', context)
+    """ return FAQ page """
+    return render(request, 'faq.html', CONTEXT)
 
-def help(request):
-    return render(request, 'help.html', context)
+def help_page(request):
+    """ return help page """
+    return render(request, 'help.html', CONTEXT)
 
 def about(request):
-    return render(request, 'about.html', context)
+    """ return about page """
+    return render(request, 'about.html', CONTEXT)
 
-def jsonList(request, type, key):
-    pk = int(key)
-    if type == 'author':
-        objects = Opus.objects.filter(author=pk)
-    elif type == 'opus':
-        objects = Book.objects.filter(opus=pk)
-    elif type == 'book':
-        objects = Poem.objects.filter(book=pk)
-    elif type == 'poem':
-        return HttpResponse(Db_Verse.getMaximumVerseNumber(poem=pk))
+def json_list(request, obj_type, key):
+    """ get a list of the requested Object Type """
+    primary = int(key)
+    if obj_type == 'author':
+        objects = Opus.objects.filter(author=primary)
+    elif obj_type == 'opus':
+        objects = Book.objects.filter(opus=primary)
+    elif obj_type == 'book':
+        objects = Poem.objects.filter(book=primary)
+    elif obj_type == 'poem':
+        return HttpResponse(Db_Verse.getMaximumVerseNumber(poem=primary))
     else:
         raise Http404
     data = serializers.serialize('json', objects)
     return HttpResponse(data, mimetype='application/json')
 
-def jsonVerse(request, poem, verse):
-    pk = int(verse)
-    poemPk = int(poem)
-    object = Db_Verse.getVerseFromDb(poemPk, pk)
-    data = json.dumps(object)
+def json_verse(request, poem, verse):
+    """ get a verse through a JSON request """
+    primary = int(verse)
+    poem_pk = int(poem)
+    obj = Db_Verse.getVerseFromDb(poem_pk, primary)
+    data = json.dumps(obj)
     return HttpResponse(data, mimetype='application/json')

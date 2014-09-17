@@ -54,15 +54,15 @@ class Test_Letter(unittest.TestCase):
     def test_LetterIsValid(self):
         for letter in Letter.letters:
             obj = Letter(letter)
-            self.assertTrue(obj.isValidLetter())
+            self.assertTrue(obj.is_valid_letter())
             
     def test_LetterVIsValid(self):
         obj = Letter('v')
-        self.assertTrue(obj.isValidLetter())
+        self.assertTrue(obj.is_valid_letter())
 
     def test_LetterJIsValid(self):
         obj = Letter('J')
-        self.assertTrue(obj.isValidLetter())
+        self.assertTrue(obj.is_valid_letter())
             
 if __name__ == '__main__':
     unittest.main()

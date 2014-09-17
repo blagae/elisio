@@ -1,9 +1,9 @@
 import unittest
-from Elisio.engine.verseProcessor import *
-from Elisio.engine.wordProcessor import *
+from Elisio.engine.verseProcessor import Verse, Hexameter, Feet, set_django
+from Elisio.engine.wordProcessor import Weights, Word
 from Elisio.exceptions import ScansionException
 
-setDjango()
+set_django()
 
 from Elisio.models import Db_Verse
 
@@ -14,63 +14,63 @@ for word in words:
     expected_word_list.append(Word(word))
 
 
-class Test_Verse(unittest.TestCase):
-    """ Test_Verse class
+class Test_verse(unittest.TestCase):
+    """ Test_verse class
     Unit tests for splitting a verse into words
     commit 1 (blagae): BLI 9
     reason: creation
     """
 
-    def constructVerse(self, text = typical_verse):
+    def construct_verse(self, text=typical_verse):
         """ Construct a verse object from a given text """
-        constructedVerse = Verse(text)
-        return constructedVerse
+        constructed_verse = Verse(text)
+        return constructed_verse
 
-    def test_VerseConstruct(self):
+    def test_verse_construct(self):
         """ constructing a Verse must work """
-        self.assertTrue(isinstance(self.constructVerse(), Verse))
-        self.assertTrue(isinstance(self.constructVerse(), Verse))
+        self.assertTrue(isinstance(self.construct_verse(), Verse))
+        self.assertTrue(isinstance(self.construct_verse(), Verse))
 
-    def test_VerseFail(self):
+    def test_verse_fail(self):
         with self.assertRaises(ScansionException):
-            self.constructVerse(7)
+            self.construct_verse(7)
 
-    def test_VerseEqual(self):
+    def test_verse_equal(self):
         """ Two separate verses are equal if they carry the exact same text
         even if one is split and the other isn't
         """
-        verse1 = self.constructVerse()
-        verse2 = self.constructVerse()
+        verse1 = self.construct_verse()
+        verse2 = self.construct_verse()
         verse1.split()
         self.assertEqual(verse1, verse2)
 
-    def test_VerseNotEqual(self):
+    def test_verse_not_equal(self):
         """ Two separate verses are equal only if they carry the exact same text
         """
-        verse1 = self.constructVerse()
-        verse2 = self.constructVerse(typical_verse.replace('cano', 'cono'))
+        verse1 = self.construct_verse()
+        verse2 = self.construct_verse(typical_verse.replace('cano', 'cono'))
         self.assertNotEqual(verse1, verse2)
 
-    def test_VerseSplit(self):
+    def test_verse_split(self):
         """ A normal verse must be split into words correctly """
-        verse = self.constructVerse()
+        verse = self.construct_verse()
         verse.split()
         self.assertEqual(verse.words, expected_word_list)
 
-    def test_VerseSplitPunctuation(self):
+    def test_verse_split_punctuation(self):
         """ A verse with unusual and heavy punctuation must be split into words correctly """
-        verse = self.constructVerse("""(Arma'virumque,%cano.!Troiae^$qui";primus/ab oris)""")
+        verse = self.construct_verse("""(Arma'virumque,%cano.!Troiae^$qui";primus/ab oris)""")
         verse.split()
         self.assertEqual(verse.words, expected_word_list)
         
-    def test_VerseSplitSpaces(self):
+    def test_verse_split_spaces(self):
         """ A verse with unusual and heavy spacing must be split into words correctly """
-        verse = self.constructVerse("""      Arma\tvirumque\rcano\nTroiae\r\nqui\n\rprimus  \b \r   ab    oris.  """)
+        verse = self.construct_verse("""      Arma\tvirumque\rcano\nTroiae\r\nqui\n\rprimus  \b \r   ab    oris.  """)
         verse.split()
         self.assertEqual(verse.words, expected_word_list)
 
         
-    def test_VerseSplitUnusualCharacter(self):
+    def test_verse_split_unusual_char(self):
         """ A verse with unusual characters (diacritics) must be split into words correctly """
         # TODO: aena should have a diaeresis
         """
@@ -80,83 +80,83 @@ class Test_Verse(unittest.TestCase):
         self.assertEqual(verse.words, expected_list)
         """
         
-    def test_VerseScansionElisionRegular(self):
-        verse = self.constructVerse('multo ille')
-        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.NONE],
-                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
+    def test_verse_scan_elis_reg(self):
+        verse = self.construct_verse('multo ille')
+        expected_result = [[Weights.HEAVY, Weights.NONE],
+                           [Weights.HEAVY, Weights.LIGHT]]
         verse.split()
-        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        self.assertEqual(verse.get_syllable_weights(), expected_result)
         
-    def test_VerseScansionElisionOnM(self):
-        verse = self.constructVerse('multum ille')
-        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.NONE],
-                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
+    def test_verse_scan_elis_on_m(self):
+        verse = self.construct_verse('multum ille')
+        expected_result = [[Weights.HEAVY, Weights.NONE],
+                           [Weights.HEAVY, Weights.LIGHT]]
         verse.split()
-        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        self.assertEqual(verse.get_syllable_weights(), expected_result)
         
-    def test_VerseScansionElisionWithH(self):
-        verse = self.constructVerse('multo hille')
-        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.NONE],
-                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
+    def test_verse_scan_elis_with_h(self):
+        verse = self.construct_verse('multo hille')
+        expected_result = [[Weights.HEAVY, Weights.NONE],
+                           [Weights.HEAVY, Weights.LIGHT]]
         verse.split()
-        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        self.assertEqual(verse.get_syllable_weights(), expected_result)
 
-    def test_VerseScansionElisionSemivowelWithH(self):
-        verse = self.constructVerse('multu hille')
-        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.NONE],
-                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
+    def test_verse_scan_elis_semivowel_with_h(self):
+        verse = self.construct_verse('multu hille')
+        expected_result = [[Weights.HEAVY, Weights.NONE],
+                           [Weights.HEAVY, Weights.LIGHT]]
         verse.split()
-        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        self.assertEqual(verse.get_syllable_weights(), expected_result)
 
-    def test_VerseScansionElisionOnMWithH(self):
-        verse = self.constructVerse('multum hille')
-        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.NONE],
-                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
+    def test_verse_scan_elis_on_m_with_h(self):
+        verse = self.construct_verse('multum hille')
+        expected_result = [[Weights.HEAVY, Weights.NONE],
+                           [Weights.HEAVY, Weights.LIGHT]]
         verse.split()
-        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        self.assertEqual(verse.get_syllable_weights(), expected_result)
 
-    def test_VerseScansionFinalAnceps(self):
-        verse = self.constructVerse('multus ille')
-        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.ANCEPS],
-                           [SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
+    def test_verse_scan_final_anceps(self):
+        verse = self.construct_verse('multus ille')
+        expected_result = [[Weights.HEAVY, Weights.ANCEPS],
+                           [Weights.HEAVY, Weights.LIGHT]]
         verse.split()
-        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        self.assertEqual(verse.get_syllable_weights(), expected_result)
         
-    def test_VerseScansionHeavyMaker(self):
-        verse = self.constructVerse('esse Zephyrumque')
-        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.HEAVY],
-                           [SyllableWeights.ANCEPS, SyllableWeights.ANCEPS, SyllableWeights.HEAVY, SyllableWeights.LIGHT]]
+    def test_verse_scan_heavy_maker(self):
+        verse = self.construct_verse('esse Zephyrumque')
+        expected_result = [[Weights.HEAVY, Weights.HEAVY],
+                           [Weights.ANCEPS, Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT]]
         verse.split()
-        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        self.assertEqual(verse.get_syllable_weights(), expected_result)
 
-    def test_VerseScansionHeavyMakingCluster(self):
-        verse = self.constructVerse('esse strabo')
-        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.HEAVY],
-                           [SyllableWeights.ANCEPS, SyllableWeights.HEAVY]]
+    def test_verse_scan_heavy_making_cluster(self):
+        verse = self.construct_verse('esse strabo')
+        expected_result = [[Weights.HEAVY, Weights.HEAVY],
+                           [Weights.ANCEPS, Weights.HEAVY]]
         verse.split()
-        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        self.assertEqual(verse.get_syllable_weights(), expected_result)
 
-    def test_VerseScansionFull(self):
+    def test_verse_scan_full(self):
         """ A regular verse must get all relevant scansion information immediately
         Example:
         arma virumque cano troiae qui primus ab oris
         _  x  x _   u  x _   _ _    _   x x  x  x _
         Note that this archetypical verse does not test for a lot
         """
-        verse = self.constructVerse()
-        expected_result = [[SyllableWeights.HEAVY, SyllableWeights.ANCEPS,],
-                           [SyllableWeights.ANCEPS, SyllableWeights.HEAVY, SyllableWeights.LIGHT,],
-                           [SyllableWeights.ANCEPS, SyllableWeights.HEAVY,],
-                           [SyllableWeights.HEAVY, SyllableWeights.HEAVY,],
-                           [SyllableWeights.HEAVY,],
-                           [SyllableWeights.ANCEPS, SyllableWeights.ANCEPS,],
-                           [SyllableWeights.ANCEPS,],
-                           [SyllableWeights.ANCEPS, SyllableWeights.HEAVY]]
+        verse = self.construct_verse()
+        expected_result = [[Weights.HEAVY, Weights.ANCEPS,],
+                           [Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT,],
+                           [Weights.ANCEPS, Weights.HEAVY,],
+                           [Weights.HEAVY, Weights.HEAVY,],
+                           [Weights.HEAVY,],
+                           [Weights.ANCEPS, Weights.ANCEPS,],
+                           [Weights.ANCEPS,],
+                           [Weights.ANCEPS, Weights.HEAVY]]
         verse.split()
-        self.assertEqual(verse.getSyllableLengths(), expected_result)
+        self.assertEqual(verse.get_syllable_weights(), expected_result)
 
 
-    def test_VerseDatabase(self):
+    def test_verse_database(self):
         """ Checks to see if a database object exists
         Expects there to be a Database Verse object with primary key 1
         ==> PLEASE CHECK FIXTURES
@@ -165,7 +165,7 @@ class Test_Verse(unittest.TestCase):
         verse = db_verse.getVerse()
         self.assertTrue(isinstance(verse, Verse))
 
-    def test_VerseLetterFrequencies(self):
+    def test_verse_letter_frequencies(self):
         letterList = {}
         db_verses = Db_Verse.objects.all()
         for db_verse in db_verses:
@@ -181,26 +181,26 @@ class Test_Verse(unittest.TestCase):
 
 class Test_Hexameter(unittest.TestCase):
     
-    def constructHexameter(self, text = typical_verse):
+    def construct_hexameter(self, text=typical_verse):
         """ Construct a Hexameter object from a given text """
-        constructedVerse = Hexameter(text)
+        constructed_verse = Hexameter(text)
 
-        return constructedVerse
+        return constructed_verse
 
     
-    def test_HexameterConstruct(self):
+    def test_hexameter_construct(self):
         """ constructing a Hexameter must work """
-        self.assertTrue(isinstance(self.constructHexameter(), Verse))
-        self.assertTrue(isinstance(self.constructHexameter(), Hexameter))
+        self.assertTrue(isinstance(self.construct_hexameter(), Verse))
+        self.assertTrue(isinstance(self.construct_hexameter(), Hexameter))
 
-    def test_HexameterScanBasicCase(self):
+    def test_hexameter_scan_basic_case(self):
         expected_feet = [Feet.DACTYLUS, Feet.DACTYLUS, Feet.SPONDAEUS, Feet.SPONDAEUS, Feet.DACTYLUS, Feet.SPONDAEUS]
-        verse = self.constructHexameter()
+        verse = self.construct_hexameter()
         verse.split()
         verse.scan()
         self.assertEqual(verse.feet, expected_feet)
 
-    def test_HexameterScanAllLolol(self):
+    def test_hexameter_scan_all(self):
         """ frivolous check to see how many verses work """
         dbverses = Db_Verse.objects.all()
         worked = 0
