@@ -1,26 +1,25 @@
-# Django settings for Elisio project.
+""" Django settings for Elisio project. """
 from tkinter.messagebox import showwarning
 
-data = None
-admins = ()
-debug = False
+DATA = None
+ADMINING = ()
+DEBUGGING = False
 try:
     from Elisio.local import DATABASE_SETTINGS, ADMIN_LIST, DEBUG_SETTING
-    data = DATABASE_SETTINGS
-    admins = ADMIN_LIST
-    debug = DEBUG_SETTING
+    DATA = DATABASE_SETTINGS
+    ADMINING = ADMIN_LIST
+    DEBUGGING = DEBUG_SETTING
 except ImportError:
     showwarning("Deployment issue", "You should create a local.py file with the required settings")
-    pass
 
-DEBUG = debug
+DEBUG = DEBUGGING
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = admins
+ADMINS = ADMINING
 
 MANAGERS = ADMINS
 
-DATABASES = data
+DATABASES = DATA
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -108,7 +107,8 @@ ROOT_URLCONF = 'Elisio.urls'
 WSGI_APPLICATION = 'Elisio.wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like "/home/html/django_templates"
+    # or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )

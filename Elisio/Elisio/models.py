@@ -5,34 +5,34 @@ from Elisio.exceptions import ScansionException
 from enumfields import EnumField
 import re
 
-class Deviant_Word(models.Model):
+class DeviantWord(models.Model):
     words = []
     stem = models.CharField(max_length=25)
-    
+
     @classmethod
     def find(cls, text):
-        Deviant_Word.getList()
-        result = [word for word in Deviant_Word.words if re.compile(word.stem).match(text)]
+        DeviantWord.get_list()
+        result = [word for word in DeviantWord.words if re.compile(word.stem).match(text)]
         if len(result) > 1:
             raise ScansionException
         if not result:
             return None
         return result[0]
 
-    def getSyllables(self):
-        sylls = Deviant_Syllable.objects.filter(word=self).order_by('sequence')
+    def get_syllables(self):
+        sylls = DeviantSyllable.objects.filter(word=self).order_by('sequence')
         result = []
         for syll in sylls:
             result.append(Syllable.create_syllable_from_database(syll))
         return result
 
     @classmethod
-    def getList(cls):
-        if len(Deviant_Word.words) < 1:
-            Deviant_Word.words = Deviant_Word.objects.all()
-    
-class Deviant_Syllable(models.Model):
-    word = models.ForeignKey(Deviant_Word)
+    def get_list(cls):
+        if len(DeviantWord.words) < 1:
+            DeviantWord.words = DeviantWord.objects.all()
+
+class DeviantSyllable(models.Model):
+    word = models.ForeignKey(DeviantWord)
     weight = EnumField(Weights)
     contents = models.CharField(max_length=8)
     sequence = models.IntegerField()
@@ -65,7 +65,7 @@ class Opus(models.Model):
     author = models.ForeignKey(Author)
     publication = models.IntegerField()
     genre = models.ForeignKey(Genre)
-    
+
 class Book(models.Model):
     opus = models.ForeignKey(Opus)
     number = models.IntegerField()
@@ -75,22 +75,22 @@ class Poem(models.Model):
     number = models.IntegerField()
     nickname = models.CharField(max_length=20)
 
-class Db_Verse(models.Model):
+class DatabaseVerse(models.Model):
     poem = models.ForeignKey(Poem)
     number = models.IntegerField()
     alternative = models.CharField(max_length=1)
     contents = models.CharField(max_length=70)
 
-    def getVerse(self):
+    def get_verse(self):
         return Verse(self.contents)
-    
-    @classmethod
-    def getMaximumVerseNumber(cls, poem):
-        from django.db.models import Max
-        return Db_Verse.objects.all().aggregate(Max('number'))['number__max']
 
     @classmethod
-    def getVerseFromDb(cls, poem, verse):
+    def get_maximum_verse_number(cls, poem):
+        from django.db.models import Max
+        return DatabaseVerse.objects.all().aggregate(Max('number'))['number__max']
+
+    @classmethod
+    def get_verse_from_db(cls, poem, verse):
         """ django.core.serializers requires this return value to be iterable (i.e. a resultset) """
-        result = Db_Verse.objects.get(poem=poem, number=verse)
+        result = DatabaseVerse.objects.get(poem=poem, number=verse)
         return result.contents

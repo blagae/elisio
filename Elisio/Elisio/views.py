@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.core import serializers
-from Elisio.models import Author, Book, Opus, Poem, Db_Verse
+from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse
 #from Elisio.models import *
 import json
 
@@ -39,7 +39,7 @@ def json_list(request, obj_type, key):
     elif obj_type == 'book':
         objects = Poem.objects.filter(book=primary)
     elif obj_type == 'poem':
-        return HttpResponse(Db_Verse.getMaximumVerseNumber(poem=primary))
+        return HttpResponse(DatabaseVerse.get_maximum_verse_number(poem=primary))
     else:
         raise Http404
     data = serializers.serialize('json', objects)
@@ -49,6 +49,6 @@ def json_verse(request, poem, verse):
     """ get a verse through a JSON request """
     primary = int(verse)
     poem_pk = int(poem)
-    obj = Db_Verse.getVerseFromDb(poem_pk, primary)
+    obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
     data = json.dumps(obj)
     return HttpResponse(data, mimetype='application/json')

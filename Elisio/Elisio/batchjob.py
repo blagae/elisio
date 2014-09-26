@@ -7,7 +7,7 @@ def createFile(tree):
         raise IOError("Invalid XML Tree object")
 
 def readObject():
-    # TODO: read-out van flatfile
+    # TODO: read-out from flatfile
     result = ['omgomgomg', 'yeyeyey']
     return result
 

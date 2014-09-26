@@ -7,10 +7,12 @@ from Elisio.engine.wordProcessor import Weights, Word
 def set_django():
     """ in order to get to the database, we must use Django """
     import os
-    if not 'DJANGO_SETTINGS_MODULE' in os.environ or os.environ['DJANGO_SETTINGS_MODULE'] != 'Elisio.settings':
+    if (not 'DJANGO_SETTINGS_MODULE' in os.environ or
+        os.environ['DJANGO_SETTINGS_MODULE'] != 'Elisio.settings'):
         os.environ['DJANGO_SETTINGS_MODULE'] = 'Elisio.settings'
 
 class Feet(enum.Enum):
+    """ Types of verse foot """
     DACTYLUS = 0
     SPONDAEUS = 1
     TROCHAEUS = 2
@@ -62,6 +64,7 @@ class Verse(object):
         return self.text == other.text
 
     def get_syllable_weights(self):
+        """ get available weights of syllables """
         result = []
         for count, word in enumerate(self.words):
             try:
@@ -357,6 +360,7 @@ class BalancedHexameter(Hexameter):
             self.__continue_search()
 
     def __continue_search(self):
+        """ do search if we've found 2 feet """
         if self.feet[0] == Feet.DACTYLUS and self.feet[2] == Feet.SPONDAEUS:
             if self.flat_list[5] == Weights.HEAVY:
                 self.feet[1] = Feet.SPONDAEUS

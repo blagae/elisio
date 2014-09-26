@@ -63,10 +63,10 @@ class Word(object):
 
     def split_from_deviant_word(self):
         """ if the word can be found the repository of Deviant Words, we should use that instead """
-        from Elisio.models import Deviant_Word
-        deviant = Deviant_Word.find(self.text)
+        from Elisio.models import DeviantWord
+        deviant = DeviantWord.find(self.text)
         if deviant:
-            self.syllables = deviant.getSyllables()
+            self.syllables = deviant.get_syllables()
             txt = self.text
             for syll in self.syllables:
                 if len(syll.syllable) >= 1:
@@ -374,8 +374,8 @@ class Syllable(object):
         The factory method that will create a syllable from the database
         with its given weight (if stored in the database)
         """
-        from Elisio.models import Deviant_Syllable
-        if not isinstance(syll, Deviant_Syllable):
+        from Elisio.models import DeviantSyllable
+        if not isinstance(syll, DeviantSyllable):
             raise ScansionException("database error with Deviant Syllable")
         result = Syllable(syll.contents, False, syll.weight)
         return result
@@ -406,7 +406,13 @@ class Sound(object):
                 letterlist.append(item)
             else:
                 for char in item:
-                    letterlist.append(Letter(char))
+                    if isinstance(char, Letter):
+                        letterlist.append(char)
+                    elif len(char) > 1:
+                        for c in char:
+                            letterlist.append(Letter(c))
+                    else:
+                        letterlist.append(Letter(char))
 
         return Sound.__factory(letterlist)
 
@@ -708,8 +714,8 @@ class Letter(object):
 
     def __init__(self, ltr):
         """ construct a Letter by its contents """
-        if not (len(ltr) == 1 and isinstance(ltr, str) and ltr.isalpha()):
-            raise ScansionException("wrong number of letters "
+        if not (isinstance(ltr, str) and len(ltr) == 1 and ltr.isalpha()):
+            raise ScansionException("wrong number of letters " +
                                     "or not a valid character")
         self.letter = ltr.lower()
         if self.letter == 'v':
@@ -740,4 +746,4 @@ class Letter(object):
         but V and J are replaced by their vocalic values U and I
         in the constructor
         """
-        return self.letter in Letter.letters
+        return self.letter in Letter.letters.keys()
