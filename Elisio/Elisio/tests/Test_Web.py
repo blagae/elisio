@@ -15,7 +15,8 @@ class TestWeb(unittest.TestCase):
 
     def test_web_root_exists(self):
         """ This test acts as the canary in the coal mine for the web frontend
-        If anything goes wrong with file imports, url dispatching, template loading, etc
+        If anything goes wrong with file imports, url dispatching,
+        template loading, etc
         then the website is down and this test should fail
         """
         response = self.client.get('/')
@@ -23,5 +24,5 @@ class TestWeb(unittest.TestCase):
 
     def test_create_xml(self):
         """ creates XML with some data """
-        from Elisio.batchjob import fillTree
-        fillTree()
+        from Elisio.batchjob import fill_tree
+        fill_tree()

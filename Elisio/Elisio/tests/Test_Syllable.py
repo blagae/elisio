@@ -54,8 +54,9 @@ class TestSyllable(unittest.TestCase):
             self.construct_syllable('prout')
 
     def test_syll_lexical_exception(self):
-        """ ui is not usually a diphthong but it is attested in the forms cui and huic
-        which are consistently monosyllabic. these should be considered lexical exceptions
+        """ ui is not usually a diphthong but it is attested in the forms
+        cui and huic, which are consistently monosyllabic.
+        these should be considered lexical exceptions
         this is not typical of the Syllable, so these syllables must fail
         """
         with self.assertRaises(ScansionException):

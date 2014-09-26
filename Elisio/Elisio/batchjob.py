@@ -1,34 +1,46 @@
+""" module for creating an xml file from given input """
 import xml.etree.ElementTree as ET
 
-def createFile(tree):
+def create_file(tree):
+    """ create the file from the given xml tree """
     if isinstance(tree, ET.ElementTree):
         tree.write("Elisio/fixtures/omg.xml")
     else:
         raise IOError("Invalid XML Tree object")
 
-def readObject():
+def read_object():
+    """ read the entries from a file """
     # TODO: read-out from flatfile
     result = ['omgomgomg', 'yeyeyey']
     return result
 
-def fillTree():
-    verses = readObject()
+def fill_tree():
+    """ externally facing method """
+    verses = read_object()
 
     root = ET.Element("django-objects", {'version': '1.0'})
 
-    poemNum = 2
+    poem_number = 2
     count = 1
     for verse in verses:
-        object = ET.SubElement(root, "object", {'pk': str(count), 'model': 'Elisio.Db_Verse'})
-        poemField = ET.SubElement(object, "field", {'type': 'ForeignKey', 'name': 'poem'})
-        poemField.text = str(poemNum)
-        numberField = ET.SubElement(object, "field", {'type': 'IntegerField', 'name': 'number'})
-        numberField.text = str(count)
-        verseField = ET.SubElement(object, "field", {'type': 'CharField', 'name': 'contents'})
-        verseField.text = verse
+        obj = ET.SubElement(root, "object",
+                            {'pk': str(count),
+                             'model': 'Elisio.DatabaseVerse'})
+        poem_field = ET.SubElement(obj, "field",
+                                   {'type': 'ForeignKey',
+                                    'name': 'poem'})
+        poem_field.text = str(poem_number)
+        number_field = ET.SubElement(obj, "field",
+                                     {'type': 'IntegerField',
+                                      'name': 'number'})
+        number_field.text = str(count)
+        verse_field = ET.SubElement(obj, "field",
+                                    {'type': 'CharField',
+                                     'name': 'contents'})
+        verse_field.text = verse
 
         count += 1
 
     tree = ET.ElementTree(root)
 
-    createFile(tree)
+    create_file(tree)

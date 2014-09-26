@@ -39,7 +39,7 @@ def json_list(request, obj_type, key):
     elif obj_type == 'book':
         objects = Poem.objects.filter(book=primary)
     elif obj_type == 'poem':
-        return HttpResponse(DatabaseVerse.get_maximum_verse_number(poem=primary))
+        return HttpResponse(DatabaseVerse.get_maximum_verse_num(poem=primary))
     else:
         raise Http404
     data = serializers.serialize('json', objects)

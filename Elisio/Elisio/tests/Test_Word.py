@@ -8,7 +8,8 @@ from Elisio.exceptions import ScansionException
 TYPICAL_WORD = "recentia"
 SYLLABLES = ['re', 'cen', 'ti', 'a']
 EXPECTED_SYLLABLE_LIST = []
-EXPECTED_WEIGHTS = [Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT, Weights.ANCEPS]
+EXPECTED_WEIGHTS = [Weights.ANCEPS, Weights.HEAVY,
+                    Weights.LIGHT, Weights.ANCEPS]
 
 for syllable in SYLLABLES:
     EXPECTED_SYLLABLE_LIST.append(Syllable(syllable))

@@ -24,7 +24,7 @@ class TestLetter(unittest.TestCase):
         with self.assertRaises(ScansionException):
             self.construct_letter('')
 
-    def test_letter_fail_nonexist_W(self):
+    def test_letter_fail_nonexist_w(self):
         """ W is an invalid letter """
         with self.assertRaises(ScansionException):
             self.construct_letter('W')

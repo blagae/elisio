@@ -31,11 +31,15 @@ class TestSound(unittest.TestCase):
 
     def test_sound_constr_diph_obj(self):
         """ a valid list of Letters """
-        self.assertTrue(isinstance(self.construct_sound(Letter('a'), Letter('U')), Sound))
+        self.assertTrue(isinstance(
+            self.construct_sound(Letter('a'), Letter('U')), Sound)
+                        )
 
     def test_sound_constr_digraph(self):
         """ a valid list of Letters """
-        self.assertTrue(isinstance(self.construct_sound(Letter('Q'), Letter('u')), Sound))
+        self.assertTrue(isinstance(
+            self.construct_sound(Letter('Q'), Letter('u')), Sound)
+            )
 
     def test_sound_fail_constr_illegal(self):
         """ not a valid list of Letters """

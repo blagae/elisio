@@ -60,24 +60,34 @@ class TestVerse(unittest.TestCase):
         self.assertEqual(verse.words, EXPECTED_WORD_LIST)
 
     def test_verse_split_punctuation(self):
-        """ A verse with unusual and heavy punctuation must be split into words correctly """
-        verse = self.construct_verse("""(Arma'virumque,%cano.!Troiae^$qui";primus/ab oris)""")
+        """ A verse with unusual and heavy punctuation
+        must be split into words correctly """
+        verse = self.construct_verse(
+            """(Arma'virumque,%cano.!Troiae^$qui";primus/ab oris)""")
         verse.split()
         self.assertEqual(verse.words, EXPECTED_WORD_LIST)
 
     def test_verse_split_spaces(self):
-        """ A verse with unusual and heavy spacing must be split into words correctly """
-        verse = self.construct_verse("""      Arma\tvirumque\rcano\nTroiae\r\nqui\n\rprimus  \b \r   ab    oris.  """)
+        """ A verse with unusual and heavy spacing
+        must be split into words correctly """
+        verse = self.construct_verse(
+            """      Arma\tvirumque\rcano\nTroiae
+            \r\nqui\n\rprimus  \b \r   ab    oris.  """)
         verse.split()
         self.assertEqual(verse.words, EXPECTED_WORD_LIST)
 
     def test_verse_split_unusual_char(self):
-        """ A verse with unusual characters (diacritics) must be split into words correctly """
+        """
+        A verse with unusual characters (diacritics)
+        must be split into words correctly
+        """
         # TODO: aena should have a diaeresis
         """
-        verse = self.constructVerse("litore aena locant alii flammasque ministrant.")
+        verse = self.constructVerse("litore aena locant "
+                                    "alii flammasque ministrant.")
         verse.split()
-        expected_list = ["litore","aena","locant","alii","flammasque","ministrant."]
+        expected_list = ["litore","aena","locant",
+                         "alii","flammasque","ministrant."]
         self.assertEqual(verse.words, expected_list)
         """
 
@@ -133,7 +143,8 @@ class TestVerse(unittest.TestCase):
         """ heavymaker makes previous syllable heavy """
         verse = self.construct_verse('esse Zephyrumque')
         expected_result = [[Weights.HEAVY, Weights.HEAVY],
-                           [Weights.ANCEPS, Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT]]
+                           [Weights.ANCEPS, Weights.ANCEPS,
+                            Weights.HEAVY, Weights.LIGHT]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
@@ -146,7 +157,7 @@ class TestVerse(unittest.TestCase):
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
     def test_verse_scan_full(self):
-        """ A regular verse must get all relevant scansion information immediately
+        """ A regular verse must get all relevant scansion information
         Example:
         arma virumque cano troiae qui primus ab oris
         _  x  x _   u  x _   _ _    _   x x  x  x _
@@ -204,7 +215,9 @@ class TestHexameter(unittest.TestCase):
 
     def test_hexameter_scan_basic_case(self):
         """ Aen. 1, 1 must scan correctly imo """
-        expected_feet = [Feet.DACTYLUS, Feet.DACTYLUS, Feet.SPONDAEUS, Feet.SPONDAEUS, Feet.DACTYLUS, Feet.SPONDAEUS]
+        expected_feet = [Feet.DACTYLUS, Feet.DACTYLUS,
+                         Feet.SPONDAEUS, Feet.SPONDAEUS,
+                         Feet.DACTYLUS, Feet.SPONDAEUS]
         verse = self.construct_hexameter()
         verse.split()
         verse.scan()
@@ -224,7 +237,8 @@ class TestHexameter(unittest.TestCase):
                 verse.scan()
             except ScansionException as exc:
                 failed += 1
-                print("{3}({0}: {1}): {2}".format(dbverse.number, verse.text, exc, type(exc)))
+                print("{3}({0}: {1}): {2}"
+                      .format(dbverse.number, verse.text, exc, type(exc)))
             else:
                 worked += 1
         self.fail(str(worked) + " worked, " + str(failed) + " failed")

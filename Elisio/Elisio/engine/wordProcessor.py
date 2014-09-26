@@ -53,7 +53,10 @@ class Word(object):
         return self.syllables
 
     def split(self, test_deviant=True):
-        """ splits a word into syllables by using a few static methods from the Syllable class """
+        """
+        splits a word into syllables by using a few static methods
+        from the Syllable class
+        """
         if test_deviant and self.split_from_deviant_word():
             return
         sounds = self.find_sounds()
@@ -62,7 +65,10 @@ class Word(object):
         self.check_consistency()
 
     def split_from_deviant_word(self):
-        """ if the word can be found the repository of Deviant Words, we should use that instead """
+        """
+        if the word can be found the repository of Deviant Words,
+        we should use that instead
+        """
         from Elisio.models import DeviantWord
         deviant = DeviantWord.find(self.text)
         if deviant:
@@ -79,11 +85,14 @@ class Word(object):
             return True
 
     def find_sounds(self):
-        """ find the sequence of sounds from the textual representation of the word """
+        """
+        find the sequence of sounds from the textual representation of the word
+        """
         return Word.find_sounds_for_text(self.text)
 
-    def __eq__(self, other): 
-        """ Words are equal if they have exactly the same characters
+    def __eq__(self, other):
+        """
+        Words are equal if they have exactly the same characters
         Case insensitivity is enforced by the constructor
         """
         return self.__dict__ == other.__dict__
@@ -103,13 +112,16 @@ class Word(object):
             last_syllable = self.syllables[-1]
             next_word.split()
             first_syllable = next_word.syllables[0]
-            if last_syllable.can_elide_if_final() and first_syllable.starts_with_vowel():
+            if (last_syllable.can_elide_if_final() and
+                    first_syllable.starts_with_vowel()):
                 # elision
                 syll_struct[-1] = Weights.NONE
-            elif last_syllable.ends_with_consonant() and first_syllable.starts_with_vowel():
+            elif (last_syllable.ends_with_consonant() and
+                  first_syllable.starts_with_vowel()):
                 # consonant de facto redistributed
                 syll_struct[-1] = Weights.ANCEPS
-            elif last_syllable.ends_with_vowel() and first_syllable.starts_with_consonant_cluster():
+            elif (last_syllable.ends_with_vowel() and
+                  first_syllable.starts_with_consonant_cluster()):
                 syll_struct[-1] = Weights.HEAVY
         return syll_struct
 
@@ -143,7 +155,8 @@ class Word(object):
     def __join_into_syllables(cls, sounds):
         """
         join a list of sounds into a preliminary syllables
-        keep adding sounds to the syllable until it becomes illegal or the word ends
+        keep adding sounds to the syllable until it becomes illegal
+        or the word ends.
         at either point, save the syllable
         """
         syllables = []
@@ -165,11 +178,14 @@ class Word(object):
         in order to use the correct syllables, not the longest possible
         """
         for count in range(len(syllables)-1):
-            if count == len(syllables)-2 and syllables[count+1] == Syllable('ve'):
+            if (count == len(syllables)-2 and
+                    syllables[count+1] == Syllable('ve')):
                 continue
-            if syllables[count].ends_with_vowel() and syllables[count+1].starts_with_consonant_cluster():
+            if (syllables[count].ends_with_vowel() and
+                    syllables[count+1].starts_with_consonant_cluster()):
                 Word.__switch_sound(syllables[count], syllables[count+1], True)
-            elif syllables[count].ends_with_consonant() and syllables[count+1].starts_with_vowel(False):
+            elif (syllables[count].ends_with_consonant() and
+                  syllables[count+1].starts_with_vowel(False)):
                 Word.__switch_sound(syllables[count], syllables[count+1], False)
         return syllables
 
@@ -235,12 +251,16 @@ class Syllable(object):
                 if contains_vowel or contains_semivowel:
                     contains_final_consonant = True
             elif isinstance(sound, VowelSound):
-                if contains_vowel or (contains_final_consonant and contains_semivowel):
+                if (contains_vowel or
+                        (contains_final_consonant and
+                         contains_semivowel)):
                     return False
                 contains_vowel = True
                 only_consonants = False
             elif isinstance(sound, SemivowelSound):
-                if contains_vowel or (contains_final_consonant and contains_semivowel):
+                if (contains_vowel or
+                        (contains_final_consonant and
+                         contains_semivowel)):
                     return False
                 if count > 0:
                     contains_vowel = True
@@ -405,14 +425,14 @@ class Sound(object):
             if isinstance(item, Letter):
                 letterlist.append(item)
             else:
-                for char in item:
-                    if isinstance(char, Letter):
-                        letterlist.append(char)
-                    elif len(char) > 1:
-                        for c in char:
-                            letterlist.append(Letter(c))
+                for stri in item:
+                    if isinstance(stri, Letter):
+                        letterlist.append(stri)
+                    elif len(stri) > 1:
+                        for char in stri:
+                            letterlist.append(Letter(char))
                     else:
-                        letterlist.append(Letter(char))
+                        letterlist.append(Letter(stri))
 
         return Sound.__factory(letterlist)
 
