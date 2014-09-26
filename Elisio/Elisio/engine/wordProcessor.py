@@ -746,4 +746,4 @@ class Letter(object):
         but V and J are replaced by their vocalic values U and I
         in the constructor
         """
-        return self.letter in Letter.letters.keys()
+        return self.letter in Letter.letters
