@@ -73,6 +73,25 @@ class Verse(object):
                 result.append(word.get_syllable_structure())
         return result
 
+    def preparse(self):
+        """ prepare the list of Syllable weights """
+        layered_list = self.get_syllable_weights()
+        for word in layered_list:
+            # TODO: open monosyllables ? se me ne are all heavy
+            for weight in word:
+                if weight != Weights.NONE:
+                    self.flat_list.append(weight)
+
+    def get_split_syllables(self):
+        result = ""
+        for word in self.words:
+            for syll in word.syllables:
+                for snd in syll.sounds:
+                    for ltr in snd.letters:
+                        result += ltr.letter
+                result += "-"
+            result = result[:-1] + " "
+        return result
 
 class Hexameter(Verse):
     """ the most popular Latin verse type """
@@ -87,15 +106,6 @@ class Hexameter(Verse):
         self.feet = [None]*6
         self.flat_list = []
         self.hex = None
-
-    def preparse(self):
-        """ prepare the list of Syllable weights """
-        layered_list = self.get_syllable_weights()
-        for word in layered_list:
-            # TODO: open monosyllables ? se me ne are all heavy
-            for weight in word:
-                if weight != Weights.NONE:
-                    self.flat_list.append(weight)
 
     def __construct_hexameter(self):
         """ factory method """
@@ -212,7 +222,7 @@ class SpondaicDominantHexameter(Hexameter):
                 self.fill_other_feet(Feet.SPONDAEUS, Feet.DACTYLUS)
             else:
                 raise HexameterException("cannot determine full foot structure"+
-                                         "of single dactylus verse")
+                                         " of single dactylus verse")
 
 class DactylicDominantHexameter(Hexameter):
     """ a Hexameter with 3 Dactyls and 1 Spondee in its first 4 feet """
@@ -274,7 +284,7 @@ class DactylicDominantHexameter(Hexameter):
             self.fill_other_feet(Feet.DACTYLUS, Feet.SPONDAEUS)
         else:
             raise HexameterException("cannot determine full foot structure"+
-                                     "of single spondaeus verse")
+                                     " of single spondaeus verse")
 
 
 class BalancedHexameter(Hexameter):

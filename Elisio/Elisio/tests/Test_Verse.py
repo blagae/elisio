@@ -230,7 +230,7 @@ class TestHexameter(unittest.TestCase):
         failed = 0
         for dbverse in dbverses:
             try:
-                if dbverse.number == 29:
+                if dbverse.number == 81:
                     worked = worked
                 verse = Hexameter(dbverse.contents)
                 verse.split()
@@ -238,7 +238,7 @@ class TestHexameter(unittest.TestCase):
             except ScansionException as exc:
                 failed += 1
                 print("{3}({0}: {1}): {2}"
-                      .format(dbverse.number, verse.text, exc, type(exc)))
+                      .format(dbverse.number, verse.get_split_syllables(), exc, type(exc)))
             else:
                 worked += 1
         self.fail(str(worked) + " worked, " + str(failed) + " failed")

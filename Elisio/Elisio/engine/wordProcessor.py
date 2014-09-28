@@ -38,7 +38,7 @@ class Word(object):
     # TODO: this breaks a lot of verses with final long e
     # and the Verse tests where e$ is scheduled to be light
     # proposed solution: find deviant word ?
-    shortEndVowels = ['e'] # []
+    shortEndVowels = []
     longEndVowels = ['i', 'o', 'u']
     def __init__(self, text):
         """ construct a Word by its contents """
@@ -123,6 +123,8 @@ class Word(object):
             elif (last_syllable.ends_with_vowel() and
                   first_syllable.starts_with_consonant_cluster()):
                 syll_struct[-1] = Weights.HEAVY
+            if last_syllable == Syllable('que') and syll_struct[-1] != Weights.NONE:
+                syll_struct[-1] = Weights.LIGHT
         return syll_struct
 
     def check_consistency(self):

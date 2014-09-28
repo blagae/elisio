@@ -390,14 +390,14 @@ class TestWord(unittest.TestCase):
     def test_word_split_cons_sv(self):
         """ split words with internal consonantal semivowels """
         word = self.construct_word('volvere')
-        syllable_list = [Syllable('vol'), Syllable('ve'), Syllable('re')]
+        syllable_list = [Syllable('vo'), Syllable('lu'), Syllable('e'), Syllable('re')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
     def test_word_scan_cons_sv(self):
         """ scan words with internal consonantal semivowels """
         word = self.construct_word('volvere')
-        weights = [Weights.HEAVY, Weights.ANCEPS, Weights.LIGHT]
+        weights = [Weights.ANCEPS, Weights.LIGHT, Weights.ANCEPS, Weights.LIGHT]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
