@@ -1,7 +1,7 @@
 """ standard Django module """
 from django.db import models
-from Elisio.engine.wordProcessor import Weights, Syllable
-from Elisio.engine.verseProcessor import Verse
+from Elisio.engine.Syllable import Weight, Syllable
+from Elisio.engine.Verse import Verse
 from Elisio.exceptions import ScansionException
 from enumfields import EnumField
 import re
@@ -40,7 +40,7 @@ class DeviantWord(models.Model):
 class DeviantSyllable(models.Model):
     """ model class for the Engine: lowest level """
     word = models.ForeignKey(DeviantWord)
-    weight = EnumField(Weights)
+    weight = EnumField(Weight)
     contents = models.CharField(max_length=8)
     sequence = models.IntegerField()
     index_together = [["word", "sequence"]]

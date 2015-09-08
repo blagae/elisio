@@ -1,7 +1,7 @@
 """ test module for class Letter """
 import unittest
-from Elisio.engine.wordProcessor import Letter
-from Elisio.exceptions import ScansionException
+from Elisio.engine.Letter import Letter
+from Elisio.exceptions import *
 
 class TestLetter(unittest.TestCase):
 
@@ -17,32 +17,32 @@ class TestLetter(unittest.TestCase):
 
     def test_letter_fail_too_long(self):
         """ argument must be 1 character """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(LetterException):
             self.construct_letter('aa')
 
     def test_letter_fail_too_short(self):
         """ argument must have content """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(LetterException):
             self.construct_letter('')
 
     def test_letter_fail_nonexist_w(self):
         """ W is an invalid letter """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(LetterException):
             self.construct_letter('W')
 
     def test_letter_fail_nonexistent(self):
         """ w is an invalid letter """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(LetterException):
             self.construct_letter('w')
 
     def test_letter_fail_space(self):
         """ space is not a letter """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(LetterException):
             self.construct_letter(' ')
 
     def test_letter_fail_non_alpha(self):
         """ letters are in [a-zA-Z] """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(LetterException):
             self.construct_letter(',')
 
     def test_letter_equal(self):

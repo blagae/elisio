@@ -1,6 +1,7 @@
 """ test module for Sound """
 import unittest
-from Elisio.engine.wordProcessor import Word, Sound, Letter
+from Elisio.engine.Letter import Letter, LetterType
+from Elisio.engine.Sound import Sound, SoundFactory
 from Elisio.exceptions import ScansionException
 
 class TestSound(unittest.TestCase):
@@ -10,7 +11,7 @@ class TestSound(unittest.TestCase):
         letters = []
         for text in texts:
             letters.append(text)
-        sound = Sound.create(letters)
+        sound = SoundFactory.create(letters)
         return sound
 
     def test_sound_constr_regular(self):
@@ -58,74 +59,50 @@ class TestSound(unittest.TestCase):
 
     def test_sound_constr_from_text(self):
         """ a regular sound should be created easily """
-        sound = Sound.create_sounds_from_text('A')
+        sound = SoundFactory.create_sounds_from_text('A')
         self.assertTrue(isinstance(sound[0], Sound))
         self.assertEqual(len(sound), 1)
 
     def test_sound_fail_cstr_incl_space(self):
         """ a sound cannot contain spaces """
         with self.assertRaises(ScansionException):
-            Sound.create_sounds_from_text([' ', 'c'])
+            SoundFactory.create_sounds_from_text([' ', 'c'])
 
     def test_sound_fail_constr_too_rare(self):
         """ not a normally recognized diphthong """
-        sound = Sound.create_sounds_from_text('ui')
-        self.assertEqual(sound[0], Sound.create('u'))
+        sound = SoundFactory.create_sounds_from_text('ui')
+        self.assertEqual(sound[0], SoundFactory.create('u'))
         self.assertEqual(len(sound), 1)
 
     def test_sound_fail_constr_nonexist(self):
         """ creating sounds from text does not accept any input """
-        sound = Sound.create_sounds_from_text('ou')
-        self.assertEqual(sound[0], Sound.create('o'))
+        sound = SoundFactory.create_sounds_from_text('ou')
+        self.assertEqual(sound[0], SoundFactory.create('o'))
         self.assertEqual(len(sound), 1)
 
     def test_sound_equal(self):
         """ equality is on letter content """
-        sound1 = Sound.create('r')
-        sound2 = Sound.create('r')
+        sound1 = SoundFactory.create('r')
+        sound2 = SoundFactory.create('r')
         self.assertEqual(sound1, sound2)
 
     def test_sound_equal_case_insens(self):
         """ capitalization is wholly irrelevant """
-        sound1 = Sound.create('a')
-        sound2 = Sound.create('A')
+        sound1 = SoundFactory.create('a')
+        sound2 = SoundFactory.create('A')
         self.assertEqual(sound1, sound2)
 
     def test_sound_equal_u_v(self):
         """ semivowels have several graphemes """
-        sound1 = Sound.create('u')
-        sound2 = Sound.create('v')
+        sound1 = SoundFactory.create('u')
+        sound2 = SoundFactory.create('v')
         self.assertEqual(sound1, sound2)
 
     def test_sound_equal_i_j(self):
         """ semivowels have several graphemes """
-        sound1 = Sound.create('i')
-        sound2 = Sound.create('j')
+        sound1 = SoundFactory.create('i')
+        sound2 = SoundFactory.create('j')
         self.assertEqual(sound1, sound2)
-
-    def test_sound_finder(self):
-        """ integration test for finding sounds """
-        sound1 = Sound.create('f')
-        sound2 = Sound.create('o')
-        sound3 = Sound.create('r')
-        sound4 = Sound.create('s')
-        expected_sounds = []
-        expected_sounds.append(sound1)
-        expected_sounds.append(sound2)
-        expected_sounds.append(sound3)
-        expected_sounds.append(sound4)
-        sounds = Word.find_sounds_for_text('fors')
-        self.assertEqual(sounds, expected_sounds)
-
-    def test_sound_finder_digraphs(self):
-        """ digraphs must work out well """
-        sound1 = Sound.create('qu')
-        sound2 = Sound.create('ae')
-        expected_sounds = []
-        expected_sounds.append(sound1)
-        expected_sounds.append(sound2)
-        sounds = Word.find_sounds_for_text('quae')
-        self.assertEqual(sounds, expected_sounds)
 
 if __name__ == '__main__':
     unittest.main()

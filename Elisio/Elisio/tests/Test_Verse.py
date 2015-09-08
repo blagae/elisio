@@ -1,7 +1,8 @@
 """ Test classes for Verse scanning """
 import unittest
-from Elisio.engine.verseProcessor import Verse, Hexameter, Feet, set_django
-from Elisio.engine.wordProcessor import Weights, Word
+from Elisio.engine.Verse import Verse, Hexameter, Foot, set_django
+from Elisio.engine.Word import Word
+from Elisio.engine.Syllable import Weight
 from Elisio.exceptions import ScansionException
 
 set_django()
@@ -94,65 +95,65 @@ class TestVerse(unittest.TestCase):
     def test_verse_scan_elis_reg(self):
         """ normal elision """
         verse = self.construct_verse('multo ille')
-        expected_result = [[Weights.HEAVY, Weights.NONE],
-                           [Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[Weight.HEAVY, Weight.NONE],
+                           [Weight.HEAVY, Weight.LIGHT]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
     def test_verse_scan_elis_um(self):
         """ special cases should be not so special """
         verse = self.construct_verse('multum ille')
-        expected_result = [[Weights.HEAVY, Weights.NONE],
-                           [Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[Weight.HEAVY, Weight.NONE],
+                           [Weight.HEAVY, Weight.LIGHT]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
     def test_verse_scan_elis_h(self):
         """ special cases should be not so special """
         verse = self.construct_verse('multo hillo')
-        expected_result = [[Weights.HEAVY, Weights.NONE],
-                           [Weights.HEAVY, Weights.HEAVY]]
+        expected_result = [[Weight.HEAVY, Weight.NONE],
+                           [Weight.HEAVY, Weight.HEAVY]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
     def test_verse_scan_elis_semivwl_h(self):
         """ special cases should be not so special """
         verse = self.construct_verse('multu hille')
-        expected_result = [[Weights.HEAVY, Weights.NONE],
-                           [Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[Weight.HEAVY, Weight.NONE],
+                           [Weight.HEAVY, Weight.LIGHT]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
     def test_verse_scan_elis_um_hi(self):
         """ special cases should be not so special """
         verse = self.construct_verse('multum hille')
-        expected_result = [[Weights.HEAVY, Weights.NONE],
-                           [Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[Weight.HEAVY, Weight.NONE],
+                           [Weight.HEAVY, Weight.LIGHT]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
     def test_verse_scan_final_anceps(self):
         """ non-heavy final syllable marked anceps if a word follows """
         verse = self.construct_verse('multus ille')
-        expected_result = [[Weights.HEAVY, Weights.ANCEPS],
-                           [Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[Weight.HEAVY, Weight.ANCEPS],
+                           [Weight.HEAVY, Weight.LIGHT]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
     def test_verse_scan_heavy_maker(self):
         """ heavymaker makes previous syllable heavy """
         verse = self.construct_verse('esse Zephyrumque')
-        expected_result = [[Weights.HEAVY, Weights.HEAVY],
-                           [Weights.ANCEPS, Weights.ANCEPS,
-                            Weights.HEAVY, Weights.LIGHT]]
+        expected_result = [[Weight.HEAVY, Weight.HEAVY],
+                           [Weight.ANCEPS, Weight.ANCEPS,
+                            Weight.HEAVY, Weight.LIGHT]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
     def test_verse_scan_cluster(self):
         """ initial cluster makes previous syllable heavy """
         verse = self.construct_verse('esse strabo')
-        expected_result = [[Weights.HEAVY, Weights.HEAVY],
-                           [Weights.ANCEPS, Weights.HEAVY]]
+        expected_result = [[Weight.HEAVY, Weight.HEAVY],
+                           [Weight.ANCEPS, Weight.HEAVY]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
@@ -164,14 +165,14 @@ class TestVerse(unittest.TestCase):
         Note that this archetypical verse does not test for a lot
         """
         verse = self.construct_verse()
-        expected_result = [[Weights.HEAVY, Weights.ANCEPS,],
-                           [Weights.ANCEPS, Weights.HEAVY, Weights.LIGHT,],
-                           [Weights.ANCEPS, Weights.HEAVY,],
-                           [Weights.HEAVY, Weights.HEAVY,],
-                           [Weights.HEAVY,],
-                           [Weights.ANCEPS, Weights.ANCEPS,],
-                           [Weights.ANCEPS,],
-                           [Weights.ANCEPS, Weights.HEAVY]]
+        expected_result = [[Weight.HEAVY, Weight.ANCEPS,],
+                           [Weight.ANCEPS, Weight.HEAVY, Weight.LIGHT,],
+                           [Weight.ANCEPS, Weight.HEAVY,],
+                           [Weight.HEAVY, Weight.HEAVY,],
+                           [Weight.HEAVY,],
+                           [Weight.ANCEPS, Weight.ANCEPS,],
+                           [Weight.ANCEPS,],
+                           [Weight.ANCEPS, Weight.HEAVY]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
@@ -215,9 +216,9 @@ class TestHexameter(unittest.TestCase):
 
     def test_hexameter_scan_basic_case(self):
         """ Aen. 1, 1 must scan correctly imo """
-        expected_feet = [Feet.DACTYLUS, Feet.DACTYLUS,
-                         Feet.SPONDAEUS, Feet.SPONDAEUS,
-                         Feet.DACTYLUS, Feet.SPONDAEUS]
+        expected_feet = [Foot.DACTYLUS, Foot.DACTYLUS,
+                         Foot.SPONDAEUS, Foot.SPONDAEUS,
+                         Foot.DACTYLUS, Foot.SPONDAEUS]
         verse = self.construct_hexameter()
         verse.split()
         verse.scan()

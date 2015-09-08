@@ -35,7 +35,16 @@
     <Compile Include="Elisio\batchjob.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Elisio\engine\wordProcessor.py">
+    <Compile Include="Elisio\engine\Letter.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\engine\Sound.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\engine\Syllable.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\engine\Word.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\engine\__init__.py">
@@ -44,7 +53,7 @@
     <Compile Include="Elisio\exceptions.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Elisio\engine\verseProcessor.py">
+    <Compile Include="Elisio\engine\Verse.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\fixtures\initial_data.xml">
@@ -60,6 +69,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\tests\Test_Letter.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\tests\Test_SoundFinder.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\tests\Test_Syllable.py">

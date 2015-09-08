@@ -1,15 +1,16 @@
 """ unit tests for Word """
 
 import unittest
-from Elisio.engine.verseProcessor import Weights, set_django
-from Elisio.engine.wordProcessor import Word, Syllable
+from Elisio.engine.Verse import Weight, set_django
+from Elisio.engine.Syllable import Syllable
+from Elisio.engine.Word import Word
 from Elisio.exceptions import ScansionException
 
 TYPICAL_WORD = "recentia"
 SYLLABLES = ['re', 'cen', 'ti', 'a']
 EXPECTED_SYLLABLE_LIST = []
-EXPECTED_WEIGHTS = [Weights.ANCEPS, Weights.HEAVY,
-                    Weights.LIGHT, Weights.ANCEPS]
+EXPECTED_WEIGHTS = [Weight.ANCEPS, Weight.HEAVY,
+                    Weight.LIGHT, Weight.ANCEPS]
 
 for syllable in SYLLABLES:
     EXPECTED_SYLLABLE_LIST.append(Syllable(syllable))
@@ -82,7 +83,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_closed_semivwl(self):
         """ semivowel is correctly scanned as vocalic """
         word = self.construct_word('iurgus')
-        weights = [Weights.HEAVY, Weights.HEAVY]
+        weights = [Weight.HEAVY, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -103,7 +104,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_initial_clusters(self):
         """ clusters are not a problem """
         word = self.construct_word('sphrostrurbs')
-        weights = [Weights.HEAVY, Weights.HEAVY]
+        weights = [Weight.HEAVY, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -117,7 +118,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_open_semivwl(self):
         """ initial semivowel is correctly scanned """
         word = self.construct_word('imus')
-        weights = [Weights.ANCEPS, Weights.HEAVY]
+        weights = [Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -131,7 +132,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_init_semivwl(self):
         """ initial semivowel is correctly scanned as vocalic """
         word = self.construct_word('uilis')
-        weights = [Weights.ANCEPS, Weights.HEAVY]
+        weights = [Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -145,7 +146,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_short_semivwl(self):
         """ semivowel is also light when corripitur """
         word = self.construct_word('pius')
-        weights = [Weights.LIGHT, Weights.HEAVY]
+        weights = [Weight.LIGHT, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -187,7 +188,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_weird_word(self):
         """ common name must be in the dictionary """
         word = self.construct_word('troiae')
-        weights = [Weights.HEAVY, Weights.HEAVY]
+        weights = [Weight.HEAVY, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -208,7 +209,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_same_vowels(self):
         """ semivowels should be analyzed correctly """
         word = self.construct_word('mortuus')
-        weights = [Weights.HEAVY, Weights.LIGHT, Weights.HEAVY]
+        weights = [Weight.HEAVY, Weight.LIGHT, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -222,7 +223,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_q(self):
         """ Q is always followed by inconsequential u """
         word = self.construct_word('antiquus')
-        weights = [Weights.HEAVY, Weights.ANCEPS, Weights.HEAVY]
+        weights = [Weight.HEAVY, Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -236,7 +237,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_anceps_h(self):
         """ H has no impact """
         word = self.construct_word('pathos')
-        weights = [Weights.ANCEPS, Weights.HEAVY]
+        weights = [Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -257,7 +258,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_muta_cum_liquid(self):
         """ muta cum liquida does not have impact """
         word = self.construct_word('patris')
-        weights = [Weights.ANCEPS, Weights.HEAVY]
+        weights = [Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -271,7 +272,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_semivwl_internal(self):
         """ intervocalic semivowel is light """
         word = self.construct_word('italiam')
-        weights = [Weights.ANCEPS, Weights.ANCEPS, Weights.LIGHT, Weights.HEAVY]
+        weights = [Weight.ANCEPS, Weight.ANCEPS, Weight.LIGHT, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -285,7 +286,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_fake_diphthong(self):
         """ intervocalic semivowel takes precedence over diphthong """
         word = self.construct_word('lavus')
-        weights = [Weights.ANCEPS, Weights.HEAVY]
+        weights = [Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -299,7 +300,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_intvoc_semivwl(self):
         """ intervocalic semivowel must be consonantal """
         word = self.construct_word('civis')
-        weights = [Weights.ANCEPS, Weights.HEAVY]
+        weights = [Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -313,35 +314,35 @@ class TestWord(unittest.TestCase):
     def test_word_scan_identical_sound(self):
         """ check reworking of word-internal sounds """
         word = self.construct_word('memor')
-        weights = [Weights.ANCEPS, Weights.HEAVY]
+        weights = [Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_word_scan_h(self):
         """ H must have no impact on weights """
         word = self.construct_word('zephyrus')
-        weights = [Weights.ANCEPS, Weights.ANCEPS, Weights.HEAVY]
+        weights = [Weight.ANCEPS, Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_word_scan_weird_word_two(self):
         """ proper name scanning """
         word = self.construct_word('troas')
-        weights = [Weights.HEAVY, Weights.HEAVY]
+        weights = [Weight.HEAVY, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_word_scan_endvowel_closed(self):
         """ any closed final syllable is scanned as heavy in isolation """
         word = self.construct_word('uiles')
-        weights = [Weights.ANCEPS, Weights.HEAVY]
+        weights = [Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_word_scan_shortened_h(self):
         """ H has no impact on vowel reduction """
         word = self.construct_word('maher')
-        weights = [Weights.LIGHT, Weights.HEAVY]
+        weights = [Weight.LIGHT, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -355,7 +356,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_not_a_diphthong(self):
         """ make sure EU is not scanned as a diphthong """
         word = self.construct_word('deum')
-        weights = [Weights.LIGHT, Weights.HEAVY]
+        weights = [Weight.LIGHT, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -369,7 +370,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_monosyllabic(self):
         """ make sure initial semivowel is scanned correctly """
         word = self.construct_word('iam')
-        weights = [Weights.HEAVY]
+        weights = [Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -383,7 +384,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_gu(self):
         """ make sure internal GU is not analyzed as a syllable """
         word = self.construct_word('sanguine')
-        weights = [Weights.HEAVY, Weights.ANCEPS, Weights.LIGHT]
+        weights = [Weight.HEAVY, Weight.ANCEPS, Weight.LIGHT]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -397,7 +398,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_cons_sv(self):
         """ scan words with internal consonantal semivowels """
         word = self.construct_word('volvere')
-        weights = [Weights.ANCEPS, Weights.LIGHT, Weights.ANCEPS, Weights.LIGHT]
+        weights = [Weight.ANCEPS, Weight.LIGHT, Weight.ANCEPS, Weight.LIGHT]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
