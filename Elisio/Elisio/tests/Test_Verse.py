@@ -109,9 +109,9 @@ class TestVerse(unittest.TestCase):
 
     def test_verse_scan_elis_h(self):
         """ special cases should be not so special """
-        verse = self.construct_verse('multo hille')
+        verse = self.construct_verse('multo hillo')
         expected_result = [[Weights.HEAVY, Weights.NONE],
-                           [Weights.HEAVY, Weights.LIGHT]]
+                           [Weights.HEAVY, Weights.HEAVY]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 

@@ -38,7 +38,7 @@ class Word(object):
     # TODO: this breaks a lot of verses with final long e
     # and the Verse tests where e$ is scheduled to be light
     # proposed solution: find deviant word ?
-    shortEndVowels = []
+    shortEndVowels = ['e']
     longEndVowels = ['i', 'o', 'u']
     def __init__(self, text):
         """ construct a Word by its contents """

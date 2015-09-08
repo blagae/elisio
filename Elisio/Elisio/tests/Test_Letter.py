@@ -4,6 +4,7 @@ from Elisio.engine.wordProcessor import Letter
 from Elisio.exceptions import ScansionException
 
 class TestLetter(unittest.TestCase):
+
     """ test class for Letter """
     def construct_letter(self, letter):
         """ Construct a letter object from a given text """

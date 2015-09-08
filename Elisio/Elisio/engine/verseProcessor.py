@@ -10,6 +10,9 @@ def set_django():
     if (not 'DJANGO_SETTINGS_MODULE' in os.environ or
             os.environ['DJANGO_SETTINGS_MODULE'] != 'Elisio.settings'):
         os.environ['DJANGO_SETTINGS_MODULE'] = 'Elisio.settings'
+    import django
+    if django.VERSION[:2] >= (1, 7):
+        django.setup()
 
 class Feet(enum.Enum):
     """ Types of verse foot """

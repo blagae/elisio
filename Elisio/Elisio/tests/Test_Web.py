@@ -19,7 +19,7 @@ class TestWeb(unittest.TestCase):
         template loading, etc
         then the website is down and this test should fail
         """
-        response = self.client.get('/')
+        response = self.client.get('/about/')
         self.assertEqual(response.status_code, 200)
 
     def test_create_xml(self):

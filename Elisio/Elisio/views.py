@@ -43,7 +43,7 @@ def json_list(request, obj_type, key):
     else:
         raise Http404
     data = serializers.serialize('json', objects)
-    return HttpResponse(data, mimetype='application/json')
+    return HttpResponse(data, content_type='application/json')
 
 def json_verse(request, poem, verse):
     """ get a verse through a JSON request """
@@ -51,4 +51,4 @@ def json_verse(request, poem, verse):
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
     data = json.dumps(obj)
-    return HttpResponse(data, mimetype='application/json')
+    return HttpResponse(data, content_type='application/json')
