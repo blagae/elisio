@@ -71,9 +71,6 @@
     <Compile Include="Elisio\tests\Test_Letter.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Elisio\tests\Test_SoundFinder.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Elisio\tests\Test_Syllable.py">
       <SubType>Code</SubType>
     </Compile>

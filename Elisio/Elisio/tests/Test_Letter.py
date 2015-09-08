@@ -11,10 +11,24 @@ class TestLetter(unittest.TestCase):
         constructed_letter = Letter(letter)
         return constructed_letter
 
+    # random sample of correct letters
     def test_letter_construct(self):
         """ normal construct works """
         self.assertTrue(isinstance(self.construct_letter('a'), Letter))
+        
+    def test_letter_construct(self):
+        """ normal construct works """
+        self.assertTrue(isinstance(self.construct_letter('D'), Letter))
 
+    def test_letter_construct(self):
+        """ normal construct works """
+        self.assertTrue(isinstance(self.construct_letter('Q'), Letter))
+
+    def test_letter_construct(self):
+        """ normal construct works """
+        self.assertTrue(isinstance(self.construct_letter('r'), Letter))
+
+    # argument too long or too short
     def test_letter_fail_too_long(self):
         """ argument must be 1 character """
         with self.assertRaises(LetterException):
@@ -25,6 +39,7 @@ class TestLetter(unittest.TestCase):
         with self.assertRaises(LetterException):
             self.construct_letter('')
 
+    # illegal letter
     def test_letter_fail_nonexist_w(self):
         """ W is an invalid letter """
         with self.assertRaises(LetterException):
@@ -34,16 +49,66 @@ class TestLetter(unittest.TestCase):
         """ w is an invalid letter """
         with self.assertRaises(LetterException):
             self.construct_letter('w')
-
+            
+    # spaces and punctuation
     def test_letter_fail_space(self):
         """ space is not a letter """
         with self.assertRaises(LetterException):
             self.construct_letter(' ')
 
+    def test_letter_fail_tab(self):
+        """ space is not a letter """
+        with self.assertRaises(LetterException):
+            self.construct_letter('\t')
+
     def test_letter_fail_non_alpha(self):
         """ letters are in [a-zA-Z] """
         with self.assertRaises(LetterException):
             self.construct_letter(',')
+            
+    def test_letter_fail_non_alpha2(self):
+        """ letters are in [a-zA-Z] """
+        with self.assertRaises(LetterException):
+            self.construct_letter('"')
+            
+    def test_letter_fail_non_alpha3(self):
+        """ letters are in [a-zA-Z] """
+        with self.assertRaises(LetterException):
+            self.construct_letter('!')
+
+    def test_letter_fail_non_alpha4(self):
+        """ letters are in [a-zA-Z] """
+        with self.assertRaises(LetterException):
+            self.construct_letter('2')
+            
+    def test_letter_fail_non_alpha5(self):
+        """ letters are in [a-zA-Z] """
+        with self.assertRaises(LetterException):
+            self.construct_letter(8)
+            
+    # letters with accents
+    def test_letter_fail_accent(self):
+        """ letters are in [a-zA-Z] """
+        with self.assertRaises(LetterException):
+            self.construct_letter('\u00E9')
+
+            
+    def test_letter_fail_other_writing1(self):
+        # Greek letter
+        with self.assertRaises(LetterException):
+            self.construct_letter(u'?')
+        # Greek letter
+    def test_letter_fail_other_writing2(self):
+        with self.assertRaises(LetterException):
+            self.construct_letter(u'\u0391')
+    def test_letter_fail_other_writing3(self):
+        # Hindi letter
+        with self.assertRaises(LetterException):
+            self.construct_letter(u'\u0917')
+    def test_letter_fail_other_writing4(self):
+        # Arabic letter
+        with self.assertRaises(LetterException):
+            self.construct_letter(u'\u063A')
 
     def test_letter_equal(self):
         """ a letter is equal to itself """
@@ -56,12 +121,23 @@ class TestLetter(unittest.TestCase):
         letter1 = self.construct_letter('a')
         letter2 = self.construct_letter('c')
         self.assertNotEqual(letter1, letter2)
-
+        
     def test_letter_equal_case_insens(self):
         """ letters are case insensitive """
         letter1 = self.construct_letter('a')
         letter2 = self.construct_letter('A')
         self.assertEqual(letter1, letter2)
+
+    def test_letter_equal_case_semivowel(self):
+        """ i == j """
+        letter1 = self.construct_letter('J')
+        letter2 = self.construct_letter('i')
+        self.assertEqual(letter1, letter2)
+
+    def test_letter_j_transformed(self):
+        """ j == i """
+        letter = self.construct_letter('j')
+        self.assertEqual(letter.letter, 'i')
 
     def test_letter_is_valid(self):
         """ tautological test ? """
