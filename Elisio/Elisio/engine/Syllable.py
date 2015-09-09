@@ -12,7 +12,7 @@ class Syllable(object):
         """ construct a Syllable by its contents """
         self.weight = weight
         self.syllable = syllable
-        self.sounds = WordAnalyzer.find_sounds_for_text(syllable)
+        self.sounds = SoundFinder.find_sounds_for_text(syllable)
         if test and not self.is_valid():
             raise SyllableException("invalid Syllable object")
 
@@ -144,7 +144,7 @@ class Syllable(object):
                      next_syllable.makes_previous_heavy()) or
                     (not self.is_light(next_syllable) and vowel.is_diphthong()))
         return (self.ends_with_consonant() or vowel.is_diphthong() or
-                vowel.letters[0] in WordAnalyzer.longEndVowels)
+                vowel.letters[0] in SoundFinder.longEndVowels)
 
     def is_light(self, next_syllable=None):
         """
@@ -157,7 +157,7 @@ class Syllable(object):
             return self.ends_with_vowel() and next_syllable.starts_with_vowel()
         return (self.ends_with_vowel() and
                 not self.get_vowel().is_diphthong() and
-                self.get_vowel().letters[0] in WordAnalyzer.shortEndVowels
+                self.get_vowel().letters[0] in SoundFinder.shortEndVowels
                )
 
     def add_sound(self, sound):
@@ -214,7 +214,7 @@ class Weight(enum.Enum):
         ANCEPS: 'Anceps'
     }
 
-class WordAnalyzer(object):
+class SoundFinder(object):
     # TODO: this breaks a lot of verses with final long e
     # and the Verse tests where e$ is scheduled to be light
     # proposed solution: find deviant word ?
@@ -265,10 +265,10 @@ class WordAnalyzer(object):
                 continue
             if (syllables[count].ends_with_vowel() and
                     syllables[count+1].starts_with_consonant_cluster()):
-                WordAnalyzer.__switch_sound(syllables[count], syllables[count+1], True)
+                SoundFinder.__switch_sound(syllables[count], syllables[count+1], True)
             elif (syllables[count].ends_with_consonant() and
                   syllables[count+1].starts_with_vowel(False)):
-                WordAnalyzer.__switch_sound(syllables[count], syllables[count+1], False)
+                SoundFinder.__switch_sound(syllables[count], syllables[count+1], False)
         return syllables
 
     @classmethod

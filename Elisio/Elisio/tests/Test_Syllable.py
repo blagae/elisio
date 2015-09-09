@@ -1,8 +1,8 @@
 """ Test classes for Syllable """
 import unittest
-from Elisio.engine.Syllable import Syllable, WordAnalyzer
+from Elisio.engine.Syllable import Syllable, SoundFinder
 from Elisio.engine.Sound import SoundFactory
-from Elisio.exceptions import ScansionException
+from Elisio.exceptions import SyllableException
 
 class TestSyllable(unittest.TestCase):
     """ Test class for Syllable """
@@ -33,17 +33,17 @@ class TestSyllable(unittest.TestCase):
 
     def test_syll_fail_non_diph(self):
         """ this is not a single syllable """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(SyllableException):
             self.construct_syllable('tia')
 
     def test_syll_fail_mult_vwl(self):
         """ this is not a single syllable """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(SyllableException):
             self.construct_syllable('aeu')
 
     def test_syll_fail_mult_syll(self):
         """ this is not a single syllable """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(SyllableException):
             self.construct_syllable('inos')
 
     def test_syll_fail_too_rare(self):
@@ -51,7 +51,7 @@ class TestSyllable(unittest.TestCase):
         while it is technically possible to make this sound a diphthong,
         is exceedingly rare and must be seen as a lexical exception
         """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(SyllableException):
             self.construct_syllable('prout')
 
     def test_syll_lexical_exception(self):
@@ -60,7 +60,7 @@ class TestSyllable(unittest.TestCase):
         these should be considered lexical exceptions
         this is not typical of the Syllable, so these syllables must fail
         """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(SyllableException):
             self.construct_syllable('cui')
 
     def test_sound_finder(self):
@@ -74,7 +74,7 @@ class TestSyllable(unittest.TestCase):
         expected_sounds.append(sound2)
         expected_sounds.append(sound3)
         expected_sounds.append(sound4)
-        sounds = WordAnalyzer.find_sounds_for_text('fors')
+        sounds = SoundFinder.find_sounds_for_text('fors')
         self.assertEqual(sounds, expected_sounds)
 
     def test_sound_finder_digraphs(self):
@@ -84,7 +84,7 @@ class TestSyllable(unittest.TestCase):
         expected_sounds = []
         expected_sounds.append(sound1)
         expected_sounds.append(sound2)
-        sounds = WordAnalyzer.find_sounds_for_text('quae')
+        sounds = SoundFinder.find_sounds_for_text('quae')
         self.assertEqual(sounds, expected_sounds)
 
 if __name__ == '__main__':
