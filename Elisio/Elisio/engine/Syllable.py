@@ -1,6 +1,6 @@
-from Elisio.engine.Sound import *
 import copy
 import enum
+from Elisio.engine.Sound import *
 from Elisio.exceptions import SyllableException
 
 class Syllable(object):

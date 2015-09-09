@@ -1,5 +1,5 @@
-from Elisio.engine.Letter import Letter, LetterType
 import re
+from Elisio.engine.Letter import Letter, LetterType
 from Elisio.exceptions import SoundException
 
 class Sound(object):
@@ -14,8 +14,7 @@ class Sound(object):
             if isinstance(letter, Letter):
                 self.letters.append(letter)
             else:
-                raise SoundException("invalid constructor"+str(self.letters))
-
+                raise SoundException("invalid constructor "+str(self.letters))
 
     def get_text(self):
         """ get String representation for output purposes """
@@ -30,7 +29,7 @@ class Sound(object):
         in case that number is 2, it must be
         one of a fixed list of combinations
         """
-        return True
+        raise NotImplementedError("Please Implement this method")
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
@@ -273,7 +272,7 @@ class SoundFactory(object):
                 # set looping consonant to False
                 first = False
             else:
-                if sound.is_vowel():
+                if sound.is_vowel() or sound.is_semivowel():
                     sound = Diphthong(sound.letters[0], item)
                 if sound.is_consonant():
                     sound.letters.append(item)
@@ -299,7 +298,7 @@ class SoundFactory(object):
                     sounds.append(snd)
                 return sounds
         try:
-            sound = SoundFactory.create(text[0:2])
+            sound = SoundFactory.create(text[0:2]) # TODO: or 0:1 ??
         except SoundException:
             sound = SoundFactory.create(text[0])
         return [sound]

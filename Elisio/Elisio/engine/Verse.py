@@ -1,9 +1,9 @@
 """ the main module for parsing verses """
-import re
 import enum
-from Elisio.exceptions import ScansionException, HexameterException
-from Elisio.engine.Word import Word
+import re
 from Elisio.engine.Syllable import Weight
+from Elisio.engine.Word import Word
+from Elisio.exceptions import ScansionException, HexameterException
 
 def set_django():
     """ in order to get to the database, we must use Django """

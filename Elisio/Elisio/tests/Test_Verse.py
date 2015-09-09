@@ -232,7 +232,7 @@ class TestHexameter(unittest.TestCase):
         for dbverse in dbverses:
             try:
                 if dbverse.number == 81:
-                    worked = worked
+                    worked = worked # for debugging
                 verse = Hexameter(dbverse.contents)
                 verse.split()
                 verse.scan()

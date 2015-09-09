@@ -1,7 +1,6 @@
 """ processing unit for Words and lower entities """
-from Elisio.exceptions import WordException
-from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Syllable, WordAnalyzer, Weight
+from Elisio.exceptions import WordException
 
 class Word(object):
     """ Word class
