@@ -209,11 +209,10 @@ $RECYCLE.BIN/
 # Local
 Elisio/bin/**
 Elisio/obj/**
-Elisio/**.config
-Elisio/**.exe
-Elisio/Elisio/**.pyc
+Elisio/Elisio/*.pyc
 Elisio/Elisio/local.py
 Elisio/env*
 Elisio/ptvs*
 Elisio/Elisio/fixtures/omg.xml
 Elisio/*.db
+Elisio/*.config
