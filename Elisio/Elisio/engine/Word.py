@@ -1,5 +1,6 @@
 """ processing unit for Words and lower entities """
-from Elisio.engine.Syllable import Syllable, SoundFinder, Weight
+from Elisio.engine.Sound import SoundFactory
+from Elisio.engine.Syllable import Syllable, SyllableSplitter, Weight
 from Elisio.exceptions import WordException
 
 class Word(object):
@@ -27,8 +28,8 @@ class Word(object):
         if test_deviant and self.split_from_deviant_word():
             return
         sounds = self.find_sounds()
-        temporary_syllables = SoundFinder.join_into_syllables(sounds)
-        self.syllables = SoundFinder.redistribute(temporary_syllables)
+        temporary_syllables = SyllableSplitter.join_into_syllables(sounds)
+        self.syllables = SyllableSplitter.redistribute(temporary_syllables)
         self.check_consistency()
 
     def split_from_deviant_word(self):
@@ -55,7 +56,7 @@ class Word(object):
         """
         find the sequence of sounds from the textual representation of the word
         """
-        return SoundFinder.find_sounds_for_text(self.text)
+        return SoundFactory.find_sounds_for_text(self.text)
 
     def __eq__(self, other):
         """

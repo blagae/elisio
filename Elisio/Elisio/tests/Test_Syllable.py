@@ -1,6 +1,6 @@
 """ Test classes for Syllable """
 import unittest
-from Elisio.engine.Syllable import Syllable, SoundFinder
+from Elisio.engine.Syllable import Syllable
 from Elisio.engine.Sound import SoundFactory
 from Elisio.exceptions import SyllableException
 
@@ -63,29 +63,6 @@ class TestSyllable(unittest.TestCase):
         with self.assertRaises(SyllableException):
             self.construct_syllable('cui')
 
-    def test_sound_finder(self):
-        """ integration test for finding sounds """
-        sound1 = SoundFactory.create('f')
-        sound2 = SoundFactory.create('o')
-        sound3 = SoundFactory.create('r')
-        sound4 = SoundFactory.create('s')
-        expected_sounds = []
-        expected_sounds.append(sound1)
-        expected_sounds.append(sound2)
-        expected_sounds.append(sound3)
-        expected_sounds.append(sound4)
-        sounds = SoundFinder.find_sounds_for_text('fors')
-        self.assertEqual(sounds, expected_sounds)
-
-    def test_sound_finder_digraphs(self):
-        """ digraphs must work out well """
-        sound1 = SoundFactory.create('qu')
-        sound2 = SoundFactory.create('ae')
-        expected_sounds = []
-        expected_sounds.append(sound1)
-        expected_sounds.append(sound2)
-        sounds = SoundFinder.find_sounds_for_text('quae')
-        self.assertEqual(sounds, expected_sounds)
 
 if __name__ == '__main__':
     unittest.main()

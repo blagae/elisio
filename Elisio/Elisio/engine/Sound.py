@@ -226,6 +226,7 @@ class HeavyMakerSound(ConsonantSound):
 
     
 class SoundFactory(object):
+    # TODO: rename methods ?
     @classmethod
     def create(cls, *letters):
         """
@@ -245,7 +246,6 @@ class SoundFactory(object):
                             letterlist.append(Letter(char))
                     else:
                         letterlist.append(Letter(stri))
-
         return SoundFactory.__factory(letterlist)
 
     @classmethod
@@ -302,3 +302,15 @@ class SoundFactory(object):
         except SoundException:
             sound = SoundFactory.create(text[0])
         return [sound]
+
+    @classmethod
+    def find_sounds_for_text(cls, text):
+        """ iteratively allocate all text to a sound """
+        i = 0
+        sounds = []
+        while i < len(text):
+            added_sounds = SoundFactory.create_sounds_from_text(text[i:i+3])
+            for sound in added_sounds:
+                sounds.append(sound)
+                i += len(sound.letters)
+        return sounds

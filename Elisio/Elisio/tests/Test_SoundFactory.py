@@ -86,9 +86,48 @@ class TestSoundFactory(unittest.TestCase):
         sound = SoundFactory.create_sounds_from_text('ou')
         self.assertEqual(sound[0], SoundFactory.create('o'))
         self.assertEqual(len(sound), 1)
+        
+    def test_sound_constr_with_th(self):
+        """ creating sounds from text does not accept any input """
+        sound = SoundFactory.create_sounds_from_text('th')
+        self.assertEqual(sound[0], SoundFactory.create('th'))
+        self.assertEqual(len(sound), 1)
+
+    def test_sound_constr_with_rh(self):
+        """ creating sounds from text does not accept any input """
+        sound = SoundFactory.create_sounds_from_text('rh')
+        self.assertEqual(sound[0], SoundFactory.create('rh'))
+        self.assertEqual(len(sound), 1)
 
     def test_sound_fail_constr_nonexist2(self):
         """ creating sounds from text does not accept any input """
         sound = SoundFactory.create_sounds_from_text('ea')
         self.assertEqual(sound[0], SoundFactory.create('e'))
         self.assertEqual(len(sound), 1)
+        
+    def test_sound_finder(self):
+        """ integration test for finding sounds """
+        expected_sounds = []
+        expected_sounds.append(SoundFactory.create('f'))
+        expected_sounds.append(SoundFactory.create('o'))
+        expected_sounds.append(SoundFactory.create('r'))
+        expected_sounds.append(SoundFactory.create('s'))
+        sounds = SoundFactory.find_sounds_for_text('fors')
+        self.assertEqual(sounds, expected_sounds)
+        
+    def test_sound_finder_digraphs(self):
+        """ digraphs must work out well """
+        expected_sounds = []
+        expected_sounds.append(SoundFactory.create('qu'))
+        expected_sounds.append(SoundFactory.create('ae'))
+        sounds = SoundFactory.find_sounds_for_text('quae')
+        self.assertEqual(sounds, expected_sounds)
+
+    def test_sound_finder_no_diph(self):
+        """ digraphs must work out well """
+        expected_sounds = []
+        expected_sounds.append(SoundFactory.create('th'))
+        expected_sounds.append(SoundFactory.create('e'))
+        expected_sounds.append(SoundFactory.create('a'))
+        sounds = SoundFactory.find_sounds_for_text('thea')
+        self.assertEqual(sounds, expected_sounds)
