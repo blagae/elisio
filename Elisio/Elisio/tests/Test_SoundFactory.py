@@ -131,3 +131,12 @@ class TestSoundFactory(unittest.TestCase):
         expected_sounds.append(SoundFactory.create('a'))
         sounds = SoundFactory.find_sounds_for_text('thea')
         self.assertEqual(sounds, expected_sounds)
+
+    def test_sound_finder_many_vowels(self):
+        """ digraphs must work out well """
+        expected_sounds = []
+        expected_sounds.append(SoundFactory.create('ae'))
+        expected_sounds.append(SoundFactory.create('u'))
+        expected_sounds.append(SoundFactory.create('m'))
+        sounds = SoundFactory.find_sounds_for_text('aeum')
+        self.assertEqual(sounds, expected_sounds)

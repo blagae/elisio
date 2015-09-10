@@ -1,6 +1,6 @@
 import copy
 import enum
-from Elisio.engine.Sound import *
+from Elisio.engine.Sound import SoundFactory
 from Elisio.exceptions import SyllableException
 
 class Syllable(object):
@@ -41,20 +41,20 @@ class Syllable(object):
         contains_final_consonant = contains_vowel = contains_semivowel = False
         only_consonants = True
         for count, sound in enumerate(self.sounds):
-            if isinstance(sound, ConsonantSound):
+            if sound.is_consonant():
                 if contains_final_consonant:
                     pass
                     #return False
                 if contains_vowel or contains_semivowel:
                     contains_final_consonant = True
-            elif isinstance(sound, VowelSound):
+            elif sound.is_vowel():
                 if (contains_vowel or
                         (contains_final_consonant and
                          contains_semivowel)):
                     return False
                 contains_vowel = True
                 only_consonants = False
-            elif isinstance(sound, SemivowelSound):
+            elif sound.is_semivowel():
                 if (contains_vowel or
                         (contains_final_consonant and
                          contains_semivowel)):
