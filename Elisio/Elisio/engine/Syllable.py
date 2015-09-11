@@ -36,16 +36,23 @@ class Syllable(object):
             * a single vowel or semivowel
             * a semivowel and a vowel in that order
         """
-        contains_final_consonant = contains_vowel = contains_semivowel = False
-        only_consonants = True
         if self.get_text().startswith('ii'):
             return False
+        if self.sounds[0] == SoundFactory.create('gu'):
+            copied = copy.deepcopy(self)
+            copied.sounds[0] = SoundFactory.create('u')
+            bool = copied.is_valid(test)
+            if bool:
+                self.sounds[0] = SoundFactory.create('g')
+                self.sounds.insert(1, SoundFactory.create('u'))
+            return bool
+        contains_final_consonant = contains_vowel = contains_semivowel = False
+        only_consonants = True
         for count, sound in enumerate(self.sounds):
             if sound.is_consonant():
-                if contains_final_consonant:
-                    pass
-                    #return False
                 if contains_vowel or contains_semivowel:
+                    if sound == SoundFactory.create('gu'):
+                        return False
                     contains_final_consonant = True
             elif sound.is_vowel():
                 if (contains_vowel or
@@ -58,14 +65,11 @@ class Syllable(object):
                 if (contains_vowel or
                         (contains_final_consonant and
                          contains_semivowel)):
-                    if self.get_text().startswith('gui'):
-                        return contains_vowel
                     return False
                 if count > 0:
                     contains_vowel = True
                 contains_semivowel = True
                 only_consonants = False
-        
         return contains_vowel or contains_semivowel or (only_consonants == test)
 
     def ends_with_consonant(self):
@@ -112,6 +116,7 @@ class Syllable(object):
         return (self.starts_with_consonant() and
                 ((len(self.sounds) > 1 and self.sounds[1].is_consonant()) or
                  self.makes_previous_heavy())
+                and self.sounds[0] != SoundFactory.create('gu')
                )
 
     def makes_previous_heavy(self):

@@ -194,6 +194,7 @@ class ConsonantSound(Sound):
         first = self.letters[0].letter
         second = self.letters[1]
         return ((first == 'q' and second == 'u') or
+                (first == 'g' and second == 'u') or
                 self.is_muta_cum_liquida() or
                 ((first == 't' or first == 'p' or first == 'c' or first == 'r')
                  and second == 'h') #or

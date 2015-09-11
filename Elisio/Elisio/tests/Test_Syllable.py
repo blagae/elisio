@@ -77,6 +77,15 @@ class TestSyllable(unittest.TestCase):
         self.assertTrue(isinstance(self.construct_syllable('zeph'), Syllable))
         self.assertTrue(isinstance(self.construct_syllable('xoe'), Syllable))
         self.assertTrue(isinstance(self.construct_syllable('hux'), Syllable))
+
+    def test_syll_constr_gu_vowel(self):
+        """ regular syllable with initial consonant cluster """
+        self.assertTrue(isinstance(self.construct_syllable('guis'), Syllable))
+        self.assertTrue(isinstance(self.construct_syllable('gui'), Syllable))
+        self.assertTrue(isinstance(self.construct_syllable('guo'), Syllable))
+
+    def test_syll_constr_gu_cons(self):
+        self.assertTrue(isinstance(self.construct_syllable('gus'), Syllable))
         
     def test_syll_fail_non_diph(self):
         """ this is not a single syllable """
@@ -118,6 +127,16 @@ class TestSyllable(unittest.TestCase):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
             self.construct_syllable('quia')
+            
+    def test_syll_fail_mult_gui(self):
+        """ this is not a single syllable """
+        with self.assertRaises(SyllableException):
+            self.construct_syllable('guia')
+
+    def test_syll_fail_mult_syll_gui(self):
+        """ this is not a single syllable """
+        with self.assertRaises(SyllableException):
+            self.construct_syllable('guisa')
 
     def test_syll_fail_only_cons_clstr(self):
         """ this is not a single syllable """

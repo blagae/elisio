@@ -37,11 +37,18 @@ class TestSoundFactory(unittest.TestCase):
         """ a valid list of Letters """
         self.assertTrue(isinstance(
             self.construct_sound(Letter('Q'), Letter('u')), ConsonantSound))
-
+        self.assertTrue(isinstance(
+            self.construct_sound(Letter('g'), Letter('U')), ConsonantSound))
+        
     def test_sound_fail_constr_illegal(self):
         """ not a valid list of Letters """
         with self.assertRaises(SoundException):
             self.construct_sound('qi')
+
+    def test_sound_fail_constr_illegal_digraph(self):
+        """ not a valid list of Letters """
+        with self.assertRaises(SoundException):
+            self.construct_sound('gy')
 
     def test_sound_fail_constr_illegal(self):
         """ not a valid list of Letters """

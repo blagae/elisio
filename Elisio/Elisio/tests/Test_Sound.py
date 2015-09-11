@@ -1,7 +1,7 @@
 """ test module for Sound """
 import unittest
 from Elisio.engine.Letter import Letter, LetterType
-from Elisio.engine.Sound import *
+from Elisio.engine.Sound import SoundFactory
 from Elisio.exceptions import SoundException, LetterException
 
 class TestSound(unittest.TestCase):

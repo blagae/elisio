@@ -401,11 +401,17 @@ class TestWord(unittest.TestCase):
         weights = [Weight.ANCEPS, Weight.LIGHT, Weight.ANCEPS, Weight.LIGHT]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
-
+        
     def test_word_scan_debug(self):
         """ scan words with internal consonantal semivowels """
         word = self.construct_word('pinguis')
         weights = [Weight.HEAVY, Weight.HEAVY]
+        word.split()
+        self.assertEqual(word.get_syllable_structure(), weights)
+    def test_word_scan_debug_more(self):
+        """ scan words with internal consonantal semivowels """
+        word = self.construct_word('profugus')
+        weights = [Weight.ANCEPS, Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 

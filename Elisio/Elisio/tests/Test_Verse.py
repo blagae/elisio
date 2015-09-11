@@ -230,8 +230,9 @@ class TestHexameter(unittest.TestCase):
         worked = 0
         failed = 0
         for dbverse in dbverses:
+            print(dbverse.number)
             try:
-                if dbverse.number == 215:
+                if dbverse.number == 2:
                     worked = worked # for debugging
                 verse = Hexameter(dbverse.contents)
                 verse.split()
