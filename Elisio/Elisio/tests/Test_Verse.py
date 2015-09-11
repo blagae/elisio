@@ -96,7 +96,7 @@ class TestVerse(unittest.TestCase):
         """ normal elision """
         verse = self.construct_verse('multo ille')
         expected_result = [[Weight.HEAVY, Weight.NONE],
-                           [Weight.HEAVY, Weight.LIGHT]]
+                           [Weight.HEAVY, Weight.ANCEPS]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
@@ -104,7 +104,7 @@ class TestVerse(unittest.TestCase):
         """ special cases should be not so special """
         verse = self.construct_verse('multum ille')
         expected_result = [[Weight.HEAVY, Weight.NONE],
-                           [Weight.HEAVY, Weight.LIGHT]]
+                           [Weight.HEAVY, Weight.ANCEPS]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
@@ -120,7 +120,7 @@ class TestVerse(unittest.TestCase):
         """ special cases should be not so special """
         verse = self.construct_verse('multu hille')
         expected_result = [[Weight.HEAVY, Weight.NONE],
-                           [Weight.HEAVY, Weight.LIGHT]]
+                           [Weight.HEAVY, Weight.ANCEPS]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
@@ -128,7 +128,7 @@ class TestVerse(unittest.TestCase):
         """ special cases should be not so special """
         verse = self.construct_verse('multum hille')
         expected_result = [[Weight.HEAVY, Weight.NONE],
-                           [Weight.HEAVY, Weight.LIGHT]]
+                           [Weight.HEAVY, Weight.ANCEPS]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
@@ -136,7 +136,7 @@ class TestVerse(unittest.TestCase):
         """ non-heavy final syllable marked anceps if a word follows """
         verse = self.construct_verse('multus ille')
         expected_result = [[Weight.HEAVY, Weight.ANCEPS],
-                           [Weight.HEAVY, Weight.LIGHT]]
+                           [Weight.HEAVY, Weight.ANCEPS]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
@@ -145,7 +145,7 @@ class TestVerse(unittest.TestCase):
         verse = self.construct_verse('esse Zephyrumque')
         expected_result = [[Weight.HEAVY, Weight.HEAVY],
                            [Weight.ANCEPS, Weight.ANCEPS,
-                            Weight.HEAVY, Weight.LIGHT]]
+                            Weight.HEAVY, Weight.ANCEPS]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)
 
@@ -230,7 +230,6 @@ class TestHexameter(unittest.TestCase):
         worked = 0
         failed = 0
         for dbverse in dbverses:
-            print(dbverse.number)
             try:
                 if dbverse.number == 2:
                     worked = worked # for debugging
@@ -244,5 +243,8 @@ class TestHexameter(unittest.TestCase):
             else:
                 worked += 1
         # canary test: over 66% of verses must succeed
-        if worked / failed < 2:
-            self.fail(str(worked) + " worked, " + str(failed) + " failed")
+        result = str(worked) + " worked, " + str(failed) + " failed"
+        if worked / failed < 3:
+            self.fail(result)
+        else:
+            print(result)

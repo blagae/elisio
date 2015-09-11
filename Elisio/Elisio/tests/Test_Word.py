@@ -384,7 +384,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_gu(self):
         """ make sure internal GU is not analyzed as a syllable """
         word = self.construct_word('sanguine')
-        weights = [Weight.HEAVY, Weight.ANCEPS, Weight.LIGHT]
+        weights = [Weight.HEAVY, Weight.ANCEPS, Weight.ANCEPS]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -398,7 +398,7 @@ class TestWord(unittest.TestCase):
     def test_word_scan_cons_sv(self):
         """ scan words with internal consonantal semivowels """
         word = self.construct_word('volvere')
-        weights = [Weight.ANCEPS, Weight.LIGHT, Weight.ANCEPS, Weight.LIGHT]
+        weights = [Weight.ANCEPS, Weight.LIGHT, Weight.ANCEPS, Weight.ANCEPS]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
         
@@ -408,6 +408,7 @@ class TestWord(unittest.TestCase):
         weights = [Weight.HEAVY, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
+
     def test_word_scan_debug_more(self):
         """ scan words with internal consonantal semivowels """
         word = self.construct_word('profugus')
