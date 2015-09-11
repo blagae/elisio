@@ -10,7 +10,7 @@
   <object pk="3" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^huic$</field>
   </object>
-  <object pk="4" model="Elisio.DeviantWord">
+  <object pk="4" model="Elisio.DeviantWord"215
     <field type="CharField" name="stem">^e$</field>
   </object>
   <object pk="5" model="Elisio.DeviantWord">

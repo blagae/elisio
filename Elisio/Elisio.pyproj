@@ -62,6 +62,9 @@
     <Compile Include="Elisio\local.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\local_template.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\models.py">
       <SubType>Code</SubType>
     </Compile>

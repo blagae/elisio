@@ -231,7 +231,7 @@ class TestHexameter(unittest.TestCase):
         failed = 0
         for dbverse in dbverses:
             try:
-                if dbverse.number == 81:
+                if dbverse.number == 215:
                     worked = worked # for debugging
                 verse = Hexameter(dbverse.contents)
                 verse.split()
@@ -242,4 +242,6 @@ class TestHexameter(unittest.TestCase):
                       .format(dbverse.number, verse.get_split_syllables(), exc, type(exc)))
             else:
                 worked += 1
-        self.fail(str(worked) + " worked, " + str(failed) + " failed")
+        # canary test: over 66% of verses must succeed
+        if worked / failed < 2:
+            self.fail(str(worked) + " worked, " + str(failed) + " failed")

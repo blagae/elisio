@@ -29,17 +29,17 @@ class Syllable(object):
             result += sound.get_text()
         return result
 
-    def is_valid(self):
+    def is_valid(self, test=False):
         """
         a syllable is valid if it contains:
             * at most one consonant after the vocalic sound, and
             * a single vowel or semivowel
             * a semivowel and a vowel in that order
         """
-        if self.get_text() == 'gui':
-            return True
         contains_final_consonant = contains_vowel = contains_semivowel = False
         only_consonants = True
+        if self.get_text().startswith('ii'):
+            return False
         for count, sound in enumerate(self.sounds):
             if sound.is_consonant():
                 if contains_final_consonant:
@@ -58,12 +58,15 @@ class Syllable(object):
                 if (contains_vowel or
                         (contains_final_consonant and
                          contains_semivowel)):
+                    if self.get_text().startswith('gui'):
+                        return contains_vowel
                     return False
                 if count > 0:
                     contains_vowel = True
                 contains_semivowel = True
                 only_consonants = False
-        return contains_vowel or contains_semivowel or only_consonants
+        
+        return contains_vowel or contains_semivowel or (only_consonants == test)
 
     def ends_with_consonant(self):
         """ last sound of the syllable is consonantal """
@@ -165,7 +168,7 @@ class Syllable(object):
         valid by the addition """
         test_syllable = copy.deepcopy(self)
         test_syllable.sounds.append(sound)
-        if test_syllable.is_valid():
+        if test_syllable.is_valid(True):
             self.sounds.append(sound)
         else:
             raise SyllableException("syllable invalidated by last addition")
