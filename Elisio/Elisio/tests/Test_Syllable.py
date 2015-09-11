@@ -92,6 +92,11 @@ class TestSyllable(unittest.TestCase):
         with self.assertRaises(SyllableException):
             self.construct_syllable('tia')
 
+    def test_syll_fail_ii(self):
+        """ this is not a single syllable """
+        with self.assertRaises(SyllableException):
+            self.construct_syllable('tii')
+
     def test_syll_fail_mult_vwl(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
