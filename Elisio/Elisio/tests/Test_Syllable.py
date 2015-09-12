@@ -177,6 +177,17 @@ class TestSyllable(unittest.TestCase):
         """
         with self.assertRaises(SyllableException):
             self.construct_syllable('cui')
+            
+    def test_syll_equal(self):
+        self.assertEqual(Syllable('aes'), Syllable('aes'))
+        self.assertEqual(Syllable('quo'), Syllable('qvo'))
+        self.assertEqual(Syllable('vjs'), Syllable('uis'))
+
+    def test_syll_unequal(self):
+        self.assertNotEqual(Syllable('ash'), Syllable('as'))
+        self.assertNotEqual(Syllable('quo'), Syllable('qvu'))
+        self.assertNotEqual(Syllable('tis'), Syllable('this'))
+
 
 
 if __name__ == '__main__':
