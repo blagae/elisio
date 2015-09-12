@@ -10,14 +10,14 @@
   <object pk="3" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^huic$</field>
   </object>
-  <object pk="4" model="Elisio.DeviantWord"215
+  <object pk="4" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^e$</field>
   </object>
   <object pk="5" model="Elisio.DeviantWord">
-    <field type="CharField" name="stem">^tro[i]?a.?$</field>
+    <field type="CharField" name="stem">^tro[i]?[ae].?$</field>
   </object>
   <object pk="6" model="Elisio.DeviantWord">
-    <field type="CharField" name="stem">^laviniaque$</field>
+    <field type="CharField" name="stem">^lavinia$</field>
   </object>
   <object pk="7" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^aeol.*$</field>

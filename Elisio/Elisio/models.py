@@ -16,7 +16,7 @@ class DeviantWord(models.Model):
         """ check for a regex in the db that matches this word """
         DeviantWord.get_list()
         result = [word for word in DeviantWord.words
-                  if re.compile(word.stem).match(text)]
+                  if re.compile(word.stem).match(text.without_enclitic())]
         if len(result) > 1:
             raise ScansionException
         if not result:

@@ -8,12 +8,14 @@ class Word(object):
     A word is the representation of the Latin word
     It has extensive knowledge of its sounds, which it can join into syllables
     """
+    enclitics = ('que', 've')
     def __init__(self, text):
         """ construct a Word by its contents """
         self.syllables = []
         if not (isinstance(text, str) and text.isalpha()):
             raise WordException("Word not initialized with alphatic data")
         self.text = text.lower()
+        self.enclitic = None
 
     def __repr__(self):
         return self.syllables
@@ -32,13 +34,28 @@ class Word(object):
         self.syllables = SyllableSplitter.redistribute(temporary_syllables)
         self.check_consistency()
 
+    def ends_in_enclitic(self):
+        if self.enclitic:
+            return True
+        for encl in Word.enclitics:
+            if self.text.endswith(encl):
+                self.enclitic = encl
+                return True
+        return False
+
+    def without_enclitic(self):
+        if self.ends_in_enclitic():
+            stem = self.text[:-len(self.enclitic)]
+            return stem
+        return self.text
+
     def split_from_deviant_word(self):
         """
         if the word can be found the repository of Deviant Words,
         we should use that instead
         """
         from Elisio.models import DeviantWord
-        deviant = DeviantWord.find(self.text)
+        deviant = DeviantWord.find(self)
         if deviant:
             self.syllables = deviant.get_syllables()
             txt = self.text
