@@ -188,6 +188,60 @@ class TestSyllable(unittest.TestCase):
         self.assertNotEqual(Syllable('quo'), Syllable('qvu'))
         self.assertNotEqual(Syllable('tis'), Syllable('this'))
 
+    def test_syll_ends_in_consonant(self):
+        self.assertTrue(Syllable('ex').ends_with_consonant())
+        self.assertTrue(Syllable('tum').ends_with_consonant())
+        self.assertFalse(Syllable('tu').ends_with_consonant())
+        self.assertFalse(Syllable('rau').ends_with_consonant())
+        
+    def test_syll_ends_in_vowel(self):
+        self.assertFalse(Syllable('ex').ends_with_vowel())
+        self.assertFalse(Syllable('tum').ends_with_vowel())
+        self.assertTrue(Syllable('tu').ends_with_vowel())
+        self.assertTrue(Syllable('rau').ends_with_vowel())
+        
+    def test_syll_elides(self):
+        self.assertFalse(Syllable('ex').can_elide_if_final())
+        self.assertFalse(Syllable('tus').can_elide_if_final())
+        self.assertTrue(Syllable('tum').can_elide_if_final())
+        self.assertTrue(Syllable('rau').can_elide_if_final())
+        
+    # not sure if testing the right things here !
+    def test_syll_noninitial_starts_vowel(self):
+        self.assertTrue(Syllable('a').starts_with_vowel(False))
+        self.assertTrue(Syllable('ha').starts_with_vowel(False))
+        self.assertTrue(Syllable('hu').starts_with_vowel(False))
+        self.assertFalse(Syllable('bo').starts_with_vowel(False))
+        self.assertFalse(Syllable('hra').starts_with_vowel(False))
+        
+        self.assertTrue(Syllable('ius').starts_with_vowel(False))
+        self.assertTrue(Syllable('i').starts_with_vowel(False))
+        self.assertTrue(Syllable('ix').starts_with_vowel(False))
+        self.assertTrue(Syllable('uos').starts_with_vowel(False))
+        self.assertTrue(Syllable('vi').starts_with_vowel(False))
+
+        self.assertFalse(Syllable('tus').starts_with_vowel(False))
+        self.assertFalse(Syllable('tum').starts_with_vowel(False))
+        self.assertFalse(Syllable('rau').starts_with_vowel(False))
+
+    # not sure if testing the right things here !
+    def test_syll_initial_starts_vowel(self):
+        self.assertTrue(Syllable('a').starts_with_vowel())
+        self.assertTrue(Syllable('ha').starts_with_vowel())
+        self.assertTrue(Syllable('hu').starts_with_vowel())
+        self.assertFalse(Syllable('bo').starts_with_vowel())
+        self.assertFalse(Syllable('hra').starts_with_vowel())
+        
+        self.assertFalse(Syllable('ius').starts_with_vowel())
+        self.assertTrue(Syllable('i').starts_with_vowel())
+        self.assertTrue(Syllable('ix').starts_with_vowel())
+        self.assertFalse(Syllable('uus').starts_with_vowel())
+        self.assertFalse(Syllable('vi').starts_with_vowel())
+
+        self.assertFalse(Syllable('tus').starts_with_vowel())
+        self.assertFalse(Syllable('tum').starts_with_vowel())
+        self.assertFalse(Syllable('rau').starts_with_vowel())
+
 
 
 if __name__ == '__main__':

@@ -97,7 +97,9 @@ class Syllable(object):
         or if it is followed directly by a consonant
         """
         return (self.sounds[0].is_vowel() or
-                self.sounds[0].is_h() or
+                (self.sounds[0].is_h() and
+                 len(self.sounds) > 1 and
+                 not self.sounds[1].is_consonant()) or
                 (self.sounds[0].is_semivowel() and
                  (not initial or len(self.sounds) == 1 or
                   self.sounds[1].is_consonant()))
