@@ -4,7 +4,7 @@ import unittest
 from Elisio.engine.Verse import Weight, set_django
 from Elisio.engine.Syllable import Syllable
 from Elisio.engine.Word import Word
-from Elisio.exceptions import ScansionException
+from Elisio.exceptions import WordException
 
 TYPICAL_WORD = "recentia"
 SYLLABLES = ['re', 'cen', 'ti', 'a']
@@ -30,11 +30,16 @@ class TestWord(unittest.TestCase):
     def test_word_construct(self):
         """ typical word """
         self.assertTrue(isinstance(self.construct_word(), Word))
-
-    def test_word_fail(self):
+        
+    def test_word_fail_object(self):
         """ incorrect input breaks word """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(WordException):
             self.construct_word(7)
+
+    def test_word_fail_space(self):
+        """ incorrect input breaks word """
+        with self.assertRaises(WordException):
+            self.construct_word("multum ille")
 
     def test_word_equal(self):
         """ equality operator"""
@@ -50,22 +55,22 @@ class TestWord(unittest.TestCase):
 
     def test_word_fail_initial_space(self):
         """ incorrect character breaks word """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(WordException):
             self.construct_word(' '.join(TYPICAL_WORD))
 
     def test_word_fail_final_space(self):
         """ incorrect character breaks word """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(WordException):
             self.construct_word(TYPICAL_WORD.join(' '))
 
     def test_word_fail_internal_space(self):
         """ incorrect character breaks word """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(WordException):
             self.construct_word(TYPICAL_WORD.replace(TYPICAL_WORD[4], ' '))
 
     def test_word_fail_non_alpha(self):
         """ incorrect character breaks word """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(WordException):
             self.construct_word(TYPICAL_WORD.replace(TYPICAL_WORD[5], '%'))
 
     def test_word_split_regular(self):
@@ -73,6 +78,13 @@ class TestWord(unittest.TestCase):
         word = self.construct_word()
         word.split()
         self.assertEqual(word.syllables, EXPECTED_SYLLABLE_LIST)
+
+    def test_word_has_enclitic(self):
+        word1 = self.construct_word()
+        self.assertFalse(word1.ends_in_enclitic())
+        word2 = self.construct_word(TYPICAL_WORD + 've')
+        self.assertTrue(word2.ends_in_enclitic())
+        self.assertEqual(word1.without_enclitic(), word2.without_enclitic())
 
     def test_word_scan_regular(self):
         """ archetypical word is scanned correctly """
