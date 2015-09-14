@@ -104,14 +104,12 @@ class Syllable(object):
                  (not initial or len(self.sounds) == 1 or
                   self.sounds[1].is_consonant()))
                )
-    def starts_with_consonant(self):
+    def starts_with_consonant(self, initial=True):
         """
         first sound of the syllable is consonantal
         an initial semivowel is consonantal if it is followed by a vowel
         """
-        return (self.sounds[0].is_consonant() or
-                (self.sounds[0].is_semivowel() and len(self.sounds) > 1 and
-                 self.sounds[1].is_vowel()))
+        return not self.starts_with_vowel(initial)
 
     def starts_with_consonant_cluster(self):
         """ first sounds of the syllable are all consonants """
@@ -189,8 +187,10 @@ class Syllable(object):
         if self.weight:
             return self.weight
         if self.is_light(next_syllable):
+            self.weight = Weight.LIGHT
             return Weight.LIGHT
         elif self.is_heavy(next_syllable):
+            self.weight = Weight.HEAVY
             return Weight.HEAVY
         else:
             return Weight.ANCEPS

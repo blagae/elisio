@@ -80,6 +80,12 @@
     <Compile Include="Elisio\tests\Test_Syllable.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\tests\Test_SyllableSplitter.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\tests\Test_Syllable_Weight.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\tests\Test_Web.py">
       <SubType>Code</SubType>
     </Compile>

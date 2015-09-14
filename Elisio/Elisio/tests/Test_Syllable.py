@@ -4,162 +4,156 @@ from Elisio.engine.Syllable import Syllable
 from Elisio.engine.Sound import SoundFactory
 from Elisio.exceptions import SyllableException
 
-class TestSyllable(unittest.TestCase):
-    """ Test class for Syllable """
-    def construct_syllable(self, text):
-        """ convenience method """
-        constructed_syllable = Syllable(text)
-        return constructed_syllable
-    
+class TestSyllable(unittest.TestCase):    
     def test_syll_constr_init(self):
         """ regular syllable """
-        self.assertTrue(isinstance(self.construct_syllable('ti'), Syllable))
+        self.assertTrue(isinstance(Syllable('ti'), Syllable))
     def test_syll_constr_final(self):
         """ regular syllable """
-        self.assertTrue(isinstance(self.construct_syllable('it'), Syllable))
+        self.assertTrue(isinstance(Syllable('it'), Syllable))
         
     def test_syll_constr_free(self):
         """ regular syllable """
-        self.assertTrue(isinstance(self.construct_syllable('o'), Syllable))
+        self.assertTrue(isinstance(Syllable('o'), Syllable))
 
     def test_syll_constr_free_diph(self):
         """ regular syllable """
-        self.assertTrue(isinstance(self.construct_syllable('oe'), Syllable))
+        self.assertTrue(isinstance(Syllable('oe'), Syllable))
         
     def test_syll_constr_diph(self):
         """ regular syllable with diphthong """
-        self.assertTrue(isinstance(self.construct_syllable('aen'), Syllable))
+        self.assertTrue(isinstance(Syllable('aen'), Syllable))
 
     def test_syll_constr_diph_final(self):
         """ regular syllable with diphthong """
-        self.assertTrue(isinstance(self.construct_syllable('sau'), Syllable))
+        self.assertTrue(isinstance(Syllable('sau'), Syllable))
 
     def test_syll_constr_semivwl(self):
         """ regular syllable with initial semivowel """
-        self.assertTrue(isinstance(self.construct_syllable('iu'), Syllable))
+        self.assertTrue(isinstance(Syllable('iu'), Syllable))
         
     def test_syll_constr_cons_cluster_h(self):
         """ regular syllable with initial consonant cluster """
-        self.assertTrue(isinstance(self.construct_syllable('thy'), Syllable))
+        self.assertTrue(isinstance(Syllable('thy'), Syllable))
         
     def test_syll_constr_cons_init_h(self):
         """ regular syllable with initial consonant cluster """
-        self.assertTrue(isinstance(self.construct_syllable('hos'), Syllable))
+        self.assertTrue(isinstance(Syllable('hos'), Syllable))
         
     def test_syll_constr_cons_init_mcl(self):
         """ regular syllable with initial consonant cluster """
-        self.assertTrue(isinstance(self.construct_syllable('trux'), Syllable))
+        self.assertTrue(isinstance(Syllable('trux'), Syllable))
 
     def test_syll_constr_cons_init_clstr_diph(self):
         """ regular syllable with initial consonant cluster """
-        self.assertTrue(isinstance(self.construct_syllable('sprau'), Syllable))
+        self.assertTrue(isinstance(Syllable('sprau'), Syllable))
         
     def test_syll_constr_cons_full(self):
         """ regular syllable with initial consonant cluster """
-        self.assertTrue(isinstance(self.construct_syllable('sphroc'), Syllable))
-        self.assertTrue(isinstance(self.construct_syllable('urbs'), Syllable))
+        self.assertTrue(isinstance(Syllable('sphroc'), Syllable))
+        self.assertTrue(isinstance(Syllable('urbs'), Syllable))
         
     def test_syll_constr_semiv(self):
         """ regular syllable with initial consonant cluster """
-        self.assertTrue(isinstance(self.construct_syllable('vos'), Syllable))
-        self.assertTrue(isinstance(self.construct_syllable('vis'), Syllable))
-        self.assertTrue(isinstance(self.construct_syllable('uus'), Syllable))
-        self.assertTrue(isinstance(self.construct_syllable('iam'), Syllable))
+        self.assertTrue(isinstance(Syllable('vos'), Syllable))
+        self.assertTrue(isinstance(Syllable('vis'), Syllable))
+        self.assertTrue(isinstance(Syllable('uus'), Syllable))
+        self.assertTrue(isinstance(Syllable('iam'), Syllable))
 
     def test_syll_constr_digraph(self):
         """ regular syllable with initial consonant cluster """
-        self.assertTrue(isinstance(self.construct_syllable('qui'), Syllable))
-        self.assertTrue(isinstance(self.construct_syllable('quod'), Syllable))
-        self.assertTrue(isinstance(self.construct_syllable('quae'), Syllable))
+        self.assertTrue(isinstance(Syllable('qui'), Syllable))
+        self.assertTrue(isinstance(Syllable('quod'), Syllable))
+        self.assertTrue(isinstance(Syllable('quae'), Syllable))
         
     def test_syll_constr_heavymaker(self):
         """ regular syllable with initial consonant cluster """
-        self.assertTrue(isinstance(self.construct_syllable('zeph'), Syllable))
-        self.assertTrue(isinstance(self.construct_syllable('xoe'), Syllable))
-        self.assertTrue(isinstance(self.construct_syllable('hux'), Syllable))
+        self.assertTrue(isinstance(Syllable('zeph'), Syllable))
+        self.assertTrue(isinstance(Syllable('xoe'), Syllable))
+        self.assertTrue(isinstance(Syllable('hux'), Syllable))
 
     def test_syll_constr_gu_vowel(self):
         """ regular syllable with initial consonant cluster """
-        self.assertTrue(isinstance(self.construct_syllable('guis'), Syllable))
-        self.assertTrue(isinstance(self.construct_syllable('gui'), Syllable))
-        self.assertTrue(isinstance(self.construct_syllable('guo'), Syllable))
+        self.assertTrue(isinstance(Syllable('guis'), Syllable))
+        self.assertTrue(isinstance(Syllable('gui'), Syllable))
+        self.assertTrue(isinstance(Syllable('guo'), Syllable))
 
     def test_syll_constr_gu_cons(self):
-        self.assertTrue(isinstance(self.construct_syllable('gus'), Syllable))
+        self.assertTrue(isinstance(Syllable('gus'), Syllable))
         
     def test_syll_fail_non_diph(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('tia')
+            Syllable('tia')
 
     def test_syll_fail_ii(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('tii')
+            Syllable('tii')
 
     def test_syll_fail_mult_vwl(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('oa')
+            Syllable('oa')
             
     def test_syll_fail_mult_vwl_diph(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('aeu')
+            Syllable('aeu')
 
     def test_syll_fail_h_diph(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('ahe')
+            Syllable('ahe')
             
     def test_syll_fail_mult_syll(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('inos')
+            Syllable('inos')
             
     def test_syll_fail_mult_syll_init(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('sepa')
+            Syllable('sepa')
     
     # TODO: fix incorrect success: there can be no syllable 'ji'
     def test_syll_fail_mult_ii(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('iit')
+            Syllable('iit')
             
     def test_syll_fail_mult_digraph(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('quia')
+            Syllable('quia')
             
     def test_syll_fail_mult_gui(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('guia')
+            Syllable('guia')
 
     def test_syll_fail_mult_syll_gui(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('guisa')
+            Syllable('guisa')
 
     def test_syll_fail_only_cons_clstr(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('lt')
+            Syllable('lt')
 
     def test_syll_fail_only_cons(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('b')
+            Syllable('b')
     def test_syll_fail_only_cons_h(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('rh')
+            Syllable('rh')
     def test_syll_fail_only_cons_digraph(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('qu')
+            Syllable('qu')
 
     def test_syll_fail_too_rare(self):
         """
@@ -167,7 +161,7 @@ class TestSyllable(unittest.TestCase):
         is exceedingly rare and must be seen as a lexical exception
         """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('prout')
+            Syllable('prout')
 
     def test_syll_lexical_exception(self):
         """ ui is not usually a diphthong but it is attested in the forms
@@ -176,7 +170,7 @@ class TestSyllable(unittest.TestCase):
         this is not typical of the Syllable, so these syllables must fail
         """
         with self.assertRaises(SyllableException):
-            self.construct_syllable('cui')
+            Syllable('cui')
             
     def test_syll_equal(self):
         self.assertEqual(Syllable('aes'), Syllable('aes'))
@@ -211,7 +205,6 @@ class TestSyllable(unittest.TestCase):
         self.assertTrue(Syllable('a').starts_with_vowel(False))
         self.assertTrue(Syllable('ha').starts_with_vowel(False))
         self.assertTrue(Syllable('hu').starts_with_vowel(False))
-        self.assertFalse(Syllable('bo').starts_with_vowel(False))
         self.assertFalse(Syllable('hra').starts_with_vowel(False))
         
         self.assertTrue(Syllable('ius').starts_with_vowel(False))
@@ -219,7 +212,8 @@ class TestSyllable(unittest.TestCase):
         self.assertTrue(Syllable('ix').starts_with_vowel(False))
         self.assertTrue(Syllable('uos').starts_with_vowel(False))
         self.assertTrue(Syllable('vi').starts_with_vowel(False))
-
+        
+        self.assertFalse(Syllable('bo').starts_with_vowel(False))
         self.assertFalse(Syllable('tus').starts_with_vowel(False))
         self.assertFalse(Syllable('tum').starts_with_vowel(False))
         self.assertFalse(Syllable('rau').starts_with_vowel(False))
@@ -229,7 +223,6 @@ class TestSyllable(unittest.TestCase):
         self.assertTrue(Syllable('a').starts_with_vowel())
         self.assertTrue(Syllable('ha').starts_with_vowel())
         self.assertTrue(Syllable('hu').starts_with_vowel())
-        self.assertFalse(Syllable('bo').starts_with_vowel())
         self.assertFalse(Syllable('hra').starts_with_vowel())
         
         self.assertFalse(Syllable('ius').starts_with_vowel())
@@ -237,12 +230,77 @@ class TestSyllable(unittest.TestCase):
         self.assertTrue(Syllable('ix').starts_with_vowel())
         self.assertFalse(Syllable('uus').starts_with_vowel())
         self.assertFalse(Syllable('vi').starts_with_vowel())
-
+        
+        self.assertFalse(Syllable('bo').starts_with_vowel())
         self.assertFalse(Syllable('tus').starts_with_vowel())
         self.assertFalse(Syllable('tum').starts_with_vowel())
         self.assertFalse(Syllable('rau').starts_with_vowel())
 
+        # not sure if testing the right things here !
+    def test_syll_noninitial_starts_cons(self):
+        self.assertFalse(Syllable('a').starts_with_consonant(False))
+        self.assertFalse(Syllable('ha').starts_with_consonant(False))
+        self.assertFalse(Syllable('hu').starts_with_consonant(False))
+        self.assertTrue(Syllable('hra').starts_with_consonant(False))
+        
+        self.assertFalse(Syllable('ius').starts_with_consonant(False))
+        self.assertFalse(Syllable('i').starts_with_consonant(False))
+        self.assertFalse(Syllable('ix').starts_with_consonant(False))
+        self.assertFalse(Syllable('uos').starts_with_consonant(False))
+        self.assertFalse(Syllable('vi').starts_with_consonant(False))
+        
+        self.assertTrue(Syllable('bo').starts_with_consonant(False))
+        self.assertTrue(Syllable('tus').starts_with_consonant(False))
+        self.assertTrue(Syllable('tum').starts_with_consonant(False))
+        self.assertTrue(Syllable('rau').starts_with_consonant(False))
 
+    # not sure if testing the right things here !
+    def test_syll_initial_starts_cons(self):
+        self.assertFalse(Syllable('a').starts_with_consonant()) #
+        self.assertFalse(Syllable('ha').starts_with_consonant()) #
+        self.assertFalse(Syllable('hu').starts_with_consonant()) #
+        self.assertTrue(Syllable('hra').starts_with_consonant())
+        
+        self.assertFalse(Syllable('i').starts_with_consonant()) #
+        self.assertFalse(Syllable('ix').starts_with_consonant()) #
+        self.assertTrue(Syllable('ius').starts_with_consonant())
+        self.assertTrue(Syllable('uus').starts_with_consonant())
+        self.assertTrue(Syllable('vi').starts_with_consonant())
+        
+        self.assertTrue(Syllable('bo').starts_with_consonant())
+        self.assertTrue(Syllable('tus').starts_with_consonant())
+        self.assertTrue(Syllable('tum').starts_with_consonant())
+        self.assertTrue(Syllable('rau').starts_with_consonant())
+
+    def test_syll_starts_cons_clst(self):
+        self.assertTrue(Syllable('spi').starts_with_consonant_cluster())
+        self.assertTrue(Syllable('xe').starts_with_consonant_cluster())
+        self.assertTrue(Syllable('spru').starts_with_consonant_cluster())
+        self.assertFalse(Syllable('pro').starts_with_consonant_cluster())
+        self.assertFalse(Syllable('pa').starts_with_consonant_cluster())
+        self.assertFalse(Syllable('pha').starts_with_consonant_cluster())
+        self.assertFalse(Syllable('u').starts_with_consonant_cluster())
+
+    def test_syll_makes_prev_heavy(self):
+        self.assertTrue(Syllable('xe').makes_previous_heavy())
+        self.assertFalse(Syllable('spre').makes_previous_heavy())
+        self.assertFalse(Syllable('rau').makes_previous_heavy())
+
+    def test_syll_get_vowel(self):
+        self.assertEqual(Syllable('quu').get_vowel(), SoundFactory.create('u'))
+        self.assertEqual(Syllable('io').get_vowel(), SoundFactory.create('o'))
+        self.assertEqual(Syllable('sprau').get_vowel(), SoundFactory.create('au'))
+        
+    def test_syll_get_vowel_fail(self):
+        syll = Syllable('qu', False)
+        with self.assertRaises(SyllableException):
+            syll.get_vowel()
+
+    def test_syll_add_sound(self):
+        syll = Syllable('tho')
+        syll.add_sound(SoundFactory.create('c'))
+        with self.assertRaises(SyllableException):
+            syll.add_sound(SoundFactory.create('u'))
 
 if __name__ == '__main__':
     unittest.main()
