@@ -78,6 +78,24 @@ class TestWord(unittest.TestCase):
         word = self.construct_word()
         word.split()
         self.assertEqual(word.syllables, EXPECTED_SYLLABLE_LIST)
+        
+    def test_word_create_deviant(self):
+        word = self.construct_word('lavinia')
+        word.split()
+        expected = []
+        expected.append(Syllable('la'))
+        expected.append(Syllable('vin'))
+        expected.append(Syllable('ia'))
+        self.assertEqual(word.syllables, expected)
+
+    def test_word_create_deviant_smvl(self):
+        word = self.construct_word('lauinja')
+        word.split()
+        expected = []
+        expected.append(Syllable('la'))
+        expected.append(Syllable('vin'))
+        expected.append(Syllable('ia'))
+        self.assertEqual(word.syllables, expected)
 
     def test_word_has_enclitic(self):
         word1 = self.construct_word()

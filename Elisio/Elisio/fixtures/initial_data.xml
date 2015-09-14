@@ -17,7 +17,7 @@
     <field type="CharField" name="stem">^tro[i]?[ae].?$</field>
   </object>
   <object pk="6" model="Elisio.DeviantWord">
-    <field type="CharField" name="stem">^lavinia$</field>
+    <field type="CharField" name="stem">^lauinia$</field>
   </object>
   <object pk="7" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^aeol.*$</field>

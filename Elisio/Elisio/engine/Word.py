@@ -8,19 +8,29 @@ class Word(object):
     A word is the representation of the Latin word
     It has extensive knowledge of its sounds, which it can join into syllables
     """
-    enclitics = ('que', 've')
+    enclitics = ('que', 'ue')
     def __init__(self, text):
         """ construct a Word by its contents """
         self.syllables = []
         if not (isinstance(text, str) and text.isalpha()):
             raise WordException("Word not initialized with alphatic data")
-        self.text = text.lower()
+        self.find_sounds(text)
         self.enclitic = None
 
     def __repr__(self):
         return self.syllables
     def __str__(self):
         return self.syllables
+
+    def find_sounds(self, text):
+        """
+        find the sequence of sounds from the textual representation of the word
+        """
+        self.sounds = SoundFactory.find_sounds_for_text(text)
+        local_text = ""
+        for sound in self.sounds:
+            local_text += sound.get_text()
+        self.text = local_text
 
     def split(self, test_deviant=True):
         """
@@ -29,8 +39,7 @@ class Word(object):
         """
         if test_deviant and self.split_from_deviant_word():
             return
-        sounds = self.find_sounds()
-        temporary_syllables = SyllableSplitter.join_into_syllables(sounds)
+        temporary_syllables = SyllableSplitter.join_into_syllables(self.sounds)
         self.syllables = SyllableSplitter.redistribute(temporary_syllables)
         self.check_consistency()
 
@@ -68,12 +77,6 @@ class Word(object):
                 for syllab in wrd.syllables:
                     self.syllables.append(syllab)
             return True
-
-    def find_sounds(self):
-        """
-        find the sequence of sounds from the textual representation of the word
-        """
-        return SoundFactory.find_sounds_for_text(self.text)
 
     def __eq__(self, other):
         """
