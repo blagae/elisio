@@ -39,9 +39,10 @@ class Word(object):
         """
         if test_deviant and self.split_from_deviant_word():
             return
-        temporary_syllables = SyllableSplitter.join_into_syllables(self.sounds)
-        self.syllables = SyllableSplitter.redistribute(temporary_syllables)
-        self.check_consistency()
+        if len(self.syllables) == 0:
+            temporary_syllables = SyllableSplitter.join_into_syllables(self.sounds)
+            self.syllables = SyllableSplitter.redistribute(temporary_syllables)
+            self.check_consistency()
 
     def ends_in_enclitic(self):
         if self.enclitic:
@@ -98,7 +99,8 @@ class Word(object):
         if next_word and isinstance(next_word, Word):
             # word contact
             last_syllable = self.syllables[-1]
-            next_word.split()
+            if len(next_word.syllables) == 0:
+                next_word.split()
             first_syllable = next_word.syllables[0]
             if (last_syllable.can_elide_if_final() and
                     first_syllable.starts_with_vowel()):
