@@ -3,7 +3,7 @@ import unittest
 from Elisio.engine.Verse import Verse, Foot, set_django
 from Elisio.engine.Word import Word
 from Elisio.engine.Syllable import Weight
-from Elisio.exceptions import ScansionException
+from Elisio.exceptions import VerseException
 
 set_django()
 
@@ -35,7 +35,7 @@ class TestVerse(unittest.TestCase):
 
     def test_verse_fail(self):
         """ fail on invalid input """
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(VerseException):
             self.construct_verse(7)
 
     def test_verse_equal(self):
@@ -82,15 +82,12 @@ class TestVerse(unittest.TestCase):
         A verse with unusual characters (diacritics)
         must be split into words correctly
         """
-        # TODO: aena should have a diaeresis
-        """
-        verse = self.constructVerse("litore aena locant "
+        verse = self.construct_verse("litore aena locant "
                                     "alii flammasque ministrant.")
         verse.split()
-        expected_list = ["litore","aena","locant",
-                         "alii","flammasque","ministrant."]
+        expected_list = [Word("litore"),Word("aena"),Word("locant"),
+                         Word("alii"),Word("flammasque"),Word("ministrant")]
         self.assertEqual(verse.words, expected_list)
-        """
 
     def test_verse_scan_elis_reg(self):
         """ normal elision """
@@ -153,6 +150,17 @@ class TestVerse(unittest.TestCase):
         """ initial cluster makes previous syllable heavy """
         verse = self.construct_verse('esse strabo')
         expected_result = [[Weight.HEAVY, Weight.HEAVY],
+                           [Weight.ANCEPS, Weight.HEAVY]]
+        verse.split()
+        self.assertEqual(verse.get_syllable_weights(), expected_result)
+
+    def test_verse_scan_contact(self):
+        verse = self.construct_verse('hic accensa super iactatos aequore toto')
+        expected_result = [[Weight.ANCEPS],
+                           [Weight.HEAVY, Weight.HEAVY, Weight.ANCEPS],
+                           [Weight.ANCEPS, Weight.HEAVY],
+                           [Weight.HEAVY, Weight.ANCEPS, Weight.ANCEPS],
+                           [Weight.HEAVY, Weight.ANCEPS, Weight.ANCEPS],
                            [Weight.ANCEPS, Weight.HEAVY]]
         verse.split()
         self.assertEqual(verse.get_syllable_weights(), expected_result)

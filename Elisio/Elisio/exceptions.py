@@ -26,3 +26,7 @@ class VerseException(ScansionException):
 class HexameterException(VerseException):
     """description of class"""
     pass
+
+class IllegalFootException(ScansionException):
+    """description of class"""
+    pass

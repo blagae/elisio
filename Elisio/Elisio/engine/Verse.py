@@ -3,7 +3,7 @@ import enum
 import re
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Word import Word
-from Elisio.exceptions import ScansionException, HexameterException
+from Elisio.exceptions import VerseException, HexameterException, IllegalFootException
 
 def set_django():
     """ in order to get to the database, we must use Django """
@@ -34,7 +34,7 @@ class Foot(enum.Enum):
             return [Weight.HEAVY, Weight.HEAVY]
         elif self == Foot.TROCHAEUS:
             return [Weight.HEAVY, Weight.LIGHT]
-        raise ScansionException("currently illegal foot structure: " + self.name)
+        raise IllegalFootException("currently illegal foot structure: " + self.name)
 
 class Verse(object):
     """ Verse class
@@ -44,7 +44,7 @@ class Verse(object):
     def __init__(self, text):
         """ construct a Verse by its contents """
         if not isinstance(text, str):
-            raise ScansionException("Verse must be initialized with text data")
+            raise VerseException("Verse must be initialized with text data")
         self.text = text
         self.words = []
 
@@ -156,13 +156,13 @@ class Hexameter(Verse):
         start = 0
         for feet_num, foot in enumerate(self.feet):
             if foot is None:
-                raise ScansionException("impossible to determine foot"
+                raise HexameterException("impossible to determine foot"
                                         " number {0}".format(feet_num))
             for count, weight in enumerate(foot.get_structure()):
                 if (weight != Weight.ANCEPS and
                         self.flat_list[count+start] != Weight.ANCEPS and
                         weight != self.flat_list[count+start]):
-                    raise ScansionException("weight #{0} was already {1}"
+                    raise HexameterException("weight #{0} was already {1}"
                                             ", tried to assign {2}"
                                             .format(count+start,
                                                     str(self.flat_list[count+start]),

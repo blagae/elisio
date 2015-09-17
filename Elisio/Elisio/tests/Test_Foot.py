@@ -1,15 +1,15 @@
 import unittest
 from Elisio.engine.Verse import Foot
 from Elisio.engine.Syllable import Weight
-from Elisio.exceptions import ScansionException
+from Elisio.exceptions import IllegalFootException
 
 class TestFoot(unittest.TestCase):
     def test_unknown_struc_fails(self):
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(IllegalFootException):
             Foot.UNKNOWN.get_structure()
 
     def test_unknown_len_fails(self):
-        with self.assertRaises(ScansionException):
+        with self.assertRaises(IllegalFootException):
             Foot.UNKNOWN.get_length()
             
     def test_dactylus(self):
