@@ -26,3 +26,7 @@ class TestWeb(unittest.TestCase):
         """ creates XML with some data """
         from Elisio.batchjob import fill_tree
         fill_tree()
+        
+    def test_go(self):
+        from Elisio.batchjob import find_all_verses_containing as find
+        find('.*os$', True)
