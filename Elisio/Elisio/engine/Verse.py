@@ -34,7 +34,7 @@ class Foot(enum.Enum):
             return [Weight.HEAVY, Weight.HEAVY]
         elif self == Foot.TROCHAEUS:
             return [Weight.HEAVY, Weight.LIGHT]
-        raise ScansionException("currently illegal foot structure: " + self)
+        raise ScansionException("currently illegal foot structure: " + self.name)
 
 class Verse(object):
     """ Verse class

@@ -2,6 +2,15 @@ import copy
 import enum
 from Elisio.engine.Sound import SoundFactory
 from Elisio.exceptions import SyllableException
+    
+class Weight(enum.Enum):
+    """
+    The possible types of syllable weights
+    """
+    NONE = 0
+    LIGHT = 1
+    HEAVY = 2
+    ANCEPS = 3
 
 class Syllable(object):
     """ Syllable class
@@ -207,22 +216,6 @@ class Syllable(object):
         result = Syllable(syll.contents, False, syll.weight)
         return result
 
-    
-class Weight(enum.Enum):
-    """
-    The possible types of syllable weights
-    """
-    NONE = 0
-    LIGHT = 1
-    HEAVY = 2
-    ANCEPS = 3
-
-    labels = {
-        NONE: 'None',
-        LIGHT: 'Light',
-        HEAVY: 'Heavy',
-        ANCEPS: 'Anceps'
-    }
 
 class SyllableSplitter(object):
     # TODO: this breaks a lot of verses with final long e
