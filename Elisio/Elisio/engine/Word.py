@@ -106,7 +106,10 @@ class Word(object):
                     first_syllable.starts_with_vowel()):
                 # elision
                 syll_struct[-1] = Weight.NONE
-            elif (last_syllable.ends_with_consonant() and
+            # TODO: redefine redistribution ! heavymakers, -os, etc
+            elif last_syllable.must_be_heavy():
+                syll_struct[-1] = Weight.HEAVY
+            elif (last_syllable.ends_with_consonant() and 
                   first_syllable.starts_with_vowel()):
                 # consonant de facto redistributed
                 syll_struct[-1] = Weight.ANCEPS

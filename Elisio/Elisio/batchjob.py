@@ -46,7 +46,8 @@ def fill_tree():
     create_file(tree)
 
 def find_all_verses_containing(regex, must_be_parsed = False):
-    from Elisio.engine.Verse import set_django, Hexameter
+    from Elisio.engine.Verse import set_django
+    from Elisio.engine.Hexameter import Hexameter
     from Elisio.models import DatabaseVerse
     from Elisio.exceptions import ScansionException
     import re
@@ -68,3 +69,4 @@ def find_all_verses_containing(regex, must_be_parsed = False):
             total.append(verse)
     for v in total:
         print(v.text)
+    print(len(total))

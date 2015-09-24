@@ -35,6 +35,9 @@
     <Compile Include="Elisio\batchjob.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\engine\Hexameter.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\engine\Letter.py">
       <SubType>Code</SubType>
     </Compile>

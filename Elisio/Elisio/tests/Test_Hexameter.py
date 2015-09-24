@@ -1,7 +1,8 @@
 import unittest
-from Elisio.engine.Verse import Verse, Hexameter, Foot, set_django
+from Elisio.engine.Verse import Verse, Foot, set_django
+from Elisio.engine.Hexameter import Hexameter
 from Elisio.tests.Test_Verse import TYPICAL_VERSE
-from Elisio.exceptions import HexameterException
+from Elisio.exceptions import HexameterException, VerseException
 
 set_django()
 
@@ -42,7 +43,7 @@ class TestHexameter(unittest.TestCase):
                 verse = Hexameter(dbverse.contents)
                 verse.split()
                 verse.scan()
-            except HexameterException as exc:
+            except VerseException as exc:
                 failed += 1
                 print("{3}({0}: {1}): {2}"
                       .format(dbverse.number, verse.get_split_syllables(), exc, type(exc)))

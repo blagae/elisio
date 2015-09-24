@@ -1,5 +1,6 @@
 import copy
 import enum
+import re
 from Elisio.engine.Sound import SoundFactory
 from Elisio.exceptions import SyllableException
     
@@ -17,6 +18,7 @@ class Syllable(object):
     A syllable knows its sounds and can determine
     if the specific combination of them is a valid one
     """
+    final_heavy = ('.*os$', '.*as$')
     def __init__(self, syllable, test=True, weight=None):
         """ construct a Syllable by its contents """
         self.weight = weight
@@ -84,6 +86,18 @@ class Syllable(object):
     def ends_with_consonant(self):
         """ last sound of the syllable is consonantal """
         return self.sounds[-1].is_consonant()
+
+    def must_be_heavy(self):
+        if self.ends_with_heavymaker():
+            return True
+        for rgx in Syllable.final_heavy:
+            if re.compile(rgx).match(self.get_text()):
+                return True
+        return False
+    
+    def ends_with_heavymaker(self):
+        """ last sound of the syllable is consonantal """
+        return self.sounds[-1].is_heavy_making()
 
     def can_elide_if_final(self):
         """ special property of words ending in a vowel """
