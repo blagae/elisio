@@ -37,6 +37,9 @@
   <object pk="12" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^deiope.*$</field>
   </object>
+  <object pk="13" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^eur.*$</field>
+  </object>
   
   <!-- Deviant syllables -->
   <object pk="1" model="Elisio.DeviantSyllable">
@@ -175,6 +178,12 @@
     <field type="CharField" name="contents">pei</field>
     <field type="IntegerField" name="sequence">4</field>
     <field type="ForeignKey" name="word">12</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="24" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">eur</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">13</field>
     <field type="enum.EnumField" name="weight">2</field>
   </object>
   
