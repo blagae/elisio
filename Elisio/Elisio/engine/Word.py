@@ -65,7 +65,7 @@ class Word(object):
         we should use that instead
         """
         from Elisio.models import DeviantWord
-        deviant = DeviantWord.find(self)
+        deviant = DeviantWord.find(self.without_enclitic())
         if deviant:
             self.syllables = deviant.get_syllables()
             txt = self.text

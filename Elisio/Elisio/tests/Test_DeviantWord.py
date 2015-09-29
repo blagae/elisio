@@ -7,7 +7,25 @@ set_django()
 from Elisio.models import DeviantWord
 
 class TestDeviantWord(unittest.TestCase):
+    # this test class requires that a DeviantWord named aene[ai].*
+    # be present in the database. If not, run syncdb or migrate
 
+    # unit tests
+    def test_table(self):
+        self.assertIsInstance(DeviantWord.find("aenean"), DeviantWord)
+
+    def test_table_fail(self):
+        self.assertIsNone(DeviantWord.find("aeneo"))
+    def test_list(self):
+        # TODO: not sure if this will always succeed
+        lst = DeviantWord.words
+        self.assertTrue(len(lst) == 0)
+        DeviantWord.get_list()
+        lst = DeviantWord.words
+        self.assertTrue(len(lst)>0)
+
+
+    # component tests
     def test_aeneas_works(self):
         word = Word("aeneas")
         self.assertTrue(word.split_from_deviant_word())

@@ -14,7 +14,7 @@ class TestLetter(unittest.TestCase):
     # random sample of correct letters
     def test_letter_construct(self):
         """ normal construct works """
-        self.assertTrue(isinstance(self.construct_letter('a'), Letter))
+        self.assertIsInstance(self.construct_letter('a'), Letter)
         
     def test_letter_construct(self):
         """ normal construct works """

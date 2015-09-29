@@ -2,7 +2,7 @@
 from django.db import models
 from Elisio.engine.Syllable import Weight, Syllable
 from Elisio.engine.Verse import Verse
-from Elisio.exceptions import ScansionException
+from Elisio.exceptions import WordException
 from enumfields import EnumField
 import re
 
@@ -16,9 +16,9 @@ class DeviantWord(models.Model):
         """ check for a regex in the db that matches this word """
         DeviantWord.get_list()
         result = [word for word in DeviantWord.words
-                  if re.compile(word.stem).match(text.without_enclitic())]
+                  if re.compile(word.stem).match(text)]
         if len(result) > 1:
-            raise ScansionException
+            raise WordException
         if not result:
             return None
         return result[0]
