@@ -31,7 +31,7 @@ class VerseFactoryImpl(object):
         self.flat_list = []
 
     def create(self):
-        return self.create_verse()
+        return self.__create_verse()
 
     def split(self):
         """ Split a Verse into Words, remembering only the letter characters """
@@ -63,7 +63,7 @@ class VerseFactoryImpl(object):
                     self.flat_list.append(weight)
         return self.flat_list
 
-    def create_verse(self):
+    def __create_verse(self):
         self.getlist()
         VerseFactory.classes = VerseCreator.__subclasses__()
         problems = []
@@ -82,7 +82,7 @@ class VerseFactoryImpl(object):
     
     def get_split_syllables(self):
         result = ""
-        if not self.words:
+        if not self.layers:
             self.layer()
         for word in self.words:
             for syll in word.syllables:
