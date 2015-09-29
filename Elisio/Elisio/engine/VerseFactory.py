@@ -48,9 +48,15 @@ class VerseFactoryImpl(object):
         result = []
         for count, word in enumerate(self.words):
             try:
-                result.append(word.get_syllable_structure(self.words[count+1]))
+                syll_struct = word.get_syllable_structure(self.words[count+1])
             except IndexError:
-                result.append(word.get_syllable_structure())
+                syll_struct = word.get_syllable_structure()
+                """
+            if (len(syll_struct) == 1 and syll_struct[0] == Weight.ANCEPS
+                    and word.text[-1] == 'e'):
+                syll_struct[0] == Weight.HEAVY
+                # """
+            result.append(syll_struct)
         self.layers = result
         return self.layers
 
@@ -58,6 +64,8 @@ class VerseFactoryImpl(object):
         self.layer()
         for word in self.layers:
             # TODO: open monosyllables ? se me ne are all heavy
+            if len(word) == 1 and word[0] == Weight.ANCEPS:
+                word[0] == Weight.HEAVY
             for weight in word:
                 if weight != Weight.NONE:
                     self.flat_list.append(weight)
@@ -82,7 +90,7 @@ class VerseFactoryImpl(object):
     
     def get_split_syllables(self):
         result = ""
-        if not self.layers:
+        if not self.words:
             self.layer()
         for word in self.words:
             for syll in word.syllables:

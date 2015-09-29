@@ -74,6 +74,9 @@
     <Compile Include="Elisio\models.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\tests\Test_DeviantWord.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\tests\Test_Foot.py">
       <SubType>Code</SubType>
     </Compile>

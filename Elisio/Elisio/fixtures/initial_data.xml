@@ -2,7 +2,7 @@
 <django-objects version="1.0">
   <!-- Deviant words -->
   <object pk="1" model="Elisio.DeviantWord">
-    <field type="CharField" name="stem">^Aene[ai].*$</field>
+    <field type="CharField" name="stem">^aene[ai].*$</field>
   </object>
   <object pk="2" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^cui$</field>

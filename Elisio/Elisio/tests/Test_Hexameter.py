@@ -37,7 +37,7 @@ class TestHexameter(unittest.TestCase):
         failed = 0
         for dbverse in dbverses:
             try:
-                if dbverse.number == 9:
+                if dbverse.number == 92:
                     worked = worked # for debugging
                 verse = VerseFactory.create(dbverse.contents)
             except VerseException as exc:
@@ -49,7 +49,7 @@ class TestHexameter(unittest.TestCase):
                 worked += 1
         # canary test: over 75% of verses must succeed
         result = str(worked) + " worked, " + str(failed) + " failed"
-        if worked / failed < 3:
+        if worked / failed < 4.5:
             self.fail(result)
         # canary test: if no verses fail, then we are probably too lax
         elif failed == 0:
