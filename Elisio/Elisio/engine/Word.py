@@ -43,6 +43,8 @@ class Word(object):
             temporary_syllables = SyllableSplitter.join_into_syllables(self.sounds)
             self.syllables = SyllableSplitter.redistribute(temporary_syllables)
             self.check_consistency()
+        if test_deviant and len(self.syllables) == 1 and len(self.text) == 1:
+            self.syllables[0].weight = Weight.HEAVY
 
     def ends_in_enclitic(self):
         if self.enclitic:
@@ -110,6 +112,7 @@ class Word(object):
             elif last_syllable.must_be_heavy():
                 syll_struct[-1] = Weight.HEAVY
             elif (last_syllable.ends_with_consonant() and 
+                  not last_syllable.ends_with_consonant_cluster() and 
                   first_syllable.starts_with_vowel()):
                 # consonant de facto redistributed
                 syll_struct[-1] = Weight.ANCEPS

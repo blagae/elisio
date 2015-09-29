@@ -37,7 +37,7 @@ class TestHexameter(unittest.TestCase):
         failed = 0
         for dbverse in dbverses:
             try:
-                if dbverse.number == 92:
+                if dbverse.number == 102:
                     worked = worked # for debugging
                 verse = VerseFactory.create(dbverse.contents)
             except VerseException as exc:

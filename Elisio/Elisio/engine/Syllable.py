@@ -87,6 +87,10 @@ class Syllable(object):
         """ last sound of the syllable is consonantal """
         return self.sounds[-1].is_consonant()
 
+    def ends_with_consonant_cluster(self):
+        return (len(self.sounds) > 1 and self.ends_with_consonant() and
+                self.sounds[-2].is_consonant())
+
     def must_be_heavy(self):
         if self.ends_with_heavymaker():
             return True
