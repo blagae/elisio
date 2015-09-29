@@ -47,6 +47,9 @@
     <Compile Include="Elisio\engine\Syllable.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\engine\VerseFactory.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\engine\Word.py">
       <SubType>Code</SubType>
     </Compile>

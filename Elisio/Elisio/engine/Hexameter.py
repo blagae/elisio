@@ -1,6 +1,48 @@
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Verse, Foot
 from Elisio.exceptions import HexameterException
+from Elisio.engine.VerseFactory import VerseCreator
+
+
+
+class HexameterCreator(VerseCreator):
+    MAX_SYLL = 17
+    MIN_SYLL = 12
+    def __init__(self, lst):
+        self.max_syllables = HexameterCreator.MAX_SYLL
+        self.min_syllables = HexameterCreator.MIN_SYLL
+        self.list = lst
+
+    def get_subtype(self):
+        if len(self.list) > self.max_syllables:
+            raise HexameterException("too many syllables in first pass")
+        elif len(self.list) < self.min_syllables:
+            raise HexameterException("too few syllables in first pass")
+        if (self.list[-3] == Weight.HEAVY or
+                self.list[-4] == Weight.HEAVY or
+                self.list[-5] == Weight.LIGHT):
+            self.max_syllables -= 1
+        else:
+            self.min_syllables += 1
+        if len(self.list) > self.max_syllables:
+            raise HexameterException("too many syllables in second pass")
+        elif len(self.list) < self.min_syllables:
+            raise HexameterException("too few syllables in second pass")
+        length = len(self.list) - self.min_syllables
+        if length == 0:
+            return SpondaicHexameter
+        elif length == 1:
+            return SpondaicDominantHexameter
+        elif length == 2:
+            return BalancedHexameter
+        elif length == 3:
+            return DactylicDominantHexameter
+        elif length == 4:
+            return DactylicHexameter
+        else:
+            raise HexameterException("{0} is an illegal number of"
+                                     "syllables in a Hexameter"
+                                     .format(len(self.list)))
 
 class Hexameter(Verse):
     """ the most popular Latin verse type """
@@ -10,14 +52,10 @@ class Hexameter(Verse):
 
     def __init__(self, text):
         super(Hexameter, self).__init__(text)
-        self.max_syllables = Hexameter.MAX_SYLL
-        self.min_syllables = Hexameter.MIN_SYLL
         self.feet = [None]*6
-        self.flat_list = []
         self.hex = None
 
     def preparse(self):
-        super(Hexameter, self).preparse()
         try:
             for i in range(0, len(self.flat_list)):
                 if self.flat_list[i] == Weight.HEAVY and self.flat_list[i+2] == Weight.HEAVY:
@@ -28,47 +66,21 @@ class Hexameter(Verse):
         except IndexError:
             pass
 
-    def __construct_hexameter(self):
-        """ factory method """
-        if len(self.flat_list) == self.min_syllables:
-            self.hex = SpondaicHexameter(self.text)
-        elif len(self.flat_list) == self.min_syllables + 1:
-            self.hex = SpondaicDominantHexameter(self.text)
-        elif len(self.flat_list) == self.max_syllables - 2:
-            self.hex = BalancedHexameter(self.text)
-        elif len(self.flat_list) == self.max_syllables - 1:
-            self.hex = DactylicDominantHexameter(self.text)
-        elif len(self.flat_list) == self.max_syllables:
-            self.hex = DactylicHexameter(self.text)
-        else:
-            raise HexameterException("{0} is an illegal number of"
-                                     "syllables in a Hexameter"
-                                     .format(len(self.flat_list)))
-
     def scan(self):
         """ main outward-facing method to be used for scanning purposes """
-        self.preparse()
+        # should be refactored
         if (self.flat_list[-3] == Weight.HEAVY or
                 self.flat_list[-4] == Weight.HEAVY or
                 self.flat_list[-5] == Weight.LIGHT):
             self.feet[4] = Foot.SPONDAEUS
-            self.max_syllables -= 1
         else:
             self.feet[4] = Foot.DACTYLUS
-            self.min_syllables += 1
         if self.flat_list[-1] == Weight.HEAVY:
             self.feet[5] = Foot.SPONDAEUS
         else:
             self.feet[5] = Foot.TROCHAEUS
 
-        self.__construct_hexameter()
-        # TODO: not a very elegant solution
-        self.hex.flat_list = self.flat_list
-        self.hex.max_syllables = self.max_syllables
-        self.hex.min_syllables = self.min_syllables
-        self.hex.feet = self.feet
-        self.hex.scan_for_real()
-        self.feet = self.hex.feet
+        self.scan_for_real()
         # control mechanism and syllable filler
         start = 0
         for feet_num, foot in enumerate(self.feet):
@@ -94,7 +106,6 @@ class Hexameter(Verse):
                 self.feet[count] = to_foot
 
     def scan_for_real(self):
-        """ main scanning method, written to be overridden """
         pass
 
 class SpondaicHexameter(Hexameter):
@@ -118,11 +129,6 @@ class SpondaicDominantHexameter(Hexameter):
     def __init__(self, text):
         super(SpondaicDominantHexameter, self).__init__(text)
     def scan_for_real(self):
-        if len(self.flat_list) != self.min_syllables + 1:
-            # avoid wrong use
-            raise HexameterException("a verse of {0} syllables cannot "
-                                     "have exactly one dactylus in foot 1-4"
-                                     .format(len(self.flat_list)))
         dact = False
         for count, weight in enumerate(self.flat_list):
             if count > 0 and count < 9 and weight == Weight.LIGHT:
@@ -174,11 +180,6 @@ class DactylicDominantHexameter(Hexameter):
             self.feet[2] = Foot.DACTYLUS
 
     def scan_for_real(self):
-        if len(self.flat_list) != self.max_syllables - 1:
-            # avoid wrong use
-            raise HexameterException("a verse of {0} syllables cannot have"
-                                     "exactly one spondaeus in foot 1-4"
-                                     .format(len(self.flat_list)))
         if (self.flat_list[1] == Weight.HEAVY or
                 self.flat_list[2] == Weight.HEAVY or
                 self.flat_list[3] == Weight.LIGHT):
@@ -257,11 +258,6 @@ class BalancedHexameter(Hexameter):
 
     def scan_for_real(self):
         """ mother method for all partial algorithms """
-        if len(self.flat_list) != self.max_syllables - 2:
-            # avoid wrong use
-            raise HexameterException("a verse of {0} syllables "
-                                     "cannot be balanced in foot 1-4"
-                                     .format(len(self.flat_list)))
         if self.__do_stab_in_the_dark():
             return
 

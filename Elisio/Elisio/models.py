@@ -97,7 +97,7 @@ class DatabaseVerse(models.Model):
 
     def get_verse(self):
         """ create a Verse object from this DatabaseVerse """
-        return Verse(self.contents)
+        return self.contents
 
     @classmethod
     def get_maximum_verse_num(cls, poem):

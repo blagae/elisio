@@ -1,6 +1,7 @@
 import unittest
 from Elisio.engine.Verse import Verse, Foot, set_django
 from Elisio.engine.Hexameter import Hexameter
+from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.tests.Test_Verse import TYPICAL_VERSE
 from Elisio.exceptions import HexameterException, VerseException
 
@@ -12,7 +13,7 @@ class TestHexameter(unittest.TestCase):
     """ testing specifically for the hexameter """
     def construct_hexameter(self, text=TYPICAL_VERSE):
         """ Construct a Hexameter object from a given text """
-        constructed_verse = Hexameter(text)
+        constructed_verse = VerseFactory.create(text)
 
         return constructed_verse
 
@@ -27,8 +28,6 @@ class TestHexameter(unittest.TestCase):
                          Foot.SPONDAEUS, Foot.SPONDAEUS,
                          Foot.DACTYLUS, Foot.SPONDAEUS]
         verse = self.construct_hexameter()
-        verse.split()
-        verse.scan()
         self.assertEqual(verse.feet, expected_feet)
 
     def test_hexameter_scan_all(self):
@@ -38,20 +37,22 @@ class TestHexameter(unittest.TestCase):
         failed = 0
         for dbverse in dbverses:
             try:
-                if dbverse.number == 18:
+                if dbverse.number == 9:
                     worked = worked # for debugging
-                verse = Hexameter(dbverse.contents)
-                verse.split()
-                verse.scan()
+                verse = VerseFactory.create(dbverse.contents)
             except VerseException as exc:
                 failed += 1
+                verse = VerseFactory.get_split_syllables(dbverse.contents)
                 print("{3}({0}: {1}): {2}"
-                      .format(dbverse.number, verse.get_split_syllables(), exc, type(exc)))
+                      .format(dbverse.number, verse, exc, type(exc)))
             else:
                 worked += 1
-        # canary test: over 66% of verses must succeed
+        # canary test: over 75% of verses must succeed
         result = str(worked) + " worked, " + str(failed) + " failed"
         if worked / failed < 3:
             self.fail(result)
+        # canary test: if no verses fail, then we are probably too lax
+        elif failed == 0:
+            self.fail("improbable result: " + result)
         else:
             print(result)

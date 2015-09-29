@@ -35,7 +35,7 @@
     <field type="CharField" name="stem">^teucr.*$</field>
   </object>
   <object pk="12" model="Elisio.DeviantWord">
-    <field type="CharField" name="stem">^deiopei.*$</field>
+    <field type="CharField" name="stem">^deiope.*$</field>
   </object>
   
   <!-- Deviant syllables -->

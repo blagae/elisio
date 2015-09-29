@@ -47,7 +47,7 @@ def fill_tree():
 
 def find_all_verses_containing(regex, must_be_parsed = False):
     from Elisio.engine.Verse import set_django
-    from Elisio.engine.Hexameter import Hexameter
+    from Elisio.engine.VerseFactory import VerseFactory
     from Elisio.models import DatabaseVerse
     from Elisio.exceptions import ScansionException
     import re
@@ -55,18 +55,17 @@ def find_all_verses_containing(regex, must_be_parsed = False):
     dbverses = DatabaseVerse.objects.all()
     total = []
     for dbverse in dbverses:
-        verse = Hexameter(dbverse.contents)
-        verse.split()
-        boo = False
-        for word in verse.words:
-            boo = boo or re.compile(regex).match(word.text)
+        words = VerseFactory.split(dbverse.contents)
+        boolean = False
+        for word in words:
+            boolean = boolean or re.compile(regex).match(word.text)
         if must_be_parsed:
             try:
-                verse.scan()
+                VerseFactory.create(dbverse.contents).parse()
             except ScansionException:
                 continue
-        if boo:
-            total.append(verse)
+        if boolean:
+            total.append(dbverse.contents)
     for v in total:
-        print(v.text)
+        print(v)
     print(len(total))

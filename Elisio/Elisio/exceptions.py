@@ -1,7 +1,21 @@
 """ special Exceptions module omg """
 class ScansionException(Exception):
     """description of class"""
-    pass
+    def __init__(self, message, *exceptions):
+        super(ScansionException, self).__init__(message, *exceptions)
+        self.message = message
+        self.exceptions = []
+        if exceptions:
+            self.exceptions = exceptions
+
+    def __str__(self):
+        result = self.message
+        if self.exceptions:
+            for excepts in self.exceptions:
+                for exc in excepts:
+                    result += str("\n{0}: {1}".format(type(exc), exc))
+        return result
+
 
 class LetterException(ScansionException):
     """description of class"""

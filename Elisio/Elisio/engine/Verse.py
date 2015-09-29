@@ -48,16 +48,6 @@ class Verse(object):
         self.text = text
         self.words = []
 
-    def split(self):
-        """ Split a Verse into Words, remembering only the letter characters """
-        txt = self.text.strip()
-        if self.words != []:
-            return
-        array = re.split('[^a-zA-Z]+', txt)
-        for word in array:
-            if word.isalpha():
-                self.words.append(Word(word))
-
     def __repr__(self):
         return self.words
     def __str__(self):
@@ -67,33 +57,12 @@ class Verse(object):
         """ Verses are equal if they have exactly the same characters """
         return self.text == other.text
 
-    def get_syllable_weights(self):
-        """ get available weights of syllables """
-        result = []
-        for count, word in enumerate(self.words):
-            try:
-                result.append(word.get_syllable_structure(self.words[count+1]))
-            except IndexError:
-                result.append(word.get_syllable_structure())
-        return result
+    def parse(self):
+        self.preparse()
+        self.scan()
 
     def preparse(self):
-        """ prepare the list of Syllable weights """
-        layered_list = self.get_syllable_weights()
-        for word in layered_list:
-            # TODO: open monosyllables ? se me ne are all heavy
-            for weight in word:
-                if weight != Weight.NONE:
-                    self.flat_list.append(weight)
+        pass
 
-    def get_split_syllables(self):
-        result = ""
-        for word in self.words:
-            for syll in word.syllables:
-                for snd in syll.sounds:
-                    for ltr in snd.letters:
-                        result += ltr.letter
-                result += "-"
-            result = result[:-1] + " "
-        return result
-
+    def scan(self):
+        pass
