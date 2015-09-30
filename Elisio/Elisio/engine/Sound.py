@@ -312,6 +312,10 @@ class SoundFactory(object):
         while i < len(text):
             added_sounds = SoundFactory.create_sounds_from_text(text[i:i+3])
             for sound in added_sounds:
+                # dirty hack to prevent 'novae' type of word from being analyzed as 'no-va-e'
+                if len(sounds) > 0 and sound == SoundFactory.create('e') and sounds[-1] == SoundFactory.create('a'):
+                    sound = SoundFactory.create('ae')
+                    sounds.pop()
                 sounds.append(sound)
                 i += len(sound.letters)
         return sounds
