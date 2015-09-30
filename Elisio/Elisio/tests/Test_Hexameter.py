@@ -58,5 +58,5 @@ class TestHexameter(unittest.TestCase):
             print(result)
 
     def test_hexameter_scan_for_debug(self):
-        dbverse = DatabaseVerse.objects.get(pk=715)
+        dbverse = DatabaseVerse.objects.get(pk=683)
         verse = VerseFactory.create(dbverse.contents)

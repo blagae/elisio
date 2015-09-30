@@ -221,11 +221,18 @@ class TestWord(unittest.TestCase):
         weights = [Weight.HEAVY, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
-
+        
     def test_word_split_no_lexical_exc(self):
         """ diphthong way too rare for a rule """
         word = self.construct_word('prout')
         syllable_list = [Syllable('pro'), Syllable('ut')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_word_split_semiv_diphthong(self):
+        """ diphthong must not be split """
+        word = self.construct_word('novae')
+        syllable_list = [Syllable('no'), Syllable('vae')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
