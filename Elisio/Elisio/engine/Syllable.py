@@ -181,6 +181,13 @@ class Syllable(object):
         return (self.ends_with_consonant() or vowel.is_diphthong() or
                 vowel.letters[0] in SyllableSplitter.longEndVowels)
 
+    def must_be_anceps(self, next_syllable=None):
+        if next_syllable and isinstance(next_syllable, Syllable):
+            return (self.ends_with_vowel() and
+                self.get_vowel().is_diphthong() and
+                next_syllable.starts_with_vowel())
+        return False
+
     def is_light(self, next_syllable=None):
         """
         determines whether the syllable is inherently light or not
@@ -213,6 +220,9 @@ class Syllable(object):
         """
         if self.weight:
             return self.weight
+        if self.must_be_anceps(next_syllable):
+            self.weight = Weight.ANCEPS
+            return Weight.ANCEPS
         if self.is_light(next_syllable):
             self.weight = Weight.LIGHT
             return Weight.LIGHT

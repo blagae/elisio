@@ -49,10 +49,14 @@ class TestHexameter(unittest.TestCase):
                 worked += 1
         # canary test: over 75% of verses must succeed
         result = str(worked) + " worked, " + str(failed) + " failed"
-        if worked / failed < 4.5:
+        if worked / failed < 5:
             self.fail(result)
         # canary test: if no verses fail, then we are probably too lax
         elif failed == 0:
             self.fail("improbable result: " + result)
         else:
             print(result)
+
+    def test_hexameter_scan_for_debug(self):
+        dbverse = DatabaseVerse.objects.get(pk=715)
+        verse = VerseFactory.create(dbverse.contents)

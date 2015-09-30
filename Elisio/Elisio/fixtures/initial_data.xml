@@ -2,7 +2,7 @@
 <django-objects version="1.0">
   <!-- Deviant words -->
   <object pk="1" model="Elisio.DeviantWord">
-    <field type="CharField" name="stem">^aene[ai].*$</field>
+    <field type="CharField" name="stem">^aene[ai].?$</field>
   </object>
   <object pk="2" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^cui$</field>
@@ -45,6 +45,9 @@
   </object>
   <object pk="15" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^dein.*$</field>
+  </object>
+  <object pk="16" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^ubi$</field>
   </object>
 
   <!-- Deviant syllables -->
@@ -209,6 +212,18 @@
     <field type="IntegerField" name="sequence">1</field>
     <field type="ForeignKey" name="word">15</field>
     <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="28" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">u</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">16</field>
+    <field type="enum.EnumField" name="weight">1</field>
+  </object>
+  <object pk="29" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">bi</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">16</field>
+    <field type="enum.EnumField" name="weight">3</field>
   </object>
 
   <!-- Periods -->
