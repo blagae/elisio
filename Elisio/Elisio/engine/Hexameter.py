@@ -176,8 +176,8 @@ class DactylicDominantHexameter(Hexameter):
             self.feet[1] = Foot.DACTYLUS
         if (self.flat_list[5] == Weight.HEAVY or
                 self.flat_list[6] == Weight.LIGHT):
-            self.feet[1] = Foot.DACTYLUS
             self.feet[2] = Foot.DACTYLUS
+            self.feet[3] = Foot.DACTYLUS
 
     def scan_for_real(self):
         if (self.flat_list[1] == Weight.HEAVY or
