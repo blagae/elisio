@@ -110,6 +110,9 @@ class Syllable(object):
                  (self.sounds[-2].is_vowel() or self.sounds[-2].is_semivowel()))
                )
 
+    def has_diphthong(self):
+        return self.get_vowel().is_diphthong()
+
     def ends_with_vowel(self):
         """
         last sound of the syllable is vocalic

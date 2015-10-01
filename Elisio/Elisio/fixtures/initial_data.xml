@@ -52,6 +52,9 @@
   <object pk="17" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^illius$</field>
   </object>
+  <object pk="18" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^qua$</field>
+  </object>
 
   <!-- Deviant syllables -->
   <object pk="1" model="Elisio.DeviantSyllable">
@@ -239,6 +242,12 @@
     <field type="IntegerField" name="sequence">2</field>
     <field type="ForeignKey" name="word">17</field>
     <field type="enum.EnumField" name="weight">3</field>
+  </object>
+  <object pk="32" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">qua</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">18</field>
+    <field type="enum.EnumField" name="weight">2</field>
   </object>
 
   <!-- Periods -->

@@ -113,6 +113,7 @@ class Word(object):
                 syll_struct[-1] = Weight.HEAVY
             elif (last_syllable.ends_with_consonant() and 
                   not last_syllable.ends_with_consonant_cluster() and 
+                  not last_syllable.has_diphthong() and
                   first_syllable.starts_with_vowel()):
                 # consonant de facto redistributed
                 syll_struct[-1] = Weight.ANCEPS
