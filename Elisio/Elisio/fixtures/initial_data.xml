@@ -58,6 +58,10 @@
   <object pk="19" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^seu$</field>
   </object>
+  <!-- shouldn't be in here but helps for now -->
+  <object pk="20" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^regin.*$</field>
+  </object>
 
   <!-- Deviant syllables -->
   <object pk="1" model="Elisio.DeviantSyllable">
@@ -256,6 +260,18 @@
     <field type="CharField" name="contents">seu</field>
     <field type="IntegerField" name="sequence">1</field>
     <field type="ForeignKey" name="word">19</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="34" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">re</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">20</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="35" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">gi</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">20</field>
     <field type="enum.EnumField" name="weight">2</field>
   </object>
 
