@@ -14,7 +14,7 @@
     <field type="CharField" name="stem">^e$</field>
   </object>
   <object pk="5" model="Elisio.DeviantWord">
-    <field type="CharField" name="stem">^tro[i]?[ae].?$</field>
+    <field type="CharField" name="stem">^tro[i]?[ae].*$</field>
   </object>
   <object pk="6" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^lauinia$</field>
@@ -54,6 +54,9 @@
   </object>
   <object pk="18" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^qua$</field>
+  </object>
+  <object pk="19" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^seu$</field>
   </object>
 
   <!-- Deviant syllables -->
@@ -247,6 +250,12 @@
     <field type="CharField" name="contents">qua</field>
     <field type="IntegerField" name="sequence">1</field>
     <field type="ForeignKey" name="word">18</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="33" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">seu</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">19</field>
     <field type="enum.EnumField" name="weight">2</field>
   </object>
 
