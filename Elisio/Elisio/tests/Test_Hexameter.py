@@ -1,4 +1,4 @@
-import unittest
+﻿import unittest
 from Elisio.engine.Verse import Verse, Foot, set_django
 from Elisio.engine.Hexameter import Hexameter
 from Elisio.engine.VerseFactory import VerseFactory
@@ -58,5 +58,5 @@ class TestHexameter(unittest.TestCase):
             print(result)
 
     def test_hexameter_scan_for_debug(self):
-        dbverse = DatabaseVerse.objects.get(pk=639)
+        dbverse = DatabaseVerse.objects.get(pk=1)
         verse = VerseFactory.create(dbverse.contents)
