@@ -1,4 +1,4 @@
-import copy
+﻿import copy
 import enum
 import re
 from Elisio.engine.Sound import SoundFactory
@@ -126,14 +126,22 @@ class Syllable(object):
         an initial semivowel is only vocalic if it is the syllable's only sound
         or if it is followed directly by a consonant
         """
-        return (self.sounds[0].is_vowel() or
-                (self.sounds[0].is_h() and
+        if self.sounds[0].is_vowel():
+            return True
+        if (self.sounds[0].is_h() and
                  len(self.sounds) > 1 and
-                 not self.sounds[1].is_consonant()) or
-                (self.sounds[0].is_semivowel() and
-                 (not initial or len(self.sounds) == 1 or
-                  self.sounds[1].is_consonant()))
-               )
+                 not self.sounds[1].is_consonant()):
+            return True
+        if (self.sounds[0] == SoundFactory.create('i') and
+                 (not initial or (len(self.sounds) == 1 or
+                  self.sounds[1].is_consonant()))):
+            return True
+        if (self.sounds[0] == SoundFactory.create('u') and
+            (len(self.sounds) == 1 or
+                  self.sounds[1].is_consonant())):
+            return True
+        return False
+
     def starts_with_consonant(self, initial=True):
         """
         first sound of the syllable is consonantal

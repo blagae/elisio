@@ -1,4 +1,4 @@
-""" unit tests for Word """
+﻿""" unit tests for Word """
 
 import unittest
 from Elisio.engine.Verse import Weight, set_django
@@ -438,6 +438,12 @@ class TestWord(unittest.TestCase):
         weights = [Weight.ANCEPS, Weight.LIGHT, Weight.ANCEPS, Weight.ANCEPS]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
+
+    def test_word_scan_failing_sv(self):
+        word = self.construct_word('arva')
+        syllable_list = [Syllable('ar'), Syllable('va')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
         
     def test_word_scan_debug(self):
         """ scan words with internal consonantal semivowels """
