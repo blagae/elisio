@@ -132,13 +132,9 @@ class Syllable(object):
                  len(self.sounds) > 1 and
                  not self.sounds[1].is_consonant()):
             return True
-        if (self.sounds[0] == SoundFactory.create('i') and
+        if (self.sounds[0].is_semivowel() and
                  (not initial or (len(self.sounds) == 1 or
                   self.sounds[1].is_consonant()))):
-            return True
-        if (self.sounds[0] == SoundFactory.create('u') and
-            (len(self.sounds) == 1 or
-                  self.sounds[1].is_consonant())):
             return True
         return False
 
