@@ -1,4 +1,4 @@
-from Elisio.engine.Syllable import Weight
+﻿from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Verse, Foot
 from Elisio.exceptions import HexameterException
 from Elisio.engine.VerseFactory import VerseCreator

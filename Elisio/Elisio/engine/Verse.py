@@ -1,4 +1,4 @@
-""" the main module for parsing verses """
+﻿""" the main module for parsing verses """
 import enum
 import re
 from Elisio.engine.Syllable import Weight
@@ -60,9 +60,26 @@ class Verse(object):
     def parse(self):
         self.preparse()
         self.scan()
+        self.save_structure()
+        #from Elisio.models import WordOccurrence
+        for wrd in self.words:
+            strct = ""
+            for syll in wrd.syllables:
+                strct += str(syll.weight.value)
+            #occ = WordOccurrence(word=wrd.text, struct=strct)
+            #occ.save()
 
     def preparse(self):
         pass
 
     def scan(self):
         pass
+
+    def save_structure(self):
+        i = 0
+        for word in self.words:
+            for syll in word.syllables:
+                #if not syll.weight or syll.weight == Weight.ANCEPS:
+                if syll.weight != Weight.NONE:
+                    syll.weight = self.flat_list[i]
+                    i+=1

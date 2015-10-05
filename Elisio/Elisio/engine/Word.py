@@ -127,6 +127,8 @@ class Word(object):
             for count in range(len(syll_struct)-1):
                 if syll_struct[count] == Weight.LIGHT:
                     syll_struct[count] = Weight.ANCEPS
+        for count, syll in enumerate(self.syllables):
+            syll.weight = syll_struct[count]
         return syll_struct
 
     def check_consistency(self):

@@ -37,8 +37,6 @@ class TestHexameter(unittest.TestCase):
         failed = 0
         for dbverse in dbverses:
             try:
-                if dbverse.number == 102:
-                    worked = worked # for debugging
                 verse = VerseFactory.create(dbverse.contents)
             except VerseException as exc:
                 failed += 1
@@ -58,5 +56,5 @@ class TestHexameter(unittest.TestCase):
             print(result)
 
     def test_hexameter_scan_for_debug(self):
-        dbverse = DatabaseVerse.objects.get(pk=467)
+        dbverse = DatabaseVerse.objects.get(pk=3)
         verse = VerseFactory.create(dbverse.contents)

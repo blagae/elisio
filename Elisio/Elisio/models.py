@@ -1,4 +1,4 @@
-""" standard Django module """
+﻿""" standard Django module """
 from django.db import models
 from Elisio.engine.Syllable import Weight, Syllable
 from Elisio.engine.Verse import Verse
@@ -112,3 +112,8 @@ class DatabaseVerse(models.Model):
         to be iterable (i.e. a resultset) """
         result = DatabaseVerse.objects.get(poem=poem, number=verse)
         return result.contents
+
+class WordOccurrence(models.Model):
+    #dbverse = models.ForeignKey(DatabaseVerse)
+    word = models.CharField(max_length=20)
+    struct = models.CharField(max_length=10)

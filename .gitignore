@@ -214,5 +214,5 @@ Elisio/Elisio/local.py
 Elisio/env*
 Elisio/ptvs*
 Elisio/Elisio/fixtures/omg.xml
-Elisio/*.db
+Elisio/Elisio/fixtures/*.db
 Elisio/*.config
