@@ -2,6 +2,8 @@
 from Elisio.engine.Letter import Letter, LetterType
 from Elisio.exceptions import SoundException
 
+sound_dict = {}
+
 class Sound(object):
     """
     Sound class
@@ -234,6 +236,10 @@ class SoundFactory(object):
         outward-facing factory which preparses its parameters
         and passes them to the internal factory method
         """
+        if isinstance(letters, str):
+            val = sound_dict.get(letters)
+            if val:
+                return val
         letterlist = []
         for item in letters:
             if isinstance(item, Letter):
@@ -279,6 +285,7 @@ class SoundFactory(object):
                     sound.letters.append(item)
         if not sound.is_valid_sound():
             raise SoundException("not a valid sound given in factory method")
+        sound_dict[sound.get_text()] = sound
         return sound
     
     @classmethod
