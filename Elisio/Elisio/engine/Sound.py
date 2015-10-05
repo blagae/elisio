@@ -2,13 +2,13 @@
 from Elisio.engine.Letter import Letter, LetterType
 from Elisio.exceptions import SoundException
 
-sound_dict = {}
 
 class Sound(object):
     """
     Sound class
     A sound is composed of one or several Letters
     """
+    
     def __init__(self, *letters):
         """ construct a Sound from a list of letters, or (a list of) text(s) """
         self.letters = []
@@ -229,6 +229,7 @@ class HeavyMakerSound(ConsonantSound):
 
     
 class SoundFactory(object):
+    sound_dict = {}
     # TODO: rename methods ?
     @classmethod
     def create(cls, *letters):
@@ -237,7 +238,7 @@ class SoundFactory(object):
         and passes them to the internal factory method
         """
         if isinstance(letters, str):
-            val = sound_dict.get(letters)
+            val = SoundFactory.sound_dict.get(letters)
             if val:
                 return val
         letterlist = []
@@ -285,7 +286,7 @@ class SoundFactory(object):
                     sound.letters.append(item)
         if not sound.is_valid_sound():
             raise SoundException("not a valid sound given in factory method")
-        sound_dict[sound.get_text()] = sound
+        SoundFactory.sound_dict[sound.get_text()] = sound
         return sound
     
     @classmethod
