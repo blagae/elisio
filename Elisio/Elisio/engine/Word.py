@@ -1,4 +1,4 @@
-""" processing unit for Words and lower entities """
+﻿""" processing unit for Words and lower entities """
 from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Syllable, SyllableSplitter, Weight
 from Elisio.exceptions import WordException
@@ -16,6 +16,7 @@ class Word(object):
             raise WordException("Word not initialized with alphatic data")
         self.find_sounds(text)
         self.enclitic = None
+        self.name = text.istitle()
 
     def __repr__(self):
         return self.syllables
@@ -122,6 +123,10 @@ class Word(object):
                 syll_struct[-1] = Weight.HEAVY
             if last_syllable == Syllable('que') and syll_struct[-1] != Weight.NONE:
                 syll_struct[-1] = Weight.LIGHT
+        if self.name:
+            for count in range(len(syll_struct)-1):
+                if syll_struct[count] == Weight.LIGHT:
+                    syll_struct[count] = Weight.ANCEPS
         return syll_struct
 
     def check_consistency(self):

@@ -292,9 +292,14 @@ class SyllableSplitter(object):
             if (syllables[count].ends_with_vowel() and
                     syllables[count+1].starts_with_consonant_cluster()):
                 SyllableSplitter.__switch_sound(syllables[count], syllables[count+1], True)
-            elif (syllables[count].ends_with_consonant() and
-                  syllables[count+1].starts_with_vowel(False)):
-                SyllableSplitter.__switch_sound(syllables[count], syllables[count+1], False)
+            elif (syllables[count].ends_with_consonant()):
+                if (syllables[count+1].sounds[0] == SoundFactory.create('u') and
+                    len(syllables[count+1].sounds) > 1 and
+                    not syllables[count].ends_with_consonant_cluster() and
+                    not syllables[count+1].sounds[1].is_consonant()):
+                    pass
+                elif syllables[count+1].starts_with_vowel(False):
+                    SyllableSplitter.__switch_sound(syllables[count], syllables[count+1], False)
         return syllables
 
     @classmethod
