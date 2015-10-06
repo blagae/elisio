@@ -20,14 +20,15 @@ class VerseFactory(object):
     def get_split_syllables(cls, text):
         return VerseFactoryImpl(text).get_split_syllables()
     @classmethod
-    def create(cls, text, save=False):
-        return VerseFactoryImpl(text).create(save)
+    def create(cls, text, save=False, useDict=False):
+        return VerseFactoryImpl(text, useDict).create(save)
 
 class VerseFactoryImpl(object):
-    def __init__(self, text):
+    def __init__(self, text, useDict=False):
         self.text = text
         self.words = []
         self.layers = [[]]
+        self.use_dict = useDict
         self.flat_list = []
 
     def create(self, save):
@@ -40,7 +41,7 @@ class VerseFactoryImpl(object):
         array = re.split('[^a-zA-Z]+', txt)
         for word in array:
             if word.isalpha():
-                self.words.append(Word(word))
+                self.words.append(Word(word, self.use_dict))
         return self.words
 
     def layer(self):
@@ -52,11 +53,6 @@ class VerseFactoryImpl(object):
                 syll_struct = word.get_syllable_structure(self.words[count+1])
             except IndexError:
                 syll_struct = word.get_syllable_structure()
-                """
-            if (len(syll_struct) == 1 and syll_struct[0] == Weight.ANCEPS
-                    and word.text[-1] == 'e'):
-                syll_struct[0] == Weight.HEAVY
-                # """
             result.append(syll_struct)
         self.layers = result
         return self.layers

@@ -9,13 +9,14 @@ class Word(object):
     It has extensive knowledge of its sounds, which it can join into syllables
     """
     enclitics = ('que', 'ue')
-    def __init__(self, text):
+    def __init__(self, text, use_dict = False):
         """ construct a Word by its contents """
         self.syllables = []
         if not (isinstance(text, str) and text.isalpha()):
             raise WordException("Word not initialized with alphatic data")
         self.find_sounds(text)
         self.enclitic = None
+        self.use_dict = use_dict
         self.name = text.istitle()
 
     def __repr__(self):
@@ -46,6 +47,20 @@ class Word(object):
             self.check_consistency()
         if test_deviant and len(self.syllables) == 1 and len(self.text) == 1:
             self.syllables[0].weight = Weight.HEAVY
+        if self.use_dict:
+            from Elisio.models import WordOccurrence
+            structs = []
+            for hit in WordOccurrence.objects.filter(word=self.text):
+                strc = hit.struct
+                if len(strc) > 1 and (strc[-1] == "3" or strc[-1] == "0"):
+                    strc = strc[:-1]
+                if not strc in structs:
+                    structs.append(strc)
+            if len(structs) == 1:
+                for count, wght in enumerate(structs[0]):
+                    self.syllables[count].weight = Weight(int(wght))
+            # TODO: multiple correct structures in database
+
 
     def ends_in_enclitic(self):
         if self.enclitic:
