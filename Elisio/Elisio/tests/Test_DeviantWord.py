@@ -1,4 +1,4 @@
-import unittest
+﻿import unittest
 from Elisio.engine.Verse import set_django
 from Elisio.engine.Syllable import Syllable
 from Elisio.engine.Word import Word, Weight

@@ -39,10 +39,13 @@ class TestHexameter(unittest.TestCase):
             try:
                 verse = VerseFactory.create(dbverse.contents)
             except VerseException as exc:
+                """try:
+                    verse = VerseFactory.create(dbverse.contents, False, True)
+                except VerseException as exc:"""
                 failed += 1
                 verse = VerseFactory.get_split_syllables(dbverse.contents)
                 print("{3}({0}: {1}): {2}"
-                      .format(dbverse.number, verse, exc, type(exc)))
+                        .format(dbverse.number, verse, exc, type(exc)))
             else:
                 worked += 1
         # canary test: over 89% of verses must succeed
@@ -56,5 +59,5 @@ class TestHexameter(unittest.TestCase):
             print(result)
 
     def test_hexameter_scan_for_debug(self):
-        dbverse = DatabaseVerse.objects.get(pk=3)
+        dbverse = DatabaseVerse.objects.get(pk=4)
         verse = VerseFactory.create(dbverse.contents)

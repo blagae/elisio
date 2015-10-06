@@ -89,6 +89,14 @@ class Word(object):
         """
         return self.__dict__ == other.__dict__
 
+    def may_be_heavy_by_position(self, next_word):
+        return (self.syllables[-1].is_heavy() and
+                ((next_word.syllables[0].starts_with_consonant_cluster() and
+                  self.syllables[-1].ends_with_vowel()) or
+                 (self.syllables[-1].ends_with_consonant() and
+                  next_word.syllables[0].starts_with_consonant()
+                  )))
+
     def get_syllable_structure(self, next_word=None):
         """ get the list of syllable weights based on the syllable list """
         syll_struct = []

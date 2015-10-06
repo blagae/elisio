@@ -57,17 +57,25 @@ class Verse(object):
         """ Verses are equal if they have exactly the same characters """
         return self.text == other.text
 
-    def parse(self):
+    def parse(self, save=False):
         self.preparse()
         self.scan()
         self.save_structure()
-        #from Elisio.models import WordOccurrence
-        for wrd in self.words:
-            strct = ""
-            for syll in wrd.syllables:
-                strct += str(syll.weight.value)
-            #occ = WordOccurrence(word=wrd.text, struct=strct)
-            #occ.save()
+        if save:
+            from Elisio.models import WordOccurrence
+            entries = []
+            for count, wrd in enumerate(self.words):
+                strct = ""
+                for cnt, syll in enumerate(wrd.syllables):
+                    strct += str(syll.weight.value)
+                    if cnt == len(wrd.syllables)-1 and count < len(self.words) - 1:
+                        if wrd.may_be_heavy_by_position(self.words[count+1]):
+                            if syll.weight != Weight.NONE:
+                                strct = strct[:-1]
+                                strct += str(Weight.ANCEPS.value)
+                entries.append(WordOccurrence(word=wrd.text, struct=strct))
+            if len(entries) > 0:
+                WordOccurrence.objects.bulk_create(entries)
 
     def preparse(self):
         pass

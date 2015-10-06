@@ -1,4 +1,4 @@
-import re
+﻿import re
 from Elisio.engine.Word import Word, Weight
 from Elisio.exceptions import ScansionException, VerseException
 
@@ -20,8 +20,8 @@ class VerseFactory(object):
     def get_split_syllables(cls, text):
         return VerseFactoryImpl(text).get_split_syllables()
     @classmethod
-    def create(cls, text):
-        return VerseFactoryImpl(text).create()
+    def create(cls, text, save=False):
+        return VerseFactoryImpl(text).create(save)
 
 class VerseFactoryImpl(object):
     def __init__(self, text):
@@ -30,7 +30,8 @@ class VerseFactoryImpl(object):
         self.layers = [[]]
         self.flat_list = []
 
-    def create(self):
+    def create(self, save):
+        self.save = save
         return self.__create_verse()
 
     def split(self):
@@ -82,7 +83,7 @@ class VerseFactoryImpl(object):
             verse.words = self.words
             verse.flat_list = self.flat_list
             try:
-                verse.parse()
+                verse.parse(self.save)
                 return verse
             except ScansionException as exc:
                 problems.append(exc)

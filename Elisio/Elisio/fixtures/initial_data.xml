@@ -173,7 +173,7 @@
     <field type="enum.EnumField" name="weight">3</field>
   </object>
   <object pk="19" model="Elisio.DeviantSyllable">
-    <field type="CharField" name="contents">teucr</field>
+    <field type="CharField" name="contents">teuc</field>
     <field type="IntegerField" name="sequence">1</field>
     <field type="ForeignKey" name="word">11</field>
     <field type="enum.EnumField" name="weight">2</field>
