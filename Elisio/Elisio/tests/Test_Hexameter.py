@@ -33,7 +33,7 @@ class TestHexameter(unittest.TestCase):
     def test_hexameter_scan_all(self):
         """ frivolous check to see how many verses work """
         save = False
-        threshold = 8 if save else 11
+        threshold = 9 if save else 11.5
         dbverses = DatabaseVerse.objects.all()
         worked = 0
         failed = 0
@@ -63,5 +63,5 @@ class TestHexameter(unittest.TestCase):
             print(result)
 
     def test_hexameter_scan_for_debug(self):
-        dbverse = DatabaseVerse.objects.get(pk=401)
+        dbverse = DatabaseVerse.objects.get(pk=700)
         verse = VerseFactory.create(dbverse.contents, False, True)

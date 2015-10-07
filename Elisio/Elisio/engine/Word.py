@@ -66,7 +66,7 @@ class Word(object):
                     val = structs[0][count]
                     for strc in structs:
                         equal = (equal and (val == strc[0] or val == "3"))
-                        if val == "3":
+                        if val == "3" and strc[count] != "0":
                             val = strc[count]
                     if equal:
                         self.syllables[count].weight = Weight(int(val))
