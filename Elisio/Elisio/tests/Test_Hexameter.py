@@ -32,12 +32,14 @@ class TestHexameter(unittest.TestCase):
 
     def test_hexameter_scan_all(self):
         """ frivolous check to see how many verses work """
+        save = False
+        threshold = 8 if save else 11
         dbverses = DatabaseVerse.objects.all()
         worked = 0
         failed = 0
         for dbverse in dbverses:
             try:
-                verse = VerseFactory.create(dbverse.contents)
+                verse = VerseFactory.create(dbverse.contents, save)
             except VerseException:
                 try:
                     verse = VerseFactory.create(dbverse.contents, False, True)
@@ -50,9 +52,9 @@ class TestHexameter(unittest.TestCase):
                     worked += 1
             else:
                 worked += 1
-        # canary test: over 89% of verses must succeed
+        # canary test: over 91% of verses must succeed
         result = str(worked) + " worked, " + str(failed) + " failed"
-        if worked / failed < 11:
+        if worked / failed < threshold:
             self.fail(result)
         # canary test: if no verses fail, then we are probably too lax
         elif failed == 0:
@@ -61,5 +63,5 @@ class TestHexameter(unittest.TestCase):
             print(result)
 
     def test_hexameter_scan_for_debug(self):
-        dbverse = DatabaseVerse.objects.get(pk=658)
+        dbverse = DatabaseVerse.objects.get(pk=401)
         verse = VerseFactory.create(dbverse.contents, False, True)

@@ -60,7 +60,7 @@ class Hexameter(Verse):
             for i in range(0, len(self.flat_list)):
                 if self.flat_list[i] == Weight.HEAVY and self.flat_list[i+2] == Weight.HEAVY:
                     if self.flat_list[i+1] == Weight.LIGHT:
-                        raise HexameterException("cannot assign HEAVY to LIGHT syllable #" + str(i))
+                        raise HexameterException("cannot assign HEAVY to LIGHT syllable #" + str(i+1))
                     else:
                         self.flat_list[i+1] = Weight.HEAVY
         except IndexError:
@@ -303,9 +303,33 @@ class BalancedHexameter(Hexameter):
         """ try some scenarios if we've found a spondee and a dactyl """
         if ((self.feet[2] == Foot.SPONDAEUS and self.feet[3] == Foot.DACTYLUS) or
             (self.feet[2] == Foot.DACTYLUS and self.feet[3] == Foot.SPONDAEUS)):
-            if self.flat_list[3] == Weight.HEAVY:
+            if self.flat_list[3] == Weight.HEAVY or self.flat_list[4] == Weight.HEAVY:
                 self.feet[0] = Foot.DACTYLUS
                 self.feet[1] = Foot.SPONDAEUS
+            elif self.flat_list[1] == Weight.HEAVY or self.flat_list[2] == Weight.HEAVY:
+                self.feet[0] = Foot.SPONDAEUS
+                self.feet[1] = Foot.DACTYLUS
+            elif self.flat_list[1] == Weight.LIGHT or self.flat_list[2] == Weight.LIGHT:
+                self.feet[0] = Foot.DACTYLUS
+                self.feet[1] = Foot.SPONDAEUS
+            elif self.flat_list[3] == Weight.LIGHT or self.flat_list[4] == Weight.LIGHT:
+                self.feet[0] = Foot.SPONDAEUS
+                self.feet[1] = Foot.DACTYLUS
+
+        elif ((self.feet[0] == Foot.DACTYLUS and self.feet[1] == Foot.SPONDAEUS) or
+              (self.feet[0] == Foot.SPONDAEUS and self.feet[1] == Foot.DACTYLUS)):
+            if self.flat_list[6] == Weight.HEAVY or self.flat_list[7] == Weight.HEAVY:
+                self.feet[2] = Foot.SPONDAEUS
+                self.feet[3] = Foot.DACTYLUS
+            elif self.flat_list[8] == Weight.HEAVY or self.flat_list[9] == Weight.HEAVY:
+                self.feet[2] = Foot.DACTYLUS
+                self.feet[3] = Foot.SPONDAEUS
+            elif self.flat_list[6] == Weight.LIGHT or self.flat_list[7] == Weight.LIGHT:
+                self.feet[2] = Foot.DACTYLUS
+                self.feet[3] = Foot.SPONDAEUS
+            elif self.flat_list[8] == Weight.LIGHT or self.flat_list[9] == Weight.LIGHT:
+                self.feet[2] = Foot.SPONDAEUS
+                self.feet[3] = Foot.DACTYLUS
 
         elif self.feet[0] == Foot.SPONDAEUS and self.feet[2] == Foot.DACTYLUS:
             if (self.flat_list[3] == Weight.HEAVY or

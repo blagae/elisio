@@ -59,6 +59,17 @@ class Word(object):
             if len(structs) == 1:
                 for count, wght in enumerate(structs[0]):
                     self.syllables[count].weight = Weight(int(wght))
+            if len(structs) > 1:
+                structs.sort(key=len)
+                for count in range(len(structs[0])):
+                    equal = True
+                    val = structs[0][count]
+                    for strc in structs:
+                        equal = (equal and (val == strc[0] or val == "3"))
+                        if val == "3":
+                            val = strc[count]
+                    if equal:
+                        self.syllables[count].weight = Weight(int(val))
             # TODO: multiple correct structures in database
 
 
