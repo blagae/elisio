@@ -6,7 +6,7 @@ from Elisio import views
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = ['',
                        # Examples:
                        url(r'^$', views.index),
                        url(r'^batch/$', views.batch),
@@ -16,4 +16,4 @@ urlpatterns = patterns('',
                        url(r'^json/([a-zA-Z]+)/([0-9]+)$', views.json_list),
                        url(r'^json/verse/([0-9]+)/([0-9]+)$', views.json_verse),
                        url(r'^admin/', include(admin.site.urls)),
-                      )
+                      ]
