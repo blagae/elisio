@@ -6,7 +6,7 @@ from Elisio import views
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = ['',
+urlpatterns = [#'',
                        # Examples:
                        url(r'^$', views.index),
                        url(r'^batch/$', views.batch),
