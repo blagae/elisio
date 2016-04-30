@@ -9,7 +9,6 @@ from Elisio import settings
 def set_django():
     """ in order to get to the database, we must use Django """
     import os
-    print(settings.__name__)
     module = 'DJANGO_SETTINGS_MODULE'
     if (not module in os.environ or
             os.environ[module] != settings.__name__):
