@@ -4,13 +4,16 @@ import re
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Word import Word
 from Elisio.exceptions import VerseException, HexameterException, IllegalFootException
+from Elisio import settings
 
 def set_django():
     """ in order to get to the database, we must use Django """
     import os
-    if (not 'DJANGO_SETTINGS_MODULE' in os.environ or
-            os.environ['DJANGO_SETTINGS_MODULE'] != 'Elisio.settings'):
-        os.environ['DJANGO_SETTINGS_MODULE'] = 'Elisio.settings'
+    print(settings.__name__)
+    module = 'DJANGO_SETTINGS_MODULE'
+    if (not module in os.environ or
+            os.environ[module] != settings.__name__):
+        os.environ[module] = settings.__name__
     import django
     if django.VERSION[:2] >= (1, 7):
         django.setup()
