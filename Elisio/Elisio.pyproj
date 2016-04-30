@@ -62,9 +62,6 @@
     <Compile Include="Elisio\engine\Verse.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Elisio\fixtures\initial_data.xml">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Elisio\local.py">
       <SubType>Code</SubType>
     </Compile>
@@ -126,6 +123,10 @@
     <Compile Include="Elisio\wsgi.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Elisio\fixtures\deviant\initial_data.xml" />
+    <Content Include="Elisio\fixtures\metadata\initial_data.xml" />
+    <Content Include="Elisio\fixtures\source.txt" />
+    <Content Include="Elisio\fixtures\verses\initial_data.xml" />
     <Content Include="Elisio\static\indexScripts.js" />
     <Content Include="Elisio\static\scripts.js" />
     <Content Include="Elisio\static\styles.css" />
@@ -141,6 +142,10 @@
     <Folder Include="Elisio\" />
     <Folder Include="Elisio\fixtures\" />
     <Folder Include="Elisio\engine\" />
+    <Folder Include="Elisio\fixtures\metadata\" />
+    <Folder Include="Elisio\fixtures\verses2\" />
+    <Folder Include="Elisio\fixtures\verses\" />
+    <Folder Include="Elisio\fixtures\deviant\" />
     <Folder Include="Elisio\templates\" />
     <Folder Include="Elisio\static\" />
     <Folder Include="Elisio\tests\" />

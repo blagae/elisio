@@ -92,6 +92,12 @@ TEMPLATE_LOADERS = (
     #'django.template.loaders.eggs.Loader',
 )
 
+FIXTURE_DIRS = (
+    'Elisio/fixtures/deviant/',
+    'Elisio/fixtures/metadata/',
+    'Elisio/fixtures/verses/',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

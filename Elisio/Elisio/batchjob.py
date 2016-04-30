@@ -1,10 +1,16 @@
 """ module for creating an xml file from given input """
 import xml.etree.ElementTree as ET
+import xml.dom.minidom as mini
 
 def create_file(tree):
     """ create the file from the given xml tree """
-    if isinstance(tree, ET.ElementTree):
-        tree.write("Elisio/fixtures/omg.xml")
+    if isinstance(tree, ET.Element):
+        xml = mini.parseString(ET.tostring(tree)).toprettyxml()
+        # TODO: use something less of a dirty hack to enforce UTF-8
+        xml = xml.replace('<?xml version="1.0" ?>', '<?xml version="1.0" encoding="utf-8" ?>')
+
+        with open('Elisio/fixtures/verses/initial_data.xml', "w") as file:
+            file.writelines(xml)
     else:
         raise IOError("Invalid XML Tree object")
 
@@ -12,7 +18,7 @@ def read_object():
     """ read the entries from a file """
     # TODO: read-out from flatfile
     with open('Elisio/fixtures/source.txt', "r") as file:
-        result = file.readlines()
+        result = [x.replace('\n', '') for x in file.readlines()]
     return result
 
 def fill_tree():
@@ -42,9 +48,9 @@ def fill_tree():
 
         count += 1
 
-    tree = ET.ElementTree(root)
+    #tree = ET.ElementTree(root)
 
-    create_file(tree)
+    create_file(root)
 
 def find_all_verses_containing(regex, must_be_parsed = False):
     from Elisio.engine.Verse import set_django
