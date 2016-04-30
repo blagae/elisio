@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<django-objects version="1.0">
+  <!-- Deviant words -->
+  <object pk="2" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^cui$</field>
+  </object>
+  <object pk="3" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^huic$</field>
+  </object>
+  <object pk="5" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^tro[i]?[ae].*$</field>
+  </object>
+  <object pk="6" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^lauinia$</field>
+  </object>
+  <object pk="8" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^oilei$</field>
+  </object>
+  <object pk="9" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^mihi$</field>
+  </object>
+  <object pk="10" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^tibi$</field>
+  </object>
+  <object pk="11" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^teucr.*$</field>
+  </object>
+  <object pk="12" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^deiope.*$</field>
+  </object>
+  <object pk="13" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^eur.*$</field>
+  </object>
+  <object pk="14" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^ego$</field>
+  </object>
+  <object pk="15" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^dein.*$</field>
+  </object>
+  <object pk="16" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^ubi</field>
+  </object>
+  <object pk="17" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^illius$</field>
+  </object>
+  <object pk="19" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^seu$</field>
+  </object>
+
+  <!-- Deviant syllables -->
+  <object pk="3" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">cui</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">2</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="4" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">huic</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">3</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="6" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">tro</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">5</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="7" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">la</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">6</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="8" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">vin</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">6</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="9" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">ia</field>
+    <field type="IntegerField" name="sequence">3</field>
+    <field type="ForeignKey" name="word">6</field>
+    <field type="enum.EnumField" name="weight">1</field>
+  </object>
+  <object pk="12" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">o</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">8</field>
+    <field type="enum.EnumField" name="weight">1</field>
+  </object>
+  <object pk="13" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">i</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">8</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="14" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">lei</field>
+    <field type="IntegerField" name="sequence">3</field>
+    <field type="ForeignKey" name="word">8</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+
+  <object pk="15" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">mi</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">9</field>
+    <field type="enum.EnumField" name="weight">1</field>
+  </object>
+  <object pk="16" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">hi</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">9</field>
+    <field type="enum.EnumField" name="weight">3</field>
+  </object>
+  <object pk="17" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">ti</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">10</field>
+    <field type="enum.EnumField" name="weight">1</field>
+  </object>
+  <object pk="18" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">bi</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">10</field>
+    <field type="enum.EnumField" name="weight">3</field>
+  </object>
+  <object pk="19" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">teuc</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">11</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="20" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">de</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">12</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="21" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">i</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">12</field>
+    <field type="enum.EnumField" name="weight">3</field>
+  </object>
+  <object pk="22" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">o</field>
+    <field type="IntegerField" name="sequence">3</field>
+    <field type="ForeignKey" name="word">12</field>
+    <field type="enum.EnumField" name="weight">3</field>
+  </object>
+  <object pk="23" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">pei</field>
+    <field type="IntegerField" name="sequence">4</field>
+    <field type="ForeignKey" name="word">12</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="24" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">eur</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">13</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="25" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">e</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">14</field>
+    <field type="enum.EnumField" name="weight">1</field>
+  </object>
+  <object pk="26" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">go</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">14</field>
+    <field type="enum.EnumField" name="weight">3</field>
+  </object>
+  <object pk="27" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">dein</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">15</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="28" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">u</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">16</field>
+    <field type="enum.EnumField" name="weight">1</field>
+  </object>
+  <object pk="29" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">bi</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">16</field>
+    <field type="enum.EnumField" name="weight">3</field>
+  </object>
+  <object pk="30" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">il</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">17</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="31" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">li</field>
+    <field type="IntegerField" name="sequence">2</field>
+    <field type="ForeignKey" name="word">17</field>
+    <field type="enum.EnumField" name="weight">3</field>
+  </object>
+  <object pk="33" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">seu</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">19</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+</django-objects>
