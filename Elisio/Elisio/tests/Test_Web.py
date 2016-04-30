@@ -21,11 +21,6 @@ class TestWeb(unittest.TestCase):
         """
         response = self.client.get('/about/')
         self.assertEqual(response.status_code, 200)
-
-    def test_create_xml(self):
-        """ creates XML with some data """
-        from Elisio.batchjob import fill_tree
-        fill_tree()
         
     def test_go(self):
         from Elisio.batchjob import find_all_verses_containing as find
