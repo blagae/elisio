@@ -11,7 +11,8 @@ def create_file(tree):
 def read_object():
     """ read the entries from a file """
     # TODO: read-out from flatfile
-    result = ['omgomgomg', 'yeyeyey']
+    with open('Elisio/fixtures/source.txt', "r") as file:
+        result = file.readlines()
     return result
 
 def fill_tree():
