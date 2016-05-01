@@ -71,9 +71,6 @@
     <Compile Include="Elisio\models.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Elisio\tests\Test_Batch.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Elisio\tests\Test_DeviantWord.py">
       <SubType>Code</SubType>
     </Compile>
@@ -126,7 +123,6 @@
     <Content Include="Elisio\fixtures\deviant\initial_data.xml" />
     <Content Include="Elisio\fixtures\metadata\initial_data.xml" />
     <Content Include="Elisio\fixtures\source.txt" />
-    <Content Include="Elisio\fixtures\verses\initial_data.xml" />
     <Content Include="Elisio\static\indexScripts.js" />
     <Content Include="Elisio\static\scripts.js" />
     <Content Include="Elisio\static\styles.css" />
@@ -143,7 +139,6 @@
     <Folder Include="Elisio\fixtures\" />
     <Folder Include="Elisio\engine\" />
     <Folder Include="Elisio\fixtures\metadata\" />
-    <Folder Include="Elisio\fixtures\verses2\" />
     <Folder Include="Elisio\fixtures\verses\" />
     <Folder Include="Elisio\fixtures\deviant\" />
     <Folder Include="Elisio\templates\" />
