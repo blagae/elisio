@@ -194,6 +194,12 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
+    def test_word_split_intervoc_v(self):
+        word = self.construct_word('achivis')
+        syllable_list = [Syllable('a'), Syllable('chi'), Syllable('vis')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
     def test_word_split_lexical(self):
         """ common word must be in the dictionary """
         word = self.construct_word('cui')
