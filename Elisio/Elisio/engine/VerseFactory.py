@@ -32,8 +32,7 @@ class VerseFactoryImpl(object):
         self.flat_list = []
 
     def create(self, save):
-        self.save = save
-        return self.__create_verse()
+        return self.__create_verse(save)
 
     def split(self):
         """ Split a Verse into Words, remembering only the letter characters """
@@ -68,7 +67,7 @@ class VerseFactoryImpl(object):
                     self.flat_list.append(weight)
         return self.flat_list
 
-    def __create_verse(self):
+    def __create_verse(self, save):
         self.getlist()
         VerseFactory.classes = VerseCreator.__subclasses__()
         problems = []
@@ -79,7 +78,7 @@ class VerseFactoryImpl(object):
             verse.words = self.words
             verse.flat_list = self.flat_list
             try:
-                verse.parse(self.save)
+                verse.parse(save)
                 return verse
             except ScansionException as exc:
                 problems.append(exc)

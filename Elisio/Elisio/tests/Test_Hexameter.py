@@ -32,17 +32,17 @@ class TestHexameter(unittest.TestCase):
 
     def test_hexameter_scan_all(self):
         """ frivolous check to see how many verses work """
-        save = False
+        save = True
         threshold = 9 if save else 11.5
         dbverses = DatabaseVerse.objects.all()
         worked = 0
         failed = 0
         for dbverse in dbverses:
             try:
-                verse = VerseFactory.create(dbverse.contents, save)
+                verse = VerseFactory.create(dbverse.contents, not dbverse.saved)
             except VerseException:
                 try:
-                    verse = VerseFactory.create(dbverse.contents, False, True)
+                    verse = VerseFactory.create(dbverse.contents, not dbverse.saved, True)
                 except VerseException as exc:
                     failed += 1
                     verse = VerseFactory.get_split_syllables(dbverse.contents)
@@ -52,6 +52,9 @@ class TestHexameter(unittest.TestCase):
                     worked += 1
             else:
                 worked += 1
+            if isinstance(verse, Verse) and not dbverse.saved:
+                dbverse.saved = True
+                dbverse.save()
         # canary test: over 91% of verses must succeed
         result = str(worked) + " worked, " + str(failed) + " failed"
         if worked / failed < threshold:

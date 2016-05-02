@@ -43,12 +43,13 @@ class Verse(object):
     A verse is the representation of the Latin text of a verse
     It has no knowledge of its surroundings or context
     """
-    def __init__(self, text):
+    def __init__(self, text, saved=False):
         """ construct a Verse by its contents """
         if not isinstance(text, str):
             raise VerseException("Verse must be initialized with text data")
         self.text = text
         self.words = []
+        self.saved = saved
 
     def __repr__(self):
         return self.words
@@ -63,7 +64,7 @@ class Verse(object):
         self.preparse()
         self.scan()
         self.save_structure()
-        if save:
+        if save and not self.saved:
             from Elisio.models import WordOccurrence
             entries = []
             for count, wrd in enumerate(self.words):

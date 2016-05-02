@@ -94,10 +94,11 @@ class DatabaseVerse(models.Model):
     number = models.IntegerField()
     alternative = models.CharField(max_length=1)
     contents = models.CharField(max_length=70)
+    saved = models.BooleanField(default=False)
 
     def get_verse(self):
         """ create a Verse object from this DatabaseVerse """
-        return self.contents
+        return self.contents# Verse(self.contents, self.saved)
 
     @classmethod
     def get_maximum_verse_num(cls, poem):

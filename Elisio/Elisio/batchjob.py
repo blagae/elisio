@@ -43,7 +43,9 @@ def fill_tree():
         number_field.text = str(count)
         verse_field = ET.SubElement(obj, "field",
                                     {'type': 'CharField',
-                                     'name': 'contents'})
+                                     'name': 'contents',
+                                     'saved': 'False'
+                                     })
         verse_field.text = verse
 
         count += 1
