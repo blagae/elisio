@@ -72,7 +72,6 @@ class Word(object):
                         self.syllables[count].weight = Weight(int(val))
             # TODO: multiple correct structures in database
 
-
     def ends_in_enclitic(self):
         if self.enclitic:
             return True
@@ -185,7 +184,6 @@ class Word(object):
                     try:
                         syllable = Syllable(syllable.get_text() + self.syllables[count + 1].get_text())
                         self.syllables.remove(self.syllables[count + 1])
-                        self.syllables.remove(self.syllables[count])
-                        self.syllables.append(syllable)
+                        self.syllables[count] = syllable
                     except SyllableException:
                         pass

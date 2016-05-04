@@ -33,7 +33,7 @@ class TestHexameter(unittest.TestCase):
     def test_hexameter_scan_all(self):
         """ frivolous check to see how many verses work """
         save = True
-        threshold = 9 if save else 11.5
+        threshold = 10 if save else 12
         dbverses = DatabaseVerse.objects.all()
         worked = 0
         failed = 0

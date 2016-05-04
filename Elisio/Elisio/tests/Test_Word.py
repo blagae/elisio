@@ -193,10 +193,16 @@ class TestWord(unittest.TestCase):
         syllable_list = [Syllable('cu'), Syllable('ius')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
-
+        
     def test_word_split_intervoc_v(self):
         word = self.construct_word('achivis')
         syllable_list = [Syllable('a'), Syllable('chi'), Syllable('vis')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_word_split_velivolum(self):
+        word = self.construct_word('velivolum')
+        syllable_list = [Syllable('ve'), Syllable('li'), Syllable('vo'), Syllable('lum')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
