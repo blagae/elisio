@@ -72,6 +72,9 @@ class Word(object):
                         self.syllables[count].weight = Weight(int(val))
             # TODO: multiple correct structures in database
 
+    def ends_in_variable_declension(self):
+        return self.text.endswith("us") or self.text.endswith("a")
+
     def ends_in_enclitic(self):
         if self.enclitic:
             return True

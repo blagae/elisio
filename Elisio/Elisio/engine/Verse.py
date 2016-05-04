@@ -76,6 +76,10 @@ class Verse(object):
                             if syll.weight != Weight.NONE:
                                 strct = strct[:-1]
                                 strct += str(Weight.ANCEPS.value)
+                if(wrd.ends_in_variable_declension()):
+                    strct = strct[:-1]
+                    strct += str(Weight.ANCEPS.value)
+
                 entries.append(WordOccurrence(word=wrd.text, struct=strct))
             if len(entries) > 0:
                 WordOccurrence.objects.bulk_create(entries)
