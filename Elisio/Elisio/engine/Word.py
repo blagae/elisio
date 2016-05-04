@@ -1,7 +1,7 @@
 ﻿""" processing unit for Words and lower entities """
 from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Syllable, SyllableSplitter, Weight
-from Elisio.exceptions import WordException
+from Elisio.exceptions import WordException, SyllableException
 
 class Word(object):
     """ Word class
@@ -178,3 +178,14 @@ class Word(object):
                 self.syllables.remove(syllable)
                 for syll in reversed(word.syllables):
                     self.syllables.insert(index, syll)
+        # recheck to catch a-chi-u-is type errors
+        for count, syllable in enumerate(self.syllables):
+            if len(syllable.sounds) == 1 and syllable.sounds[0].is_semivowel():
+                if count < len(self.syllables) - 1 and self.syllables[count + 1].starts_with_vowel():
+                    try:
+                        syllable = Syllable(syllable.get_text() + self.syllables[count + 1].get_text())
+                        self.syllables.remove(self.syllables[count + 1])
+                        self.syllables.remove(self.syllables[count])
+                        self.syllables.append(syllable)
+                    except SyllableException:
+                        pass

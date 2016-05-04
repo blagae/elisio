@@ -200,6 +200,12 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
+    def test_word_split_iit(self):
+        word = self.construct_word('iit')
+        syllable_list = [Syllable('i'), Syllable('it')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
     def test_word_split_lexical(self):
         """ common word must be in the dictionary """
         word = self.construct_word('cui')
