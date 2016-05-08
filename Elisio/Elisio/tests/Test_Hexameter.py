@@ -67,7 +67,7 @@ class TestHexameter(unittest.TestCase):
 
     def test_hexameter_scan_for_debug(self):
         """
-        376: Troiae nomen iit, diversa per aequora vectos
+        21: hinc populum late regem belloque superbum
         """
-        dbverse = DatabaseVerse.objects.get(pk=376)
-        verse = VerseFactory.create(dbverse.contents, False, True)
+        dbverse = DatabaseVerse.objects.get(pk=140)
+        verse = VerseFactory.create("vestras, Eure, domos; illa se iactet in aula", False, True)

@@ -477,5 +477,13 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
+    def test_word_scan_final_e(self):
+        """ scan word with final -e as anceps """
+        word = self.construct_word('late')
+        weights = [Weight.ANCEPS, Weight.ANCEPS]
+        word.split()
+        self.assertEqual(word.get_syllable_structure(), weights)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -60,12 +60,14 @@ class Word(object):
                 for count, wght in enumerate(structs[0]):
                     self.syllables[count].weight = Weight(int(wght))
             if len(structs) > 1:
-                structs.sort(key=len)
+                structs.sort(key=len, reverse=True)
                 for count in range(len(structs[0])):
+                    # TODO: '23' (=> '2') is looked at before '22' because of length
+                    # even though '22' is much more interesting
                     equal = True
                     val = structs[0][count]
                     for strc in structs:
-                        equal = (equal and (val == strc[0] or val == "3"))
+                        equal = (equal and (val == strc[count] or val == "3"))
                         if val == "3" and strc[count] != "0":
                             val = strc[count]
                     if equal:
@@ -148,12 +150,14 @@ class Word(object):
             # TODO: redefine redistribution ! heavymakers, -os, etc
             elif last_syllable.must_be_heavy():
                 syll_struct[-1] = Weight.HEAVY
-            elif (last_syllable.ends_with_consonant() and 
-                  not last_syllable.ends_with_consonant_cluster() and 
-                  not last_syllable.has_diphthong() and
-                  first_syllable.starts_with_vowel()):
-                # consonant de facto redistributed
-                syll_struct[-1] = Weight.ANCEPS
+            elif last_syllable.ends_with_consonant():
+                if (not last_syllable.ends_with_consonant_cluster() and 
+                   not last_syllable.has_diphthong() and
+                   first_syllable.starts_with_vowel()):
+                    # consonant de facto redistributed
+                    syll_struct[-1] = Weight.ANCEPS
+                elif first_syllable.starts_with_consonant():
+                    syll_struct[-1] = Weight.HEAVY
             elif (last_syllable.ends_with_vowel() and
                   first_syllable.starts_with_consonant_cluster()):
                 syll_struct[-1] = Weight.HEAVY

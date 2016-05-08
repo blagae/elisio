@@ -77,8 +77,11 @@ class Hexameter(Verse):
             self.feet[4] = Foot.DACTYLUS
         if self.flat_list[-1] == Weight.HEAVY:
             self.feet[5] = Foot.SPONDAEUS
-        else:
+        elif self.flat_list[-1] == Weight.LIGHT:
             self.feet[5] = Foot.TROCHAEUS
+        else:
+            self.feet[5] = Foot.BINARY_ANCEPS
+
 
         self.scan_for_real()
         # control mechanism and syllable filler

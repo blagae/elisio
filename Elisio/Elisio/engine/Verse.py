@@ -22,7 +22,8 @@ class Foot(enum.Enum):
     DACTYLUS = 0
     SPONDAEUS = 1
     TROCHAEUS = 2
-    UNKNOWN = 3
+    BINARY_ANCEPS = 3
+    UNKNOWN = 4
 
     def get_length(self):
         """ number of syllables in the foot """
@@ -36,6 +37,8 @@ class Foot(enum.Enum):
             return [Weight.HEAVY, Weight.HEAVY]
         elif self == Foot.TROCHAEUS:
             return [Weight.HEAVY, Weight.LIGHT]
+        elif self == Foot.BINARY_ANCEPS:
+            return [Weight.HEAVY, Weight.ANCEPS]
         raise IllegalFootException("currently illegal foot structure: " + self.name)
 
 class Verse(object):
