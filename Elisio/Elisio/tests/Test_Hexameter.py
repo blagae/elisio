@@ -54,6 +54,7 @@ class TestHexameter(unittest.TestCase):
                 worked += 1
             if isinstance(verse, Verse) and not dbverse.saved:
                 dbverse.saved = True
+                dbverse.structure = verse.structure
                 dbverse.save()
         # canary test: over 91% of verses must succeed
         result = str(worked) + " worked, " + str(failed) + " failed"
@@ -70,4 +71,4 @@ class TestHexameter(unittest.TestCase):
         21: hinc populum late regem belloque superbum
         """
         dbverse = DatabaseVerse.objects.get(pk=140)
-        verse = VerseFactory.create("vestras, Eure, domos; illa se iactet in aula", False, True)
+        verse = VerseFactory.create(dbverse.contents, False, True)

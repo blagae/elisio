@@ -50,6 +50,12 @@ class Hexameter(Verse):
     MAX_SYLL = 17
     MIN_SYLL = 12
 
+    def save_feet(self):
+        result = ""
+        for ft in self.feet:
+            result += str(ft.value)
+        return result
+
     def __init__(self, text):
         super(Hexameter, self).__init__(text)
         self.feet = [None]*6

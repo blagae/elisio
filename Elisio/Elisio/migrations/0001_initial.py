@@ -44,6 +44,7 @@ class Migration(migrations.Migration):
                 ('alternative', models.CharField(max_length=1)),
                 ('contents', models.CharField(max_length=70)),
                 ('saved', models.BooleanField(default=False)),
+                ('structure', models.CharField(max_length=10)),
             ],
         ),
         migrations.CreateModel(
