@@ -62,8 +62,7 @@ class Word(object):
             if len(structs) > 1:
                 structs.sort(key=len, reverse=True)
                 for count in range(len(structs[0])):
-                    # TODO: '23' (=> '2') is looked at before '22' because of length
-                    # even though '22' is much more interesting
+                    # TODO: unit test this algorithm
                     equal = True
                     val = structs[0][count]
                     for strc in structs:
