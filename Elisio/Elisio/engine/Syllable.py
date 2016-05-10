@@ -182,6 +182,8 @@ class Syllable(object):
         """
         vowel = self.get_vowel()
         if next_syllable and isinstance(next_syllable, Syllable):
+            if next_syllable.sounds[0] == SoundFactory.create('h'):
+                return self.ends_with_consonant_cluster() or self.ends_with_heavymaker()
             return ((self.ends_with_consonant() or
                      next_syllable.makes_previous_heavy()) or
                     (not self.is_light(next_syllable) and vowel.is_diphthong()))

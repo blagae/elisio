@@ -75,5 +75,5 @@ class TestHexameter(unittest.TestCase):
         """
         21: hinc populum late regem belloque superbum
         """
-        dbverse = DatabaseVerse.objects.get(pk=273)
-        verse = VerseFactory.create("ac prior «heus,» inquit, «iuvenes, monstrate, mearum", False, True)
+        dbverse = DatabaseVerse.objects.get(pk=353)
+        verse = VerseFactory.create(dbverse.contents, False, True)

@@ -380,6 +380,13 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
+    def test_word_scan_internal_nh(self):
+        word = self.construct_word('inhumati')
+        weights = [Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS, Weight.HEAVY]
+        word.split()
+        self.assertEqual(word.get_syllable_structure(), weights)
+
+
     def test_word_scan_weird_word_two(self):
         """ proper name scanning """
         word = self.construct_word('troas')
