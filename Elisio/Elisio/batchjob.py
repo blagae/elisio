@@ -14,16 +14,17 @@ def create_file(tree):
     else:
         raise IOError("Invalid XML Tree object")
 
-def read_object():
+def read_object(name):
     """ read the entries from a file """
     # TODO: read-out from flatfile
-    with open('Elisio/fixtures/source.txt', "r") as file:
+    with open('Elisio/fixtures/sources/'+name+'.txt', "r") as file:
         result = [x.replace('\n', '') for x in file.readlines()]
     return result
 
 def fill_tree():
     """ externally facing method """
-    verses = read_object()
+    verses = read_object("book1")
+    #verses.extend(read_object("book2"))
 
     root = ET.Element("django-objects", {'version': '1.0'})
 

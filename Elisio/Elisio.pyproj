@@ -125,7 +125,8 @@
   <ItemGroup>
     <Content Include="Elisio\fixtures\deviant\initial_data.xml" />
     <Content Include="Elisio\fixtures\metadata\initial_data.xml" />
-    <Content Include="Elisio\fixtures\source.txt" />
+    <Content Include="Elisio\fixtures\sources\book2.txt" />
+    <Content Include="Elisio\fixtures\sources\book1.txt" />
     <Content Include="Elisio\static\indexScripts.js" />
     <Content Include="Elisio\static\scripts.js" />
     <Content Include="Elisio\static\styles.css" />
@@ -142,6 +143,7 @@
     <Folder Include="Elisio\fixtures\" />
     <Folder Include="Elisio\engine\" />
     <Folder Include="Elisio\fixtures\metadata\" />
+    <Folder Include="Elisio\fixtures\sources\" />
     <Folder Include="Elisio\fixtures\verses\" />
     <Folder Include="Elisio\fixtures\deviant\" />
     <Folder Include="Elisio\templates\" />
