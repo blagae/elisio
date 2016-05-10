@@ -52,6 +52,8 @@ class Word(object):
             structs = []
             for hit in WordOccurrence.objects.filter(word=self.text):
                 strc = hit.struct
+                if len(strc) == 1 and strc[-1] == "0":
+                    continue
                 if len(strc) > 1 and (strc[-1] == "3" or strc[-1] == "0"):
                     strc = strc[:-1]
                 if not strc in structs:
@@ -62,16 +64,20 @@ class Word(object):
             if len(structs) > 1:
                 structs.sort(key=len, reverse=True)
                 for count in range(len(structs[0])):
-                    # TODO: unit test this algorithm
-                    equal = True
-                    val = structs[0][count]
+                    val = None
                     for strc in structs:
-                        equal = (equal and (val == strc[0] or val == "3"))
-                        if val == "3" and strc[count] != "0":
-                            val = strc[count]
-                    if equal:
+                        try:
+                            if not val and (strc[count] != "3" and strc[count] != "0"):
+                                val = strc[count]
+                            elif val != strc[count]:
+                                if strc[count] != "3" and strc[count] != "0":
+                                    val = None
+                                    break
+                                    #raise WordException("different occurrences have different qualities")
+                        except IndexError:
+                            pass
+                    if val:
                         self.syllables[count].weight = Weight(int(val))
-            # TODO: multiple correct structures in database
 
     def ends_in_variable_declension(self):
         return self.text.endswith("us") or self.text.endswith("a")

@@ -7,7 +7,7 @@ from Elisio.exceptions import HexameterException, VerseException
 
 set_django()
 
-from Elisio.models import DatabaseVerse
+from Elisio.models import DatabaseVerse, WordOccurrence
 
 class TestHexameter(unittest.TestCase):
     """ testing specifically for the hexameter """
@@ -32,29 +32,34 @@ class TestHexameter(unittest.TestCase):
 
     def test_hexameter_scan_all(self):
         """ frivolous check to see how many verses work """
-        save = True
-        threshold = 10 if save else 12
+        save = WordOccurrence.objects.count() > 0
+        threshold = 14 if save else 11
         dbverses = DatabaseVerse.objects.all()
         worked = 0
         failed = 0
         for dbverse in dbverses:
+            verse_saved = dbverse.saved
             try:
                 verse = VerseFactory.create(dbverse.contents, not dbverse.saved)
+                dbverse.saved = True
+                dbverse.structure = verse.structure
             except VerseException:
                 try:
                     verse = VerseFactory.create(dbverse.contents, not dbverse.saved, True)
+                    dbverse.saved = True
+                    dbverse.structure = verse.structure
                 except VerseException as exc:
                     failed += 1
                     verse = VerseFactory.get_split_syllables(dbverse.contents)
                     print("{3}({0}: {1}): {2}"
                             .format(dbverse.number, verse, exc, type(exc)))
+                    dbverse.saved = False
+                    dbverse.structure = ""
                 else:
                     worked += 1
             else:
                 worked += 1
-            if isinstance(verse, Verse) and not dbverse.saved:
-                dbverse.saved = True
-                dbverse.structure = verse.structure
+            if verse_saved != dbverse.saved:
                 dbverse.save()
         # canary test: over 91% of verses must succeed
         result = str(worked) + " worked, " + str(failed) + " failed"
