@@ -46,6 +46,12 @@
   <object pk="19" model="Elisio.DeviantWord">
     <field type="CharField" name="stem">^seu$</field>
   </object>
+  <object pk="20" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^heu$</field>
+  </object>
+  <object pk="21" model="Elisio.DeviantWord">
+    <field type="CharField" name="stem">^heus$</field>
+  </object>
 
   <!-- Deviant syllables -->
   <object pk="3" model="Elisio.DeviantSyllable">
@@ -209,6 +215,18 @@
     <field type="CharField" name="contents">seu</field>
     <field type="IntegerField" name="sequence">1</field>
     <field type="ForeignKey" name="word">19</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="34" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">heu</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">20</field>
+    <field type="enum.EnumField" name="weight">2</field>
+  </object>
+  <object pk="35" model="Elisio.DeviantSyllable">
+    <field type="CharField" name="contents">heus</field>
+    <field type="IntegerField" name="sequence">1</field>
+    <field type="ForeignKey" name="word">21</field>
     <field type="enum.EnumField" name="weight">2</field>
   </object>
 </django-objects>

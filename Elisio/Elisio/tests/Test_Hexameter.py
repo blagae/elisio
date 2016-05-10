@@ -33,7 +33,7 @@ class TestHexameter(unittest.TestCase):
     def test_hexameter_scan_all(self):
         """ frivolous check to see how many verses work """
         save = WordOccurrence.objects.count() > 0
-        threshold = 14 if save else 11
+        threshold = 14 if save else 12
         dbverses = DatabaseVerse.objects.all()
         worked = 0
         failed = 0
@@ -75,5 +75,5 @@ class TestHexameter(unittest.TestCase):
         """
         21: hinc populum late regem belloque superbum
         """
-        dbverse = DatabaseVerse.objects.get(pk=140)
-        verse = VerseFactory.create(dbverse.contents, False, True)
+        dbverse = DatabaseVerse.objects.get(pk=273)
+        verse = VerseFactory.create("ac prior «heus,» inquit, «iuvenes, monstrate, mearum", False, True)
