@@ -160,7 +160,8 @@ class Word(object):
                    not last_syllable.has_diphthong() and
                    first_syllable.starts_with_vowel()):
                     # consonant de facto redistributed
-                    syll_struct[-1] = Weight.ANCEPS
+                    if syll_struct[-1] != Weight.LIGHT:
+                        syll_struct[-1] = Weight.ANCEPS
                 elif first_syllable.starts_with_consonant():
                     syll_struct[-1] = Weight.HEAVY
             elif (last_syllable.ends_with_vowel() and

@@ -62,3 +62,11 @@ class Test_WordOccurrence(TestCase):
         word.split()
         weights = [Weight.LIGHT, Weight.LIGHT]
         self.assertEqual(word.get_syllable_structure(), weights)
+
+    def test_et_dict(self):
+        WordOccurrence.objects.create(word = "et",struct = "1")
+        WordOccurrence.objects.create(word = "et",struct = "3")
+        word = Word("et", True)
+        word.split()
+        weights = [Weight.LIGHT]
+        self.assertEqual(word.get_syllable_structure(), weights)
