@@ -1,5 +1,4 @@
 from django.test import TestCase
-import mock
 from Elisio.engine.Word import Word
 from Elisio.engine.Verse import Weight, set_django
 
