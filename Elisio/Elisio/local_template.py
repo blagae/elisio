@@ -8,3 +8,7 @@ DATABASE_SETTINGS = {
     }
 ADMIN_LIST = {}
 DEBUG_SETTING = True
+
+# replace this with a longer key
+# suggestion: http://www.miniwebtool.com/django-secret-key-generator/
+KEY = 'abc'

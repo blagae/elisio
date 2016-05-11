@@ -5,8 +5,6 @@ realistic TODOs
 ** license
 ** README
 ** build instructions
-** fix Django 1.10 warnings
-
 
 * engine
 ** syllable splitting
