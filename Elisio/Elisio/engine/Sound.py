@@ -307,7 +307,7 @@ class SoundFactory(object):
                     sounds.append(snd)
                 return sounds
         try:
-            sound = SoundFactory.create(text[0:2]) # TODO: or 0:1 ??
+            sound = SoundFactory.create(text[0:2])
         except SoundException:
             sound = SoundFactory.create(text[0])
         return [sound]

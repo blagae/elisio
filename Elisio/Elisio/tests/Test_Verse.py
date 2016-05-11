@@ -179,7 +179,6 @@ class TestVerse(unittest.TestCase):
         """
         db_verse = DatabaseVerse.objects.get(pk=1)
         verse = db_verse.get_verse()
-        # TODO: decide whether we want this to be True or False
         self.assertFalse(isinstance(verse, Verse))
 
     def test_verse_letter_frequencies(self):

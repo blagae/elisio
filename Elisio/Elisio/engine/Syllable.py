@@ -255,9 +255,6 @@ class Syllable(object):
 
 
 class SyllableSplitter(object):
-    # TODO: this breaks a lot of verses with final long e
-    # and the Verse tests where e$ is scheduled to be light
-    # proposed solution: find deviant word ?
     shortEndVowels = []
     longEndVowels = ['i', 'o', 'u']
 

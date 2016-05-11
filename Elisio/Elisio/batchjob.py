@@ -16,7 +16,6 @@ def create_file(tree):
 
 def read_object(name):
     """ read the entries from a file """
-    # TODO: read-out from flatfile
     with open('Elisio/fixtures/sources/'+name+'.txt', "r") as file:
         result = [x.replace('\n', '') for x in file.readlines()]
     return result

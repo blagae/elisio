@@ -59,7 +59,6 @@ class VerseFactoryImpl(object):
     def getlist(self):
         self.layer()
         for word in self.layers:
-            # TODO: open monosyllables ? se me ne are all heavy
             if len(word) == 1 and word[0] == Weight.ANCEPS:
                 word[0] == Weight.HEAVY
             for weight in word:

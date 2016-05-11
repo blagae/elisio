@@ -116,7 +116,6 @@ class TestSyllable(unittest.TestCase):
         with self.assertRaises(SyllableException):
             Syllable('sepa')
     
-    # TODO: fix incorrect success: there can be no syllable 'ji'
     def test_syll_fail_mult_ii(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
