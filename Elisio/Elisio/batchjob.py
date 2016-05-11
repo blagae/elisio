@@ -6,9 +6,6 @@ def create_file(tree):
     """ create the file from the given xml tree """
     if isinstance(tree, ET.Element):
         xml = mini.parseString(ET.tostring(tree)).toprettyxml()
-        # TODO: use something less of a dirty hack to enforce UTF-8
-        xml = xml.replace('<?xml version="1.0" ?>', '<?xml version="1.0" encoding="utf-8" ?>')
-
         with open('Elisio/fixtures/verses/initial_data.xml', "w") as file:
             file.writelines(xml)
     else:
