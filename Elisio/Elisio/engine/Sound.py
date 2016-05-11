@@ -230,7 +230,6 @@ class HeavyMakerSound(ConsonantSound):
     
 class SoundFactory(object):
     sound_dict = {}
-    # TODO: rename methods ?
     @classmethod
     def create(cls, *letters):
         """
