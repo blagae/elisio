@@ -2,7 +2,6 @@ realistic TODOs
 ====
 
 * project
-** license
 ** build instructions
 
 * engine
