@@ -3,7 +3,6 @@ realistic TODOs
 
 * project
 ** license
-** README
 ** build instructions
 
 * engine
