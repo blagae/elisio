@@ -24,6 +24,7 @@ class Foot(enum.Enum):
     TROCHAEUS = 2
     BINARY_ANCEPS = 3
     UNKNOWN = 4
+    MACRON = 5
 
     def get_length(self):
         """ number of syllables in the foot """
@@ -39,6 +40,8 @@ class Foot(enum.Enum):
             return [Weight.HEAVY, Weight.LIGHT]
         elif self == Foot.BINARY_ANCEPS:
             return [Weight.HEAVY, Weight.ANCEPS]
+        elif self == Foot.MACRON:
+            return [Weight.HEAVY]
         raise IllegalFootException("currently illegal foot structure: " + self.name)
 
 class Verse(object):
@@ -96,9 +99,29 @@ class Verse(object):
         pass
 
     def save_feet(self):
-        pass
+        result = ""
+        for ft in self.feet:
+            result += str(ft.value)
+        return result
 
     def save_structure(self):
+                # control mechanism and syllable filler
+        start = 0
+        for feet_num, foot in enumerate(self.feet):
+            if foot is None:
+                raise VerseException("impossible to determine foot"
+                                        " number {0}".format(feet_num))
+            for count, weight in enumerate(foot.get_structure()):
+                if (weight != Weight.ANCEPS and
+                        self.flat_list[count+start] != Weight.ANCEPS and
+                        weight != self.flat_list[count+start]):
+                    raise VerseException("weight #{0} was already {1}"
+                                            ", tried to assign {2}"
+                                            .format(count+start,
+                                                    str(self.flat_list[count+start]),
+                                                    str(weight)))
+                self.flat_list[count+start] = weight
+            start += foot.get_length()
         i = 0
         for word in self.words:
             for syll in word.syllables:

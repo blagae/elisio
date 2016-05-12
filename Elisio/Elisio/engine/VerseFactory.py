@@ -75,7 +75,7 @@ class VerseFactoryImpl(object):
             cls = item.get_subtype()
             verse = cls(self.text)
             verse.words = self.words
-            verse.flat_list = self.flat_list
+            verse.flat_list = self.flat_list.copy()
             try:
                 verse.parse(save)
                 return verse

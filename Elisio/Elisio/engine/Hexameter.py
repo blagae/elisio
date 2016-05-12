@@ -46,16 +46,6 @@ class HexameterCreator(VerseCreator):
 
 class Hexameter(Verse):
     """ the most popular Latin verse type """
-    # CONSTANTS
-    MAX_SYLL = 17
-    MIN_SYLL = 12
-
-    def save_feet(self):
-        result = ""
-        for ft in self.feet:
-            result += str(ft.value)
-        return result
-
     def __init__(self, text):
         super(Hexameter, self).__init__(text)
         self.feet = [None]*6
@@ -90,26 +80,8 @@ class Hexameter(Verse):
             self.feet[5] = Foot.TROCHAEUS
         else:
             self.feet[5] = Foot.BINARY_ANCEPS
-
-
         self.scan_for_real()
-        # control mechanism and syllable filler
-        start = 0
-        for feet_num, foot in enumerate(self.feet):
-            if foot is None:
-                raise HexameterException("impossible to determine foot"
-                                        " number {0}".format(feet_num))
-            for count, weight in enumerate(foot.get_structure()):
-                if (weight != Weight.ANCEPS and
-                        self.flat_list[count+start] != Weight.ANCEPS and
-                        weight != self.flat_list[count+start]):
-                    raise HexameterException("weight #{0} was already {1}"
-                                            ", tried to assign {2}"
-                                            .format(count+start,
-                                                    str(self.flat_list[count+start]),
-                                                    str(weight)))
-                self.flat_list[count+start] = weight
-            start += foot.get_length()
+
 
     def fill_other_feet(self, from_foot, to_foot):
         """ only use after certifying that all necessary info is present """

@@ -41,6 +41,10 @@ class HexameterException(VerseException):
     """description of class"""
     pass
 
+class PentameterException(VerseException):
+    """description of class"""
+    pass
+
 class IllegalFootException(ScansionException):
     """description of class"""
     pass

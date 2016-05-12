@@ -41,6 +41,9 @@
     <Compile Include="Elisio\engine\Letter.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\engine\Pentameter.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\engine\Sound.py">
       <SubType>Code</SubType>
     </Compile>
@@ -78,6 +81,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\tests\Test_Hexameter.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\tests\Test_Pentameter.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\tests\Test_Sound.py">
