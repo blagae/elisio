@@ -13,6 +13,10 @@ realistic TODOs
 ** accents
 *** calculate
 *** correlate to verse structure (Zeleny)
+** verse types
+*** implement pentameter algorithm
+** testing
+*** unit testing specific hexameter cases (to prevent regressions)
 
 * website
 ** REST API
@@ -31,6 +35,7 @@ pipe dreams
 * engine: essentially teach it Latin
 ** declensions: be able to correlate loco with locos
 ** conjugations: be able to correlate laborat with laboravit
+** parsing lyrical meters
 
 * website: user interaction
 ** user feedback
