@@ -69,6 +69,9 @@ class Hexameter(Verse):
                         raise HexameterException("cannot assign HEAVY to LIGHT syllable #" + str(i+1))
                     else:
                         self.flat_list[i+1] = Weight.HEAVY
+                elif self.flat_list[i] == Weight.LIGHT and self.flat_list[i+1] == Weight.LIGHT:
+                    self.flat_list[i+2] = Weight.HEAVY
+                    self.flat_list[i-1] = Weight.HEAVY
         except IndexError:
             pass
 
