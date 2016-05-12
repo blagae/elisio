@@ -34,6 +34,7 @@ The problematic types of verses include:
 * verses with words that must be scanned in non-intuitive ways (e.g. Verg. Aen. I, 2: La-vin-ia)
 * half-verses, most commonly in Vergilius
 * verses that have a hiatus
+* verses with verb forms that may derive from either volvere or volui (perfect tenses of velle)
 
 Less severe problems include:
 * rare words in verses where information is already scarce
