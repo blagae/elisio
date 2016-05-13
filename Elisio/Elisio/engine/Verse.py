@@ -67,7 +67,7 @@ class Verse(object):
         """ Verses are equal if they have exactly the same characters """
         return self.text == other.text
 
-    def parse(self, save=False):
+    def parse(self, save=False, verse=None):
         self.preparse()
         self.scan()
         self.save_structure()
@@ -87,8 +87,10 @@ class Verse(object):
                 if(wrd.ends_in_variable_declension()):
                     strct = strct[:-1]
                     strct += str(Weight.ANCEPS.value)
-
-                entries.append(WordOccurrence(word=wrd.text, struct=strct))
+                if verse:
+                    entries.append(WordOccurrence(word=wrd.text, struct=strct, verse=verse))
+                else:
+                    entries.append(WordOccurrence(word=wrd.text, struct=strct))
             if len(entries) > 0:
                 WordOccurrence.objects.bulk_create(entries)
 

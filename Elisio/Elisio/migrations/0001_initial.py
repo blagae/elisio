@@ -130,4 +130,9 @@ class Migration(migrations.Migration):
             name='period',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Elisio.Period'),
         ),
+        migrations.AddField(
+            model_name='wordoccurrence',
+            name='verse',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='Elisio.DatabaseVerse'),
+        ),
     ]

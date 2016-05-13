@@ -20,8 +20,8 @@ class VerseFactory(object):
     def get_split_syllables(cls, text):
         return VerseFactoryImpl(text).get_split_syllables()
     @classmethod
-    def create(cls, text, save=False, useDict=False):
-        return VerseFactoryImpl(text, useDict).create(save)
+    def create(cls, text, save=False, useDict=False, dbverse=None):
+        return VerseFactoryImpl(text, useDict).create(save, dbverse)
 
 class VerseFactoryImpl(object):
     def __init__(self, text, useDict=False):
@@ -31,7 +31,8 @@ class VerseFactoryImpl(object):
         self.use_dict = useDict
         self.flat_list = []
 
-    def create(self, save):
+    def create(self, save, dbverse=None):
+        self.dbverse = dbverse
         return self.__create_verse(save)
 
     def split(self):
@@ -77,7 +78,7 @@ class VerseFactoryImpl(object):
             verse.words = self.words
             verse.flat_list = self.flat_list.copy()
             try:
-                verse.parse(save)
+                verse.parse(save, self.dbverse)
                 return verse
             except ScansionException as exc:
                 problems.append(exc)

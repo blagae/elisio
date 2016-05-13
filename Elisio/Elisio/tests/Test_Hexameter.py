@@ -40,12 +40,12 @@ class TestHexameter(unittest.TestCase):
         for dbverse in dbverses:
             verse_saved = dbverse.saved
             try:
-                verse = VerseFactory.create(dbverse.contents, not dbverse.saved)
+                verse = VerseFactory.create(dbverse.contents, not dbverse.saved, dbverse=dbverse)
                 dbverse.saved = True
                 dbverse.structure = verse.structure
             except VerseException:
                 try:
-                    verse = VerseFactory.create(dbverse.contents, not dbverse.saved, True)
+                    verse = VerseFactory.create(dbverse.contents, not dbverse.saved, True, dbverse=dbverse)
                     dbverse.saved = True
                     dbverse.structure = verse.structure
                 except VerseException as exc:
@@ -76,5 +76,5 @@ class TestHexameter(unittest.TestCase):
         21: hinc populum late regem belloque superbum
         """
         dbverse = DatabaseVerse.objects.get(pk=415)
-        verse = VerseFactory.create(dbverse.contents, False, True)
+        verse = VerseFactory.create("ianua, et emoti procumbunt cardine postes.", False, True)
         print(verse.structure)

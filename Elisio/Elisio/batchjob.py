@@ -20,7 +20,7 @@ def read_object(name):
 def fill_tree():
     """ externally facing method """
     verses = read_object("book1")
-    #verses.extend(read_object("book2"))
+    verses.extend(read_object("book2"))
 
     root = ET.Element("django-objects", {'version': '1.0'})
 

@@ -116,6 +116,6 @@ class DatabaseVerse(models.Model):
         return result.contents
 
 class WordOccurrence(models.Model):
-    #dbverse = models.ForeignKey(DatabaseVerse)
+    verse = models.ForeignKey(DatabaseVerse, null=True)
     word = models.CharField(max_length=20)
     struct = models.CharField(max_length=10)
