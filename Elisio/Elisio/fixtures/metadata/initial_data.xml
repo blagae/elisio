@@ -184,6 +184,11 @@
     <field type="IntegerField" name="nickname">Arma virumque cano</field>
   </object>
   <object pk="2" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">2</field>
+    <field type="IntegerField" name="number">2</field>
+    <field type="IntegerField" name="nickname">Conticuere omnes</field>
+  </object>
+  <object pk="3" model="Elisio.Poem">
     <field type="ForeignKey" name="book">4</field>
     <field type="IntegerField" name="number">1</field>
     <field type="IntegerField" name="nickname">Tityre tu patulae</field>
