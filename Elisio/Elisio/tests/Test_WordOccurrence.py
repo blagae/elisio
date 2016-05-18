@@ -65,7 +65,8 @@ class Test_WordOccurrence(TestCase):
     def test_et_dict(self):
         WordOccurrence.objects.create(word = "et",struct = "1")
         WordOccurrence.objects.create(word = "et",struct = "3")
+        WordOccurrence.objects.create(word = "et",struct = "2")
         word = Word("et", True)
         word.split()
-        weights = [Weight.LIGHT]
+        weights = [Weight.ANCEPS]
         self.assertEqual(word.get_syllable_structure(), weights)

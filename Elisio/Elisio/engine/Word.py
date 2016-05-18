@@ -71,7 +71,7 @@ class Word(object):
                                 val = strc[count]
                             elif val != strc[count]:
                                 if strc[count] != "3" and strc[count] != "0":
-                                    val = None
+                                    val = "3"
                                     break
                                     #raise WordException("different occurrences have different qualities")
                         except IndexError:
