@@ -43,7 +43,6 @@ class TestDeviantWord(unittest.TestCase):
 
     def test_aenea_is_correct(self):
         word = Word("aenea")
-        weights = [Weight.HEAVY, Weight.HEAVY, Weight.ANCEPS]
         sylls = [Syllable("ae"), Syllable("ne"), Syllable("a")]
         self.assertEqual(weights, word.get_syllable_structure())
         self.assertEqual(sylls, word.syllables)
@@ -52,3 +51,11 @@ class TestDeviantWord(unittest.TestCase):
         with self.assertRaises(WordException):
             word = Word("Aenei,")
     #"""
+
+    def test_syllsplit_ianua(self):
+        # TODO: deviant word ?
+        word = Word('ianua')
+        weights = [Weight.ANCEPS, Weight.LIGHT, Weight.ANCEPS]
+        sylls = [Syllable('ia'), Syllable('nu'), Syllable('a')]
+        self.assertEqual(weights, word.get_syllable_structure())
+        self.assertEquals(sylls, word.syllables)
