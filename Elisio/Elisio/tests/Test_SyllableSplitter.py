@@ -30,3 +30,14 @@ class Test_SyllableSplitter(unittest.TestCase):
         expected.append(Syllable('thos'))
         expected.append(Syllable('ve'))
         self.assertEquals(syll, expected)
+
+    def test_syllsplit_ianua(self):
+        # TODO: deviant word ?
+        txt = SoundFactory.find_sounds_for_text('ianua')
+        syll = SyllableSplitter.join_into_syllables(txt)
+        syll = SyllableSplitter.redistribute(syll)
+        expected = []
+        expected.append(Syllable('ia'))
+        expected.append(Syllable('nu'))
+        expected.append(Syllable('a'))
+        self.assertEquals(syll, expected)
