@@ -2,42 +2,42 @@ realistic TODOs
 ====
 
 * project
-** build instructions
+    * build instructions: develop & deploy on Linux VMs ? Vagrant file ?
 
 * engine
-** syllable splitting
-*** prefixes: subiectum = sub-iec-tum, not su-bi-ec-tum
-** dictionary
-*** suffixes: -que should not be part of the stored dictionary entry
-** accents
-*** calculate
-*** correlate to verse structure (Zeleny)
-** verse types
-*** implement pentameter algorithm
-** testing
-*** unit testing specific hexameter cases (to prevent regressions)
+    * syllable splitting
+        * prefixes: subiectum = sub-iec-tum, not su-bi-ec-tum
+    * dictionary
+        * suffixes: -que should not be part of the stored dictionary entry
+    * accents
+        * calculate
+        * correlate to verse structure (Zeleny)
+    * testing
+        * unit testing specific hexameter cases (to prevent regressions)
+        * unit test pentameter algorithm
+        * code coverage analysis
 
 * website
-** REST API
-*** fix failing JSON requests
-*** add parsing results
-** fonts
-*** find font with diacritics
-*** feed diacritics into words
-** beautify
-*** create UI
-*** modern style
+    * REST API
+        * fix failing JSON requests
+        * add parsing results
+    * fonts
+        * find font with diacritics
+        * feed diacritics into words
+    * beautify
+        * create UI
+        * modern style
 
-pipe dreams
+Pipe dreams
 ====
 
 * engine: essentially teach it Latin
-** declensions: be able to correlate loco with locos
-** conjugations: be able to correlate laborat with laboravit
-** parsing lyrical meters
+    * declensions: be able to correlate loco with locos
+    * conjugations: be able to correlate laborat with laboravit
+    * parsing lyrical meters
 
 * website: user interaction
-** user feedback
-** user queries
-*** exporting results
-** manual fixes by community
+    * user feedback
+    * user queries
+        * exporting results
+    * manual fixes by community
