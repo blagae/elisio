@@ -9,6 +9,8 @@ def load_initial_data(self, orm):
         os.remove('Elisio/fixtures/verses/initial_data.xml')
     except OSError:
         pass
+    if not os.path.exists('Elisio/fixtures/verses/'):
+        os.makedirs('Elisio/fixtures/verses/')
     from django.core.management import call_command
     call_command('loaddata', 'initial_data.xml')
 
