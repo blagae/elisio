@@ -19,7 +19,6 @@ realistic TODOs
 
 * website
     * REST API
-        * fix failing JSON requests
         * add parsing results
     * fonts
         * find font with diacritics
