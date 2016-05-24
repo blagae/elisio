@@ -217,3 +217,5 @@ Elisio/Elisio/fixtures/omg.xml
 Elisio/Elisio/fixtures/*.db
 Elisio/*.config
 Elisio/Elisio/fixtures/verses/*
+*.sh
+*.bat
