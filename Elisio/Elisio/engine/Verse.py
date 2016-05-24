@@ -19,12 +19,15 @@ def set_django():
 
 class Foot(enum.Enum):
     """ Types of verse foot """
-    DACTYLUS = 0
-    SPONDAEUS = 1
-    TROCHAEUS = 2
-    BINARY_ANCEPS = 3
-    UNKNOWN = 4
-    MACRON = 5
+    UNKNOWN = 0
+    MACRON = 1
+    BREVE = 2
+    SPONDAEUS = 3
+    TROCHAEUS = 4
+    BINARY_ANCEPS = 5
+    IAMBUS = 6
+    PYRRHICUS = 7
+    DACTYLUS = 8
 
     def get_length(self):
         """ number of syllables in the foot """
