@@ -10,6 +10,8 @@ If this condition is not fulfilled, you will get error messages very early in yo
 
 We advise you to create a Python virtual environment for this project,
 in order not to get into version trouble in case you are working on or running other Python projects on the same machine.
+The packages listed in requirements.txt should be enough to have virtualenv construct a working environment for Elisio.
+You can find more info about virtualenv on http://docs.python-guide.org/en/latest/dev/virtualenvs/
 
 Generating local.py
 ===
