@@ -1,6 +1,7 @@
 from django.test import TestCase
 from Elisio.engine.Word import Word
-from Elisio.engine.Verse import Weight, set_django
+from Elisio.engine.Verse import Weight
+from Elisio.utils import set_django
 
 set_django()
 

@@ -1,5 +1,6 @@
 ﻿import unittest
-from Elisio.engine.Verse import Verse, Foot, set_django
+from Elisio.engine.Verse import Verse, Foot
+from Elisio.utils import set_django
 from Elisio.engine.Hexameter import Hexameter
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.tests.Test_Verse import TYPICAL_VERSE

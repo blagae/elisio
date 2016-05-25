@@ -3,7 +3,6 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom as mini
 from Elisio.numerals import roman_to_int
 
-
 def create_output_file(tree):
     """ create the file from the given xml tree """
     if isinstance(tree, ET.Element):
@@ -69,7 +68,7 @@ def fill_xml_object():
     create_output_file(root)
 
 def find_all_verses_containing(regex, must_be_parsed = False):
-    from Elisio.engine.Verse import set_django
+    from Elisio.utils import set_django
     from Elisio.engine.VerseFactory import VerseFactory
     from Elisio.models import DatabaseVerse
     from Elisio.exceptions import ScansionException

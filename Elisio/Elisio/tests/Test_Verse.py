@@ -1,6 +1,7 @@
 """ Test classes for Verse scanning """
 import unittest
-from Elisio.engine.Verse import Verse, Foot, set_django
+from Elisio.engine.Verse import Verse, Foot
+from Elisio.utils import set_django
 from Elisio.engine.Word import Word
 from Elisio.engine.Syllable import Weight
 from Elisio.exceptions import VerseException

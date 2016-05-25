@@ -1,7 +1,8 @@
 ﻿""" unit tests for Word """
 
 import unittest
-from Elisio.engine.Verse import Weight, set_django
+from Elisio.engine.Verse import Weight
+from Elisio.utils import set_django
 from Elisio.engine.Syllable import Syllable
 from Elisio.engine.Word import Word
 from Elisio.exceptions import WordException

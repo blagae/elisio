@@ -1,5 +1,5 @@
 ﻿import unittest
-from Elisio.engine.Verse import set_django
+from Elisio.utils import set_django
 from Elisio.engine.Syllable import Syllable
 from Elisio.engine.Word import Word, Weight
 from Elisio.exceptions import WordException

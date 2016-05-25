@@ -1,5 +1,6 @@
 import unittest
-from Elisio.engine.Verse import Verse, Foot, set_django
+from Elisio.engine.Verse import Verse, Foot
+from Elisio.utils import set_django
 from Elisio.engine.Pentameter import Pentameter
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.exceptions import PentameterException, VerseException

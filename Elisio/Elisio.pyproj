@@ -122,6 +122,9 @@
     <Compile Include="Elisio\tests\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\utils.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\views.py">
       <SubType>Code</SubType>
     </Compile>

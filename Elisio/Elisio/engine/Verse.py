@@ -4,18 +4,6 @@ import re
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Word import Word
 from Elisio.exceptions import VerseException, HexameterException, IllegalFootException
-from Elisio import settings
-
-def set_django():
-    """ in order to get to the database, we must use Django """
-    import os
-    module = 'DJANGO_SETTINGS_MODULE'
-    if (not module in os.environ or
-            os.environ[module] != settings.__name__):
-        os.environ[module] = settings.__name__
-    import django
-    if django.VERSION[:2] >= (1, 7):
-        django.setup()
 
 class Foot(enum.Enum):
     """ Types of verse foot """
@@ -80,6 +68,7 @@ class Verse(object):
             entries = []
             for count, wrd in enumerate(self.words):
                 strct = ""
+                txt = wrd.text
                 for cnt, syll in enumerate(wrd.syllables):
                     strct += str(syll.weight.value)
                     if cnt == len(wrd.syllables)-1 and count < len(self.words) - 1:
@@ -87,13 +76,16 @@ class Verse(object):
                             if syll.weight != Weight.NONE:
                                 strct = strct[:-1]
                                 strct += str(Weight.ANCEPS.value)
+                if wrd.ends_in_enclitic():
+                    strct = strct[:-1]
+                    txt = wrd.without_enclitic()
                 if(wrd.ends_in_variable_declension()):
                     strct = strct[:-1]
                     strct += str(Weight.ANCEPS.value)
                 if verse:
-                    entries.append(WordOccurrence(word=wrd.text, struct=strct, verse=verse))
+                    entries.append(WordOccurrence(word=txt, struct=strct, verse=verse))
                 else:
-                    entries.append(WordOccurrence(word=wrd.text, struct=strct))
+                    entries.append(WordOccurrence(word=txt, struct=strct))
             if len(entries) > 0:
                 WordOccurrence.objects.bulk_create(entries)
 
