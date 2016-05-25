@@ -1,7 +1,8 @@
 ﻿import unittest
 from Elisio.engine.Verse import Verse, Foot
+from Elisio.engine.Syllable import Weight
 from Elisio.utils import set_django
-from Elisio.engine.Hexameter import Hexameter
+from Elisio.engine.Hexameter import Hexameter, HexameterCreator
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.tests.Test_Verse import TYPICAL_VERSE
 from Elisio.exceptions import HexameterException, VerseException
@@ -79,3 +80,16 @@ class TestHexameter(unittest.TestCase):
         dbverse = DatabaseVerse.objects.get(pk=415)
         verse = VerseFactory.create("ianua, et emoti procumbunt cardine postes.", False, True)
         print(verse.structure)
+
+    def test_hexameter_structure(self):
+        lst = [Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT]
+        hex_creator = HexameterCreator(lst)
+        hex_class = hex_creator.get_subtype()
+        hex = hex_class('')
+        hex.flat_list = lst
+        hex.parse()
