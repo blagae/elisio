@@ -2,6 +2,9 @@
 
 # DO NOT CHANGE THE VARIABLE NAMES OF THE PROPERTIES
 
+# you will only need to define this if you want to use utils.recreate_db()
+DB_SUPERUSER_PASSWORD = 'mp'
+
 # change database settings at will
 # if you use something other than SQLite, you will need to
 # consult the Django docs for database settings

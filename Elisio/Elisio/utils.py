@@ -1,4 +1,4 @@
-from Elisio import settings
+from Elisio import local, settings
 
 def set_django():
     """ in order to get to the database, we must use Django """
@@ -10,3 +10,18 @@ def set_django():
     import django
     if django.VERSION[:2] >= (1, 7):
         django.setup()
+
+def recreate_db():
+    if "psycopg2" in local.DATABASE_SETTINGS['default']['ENGINE']:
+        import psycopg2
+        with psycopg2.connect(database="postgres", user="postgres", password=local.DB_SUPERUSER_PASSWORD) as conn:
+            with conn.cursor() as cur:
+                conn.autocommit = True   #  Explains why we do this - we cannot drop or create from within a DB transaction. http://initd.org/psycopg/docs/connection.html#connection.autocommit
+                try:
+                    cur.execute("DROP DATABASE " + local.DATABASE_SETTINGS['default']['NAME'])
+                except psycopg2.ProgrammingError:
+                    pass
+                cur.execute("CREATE DATABASE " + local.DATABASE_SETTINGS['default']['NAME'] + " WITH OWNER " + local.DATABASE_SETTINGS['default']['USER'])
+    set_django()
+    from django.core.management import call_command
+    call_command('migrate')
