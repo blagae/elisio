@@ -1,5 +1,5 @@
 """ Django settings for Elisio project. """
-from tkinter.messagebox import showwarning
+import sys
 
 DATABASES = None
 ADMINS = ()
@@ -15,8 +15,7 @@ try:
     MANAGERS = ADMIN_LIST
     DEBUG = DEBUG_SETTING
 except ImportError:
-    showwarning("Deployment issue",
-                "You must create a local.py file with the required settings")
+    sys.exit("Deployment issue: You must create a local.py file with the required settings")
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
