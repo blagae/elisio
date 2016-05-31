@@ -1,12 +1,10 @@
 ﻿import re
 from Elisio.engine.Word import Word, Weight
 from Elisio.exceptions import ScansionException, VerseException
+import collections
+
 
 class VerseFactory(object):
-    classes = []
-    @classmethod
-    def init_class(cls):
-        VerseFactory.classes = VerseCreator.__subclasses__()
     @classmethod
     def split(cls, text):
         return VerseFactoryImpl(text).split()
@@ -20,16 +18,20 @@ class VerseFactory(object):
     def get_split_syllables(cls, text):
         return VerseFactoryImpl(text).get_split_syllables()
     @classmethod
-    def create(cls, text, save=False, useDict=False, dbverse=None):
-        return VerseFactoryImpl(text, useDict).create(save, dbverse)
+    def create(cls, text, save=False, useDict=False, dbverse=None, classes=[]):
+        return VerseFactoryImpl(text, useDict, classes=classes).create(save, dbverse)
 
 class VerseFactoryImpl(object):
-    def __init__(self, text, useDict=False):
+    def __init__(self, text, useDict=False, classes=[]):
         self.text = text
         self.words = []
         self.layers = [[]]
         self.use_dict = useDict
         self.flat_list = []
+        if isinstance(classes, collections.Iterable):
+            self.classes = classes
+        else:
+            self.classes = [classes]
 
     def create(self, save, dbverse=None):
         self.dbverse = dbverse
@@ -69,9 +71,8 @@ class VerseFactoryImpl(object):
 
     def __create_verse(self, save):
         self.getlist()
-        VerseFactory.classes = VerseCreator.__subclasses__()
         problems = []
-        for creator in VerseFactory.classes:
+        for creator in self.classes:
             item = creator(self.flat_list)
             cls = item.get_subtype()
             verse = cls(self.text)

@@ -15,7 +15,7 @@ class TestHexameter(unittest.TestCase):
     """ testing specifically for the hexameter """
     def construct_hexameter(self, text=TYPICAL_VERSE):
         """ Construct a Hexameter object from a given text """
-        constructed_verse = VerseFactory.create(text)
+        constructed_verse = VerseFactory.create(text, classes=HexameterCreator)
 
         return constructed_verse
 
@@ -42,12 +42,12 @@ class TestHexameter(unittest.TestCase):
         for dbverse in dbverses:
             verse_saved = dbverse.saved
             try:
-                verse = VerseFactory.create(dbverse.contents, not dbverse.saved, dbverse=dbverse)
+                verse = VerseFactory.create(dbverse.contents, not dbverse.saved, False, dbverse, classes=HexameterCreator)
                 dbverse.saved = True
                 dbverse.structure = verse.structure
             except VerseException:
                 try:
-                    verse = VerseFactory.create(dbverse.contents, not dbverse.saved, True, dbverse=dbverse)
+                    verse = VerseFactory.create(dbverse.contents, not dbverse.saved, True, dbverse, classes=HexameterCreator)
                     dbverse.saved = True
                     dbverse.structure = verse.structure
                 except VerseException as exc:
@@ -77,8 +77,8 @@ class TestHexameter(unittest.TestCase):
         """
         21: hinc populum late regem belloque superbum
         """
-        dbverse = DatabaseVerse.objects.get(pk=415)
-        verse = VerseFactory.create("ianua, et emoti procumbunt cardine postes.", False, True)
+        dbverse = DatabaseVerse.objects.get(pk=1)
+        verse = VerseFactory.create(dbverse.contents, False, True, classes=HexameterCreator)
         print(verse.structure)
 
     def test_hexameter_structure(self):
