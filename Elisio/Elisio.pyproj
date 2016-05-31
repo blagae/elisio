@@ -142,6 +142,9 @@
     <Content Include="Elisio\fixtures\sources\Verg. Aen. II.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. I.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. III.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Aen. IV.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Aen. V.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Aen. VI.txt" />
     <Content Include="Elisio\static\indexScripts.js" />
     <Content Include="Elisio\static\scripts.js" />
     <Content Include="Elisio\static\styles.css" />

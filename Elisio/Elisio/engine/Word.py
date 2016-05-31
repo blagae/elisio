@@ -184,7 +184,7 @@ class Word(object):
         """
         for syllable in self.syllables:
             if not syllable.is_valid():
-                word = Word(syllable.get_text())
+                word = FallbackWord(syllable.get_text())
                 word.split()
                 index = self.syllables.index(syllable)
                 self.syllables.remove(syllable)
@@ -200,3 +200,9 @@ class Word(object):
                         self.syllables[count] = syllable
                     except SyllableException:
                         pass
+
+class FallbackWord(Word):
+    def __init__(self, text, use_dict = False):
+        super(FallbackWord, self).__init__(text, use_dict)
+    def check_consistency(self):
+        pass
