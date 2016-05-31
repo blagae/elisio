@@ -141,6 +141,7 @@
     <Content Include="Elisio\fixtures\metadata\initial_data.xml" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. II.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. I.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Aen. III.txt" />
     <Content Include="Elisio\static\indexScripts.js" />
     <Content Include="Elisio\static\scripts.js" />
     <Content Include="Elisio\static\styles.css" />

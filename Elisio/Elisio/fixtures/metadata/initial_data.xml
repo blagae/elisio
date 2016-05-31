@@ -193,4 +193,9 @@
     <field type="IntegerField" name="number">1</field>
     <field type="IntegerField" name="nickname">Tityre tu patulae</field>
   </object>
+  <object pk="4" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">3</field>
+    <field type="IntegerField" name="number">3</field>
+    <field type="IntegerField" name="nickname">Postquam res Asiae</field>
+  </object>
 </django-objects>
