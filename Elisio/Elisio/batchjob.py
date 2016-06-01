@@ -88,6 +88,4 @@ def find_all_verses_containing(regex, must_be_parsed = False):
                 continue
         if boolean:
             total.append(dbverse.contents)
-    for v in total:
-        print(v)
-    print(len(total))
+    return total

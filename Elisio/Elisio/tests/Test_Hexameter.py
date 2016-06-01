@@ -53,8 +53,6 @@ class TestHexameter(unittest.TestCase):
                 except VerseException as exc:
                     failed += 1
                     verse = VerseFactory.get_split_syllables(dbverse.contents)
-                    print("{3}({0}: {1}): {2}"
-                            .format(dbverse.number, verse, exc, type(exc)))
                     dbverse.saved = False
                     dbverse.structure = ""
                 else:
@@ -79,7 +77,6 @@ class TestHexameter(unittest.TestCase):
         """
         dbverse = DatabaseVerse.objects.get(pk=3003)
         verse = VerseFactory.create(dbverse.contents, False, True, classes=HexameterCreator)
-        print(verse.structure)
 
     def test_hexameter_structure(self):
         lst = [Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
