@@ -58,4 +58,4 @@ class TestDeviantWord(unittest.TestCase):
         weights = [Weight.ANCEPS, Weight.LIGHT, Weight.ANCEPS]
         sylls = [Syllable('ia'), Syllable('nu'), Syllable('a')]
         self.assertEqual(weights, word.get_syllable_structure())
-        self.assertEquals(sylls, word.syllables)
+        self.assertEqual(sylls, word.syllables)
