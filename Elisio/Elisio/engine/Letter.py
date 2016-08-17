@@ -42,7 +42,9 @@ class Letter(object):
         'x' : LetterType.HEAVYMAKER,
         'y' : LetterType.VOWEL,
         'k' : LetterType.CONSONANT,
-        'z' : LetterType.HEAVYMAKER
+        'z' : LetterType.HEAVYMAKER,
+        #'ë' : LetterType.VOWEL # TODO: check for unicode & alternatives
+        # TODO: tests for ë !
         }
 
     def __init__(self, ltr):
