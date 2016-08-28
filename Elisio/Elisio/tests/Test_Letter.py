@@ -12,21 +12,36 @@ class TestLetter(unittest.TestCase):
         return constructed_letter
 
     # random sample of correct letters
-    def test_letter_construct(self):
+    def test_letter_construct1(self):
         """ normal construct works """
         self.assertIsInstance(self.construct_letter('a'), Letter)
         
-    def test_letter_construct(self):
+    def test_letter_construct2(self):
         """ normal construct works """
         self.assertTrue(isinstance(self.construct_letter('D'), Letter))
 
-    def test_letter_construct(self):
+    def test_letter_construct3(self):
         """ normal construct works """
         self.assertTrue(isinstance(self.construct_letter('Q'), Letter))
 
-    def test_letter_construct(self):
+    def test_letter_construct4(self):
         """ normal construct works """
         self.assertTrue(isinstance(self.construct_letter('r'), Letter))
+
+    # explicitly added letter
+    def test_letter_construct_e_trema1(self):
+        # may fail, if incorrect encoding ?
+        self.assertTrue(isinstance(self.construct_letter('ë'), Letter))
+
+    def test_letter_construct_e_trema2(self):
+        self.assertTrue(isinstance(self.construct_letter('\u00EB'), Letter))
+
+    def test_letter_construct_e_trema3(self):
+        # may fail, if incorrect encoding ?
+        self.assertTrue(isinstance(self.construct_letter('Ë'), Letter))
+
+    def test_letter_construct_e_trema4(self):
+        self.assertTrue(isinstance(self.construct_letter('\u00CB'), Letter))
 
     # argument too long or too short
     def test_letter_fail_too_long(self):

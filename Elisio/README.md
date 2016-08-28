@@ -17,7 +17,7 @@ Approach
 In scanning a verse, this is a very high-level description of the approach that we took:
 1. split the verse into words
 1. analyze the letters: remove reading marks, resolve writing conventions (v => u)
-1. combine letters into sounds (qu is one sound, muta cum liquida also for our purposes)
+1. combine letters into sounds (qu is one sound, *muta cum liquida* also for our purposes)
 1. combine sounds into syllables, taking into account the possible ambiguity of semivowels
 1. try to determine syllable weights based on the basic weight rules
 1. try to see, from the syllable count, whether the verse can legally be a hexameter, pentameter, ... verse

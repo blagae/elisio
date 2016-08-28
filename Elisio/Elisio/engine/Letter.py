@@ -43,7 +43,7 @@ class Letter(object):
         'y' : LetterType.VOWEL,
         'k' : LetterType.CONSONANT,
         'z' : LetterType.HEAVYMAKER,
-        #'ë' : LetterType.VOWEL # TODO: check for unicode & alternatives
+        'ë' : LetterType.VOWEL # TODO: check for unicode & alternatives
         # TODO: tests for ë !
         }
 
