@@ -3,10 +3,14 @@ Building the Elisio Project
 In general, Elisio requires the following prerequisites to be fulfilled on the machine it will run on.
 
 * Python 3.x must be installed with access to pip
+* all packages in requirements.txt must be installed - this can be handled by a virtual environment
 * you must have a file Elisio/Elisio/local.py (same folder as local_template.py) with a number of properties specified. 
 If this condition is not fulfilled, you will get error messages very early in your build process.
 * you must have access to a database server (possibly remote) or SQLite
 * for the web app deployment, you will need to allow traffic to a network port for incoming requests
+
+Virtual environment
+===
 
 We advise you to create a Python virtual environment for this project,
 in order not to get into version trouble in case you are working on or running other Python projects on the same machine.
