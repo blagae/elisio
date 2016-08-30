@@ -1,6 +1,6 @@
 # source: https://code.activestate.com/recipes/81611-roman-numerals/
 # licensed under the PSF License, which is compatible with the (A)GPL
-# This file includes minor porting alterations to Python 3
+# This file includes minor porting alterations for Python 3
 
 def int_to_roman(input):
    """
