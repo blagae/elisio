@@ -83,6 +83,3 @@ class TestSound(unittest.TestCase):
         self.assertTrue(sound.is_consonant())
         self.assertFalse(sound.is_heavy_making())
         self.assertTrue(sound.is_h())
-
-if __name__ == '__main__':
-    unittest.main()

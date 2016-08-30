@@ -491,7 +491,3 @@ class TestWord(unittest.TestCase):
         weights = [Weight.ANCEPS, Weight.ANCEPS]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
-
-
-if __name__ == '__main__':
-    unittest.main()

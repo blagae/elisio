@@ -169,6 +169,3 @@ class TestLetter(unittest.TestCase):
         """ j is a valid letter """
         obj = Letter('J')
         self.assertTrue(obj.is_valid_letter())
-
-if __name__ == '__main__':
-    unittest.main()

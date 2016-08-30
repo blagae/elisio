@@ -300,6 +300,3 @@ class TestSyllable(unittest.TestCase):
         syll.add_sound(SoundFactory.create('c'))
         with self.assertRaises(SyllableException):
             syll.add_sound(SoundFactory.create('u'))
-
-if __name__ == '__main__':
-    unittest.main()
