@@ -9,6 +9,7 @@ class Word(object):
     It has extensive knowledge of its sounds, which it can join into syllables
     """
     enclitics = ('que', 'ue')
+    proclitics = ('ab', 'ad', 'con', 'in', 'sub') #circum?, de?,dis?, e-?,ob?per?prae?pro?
     def __init__(self, text, use_dict = False):
         """ construct a Word by its contents """
         self.syllables = []

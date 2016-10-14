@@ -367,6 +367,12 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
+    def test_word_split_proclitic(self):
+        word = self.construct_word('ades')
+        syllable_list = [Syllable('ad'), Syllable('es')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
     def test_word_scan_identical_sound(self):
         """ check reworking of word-internal sounds """
         word = self.construct_word('memor')
