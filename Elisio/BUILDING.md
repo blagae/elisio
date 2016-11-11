@@ -39,7 +39,7 @@ If you do want to use a database server, you are constrained by the possibilitie
 * Others: support in Django varies significantly (use at own risk)
 
 Basically, you should get good performance with PostgreSQL, and Django also implicitly advises users to use that database.
-Unless my preferences change, Postgres will always be the reference implementation.
+Unless my preferences change, Postgres will always be used in the reference implementation.
 
 There is a minor glitch when combining Python 3.5 with psycopg2 2.6.1 in PTVS. So until a new psycopg2 version is released,
 you may need to work with Python 3.4 (although YMMV).

@@ -58,7 +58,7 @@ except those introduced by Django itself - and the availability of database conn
 License
 ===
 
-Elisio is released under the AGPL, a strong copyleft license which still gives third parties
+Elisio is released under the Affero General Public License (AGPL), a strong copyleft license which still gives third parties
 considerable freedom to use the source code contained in this project.
 If you are considering forking Elisio or using some of its algorithms,
 please check the license terms to make yourself acquainted with your rights and obligations.

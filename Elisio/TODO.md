@@ -21,7 +21,7 @@ realistic TODOs
     * REST API
         * add parsing results
     * fonts
-        * find font with diacritics
+        * find free/libre font with diacritics
         * feed diacritics into words
     * beautify
         * create UI
@@ -31,7 +31,7 @@ Pipe dreams
 ====
 
 * engine: essentially teach it Latin
-    * declensions: be able to correlate loco with locos
+    * declensions: be able to correlate avo with avos
     * conjugations: be able to correlate laborat with laboravit
     * parsing lyrical meters
 
