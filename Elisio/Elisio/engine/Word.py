@@ -35,6 +35,9 @@ class Word(object):
             local_text += sound.get_text()
         self.text = local_text
 
+    def starts_with_proclitic(self):
+        return self.text.startswith(Word.proclitics)
+
     def split(self, test_deviant=True):
         """
         splits a word into syllables by using a few static methods
@@ -44,7 +47,8 @@ class Word(object):
             return
         if len(self.syllables) == 0:
             temporary_syllables = SyllableSplitter.join_into_syllables(self.sounds)
-            self.syllables = SyllableSplitter.redistribute(temporary_syllables)
+            skipFirst = self.starts_with_proclitic()
+            self.syllables = SyllableSplitter.redistribute(temporary_syllables, skipFirst)
             self.check_consistency()
         if test_deviant and len(self.syllables) == 1 and len(self.text) == 1:
             self.syllables[0].weight = Weight.HEAVY
@@ -81,7 +85,7 @@ class Word(object):
                         self.syllables[count].weight = Weight(int(val))
 
     def ends_in_variable_declension(self):
-        return len(self.syllables) > 1 and (self.text.endswith("us") or self.text.endswith("a"))
+        return len(self.syllables) > 1 and (self.text.endswith(("us", "a")))
 
     def ends_in_enclitic(self):
         if self.enclitic:

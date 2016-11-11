@@ -389,7 +389,7 @@ class TestWord(unittest.TestCase):
 
     def test_word_scan_internal_nh(self):
         word = self.construct_word('inhumati')
-        weights = [Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS, Weight.HEAVY]
+        weights = [Weight.HEAVY, Weight.ANCEPS, Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 
