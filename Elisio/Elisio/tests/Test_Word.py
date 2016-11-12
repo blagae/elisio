@@ -366,10 +366,22 @@ class TestWord(unittest.TestCase):
         syllable_list = [Syllable('me'), Syllable('mor')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
-
+        
     def test_word_split_proclitic(self):
+        word = self.construct_word('adiuvat')
+        syllable_list = [Syllable('ad'), Syllable('iu'), Syllable('vat')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_word_split_disregard_proclitic(self):
         word = self.construct_word('ades')
-        syllable_list = [Syllable('ad'), Syllable('es')]
+        syllable_list = [Syllable('a'), Syllable('des')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_word_split_disregard_proclitic_sv(self):
+        word = self.construct_word('adultus')
+        syllable_list = [Syllable('a'), Syllable('dul'), Syllable('tus')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
@@ -389,7 +401,7 @@ class TestWord(unittest.TestCase):
 
     def test_word_scan_internal_nh(self):
         word = self.construct_word('inhumati')
-        weights = [Weight.HEAVY, Weight.ANCEPS, Weight.ANCEPS, Weight.HEAVY]
+        weights = [Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 

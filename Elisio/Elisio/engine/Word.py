@@ -47,7 +47,11 @@ class Word(object):
             return
         if len(self.syllables) == 0:
             temporary_syllables = SyllableSplitter.join_into_syllables(self.sounds)
-            skipFirst = self.starts_with_proclitic()
+            skipFirst = (self.starts_with_proclitic() and
+                         len(temporary_syllables) > 1 and
+                         temporary_syllables[1].sounds[0].is_semivowel()
+                         and len(temporary_syllables[1].sounds) > 1
+                         and not temporary_syllables[1].sounds[1].is_consonant())
             self.syllables = SyllableSplitter.redistribute(temporary_syllables, skipFirst)
             self.check_consistency()
         if test_deviant and len(self.syllables) == 1 and len(self.text) == 1:

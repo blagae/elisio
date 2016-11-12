@@ -218,7 +218,7 @@
   <object pk="6" model="Elisio.Poem">
     <field type="ForeignKey" name="book">6</field>
     <field type="IntegerField" name="number">5</field>
-    <field type="IntegerField" name="nickname">Interea medium Aeneas</field>
+    <field type="IntegerField" name="nickname">Interea medium</field>
   </object>
   <object pk="7" model="Elisio.Poem">
     <field type="ForeignKey" name="book">7</field>
