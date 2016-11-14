@@ -111,6 +111,11 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddField(
+            model_name='databaseverse',
+            name='failure',
+            field=models.CharField(blank=True, max_length=70),
+        ),
+        migrations.AddField(
             model_name='deviantsyllable',
             name='word',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Elisio.DeviantWord'),

@@ -54,12 +54,13 @@ class TestHexameter(unittest.TestCase):
                     failed += 1
                     verse = VerseFactory.get_split_syllables(dbverse.contents)
                     dbverse.saved = False
+                    dbverse.failure = exc.message[:69]
                     dbverse.structure = ""
                 else:
                     worked += 1
             else:
                 worked += 1
-            if verse_saved != dbverse.saved:
+            if verse_saved != dbverse.saved or dbverse.failure:
                 dbverse.save()
         # canary test: over 91% of verses must succeed
         result = str(worked) + " worked, " + str(failed) + " failed"
