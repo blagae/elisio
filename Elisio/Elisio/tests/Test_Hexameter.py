@@ -54,7 +54,10 @@ class TestHexameter(unittest.TestCase):
                     failed += 1
                     verse = VerseFactory.get_split_syllables(dbverse.contents)
                     dbverse.saved = False
-                    dbverse.failure = exc.message[:69]
+                    try:
+                        dbverse.failure = exc.exceptions[0][0].message[:69]
+                    except IndexError:
+                        dbverse.failure = exc.message[:69]
                     dbverse.structure = ""
                 else:
                     worked += 1
