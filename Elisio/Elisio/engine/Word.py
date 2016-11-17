@@ -36,7 +36,9 @@ class Word(object):
         self.text = local_text
 
     def starts_with_proclitic(self):
-        return self.text.startswith(Word.proclitics)
+        for proc in Word.proclitics:
+            if self.text.startswith(proc) and self.text != proc:
+                return proc
 
     def split(self, test_deviant=True):
         """
@@ -47,12 +49,7 @@ class Word(object):
             return
         if len(self.syllables) == 0:
             temporary_syllables = SyllableSplitter.join_into_syllables(self.sounds)
-            skipFirst = (self.starts_with_proclitic() and
-                         len(temporary_syllables) > 1 and
-                         temporary_syllables[1].sounds[0].is_semivowel()
-                         and len(temporary_syllables[1].sounds) > 1
-                         and not temporary_syllables[1].sounds[1].is_consonant())
-            self.syllables = SyllableSplitter.redistribute(temporary_syllables, skipFirst)
+            self.syllables = SyllableSplitter.redistribute(temporary_syllables)
             self.check_consistency()
         if test_deviant and len(self.syllables) == 1 and len(self.text) == 1:
             self.syllables[0].weight = Weight.HEAVY
@@ -191,6 +188,20 @@ class Word(object):
         see that all syllables are valid
         or fix if necessary
         """
+        proc = self.starts_with_proclitic()
+        if proc:
+            mainword = self.text.replace(proc, '', 1)
+            s = SoundFactory.create(mainword[0])
+            if (s.is_consonant() or
+                (s.is_semivowel() and not SoundFactory.create(mainword[1]).is_consonant())):
+                wr = Word(mainword)
+                wr.split()
+                syl = Syllable(proc)
+                self.sounds = syl.sounds.copy()
+                self.sounds += wr.sounds
+                self.syllables = [syl]
+                self.syllables += wr.syllables
+                return
         for syllable in self.syllables:
             if not syllable.is_valid():
                 word = FallbackWord(syllable.get_text())

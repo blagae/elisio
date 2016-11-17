@@ -381,7 +381,7 @@ class TestWord(unittest.TestCase):
 
     def test_word_split_disregard_proclitic_mql(self):
         word = self.construct_word('obripio')
-        syllable_list = [Syllable('ob'), Syllable('ri'), Syllable('pio')]
+        syllable_list = [Syllable('ob'), Syllable('ri'), Syllable('pi'), Syllable('o')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 

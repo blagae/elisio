@@ -279,14 +279,12 @@ class SyllableSplitter(object):
         return syllables
 
     @classmethod
-    def redistribute(cls, syllables, skipFirst = False):
+    def redistribute(cls, syllables):
         """
         redistribute the sounds of a list of syllables
         in order to use the correct syllables, not the longest possible
         """
         for count in range(len(syllables)-1):
-            if (skipFirst and count == 0):
-                continue
             if (count == len(syllables)-2 and
                     syllables[count+1] == Syllable('ve')):
                 continue
