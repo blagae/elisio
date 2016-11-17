@@ -373,9 +373,21 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
-    def test_word_split_disregard_proclitic(self):
+    def test_word_split_disregard_proclitic_vwl(self):
         word = self.construct_word('ades')
         syllable_list = [Syllable('a'), Syllable('des')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_word_split_disregard_proclitic_mql(self):
+        word = self.construct_word('obripio')
+        syllable_list = [Syllable('ob'), Syllable('ri'), Syllable('pio')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_word_split_disregard_proclitic_cons(self):
+        word = self.construct_word('conscia')
+        syllable_list = [Syllable('con'), Syllable('sci'), Syllable('a')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
