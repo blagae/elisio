@@ -5,10 +5,9 @@ realistic TODOs
     * build instructions: develop & deploy on Linux VMs ? Vagrant file ?
 
 * engine
-    * syllable splitting
-        * prefixes: subiectum = sub-iec-tum, not su-bi-ec-tum
     * dictionary
-        * suffixes: -que should not be part of the stored dictionary entry
+        * suffixes: -que should have no influence on word structure in dictionary
+            * e.g. structurue of dicitque should be [HEAVY, ANCEPS]
     * accents
         * calculate
         * correlate to verse structure (Zeleny)
