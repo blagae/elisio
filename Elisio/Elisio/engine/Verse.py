@@ -1,6 +1,7 @@
 ﻿""" the main module for parsing verses """
 import enum
 import re
+from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Word import Word
 from Elisio.exceptions import VerseException, HexameterException, IllegalFootException
@@ -79,6 +80,11 @@ class Verse(object):
                 if wrd.ends_in_enclitic():
                     strct = strct[:-1]
                     txt = wrd.without_enclitic()
+                    if strct[-1] == str(Weight.HEAVY.value):
+                        ltr = SoundFactory.create(txt[-1])
+                        if ltr.is_consonant() and not ltr.is_heavy_making():
+                            strct = strct[:-1]
+                            strct += str(Weight.ANCEPS.value)
                 if(wrd.ends_in_variable_declension()):
                     strct = strct[:-1]
                     strct += str(Weight.ANCEPS.value)

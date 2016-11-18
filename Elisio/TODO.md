@@ -5,9 +5,6 @@ realistic TODOs
     * build instructions: develop & deploy on Linux VMs ? Vagrant file ?
 
 * engine
-    * dictionary
-        * suffixes: -que should have no influence on word structure in dictionary
-            * e.g. structurue of dicitque should be [HEAVY, ANCEPS]
     * accents
         * calculate
         * correlate to verse structure (Zeleny)
