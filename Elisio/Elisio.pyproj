@@ -80,7 +80,7 @@
     <Compile Include="Elisio\numerals.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Elisio\tests\Test_Decorate.py">
+    <Compile Include="Elisio\tests\Test_TextDecorator.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\tests\Test_DeviantWord.py">
