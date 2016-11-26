@@ -50,6 +50,9 @@
     <Compile Include="Elisio\engine\Syllable.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\engine\TextDecorator.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\engine\VerseFactory.py">
       <SubType>Code</SubType>
     </Compile>
@@ -75,6 +78,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\numerals.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\tests\Test_Decorate.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\tests\Test_DeviantWord.py">
