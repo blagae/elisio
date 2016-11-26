@@ -2,22 +2,29 @@ from Elisio.engine.Verse import Verse
 from Elisio.engine.Syllable import Weight
 
 class TextDecorator(object):
-    # TODO: don't put diacritic on consonantal semivowel
-    # TODO: include punctuation marks
-    # TODO: include capitals
     def __init__(self, verse):
         if (isinstance(verse, Verse)):
             self.verse = verse
 
     def decorate(self):
         s = ''
-        for word in self.verse.words:
+        vrs = self.verse.text.split(' ')
+        for idx, word in enumerate(self.verse.words):
+            lettercount = 0
             for syll in word.syllables:
+                vowel = False
                 for sound in syll.sounds:
+                    if vowel and not sound.is_consonant():
+                        s = s[:-1]
                     for letter in sound.letters:
-                        s += letter.letter
+                        s += vrs[idx][lettercount]
+                        lettercount += 1
+
                     if not sound.is_consonant():
+                        vowel = True
                         s += self.glyph(syll.weight)
+            if len(vrs[idx]) > lettercount:
+                s += vrs[idx][-1]
             s += ' '
         return s
 

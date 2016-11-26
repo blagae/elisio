@@ -8,7 +8,6 @@ set_django()
 
 class TestTextDecorator(unittest.TestCase):
     def test_dec(self):
-        verse = VerseFactory.create("litora, multum ille et terris iactatus et alto", False, True, classes=HexameterCreator)
+        verse = VerseFactory.create("Arma virumque cano, Troiae qui primus ab oris", False, True, classes=HexameterCreator)
         s = TextDecorator(verse).decorate()
-        text_file = open("output.txt", "w", encoding='UTF-8')
-        text_file.write(s)
+        self.assertEquals(s, "A̱rma̯ vi̯ru̱mque̯ ca̯no̱, Tro̱iae̱ qui̱ pri̱mu̯s a̯b o̱ri̱s ")
