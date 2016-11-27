@@ -11,6 +11,9 @@ class TextDecorator(object):
         vrs = self.verse.text.split(' ')
         for idx, word in enumerate(self.verse.words):
             lettercount = 0
+            while not vrs[idx][lettercount].isalnum():
+                s += vrs[idx][lettercount]
+                lettercount += 1
             for syll in word.syllables:
                 vowel = False
                 for sound in syll.sounds:

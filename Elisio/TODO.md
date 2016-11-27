@@ -14,11 +14,6 @@ realistic TODOs
         * code coverage analysis
 
 * website
-    * REST API
-        * add parsing results
-    * fonts
-        * find free/libre font with diacritics
-        * feed diacritics into words
     * beautify
         * create UI
         * modern style
