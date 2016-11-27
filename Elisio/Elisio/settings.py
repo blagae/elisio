@@ -17,6 +17,8 @@ try:
 except ImportError:
     sys.exit("Deployment issue: You must create a local.py file with the required settings")
 
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver']
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.

@@ -1,5 +1,5 @@
 """ standard Django module """
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from Elisio import views
 
 # Uncomment the next two lines to enable the admin:
