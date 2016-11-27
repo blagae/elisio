@@ -3,6 +3,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.core import serializers
 from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse
+from Elisio.engine.TextDecorator import TextDecorator
+from Elisio.engine.VerseFactory import VerseFactory
+from Elisio.engine.Hexameter import HexameterCreator
 #from Elisio.models import *
 import json
 
@@ -51,4 +54,14 @@ def json_verse(request, poem, verse):
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
     data = json.dumps(obj)
+    return HttpResponse(data, content_type='application/json')
+
+def json_scan(request, poem, verse):
+    """ get a verse through a JSON request """
+    primary = int(verse)
+    poem_pk = int(poem)
+    obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
+    verse = VerseFactory.create(obj, False, True, classes=HexameterCreator)
+    s = TextDecorator(verse).decorate()
+    data = json.dumps(s)
     return HttpResponse(data, content_type='application/json')
