@@ -2,6 +2,8 @@ from Elisio import local, settings
 
 def set_django():
     """ in order to get to the database, we must use Django """
+    import pymysql
+    pymysql.install_as_MySQLdb()
     import os
     module = 'DJANGO_SETTINGS_MODULE'
     if (not module in os.environ or

@@ -2,3 +2,4 @@ django>=1.7
 django-enumfields
 pylint
 psycopg2
+pymysql
