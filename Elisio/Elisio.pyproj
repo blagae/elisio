@@ -5,7 +5,7 @@
     <Name>Elisio</Name>
     <RootNamespace>Elisio</RootNamespace>
     <WebBrowserPort>9000</WebBrowserPort>
-    <InterpreterId>{e16a280d-4979-4b9b-aad4-12b469158e88}</InterpreterId>
+    <InterpreterId>{18a7b88f-f0a3-4b25-9fb4-05940b12121e}</InterpreterId>
     <InterpreterVersion>3.4</InterpreterVersion>
     <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
@@ -179,7 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env32\">
-      <Id>{e16a280d-4979-4b9b-aad4-12b469158e88}</Id>
+      <Id>{18a7b88f-f0a3-4b25-9fb4-05940b12121e}</Id>
       <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
       <Version>3.4</Version>
       <Description>env32 (Python 3.4)</Description>

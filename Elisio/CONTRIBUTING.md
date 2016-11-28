@@ -5,15 +5,17 @@ Version control
 ===
 
 Git is the versioning system for this project. We use git-flow in order to separate features from ongoing development work.
-This is not necessary for bug fixes, enhancements, and other work items which can be easily contained in a few commits.
 
 Features
 ===
 
 The high-level features we'd like to work on next are listed in TODO.md . Actually working on these may require
-further discussion, for which you're welcome to ping me in issues.
+further discussion, for which you're welcome to ping me in tickets or pull requests.
 
 For unfinished feature development, please use the feature branch concept from git-flow.
+
+Feature branches is not necessary for small bug fixes, enhancements, documentation,
+and other work items which can be easily contained in a single commit.
 
 Bug fixes
 ===
@@ -27,7 +29,7 @@ Ideally, your pull request consists of at least two commits (in this order):
 1. in the last commit: the code for the full fix, which makes the tests succeed
 
 Of course, this requires some discipline and more planning than you may be used to.
-As a consequence, compliance with this rule is not required for a fix to be accepted.
+Compliance with this rule is strongly encouraged, but is not required for a fix to be accepted.
 
 Tests
 ===
@@ -48,4 +50,4 @@ least make an effort to not make the current situation worse.
 Version numbers
 ===
 
-As of June 2016, no releases have been made. We intend to implement Semantic Versioning when we do.
+As of December 2016, no releases have been made. We intend to implement Semantic Versioning when we do.

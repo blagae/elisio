@@ -23,7 +23,7 @@ In scanning a verse, this is a very high-level description of the approach that 
 1. try to see, from the syllable count, whether the verse can legally be a hexameter, pentameter, ... verse
 1. try to determine the full verse from the known weights
     1. if this succeeds, store the resulting verse structure and word structures in the database
-    1. if this fails, use knowledge in the database from words from succeeding verses to determine more known syllables and reanalyze
+    1. if this fails, use knowledge in the database from words from successfully parsed verses to determine more known syllables and reanalyze
 
 Problems and limitations
 ===
@@ -73,3 +73,10 @@ and read the TODO.md file to see the high-level features we'd like to work on ne
 Building
 ===
 Please refer to BUILDING.md for instructions on how to import and build your own version of the project.
+
+Major contributors
+===
+
+This project was started by Benoit Lagae as a hobby assignment, coming from his background in Latin linguistics
+and his Master's thesis research. The engine and the REST interface are his work.
+Martijn Dentant contributed the front-end and advice on usability and visual design.

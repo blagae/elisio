@@ -30,19 +30,17 @@ Database
 ===
 
 It is possible to run Elisio without connecting to a database server, by using the SQLite implementation of Python itself.
-However, the write phase of the method test_hexameter_scan_all will be horribly slow (3min per 1000 verses) during the first test run.
+However, the write phase of the method test_hexameter_scan_all will be horribly slow (300 verses per minute) during the first test run.
+With Postgres or MySQL, you can get performance up to 5000 verses per minute.
 
 If you do want to use a database server, you are constrained by the possibilities offered by Django and Python 3:
 * PostgreSQL: requires the psycopg2 package. Actively supported.
-* MySQL: should be supported, but not tested. Connector situation for Python 3 is murky.
+* MySQL: requires the pymysql package. Supported, but not tested extensively.
 * Oracle DB: should be supported, but not tested.
 * Others: support in Django varies significantly (use at own risk)
 
 Basically, you should get good performance with PostgreSQL, and Django also implicitly advises users to use that database.
 Unless my preferences change, Postgres will always be used in the reference implementation.
-
-There is a minor glitch when combining Python 3.5 with psycopg2 2.6.1 in PTVS. So until a new psycopg2 version is released,
-you may need to work with Python 3.4 (although YMMV).
 
 First run
 ===
@@ -53,9 +51,9 @@ Once you've configured local.py, you should run the migrate command. From the fo
 $ python manage.py migrate
 ```
 
-This will create your database schema and load all available verses and metadata from the source files into the database.
+This will create your database schema and load all available verses and metadata from the source files (fixtures) into the database.
 Elisio contains an algorithm for remembering the syllable structures of successfully parsed verses in the database.
-This table will be filled during the first test run on a fresh database (with test_hexameter_scan_all).
+This table will be filled during the first run of the test suite on a fresh database, when running test_hexameter_scan_all.
 
 Tests
 ===
@@ -75,5 +73,5 @@ PTVS
 
 Original development of Elisio took place with the Python Tools for Visual Studio (PTVS), which allows advanced Python editing from that IDE.
 This has some minor side effects, most notably a .sln file and a .pyproj file, which you can safely ignore if you don't use PTVS.
-If you push new files to the public git repository, then you may notice that some changes will be applied to these
-files when the commits are being merged to the develop branch.
+If you submit pull requests containing new files to the public git repository, then you may notice that some changes will be applied to these
+files when I merge or rebase the pull request into the develop branch.
