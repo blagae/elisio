@@ -18,19 +18,17 @@ def find_poem(file):
     split = file.split('/')
     split = split[-1].split()
     split[-1] = split[-1].replace('.txt', '')
-    author = Author.objects.get(abbreviation = split[0])
-    opus = Opus.objects.get(abbreviation = split[1], author = author)
+    author = Author.objects.get(abbreviation=split[0])
+    opus = Opus.objects.get(abbreviation=split[1], author=author)
     book = Book.objects.get(opus=opus, number=roman_to_int(split[2]))
     poem = Poem.objects.filter(book=book)
-    if (len(poem) == 1):
+    if len(poem) == 1:
         return poem[0].id
     return poem.get(number=split[3]).id
 
 def fill_xml_object():
     """ externally facing method """
     root = ET.Element("django-objects", {'version': '1.0'})
-
-    
     path = 'Elisio/fixtures/sources/'
     # https://stackoverflow.com/questions/3207219/how-to-list-all-files-of-a-directory-in-python
     from os import listdir
@@ -45,7 +43,7 @@ def fill_xml_object():
         for verse in verses:
             obj = ET.SubElement(root, "object",
                                 {#'pk': str(count),
-                                 'model': 'Elisio.DatabaseVerse'})
+                                    'model': 'Elisio.DatabaseVerse'})
             poem_field = ET.SubElement(obj, "field",
                                        {'type': 'ForeignKey',
                                         'name': 'poem'})
@@ -58,7 +56,7 @@ def fill_xml_object():
                                         {'type': 'CharField',
                                          'name': 'contents',
                                          'saved': 'False'
-                                         })
+                                        })
             verse_field.text = verse
 
             count += 1
@@ -67,7 +65,7 @@ def fill_xml_object():
 
     create_output_file(root)
 
-def find_all_verses_containing(regex, must_be_parsed = False):
+def find_all_verses_containing(regex, must_be_parsed=False):
     from Elisio.utils import set_django
     from Elisio.engine.VerseFactory import VerseFactory
     from Elisio.models import DatabaseVerse

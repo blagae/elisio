@@ -38,6 +38,7 @@ class TestHexameter(unittest.TestCase):
         threshold = 14 if save else 12
         dbverses = DatabaseVerse.objects.all()
         worked = 0
+        worked_without_dict = 0
         failed = 0
         for dbverse in dbverses:
             verse_saved = dbverse.saved
@@ -45,6 +46,7 @@ class TestHexameter(unittest.TestCase):
                 verse = VerseFactory.create(dbverse.contents, not dbverse.saved, False, dbverse, classes=HexameterCreator)
                 dbverse.saved = True
                 dbverse.structure = verse.structure
+                worked_without_dict += 1
             except VerseException:
                 try:
                     verse = VerseFactory.create(dbverse.contents, not dbverse.saved, True, dbverse, classes=HexameterCreator)
@@ -66,7 +68,7 @@ class TestHexameter(unittest.TestCase):
             if verse_saved != dbverse.saved or dbverse.failure:
                 dbverse.save()
         # canary test: over 91% of verses must succeed
-        result = str(worked) + " worked, " + str(failed) + " failed"
+        result =  str(worked_without_dict) + " worked without dict, " + str(worked) + " worked, " + str(failed) + " failed"
         if worked / failed < threshold:
             self.fail(result)
         # canary test: if no verses fail, then we are probably too lax
