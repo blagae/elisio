@@ -1,7 +1,7 @@
 ﻿import re
+import collections
 from Elisio.engine.Word import Word, Weight
 from Elisio.exceptions import ScansionException, VerseException
-import collections
 
 
 class VerseFactory(object):
@@ -18,16 +18,19 @@ class VerseFactory(object):
     def get_split_syllables(cls, text):
         return VerseFactoryImpl(text).get_split_syllables()
     @classmethod
-    def create(cls, text, save=False, useDict=False, dbverse=None, classes=[]):
+    def create(cls, text, save=False, useDict=False, dbverse=None, classes=None):
         return VerseFactoryImpl(text, useDict, classes=classes).create(save, dbverse)
 
 class VerseFactoryImpl(object):
-    def __init__(self, text, useDict=False, classes=[]):
+    def __init__(self, text, usedict=False, classes=None):
         self.text = text
         self.words = []
         self.layers = [[]]
-        self.use_dict = useDict
+        self.use_dict = usedict
         self.flat_list = []
+        # https://docs.python.org/3/tutorial/controlflow.html#default-argument-values
+        if classes is None:
+            classes = []
         if isinstance(classes, collections.Iterable):
             self.classes = classes
         else:
@@ -84,7 +87,7 @@ class VerseFactoryImpl(object):
             except ScansionException as exc:
                 problems.append(exc)
         raise VerseException("parsing did not succeed", problems)
-    
+
     def get_split_syllables(self):
         result = ""
         if not self.words:

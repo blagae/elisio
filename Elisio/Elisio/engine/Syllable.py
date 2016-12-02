@@ -3,7 +3,7 @@ import enum
 import re
 from Elisio.engine.Sound import SoundFactory
 from Elisio.exceptions import SyllableException
-    
+
 class Weight(enum.Enum):
     """
     The possible types of syllable weights
@@ -52,11 +52,11 @@ class Syllable(object):
         if self.sounds[0] == SoundFactory.create('gu'):
             copied = copy.deepcopy(self)
             copied.sounds[0] = SoundFactory.create('u')
-            bool = copied.is_valid(test)
-            if bool:
+            boole = copied.is_valid(test)
+            if boole:
                 self.sounds[0] = SoundFactory.create('g')
                 self.sounds.insert(1, SoundFactory.create('u'))
-            return bool
+            return boole
         contains_final_consonant = contains_vowel = contains_semivowel = False
         only_consonants = True
         for count, sound in enumerate(self.sounds):
@@ -98,7 +98,7 @@ class Syllable(object):
             if re.compile(rgx).match(self.get_text()):
                 return True
         return False
-    
+
     def ends_with_heavymaker(self):
         """ last sound of the syllable is consonantal """
         return self.sounds[-1].is_heavy_making()
@@ -193,8 +193,8 @@ class Syllable(object):
     def must_be_anceps(self, next_syllable=None):
         if next_syllable and isinstance(next_syllable, Syllable):
             return (self.ends_with_vowel() and
-                self.get_vowel().is_diphthong() and
-                next_syllable.starts_with_vowel())
+                    self.get_vowel().is_diphthong() and
+                    next_syllable.starts_with_vowel())
         return False
 
     def is_light(self, next_syllable=None):
@@ -291,11 +291,11 @@ class SyllableSplitter(object):
             if (syllables[count].ends_with_vowel() and
                     syllables[count+1].starts_with_consonant_cluster()):
                 SyllableSplitter.__switch_sound(syllables[count], syllables[count+1], True)
-            elif (syllables[count].ends_with_consonant()):
+            elif syllables[count].ends_with_consonant():
                 if (syllables[count+1].sounds[0] == SoundFactory.create('u') and
-                    len(syllables[count+1].sounds) > 1 and
-                    not syllables[count].ends_with_consonant_cluster() and
-                    not syllables[count+1].sounds[1].is_consonant()):
+                        len(syllables[count+1].sounds) > 1 and
+                        not syllables[count].ends_with_consonant_cluster() and
+                        not syllables[count+1].sounds[1].is_consonant()):
                     pass
                 elif syllables[count+1].starts_with_vowel(False):
                     SyllableSplitter.__switch_sound(syllables[count], syllables[count+1], False)

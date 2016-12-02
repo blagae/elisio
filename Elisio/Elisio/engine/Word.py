@@ -10,7 +10,7 @@ class Word(object):
     """
     enclitics = ('que', 'ue')
     proclitics = ('ab', 'ad', 'con', 'dis', 'in', 'ob', 'sub') #circum?, de?, e-?,ob?per?prae?pro?
-    def __init__(self, text, use_dict = False):
+    def __init__(self, text, use_dict=False):
         """ construct a Word by its contents """
         self.syllables = []
         if not (isinstance(text, str) and text.isalpha()):
@@ -136,7 +136,7 @@ class Word(object):
                   self.syllables[-1].ends_with_vowel()) or
                  (self.syllables[-1].ends_with_consonant() and
                   next_word.syllables[0].starts_with_consonant()
-                  )))
+                 )))
 
     def get_syllable_structure(self, next_word=None):
         """ get the list of syllable weights based on the syllable list """
@@ -158,11 +158,10 @@ class Word(object):
                     first_syllable.starts_with_vowel()):
                 # elision
                 syll_struct[-1] = Weight.NONE
-            # TODO: redefine redistribution ! heavymakers, -os, etc
             elif last_syllable.must_be_heavy():
                 syll_struct[-1] = Weight.HEAVY
             elif last_syllable.ends_with_consonant():
-                if (not last_syllable.ends_with_consonant_cluster() and 
+                if (not last_syllable.ends_with_consonant_cluster() and
                    not last_syllable.has_diphthong() and
                    first_syllable.starts_with_vowel()):
                     # consonant de facto redistributed
@@ -191,16 +190,16 @@ class Word(object):
         proc = self.starts_with_proclitic()
         if proc:
             mainword = self.text.replace(proc, '', 1)
-            s = SoundFactory.create(mainword[0])
-            if (s.is_consonant() or
-                (s.is_semivowel() and not SoundFactory.create(mainword[1]).is_consonant())):
-                wr = Word(mainword)
-                wr.split()
+            snd = SoundFactory.create(mainword[0])
+            if (snd.is_consonant() or
+                    (snd.is_semivowel() and not SoundFactory.create(mainword[1]).is_consonant())):
+                wrd = Word(mainword)
+                wrd.split()
                 syl = Syllable(proc)
                 self.sounds = syl.sounds.copy()
-                self.sounds += wr.sounds
+                self.sounds += wrd.sounds
                 self.syllables = [syl]
-                self.syllables += wr.syllables
+                self.syllables += wrd.syllables
                 return
         for syllable in self.syllables:
             if not syllable.is_valid():
@@ -222,7 +221,7 @@ class Word(object):
                         pass
 
 class FallbackWord(Word):
-    def __init__(self, text, use_dict = False):
+    def __init__(self, text, use_dict=False):
         super(FallbackWord, self).__init__(text, use_dict)
     def check_consistency(self):
         pass

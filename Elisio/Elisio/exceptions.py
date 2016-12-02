@@ -6,7 +6,7 @@ class ScansionException(Exception):
         self.message = message
         self.exceptions = []
         if exceptions:
-            self.exceptions = exceptions
+            self.exceptions = list(exceptions)
 
     def __str__(self):
         result = self.message

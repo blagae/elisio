@@ -1,10 +1,8 @@
 ﻿""" the main module for parsing verses """
 import enum
-import re
 from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Weight
-from Elisio.engine.Word import Word
-from Elisio.exceptions import VerseException, HexameterException, IllegalFootException
+from Elisio.exceptions import VerseException, IllegalFootException
 
 class Foot(enum.Enum):
     """ Types of verse foot """
@@ -85,7 +83,7 @@ class Verse(object):
                         if ltr.is_consonant() and not ltr.is_heavy_making():
                             strct = strct[:-1]
                             strct += str(Weight.ANCEPS.value)
-                if(wrd.ends_in_variable_declension()):
+                if wrd.ends_in_variable_declension():
                     strct = strct[:-1]
                     strct += str(Weight.ANCEPS.value)
                 if verse:
@@ -103,8 +101,8 @@ class Verse(object):
 
     def save_feet(self):
         result = ""
-        for ft in self.feet:
-            result += str(ft.value)
+        for foot in self.feet:
+            result += str(foot.value)
         return result
 
     def save_structure(self):
@@ -113,14 +111,14 @@ class Verse(object):
         for feet_num, foot in enumerate(self.feet):
             if foot is None:
                 raise VerseException("impossible to determine foot"
-                                        " number {0}".format(feet_num))
+                                     " number {0}".format(feet_num))
             for count, weight in enumerate(foot.get_structure()):
                 if (weight != Weight.ANCEPS and
                         self.flat_list[count+start] != Weight.ANCEPS and
                         weight != self.flat_list[count+start]):
                     raise VerseException("weight #{0} was already {1}"
-                                            ", tried to assign {2}"
-                                            .format(count+start,
+                                         ", tried to assign {2}"
+                                         .format(count+start,
                                                     str(self.flat_list[count+start]),
                                                     str(weight)))
                 self.flat_list[count+start] = weight
@@ -131,4 +129,4 @@ class Verse(object):
                 #if not syll.weight or syll.weight == Weight.ANCEPS:
                 if syll.weight != Weight.NONE:
                     syll.weight = self.flat_list[i]
-                    i+=1
+                    i += 1

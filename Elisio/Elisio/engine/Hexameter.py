@@ -286,7 +286,7 @@ class BalancedHexameter(Hexameter):
     def __do_reasonable_guesses(self):
         """ try some scenarios if we've found a spondee and a dactyl """
         if ((self.feet[2] == Foot.SPONDAEUS and self.feet[3] == Foot.DACTYLUS) or
-            (self.feet[2] == Foot.DACTYLUS and self.feet[3] == Foot.SPONDAEUS)):
+                (self.feet[2] == Foot.DACTYLUS and self.feet[3] == Foot.SPONDAEUS)):
             if self.flat_list[3] == Weight.HEAVY or self.flat_list[4] == Weight.HEAVY:
                 self.feet[0] = Foot.DACTYLUS
                 self.feet[1] = Foot.SPONDAEUS

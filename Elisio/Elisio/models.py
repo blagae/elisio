@@ -1,10 +1,9 @@
 ﻿""" standard Django module """
 from django.db import models
+import re
 from Elisio.engine.Syllable import Weight, Syllable
-from Elisio.engine.Verse import Verse
 from Elisio.exceptions import WordException
 from enumfields import EnumField
-import re
 
 class DeviantWord(models.Model):
     """ model class for the Engine: highest level """
@@ -100,7 +99,7 @@ class DatabaseVerse(models.Model):
 
     def get_verse(self):
         """ create a Verse object from this DatabaseVerse """
-        return self.contents# Verse(self.contents, self.saved)
+        return self.contents
 
     @classmethod
     def get_maximum_verse_num(cls, poem):

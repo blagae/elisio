@@ -8,7 +8,7 @@ class Sound(object):
     Sound class
     A sound is composed of one or several Letters
     """
-    
+
     def __init__(self, *letters):
         """ construct a Sound from a list of letters, or (a list of) text(s) """
         self.letters = []
@@ -227,7 +227,7 @@ class HeavyMakerSound(ConsonantSound):
         first = self.letters[0].letter
         return Letter.letters[first] == LetterType.HEAVYMAKER
 
-    
+
 class SoundFactory(object):
     sound_dict = {}
     @classmethod
@@ -287,7 +287,7 @@ class SoundFactory(object):
             raise SoundException("not a valid sound given in factory method")
         SoundFactory.sound_dict[sound.get_text()] = sound
         return sound
-    
+
     @classmethod
     def create_sounds_from_text(cls, text):
         """

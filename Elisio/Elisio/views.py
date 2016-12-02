@@ -1,4 +1,5 @@
 """ standard Django views module for back-end logic """
+import json
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.core import serializers
@@ -7,7 +8,6 @@ from Elisio.engine.TextDecorator import TextDecorator
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.engine.Hexameter import HexameterCreator
 #from Elisio.models import *
-import json
 
 CONTEXT = {}
 

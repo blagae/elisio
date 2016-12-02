@@ -43,15 +43,14 @@ class Letter(object):
         'y' : LetterType.VOWEL,
         'k' : LetterType.CONSONANT,
         'z' : LetterType.HEAVYMAKER,
-        'ë' : LetterType.VOWEL # TODO: check for unicode & alternatives
-        # TODO: tests for ë !
+        'ë' : LetterType.VOWEL
         }
 
     def __init__(self, ltr):
         """ construct a Letter by its contents """
         if not (isinstance(ltr, str) and len(ltr) == 1 and ltr.isalpha()):
             raise LetterException("wrong number of letters " +
-                                    "or not a valid character")
+                                  "or not a valid character")
         self.letter = ltr.lower()
         if self.letter == 'v':
             self.letter = 'u'

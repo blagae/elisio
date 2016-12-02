@@ -25,8 +25,8 @@ class PentameterCreator(VerseCreator):
             return DactylicPentameter
         else:
             raise PentameterException("{0} is an illegal number of"
-                                     "syllables in a Pentameter"
-                                     .format(len(self.list)))
+                                      "syllables in a Pentameter"
+                                      .format(len(self.list)))
 
 class Pentameter(Verse):
     def __init__(self, text):
@@ -35,13 +35,13 @@ class Pentameter(Verse):
 
     def preparse(self):
         if (self.flat_list[-1] == Weight.LIGHT
-            or self.flat_list[-2] == Weight.HEAVY
-            or self.flat_list[-3] == Weight.HEAVY
-            or self.flat_list[-4] == Weight.LIGHT
-            or self.flat_list[-5] == Weight.HEAVY
-            or self.flat_list[-6] == Weight.HEAVY
-            or self.flat_list[-7] == Weight.LIGHT
-            or self.flat_list[-8] == Weight.LIGHT):
+                or self.flat_list[-2] == Weight.HEAVY
+                or self.flat_list[-3] == Weight.HEAVY
+                or self.flat_list[-4] == Weight.LIGHT
+                or self.flat_list[-5] == Weight.HEAVY
+                or self.flat_list[-6] == Weight.HEAVY
+                or self.flat_list[-7] == Weight.LIGHT
+                or self.flat_list[-8] == Weight.LIGHT):
             raise PentameterException("problem in second half with syllable weight")
 
     def scan(self):
@@ -53,7 +53,7 @@ class Pentameter(Verse):
 
     def fill(self):
         pass
-        
+
 class SpondaicPentameter(Pentameter):
     def __init__(self, text):
         super(SpondaicPentameter, self).__init__(text)
@@ -72,20 +72,20 @@ class DactylicPentameter(Pentameter):
 
     def scan_first_half(self):
         if (self.flat_list[0] == Weight.LIGHT
-            or self.flat_list[1] == Weight.HEAVY
-            or self.flat_list[2] == Weight.HEAVY
-            or self.flat_list[3] == Weight.LIGHT
-            or self.flat_list[4] == Weight.HEAVY
-            or self.flat_list[5] == Weight.HEAVY):
+                or self.flat_list[1] == Weight.HEAVY
+                or self.flat_list[2] == Weight.HEAVY
+                or self.flat_list[3] == Weight.LIGHT
+                or self.flat_list[4] == Weight.HEAVY
+                or self.flat_list[5] == Weight.HEAVY):
             raise PentameterException("problem with first half of Dactylic Pentameter")
         self.feet[0] = self.feet[1] = Foot.DACTYLUS
-        
+
 class BalancedPentameter(Pentameter):
     def __init__(self, text):
         super(BalancedPentameter, self).__init__(text)
 
     def scan_first_half(self):
-        for i in range (1, 5):
+        for i in range(1, 5):
             if self.flat_list[i] != Weight.ANCEPS:
                 if self.flat_list[i] == Weight.LIGHT:
                     self.feet[i // 3] = Foot.DACTYLUS
