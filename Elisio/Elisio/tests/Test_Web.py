@@ -24,4 +24,4 @@ class TestWeb(unittest.TestCase):
         
     def test_go(self):
         from Elisio.batchjob import find_all_verses_containing as find
-        print(len(find('^uolu.*$', False)))
+        self.assertEqual(len(find('^uolu.*$', False)), 56)

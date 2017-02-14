@@ -231,7 +231,7 @@ class HeavyMakerSound(ConsonantSound):
 class SoundFactory(object):
     sound_dict = {}
     @classmethod
-    def create(cls, *letters):
+    def create(cls, letters):
         """
         outward-facing factory which preparses its parameters
         and passes them to the internal factory method
