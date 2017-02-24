@@ -1,33 +1,50 @@
-realistic TODOs
-====
+# TODO
 
-* project
-    * build instructions: develop & deploy on Linux VMs ? Vagrant file ?
+This is a high-level list of tasks that are on the roadmap. There is no priority list as of this writing.
 
-* engine
-    * accents
-        * calculate
-        * correlate to verse structure (Zeleny)
-    * testing
-        * unit testing specific hexameter cases (to prevent regressions)
-        * unit test pentameter algorithm
-        * code coverage analysis
+## realistic TODOs
 
-* website
-    * beautify
-        * create UI
-        * modern style
+### Project
 
-Pipe dreams
-====
+* build instructions: develop & deploy on Linux VM
+* Vagrant file
 
-* engine: essentially teach it Latin
-    * declensions: be able to correlate avo with avos
-    * conjugations: be able to correlate laborat with laboravit
-    * parsing lyrical meters
+### Engine
 
-* website: user interaction
-    * user feedback
-    * user queries
-        * exporting results
-    * manual fixes by community
+* accents
+    * calculate
+    * correlate to verse structure (Zeleny)
+* testing
+    * unit testing specific hexameter cases (to prevent regressions)
+    * unit test pentameter algorithm
+    * code coverage analysis
+
+### Website
+
+* beautify
+    * create UI
+    * modern style
+
+## Pipe dreams
+
+### Engine
+
+essentially teach it Latin:
+
+* declensions: be able to correlate avo with avos
+* conjugations: be able to correlate laborat with laboravit
+
+parsing:
+
+* lyrical meters
+* dramatic meters (haha)
+
+### Website
+
+user interaction:
+
+* user feedback
+* user queries
+    * exporting results
+* build community
+* manual fixes by community
