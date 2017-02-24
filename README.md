@@ -20,8 +20,8 @@ In scanning a verse, this is a very high-level description of the approach that 
 5. try to determine syllable weights based on the basic weight rules
 6. try to see, from the syllable count, whether the verse can legally be a hexameter, pentameter, ... verse
 7. try to determine the full verse from the known weights
-  a. if this succeeds, store the resulting verse structure and word structures in the database
-  b. if this fails, use knowledge in the database from words from successfully parsed verses to determine more known syllables and reanalyze
+    1. if this succeeds, store the resulting verse structure and word structures in the database
+    2. if this fails, use knowledge in the database from words from successfully parsed verses to determine more known syllables and reanalyze
 
 ## Problems and limitations
 
