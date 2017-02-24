@@ -141,8 +141,6 @@
     <Compile Include="Elisio\wsgi.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BUILDING.md" />
-    <Content Include="CONTRIBUTING.md" />
     <Content Include="Elisio\fixtures\deviant\initial_data.xml" />
     <Content Include="Elisio\fixtures\metadata\initial_data.xml" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. II.txt" />
@@ -160,9 +158,6 @@
     <Content Include="Elisio\templates\faq.html" />
     <Content Include="Elisio\templates\help.html" />
     <Content Include="Elisio\templates\index.html" />
-    <Content Include="LICENSE.md" />
-    <Content Include="README.md" />
-    <Content Include="TODO.md" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
