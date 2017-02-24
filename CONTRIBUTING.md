@@ -23,9 +23,10 @@ When submitting a bug fix in a pull request, you should include tests that would
 This will serve as documentation for the original problem, and may be the deciding argument convincing us that there is a problem.
 
 Ideally, your pull request consists of at least two commits (in this order):
+
 1. in the first commit: the failing tests, so that reproducing the problem can be done by checking out this commit
-1. (optional) any intermediate steps for the fix
-1. in the last commit: the code for the full fix, which makes the tests succeed
+2. (optional) any intermediate steps for the fix
+3. in the last commit: the code for the full fix, which makes the tests succeed
 
 Of course, this requires some discipline and more planning than you may be used to.
 Compliance with this rule is strongly encouraged, but is not required for a fix to be accepted.

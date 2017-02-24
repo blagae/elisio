@@ -12,15 +12,16 @@ in hopes that they can eventually retrieve previously unknown information from t
 ## Approach
 
 In scanning a verse, this is a very high-level description of the approach that we took:
+
 1. split the verse into words
-1. analyze the letters: remove reading marks, resolve writing conventions (v => u)
-1. combine letters into sounds (qu is one sound, *muta cum liquida* also for our purposes)
-1. combine sounds into syllables, taking into account the possible ambiguity of semivowels
-1. try to determine syllable weights based on the basic weight rules
-1. try to see, from the syllable count, whether the verse can legally be a hexameter, pentameter, ... verse
-1. try to determine the full verse from the known weights
-    1. if this succeeds, store the resulting verse structure and word structures in the database
-    1. if this fails, use knowledge in the database from words from successfully parsed verses to determine more known syllables and reanalyze
+2. analyze the letters: remove reading marks, resolve writing conventions (v => u)
+3. combine letters into sounds (qu is one sound, *muta cum liquida* also for our purposes)
+4. combine sounds into syllables, taking into account the possible ambiguity of semivowels
+5. try to determine syllable weights based on the basic weight rules
+6. try to see, from the syllable count, whether the verse can legally be a hexameter, pentameter, ... verse
+7. try to determine the full verse from the known weights
+  a. if this succeeds, store the resulting verse structure and word structures in the database
+  b. if this fails, use knowledge in the database from words from successfully parsed verses to determine more known syllables and reanalyze
 
 ## Problems and limitations
 
@@ -62,7 +63,7 @@ considerable freedom to use the source code contained in this project.
 If you are considering forking Elisio or using some of its algorithms,
 please check [the license terms](./LICENSE.md) to make yourself acquainted with your rights and obligations.
 
-_Ignorance is not a valid excuse._
+**Ignorance is not a valid excuse.**
 
 ## Further developments
 
