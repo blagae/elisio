@@ -143,6 +143,21 @@
   <ItemGroup>
     <Content Include="Elisio\fixtures\deviant\initial_data.xml" />
     <Content Include="Elisio\fixtures\metadata\initial_data.xml" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. I.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. II.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. III.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. IV.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. IX.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. V.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. VI.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. VII.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. VIII.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. X.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. XI.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. XII.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. XIII.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. XIV.txt" />
+    <Content Include="Elisio\fixtures\sources\Ov. Met. XV.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. II.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. I.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. III.txt" />

@@ -78,6 +78,16 @@
     <field type="IntegerField" name="floruit_start">86</field>
     <field type="IntegerField" name="floruit_end">103</field>
   </object>
+  <object pk="6" model="Elisio.Author">
+    <field type="CharField" name="full_name">Publius Ovidius Naso</field>
+    <field type="CharField" name="short_name">Ovidius</field>
+    <field type="CharField" name="abbreviation">Ov.</field>
+    <field type="ForeignKey" name="period">3</field>
+    <field type="IntegerField" name="birth_year">-43</field>
+    <field type="IntegerField" name="dying_year">18</field>
+    <field type="IntegerField" name="floruit_start">-16</field>
+    <field type="IntegerField" name="floruit_end">15</field>
+  </object>
 
   <!-- Genres -->
   <object pk="1" model="Elisio.Genre">
@@ -158,6 +168,14 @@
     <field type="IntegerField" name="publication">90</field>
     <field type="ForeignKey" name="genre">2</field>
   </object>
+  <object pk="8" model="Elisio.Opus">
+    <field type="CharField" name="full_name">Metamorphoses</field>
+    <field type="CharField" name="abbreviation">Met.</field>
+    <field type="CharField" name="alternative_name"></field>
+    <field type="ForeignKey" name="author">6</field>
+    <field type="IntegerField" name="publication">8</field>
+    <field type="ForeignKey" name="genre">2</field>
+  </object>
 
   <!-- Books -->
   <object pk="1" model="Elisio.Book">
@@ -187,6 +205,66 @@
   <object pk="7" model="Elisio.Book">
     <field type="ForeignKey" name="opus">6</field>
     <field type="IntegerField" name="number">6</field>
+  </object>
+  <object pk="8" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">1</field>
+  </object>
+  <object pk="9" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">2</field>
+  </object>
+  <object pk="10" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">3</field>
+  </object>
+  <object pk="11" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">4</field>
+  </object>
+  <object pk="12" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">5</field>
+  </object>
+  <object pk="13" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">6</field>
+  </object>
+  <object pk="14" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">7</field>
+  </object>
+  <object pk="15" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">8</field>
+  </object>
+  <object pk="16" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">9</field>
+  </object>
+  <object pk="17" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">10</field>
+  </object>
+  <object pk="18" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">11</field>
+  </object>
+  <object pk="19" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">12</field>
+  </object>
+  <object pk="20" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">13</field>
+  </object>
+  <object pk="21" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">14</field>
+  </object>
+  <object pk="22" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">8</field>
+    <field type="IntegerField" name="number">15</field>
   </object>
 
   <!-- Poems -->
@@ -224,5 +302,80 @@
     <field type="ForeignKey" name="book">7</field>
     <field type="IntegerField" name="number">6</field>
     <field type="IntegerField" name="nickname">Sic fatur lacrimans</field>
+  </object>
+  <object pk="8" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">8</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="9" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">9</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="10" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">10</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="11" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">11</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="12" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">12</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="13" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">13</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="14" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">14</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="15" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">15</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="16" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">16</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="17" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">17</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="18" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">18</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="19" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">19</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="20" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">20</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="21" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">21</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="22" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">22</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">-</field>
   </object>
 </django-objects>

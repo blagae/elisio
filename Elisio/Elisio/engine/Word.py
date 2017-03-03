@@ -91,6 +91,9 @@ class Word(object):
     def ends_in_enclitic(self):
         if self.enclitic:
             return True
+        # catch isolated -que
+        if self.text in Word.enclitics:
+            return False
         for encl in Word.enclitics:
             if self.text.endswith(encl):
                 self.enclitic = encl

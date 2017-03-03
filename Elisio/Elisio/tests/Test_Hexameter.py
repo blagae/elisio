@@ -5,7 +5,7 @@ from Elisio.utils import set_django
 from Elisio.engine.Hexameter import Hexameter, HexameterCreator
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.tests.Test_Verse import TYPICAL_VERSE
-from Elisio.exceptions import HexameterException, VerseException
+from Elisio.exceptions import HexameterException, VerseException, ScansionException
 
 set_django()
 
@@ -63,6 +63,10 @@ class TestHexameter(unittest.TestCase):
                     dbverse.structure = ""
                 else:
                     worked += 1
+            except ScansionException as exc:
+                dbverse.failure = exc.message[:69]
+                dbverse.saved = False
+                dbverse.structure = ""
             else:
                 worked += 1
             if verse_saved != dbverse.saved or dbverse.failure:
@@ -81,7 +85,7 @@ class TestHexameter(unittest.TestCase):
         """
         21: hinc populum late regem belloque superbum
         """
-        dbverse = DatabaseVerse.objects.get(pk=300)
+        dbverse = DatabaseVerse.objects.get(pk=1)
         verse = VerseFactory.create(dbverse.contents, False, True, classes=HexameterCreator)
 
     def test_hexameter_structure(self):
