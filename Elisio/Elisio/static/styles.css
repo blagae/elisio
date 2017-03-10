@@ -1,5 +1,32 @@
 ﻿body
 {
-    background-color: #1CD622;
+    background-color: #F5F5F5;
     font-family: "Noto Sans", Arial, sans-serif;
+}
+nav {
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+}
+
+a {
+    background-color: #392B2B;
+    padding: 5px;
+    color: #BB2222;
+    text-decoration: none;
+}
+
+nav a {
+    display: table-cell;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+select, input {
+    background-color: #E9E980;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    font-weight: 700;
 }

@@ -3,34 +3,49 @@
 {% block extra_scripts %}
         <script src="{% static 'indexScripts.js' %}" type="text/javascript"></script>{% endblock %}
 {% block content %}
-<section id="welcome">
-    <h3>Welcome</h3>
-    <p>Hi and welcome to the Elisio website. We look forward to being your favorite Latin verse scanning solution &lt;3</p>
-    <p>Browse the site for more information, and don't forget to scan !</p>
-</section>
-<section id="scantool">
-    <form id="verseScanner">
-        <span class="superscript">Author</span>
-        <select name="author" id="author">
-            {% for author in authors %}
-            <option value="{{ author.id }}">{{ author.short_name }}</option>
-            {% endfor %}
-        </select>
-        <span class="superscript">Opus</span>
-        <select name="opus" id="opus">
-        </select>
-        <span class="superscript">Book</span>
-        <select name="book" id="book">
-        </select>
-        <span class="superscript">Poem</span>
-        <select name="poem" id="poem">
-        </select>
-        <span class="superscript">Verse</span>
-        <input name="verseNumber" id="verseNumber" />
-        <p id="warning"></p>
-        <input type="text" name="verse" id="verse" size="80"/>
-        {% csrf_token %}
-    </form>
-    <p id="scan">txt</p>
-</section>
+        <section id="scantool">
+            <form id="verseScanner">
+                <table>
+                    <tr>
+                        <td colspan="2">Author</td>
+                        <td colspan="2">Opus</td>
+                        <td>Book</td>
+                        <td>Poem</td>
+                        <td>Verse</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><select name="author" id="author">
+                            {% for author in authors %}
+                            <option value="{{ author.id }}">{{ author.short_name }}</option>
+                            {% endfor %}
+                        </select></td>
+                        <td colspan="2"><select name="opus" id="opus">
+                        </select></td>
+                        <td><select name="book" id="book">
+                        </select></td>
+                        <td><select name="poem" id="poem">
+                        </select></td>
+                        <td><input name="verseNumber" id="verseNumber" /></td>
+                        <td><input type="button" value="Random verse (TODO)" id="randomVerse" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"><input type="text" name="verse" id="verse" size="80"/></td>
+                        <td><p id="warning"></p></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"><p id="scan">txt</p></td>
+                    </tr>
+                </table>
+                {% csrf_token %}
+            </form>
+        </section>
+        <section id="info">
+            <h3>Elisio Project</h3>
+            <p>The Elisio project is an attempt to teach computers to scan Latin verses, and to share the results publicly with those who are interested.
+            Scanning a Latin verse means, in this technical context, to analyze its structural variation of light and heavy syllables.
+            <br/>
+            With this scanning engine, we want to allow users to do batch scans of Latin verses,
+            in hopes that they can eventually retrieve previously unknown information from this heavily stylized use of the Latin language.</p>
+            <p>Both the scanning engine and the web app are Free Software, licensed under the AGPL and available on <a href="https://github.com/blagae/elisio">Github</a></p>
+        </section>
 {% endblock %}
