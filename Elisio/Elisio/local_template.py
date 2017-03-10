@@ -27,3 +27,8 @@ ADMIN_LIST = []
 # replace this with a longer key
 # suggestion: http://www.miniwebtool.com/django-secret-key-generator/
 KEY = 'abc'
+
+# if you want to deploy this project on a web server, then your application needs to know the domain name
+# if this doesn't apply to you, then you can leave this empty, or set it to None
+ALLOWED = []
+# example: ['myaccount.example.com']

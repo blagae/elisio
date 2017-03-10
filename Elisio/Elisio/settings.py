@@ -6,19 +6,23 @@ ADMINS = ()
 MANAGERS = ()
 DEBUG = False
 SECRET_KEY = None
+HOSTS = []
 
 try:
-    from Elisio.local import DATABASE_SETTINGS, ADMIN_LIST, DEBUG_SETTING, KEY
+    from Elisio.local import DATABASE_SETTINGS, ADMIN_LIST, DEBUG_SETTING, KEY, ALLOWED
     SECRET_KEY = KEY
     DATABASES = DATABASE_SETTINGS
     ADMINS = ADMIN_LIST
     MANAGERS = ADMIN_LIST
     DEBUG = DEBUG_SETTING
+    HOSTS = ALLOWED
 except ImportError:
     sys.exit("Deployment issue: You must create a local.py file with the required settings")
 
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver']
+if HOSTS is not None:
+    ALLOWED_HOSTS.extend(HOSTS)
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
