@@ -29,11 +29,11 @@
                         <td><input type="button" value="Random verse (TODO)" id="randomVerse" /></td>
                     </tr>
                     <tr>
-                        <td colspan="6"><input type="text" name="verse" id="verse" size="80"/></td>
+                        <td colspan="7"><input type="text" name="verse" id="verse" size="80"/></td>
                         <td><p id="warning"></p></td>
                     </tr>
                     <tr>
-                        <td colspan="6"><p id="scan">txt</p></td>
+                        <td colspan="7"><p id="scannedVerse"> </p></td>
                     </tr>
                 </table>
                 {% csrf_token %}
@@ -46,6 +46,5 @@
             <br/>
             With this scanning engine, we want to allow users to do batch scans of Latin verses,
             in hopes that they can eventually retrieve previously unknown information from this heavily stylized use of the Latin language.</p>
-            <p>Both the scanning engine and the web app are Free Software, licensed under the AGPL and available on <a href="https://github.com/blagae/elisio">Github</a></p>
         </section>
 {% endblock %}
