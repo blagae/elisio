@@ -44,7 +44,6 @@ class Migration(migrations.Migration):
                 ('alternative', models.CharField(max_length=1)),
                 ('contents', models.CharField(max_length=70)),
                 ('saved', models.BooleanField(default=False)),
-                ('structure', models.CharField(max_length=10)),
             ],
         ),
         migrations.CreateModel(
@@ -109,11 +108,6 @@ class Migration(migrations.Migration):
                 ('word', models.CharField(max_length=20)),
                 ('struct', models.CharField(max_length=10)),
             ],
-        ),
-        migrations.AddField(
-            model_name='databaseverse',
-            name='failure',
-            field=models.CharField(blank=True, max_length=70),
         ),
         migrations.AddField(
             model_name='deviantsyllable',

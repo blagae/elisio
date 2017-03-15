@@ -1,14 +1,14 @@
 ﻿""" standard Django module """
-from django.db import models
+from django.db.models import *
 import re
 from Elisio.engine.Syllable import Weight, Syllable
 from Elisio.exceptions import WordException
 from enumfields import EnumField
 
-class DeviantWord(models.Model):
+class DeviantWord(Model):
     """ model class for the Engine: highest level """
     words = []
-    stem = models.CharField(max_length=25)
+    stem = CharField(max_length=25)
 
     @classmethod
     def find(cls, text):
@@ -36,66 +36,64 @@ class DeviantWord(models.Model):
         if len(DeviantWord.words) < 1:
             DeviantWord.words = DeviantWord.objects.all()
 
-class DeviantSyllable(models.Model):
+class DeviantSyllable(Model):
     """ model class for the Engine: lowest level """
-    word = models.ForeignKey(DeviantWord)
+    word = ForeignKey(DeviantWord)
     weight = EnumField(Weight)
-    contents = models.CharField(max_length=8)
-    sequence = models.IntegerField()
+    contents = CharField(max_length=8)
+    sequence = IntegerField()
     index_together = [["word", "sequence"]]
 
-class Period(models.Model):
+class Period(Model):
     """ model class that contains a Period """
-    name = models.CharField(max_length=20)
-    start_year = models.IntegerField()
-    end_year = models.IntegerField()
-    description = models.CharField(max_length=200)
+    name = CharField(max_length=20)
+    start_year = IntegerField()
+    end_year = IntegerField()
+    description = CharField(max_length=200)
 
-class Author(models.Model):
+class Author(Model):
     """ model class that contains an Author """
-    full_name = models.CharField(max_length=45)
-    short_name = models.CharField(max_length=18)
-    abbreviation = models.CharField(max_length=10)
-    period = models.ForeignKey(Period)
-    birth_year = models.IntegerField()
-    dying_year = models.IntegerField()
-    floruit_start = models.IntegerField()
-    floruit_end = models.IntegerField()
+    full_name = CharField(max_length=45)
+    short_name = CharField(max_length=18)
+    abbreviation = CharField(max_length=10)
+    period = ForeignKey(Period)
+    birth_year = IntegerField()
+    dying_year = IntegerField()
+    floruit_start = IntegerField()
+    floruit_end = IntegerField()
 
-class Genre(models.Model):
+class Genre(Model):
     """ model class that contains a Genre """
-    name = models.CharField(max_length=20)
-    description = models.CharField(max_length=200)
+    name = CharField(max_length=20)
+    description = CharField(max_length=200)
 
-class Opus(models.Model):
+class Opus(Model):
     """ model class that contains an Opus """
-    full_name = models.CharField(max_length=40)
-    abbreviation = models.CharField(max_length=10)
-    alternative_name = models.CharField(max_length=40)
-    author = models.ForeignKey(Author)
-    publication = models.IntegerField()
-    genre = models.ForeignKey(Genre)
+    full_name = CharField(max_length=40)
+    abbreviation = CharField(max_length=10)
+    alternative_name = CharField(max_length=40)
+    author = ForeignKey(Author)
+    publication = IntegerField()
+    genre = ForeignKey(Genre)
 
-class Book(models.Model):
+class Book(Model):
     """ model class that contains a Book """
-    opus = models.ForeignKey(Opus)
-    number = models.IntegerField()
+    opus = ForeignKey(Opus)
+    number = IntegerField()
 
-class Poem(models.Model):
+class Poem(Model):
     """ model class that contains a Poem """
-    book = models.ForeignKey(Book)
-    number = models.IntegerField()
-    nickname = models.CharField(max_length=20)
+    book = ForeignKey(Book)
+    number = IntegerField()
+    nickname = CharField(max_length=20)
 
-class DatabaseVerse(models.Model):
+class DatabaseVerse(Model):
     """ model class that contains a Verse """
-    poem = models.ForeignKey(Poem)
-    number = models.IntegerField()
-    alternative = models.CharField(max_length=1)
-    contents = models.CharField(max_length=70)
-    saved = models.BooleanField(default=False)
-    failure = models.CharField(max_length=70, blank=True)
-    structure = models.CharField(max_length=10)
+    poem = ForeignKey(Poem)
+    number = IntegerField()
+    alternative = CharField(max_length=1)
+    contents = CharField(max_length=70)
+    saved = BooleanField(default=False)
 
     def get_verse(self):
         """ create a Verse object from this DatabaseVerse """
@@ -104,8 +102,8 @@ class DatabaseVerse(models.Model):
     @classmethod
     def get_maximum_verse_num(cls, poem):
         """ get the highest verse number in this poem """
-        from django.db.models import Max
-        return (DatabaseVerse.objects.all()
+        #from django.db.models import Max
+        return (DatabaseVerse.objects.filter()
                 .aggregate(Max('number'))['number__max'])
 
     @classmethod
@@ -115,7 +113,19 @@ class DatabaseVerse(models.Model):
         result = DatabaseVerse.objects.get(poem=poem, number=verse)
         return result.contents
 
-class WordOccurrence(models.Model):
-    verse = models.ForeignKey(DatabaseVerse, null=True)
-    word = models.CharField(max_length=20)
-    struct = models.CharField(max_length=10)
+class WordOccurrence(Model):
+    verse = ForeignKey(DatabaseVerse, null=True)
+    word = CharField(max_length=20)
+    struct = CharField(max_length=10)
+
+class ScanSession(Model):
+    timing = DateTimeField(auto_now=True)
+    initiator = CharField(max_length=40) # user id, or hashed IP address ?
+    commit = CharField(max_length=40)
+
+class ScanVerseResult(Model):
+    verse = ForeignKey(DatabaseVerse)
+    session = ForeignKey(ScanSession)
+    failure = CharField(max_length=70, blank=True)
+    structure = CharField(max_length=8)
+    zeleny = CharField(max_length=17)
