@@ -163,6 +163,16 @@
     <Content Include="Elisio\fixtures\sources\Verg. Aen. III.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. IV.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. V.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Buc. I 2.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Buc. I 3.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Buc. I 4.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Buc. I 5.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Buc. I 9.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Buc. I 6.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Buc. I 7.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Buc. I 8.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Buc. I 10.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Buc. I 1.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. VI.txt" />
     <Content Include="Elisio\static\indexScripts.js" />
     <Content Include="Elisio\static\scripts.js" />

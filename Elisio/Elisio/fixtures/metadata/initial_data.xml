@@ -378,4 +378,49 @@
     <field type="IntegerField" name="number">1</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
+  <object pk="24" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">1</field>
+    <field type="IntegerField" name="number">2</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="25" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">1</field>
+    <field type="IntegerField" name="number">3</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="26" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">1</field>
+    <field type="IntegerField" name="number">4</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="27" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">1</field>
+    <field type="IntegerField" name="number">5</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="28" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">1</field>
+    <field type="IntegerField" name="number">6</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="29" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">1</field>
+    <field type="IntegerField" name="number">7</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="30" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">1</field>
+    <field type="IntegerField" name="number">8</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="31" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">1</field>
+    <field type="IntegerField" name="number">9</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="32" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">1</field>
+    <field type="IntegerField" name="number">10</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
 </django-objects>
