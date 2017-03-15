@@ -13,7 +13,7 @@ CONTEXT = {}
 
 def index(request):
     """ return index page """
-    CONTEXT['authors'] = Author.objects.all()
+    CONTEXT['authors'] = Author.objects.filter(opus__book__gt=0).distinct()
     return render(request, 'index.html', CONTEXT)
 
 def batch(request):
