@@ -1,4 +1,5 @@
 ﻿import unittest
+from Elisio.batchjob import scan_verses
 from Elisio.engine.Verse import Verse, Foot
 from Elisio.engine.Syllable import Weight
 from Elisio.utils import set_django
@@ -36,41 +37,8 @@ class TestHexameter(unittest.TestCase):
         """ frivolous check to see how many verses work """
         save = WordOccurrence.objects.count() > 0
         threshold = 14 if save else 12
-        dbverses = DatabaseVerse.objects.all()
-        worked = 0
-        worked_without_dict = 0
-        failed = 0
-        for dbverse in dbverses:
-            verse_saved = dbverse.saved
-            try:
-                verse = VerseFactory.create(dbverse.contents, not dbverse.saved, False, dbverse, classes=HexameterCreator)
-                dbverse.saved = True
-                dbverse.structure = verse.structure
-                worked_without_dict += 1
-            except VerseException:
-                try:
-                    verse = VerseFactory.create(dbverse.contents, not dbverse.saved, True, dbverse, classes=HexameterCreator)
-                    dbverse.saved = True
-                    dbverse.structure = verse.structure
-                except VerseException as exc:
-                    failed += 1
-                    verse = VerseFactory.get_split_syllables(dbverse.contents)
-                    dbverse.saved = False
-                    try:
-                        dbverse.failure = exc.exceptions[0][0].message[:69]
-                    except IndexError:
-                        dbverse.failure = exc.message[:69]
-                    dbverse.structure = ""
-                else:
-                    worked += 1
-            except ScansionException as exc:
-                dbverse.failure = exc.message[:69]
-                dbverse.saved = False
-                dbverse.structure = ""
-            else:
-                worked += 1
-            if verse_saved != dbverse.saved or dbverse.failure:
-                dbverse.save()
+        verses = DatabaseVerse.objects.all()
+        worked, failed, worked_without_dict = scan_verses(verses, "test_hexameter_scan_all")
         # canary test: over 91% of verses must succeed
         result =  str(worked_without_dict) + " worked without dict, " + str(worked) + " worked, " + str(failed) + " failed"
         if worked / failed < threshold:

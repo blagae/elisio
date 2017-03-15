@@ -87,3 +87,52 @@ def find_all_verses_containing(regex, must_be_parsed=False):
         if boolean:
             total.append(dbverse.contents)
     return total
+
+def scan_verses(dbverses, initiator, commit=""):
+    from Elisio.engine.VerseFactory import VerseFactory
+    from Elisio.exceptions import HexameterException, VerseException, ScansionException
+    from Elisio.engine.Hexameter import HexameterCreator
+    from Elisio.models import ScanVerseResult, ScanSession
+    worked = 0
+    worked_without_dict = 0
+    failed = 0
+    session = ScanSession()
+    session.initiator = initiator
+    session.commit = commit
+    session.save()
+    for dbverse in dbverses:
+        verse_saved = dbverse.saved
+        scanResult = ScanVerseResult()
+        scanResult.session = session
+        scanResult.verse = dbverse
+        try:
+            verse = VerseFactory.create(dbverse.contents, not dbverse.saved, False, dbverse, classes=HexameterCreator)
+            dbverse.saved = True
+            scanResult.structure = verse.structure
+            worked_without_dict += 1
+        except VerseException:
+            try:
+                verse = VerseFactory.create(dbverse.contents, not dbverse.saved, True, dbverse, classes=HexameterCreator)
+                dbverse.saved = True
+                scanResult.structure = verse.structure
+            except VerseException as exc:
+                failed += 1
+                verse = VerseFactory.get_split_syllables(dbverse.contents)
+                dbverse.saved = False
+                try:
+                    scanResult.failure = exc.exceptions[0][0].message[:69]
+                except IndexError:
+                    scanResult.failure = exc.message[:69]
+                scanResult.structure = ""
+            else:
+                worked += 1
+        except ScansionException as exc:
+            scanResult.failure = exc.message[:69]
+            dbverse.saved = False
+            scanResult.structure = ""
+        else:
+            worked += 1
+        if verse_saved != dbverse.saved or scanResult.failure:
+            dbverse.save()
+        scanResult.save()
+    return worked, failed, worked_without_dict
