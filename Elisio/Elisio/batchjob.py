@@ -37,7 +37,7 @@ def fill_xml_object():
 
     for filename in all_filenames:
         with open(join(path, filename), "r") as file:
-            verses = [line.replace('\n', '') for line in file.readlines()]
+            verses = [line.replace('\n', '').strip() for line in file.readlines()]
         poem_number = find_poem(file.name)
         count = 1
         for verse in verses:
@@ -51,15 +51,24 @@ def fill_xml_object():
             number_field = ET.SubElement(obj, "field",
                                          {'type': 'IntegerField',
                                           'name': 'number'})
+            parsed = verse.split('|')
+            if (len(parsed) > 1):
+                try:
+                    count = int(parsed[0])
+                except:
+                    count = int(parsed[0][:-1])
+                    alt_field = ET.SubElement(obj, "field",
+                                         {'type': 'CharField',
+                                          'name': 'alternative'})
+                    alt_field.text = parsed[0][-1]
             number_field.text = str(count)
+            count += 1
             verse_field = ET.SubElement(obj, "field",
                                         {'type': 'CharField',
                                          'name': 'contents',
                                          'saved': 'False'
                                         })
-            verse_field.text = verse
-
-            count += 1
+            verse_field.text = parsed[-1]
 
     #tree = ET.ElementTree(root)
 

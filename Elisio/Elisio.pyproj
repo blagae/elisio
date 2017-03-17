@@ -163,6 +163,12 @@
     <Content Include="Elisio\fixtures\sources\Verg. Aen. III.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. IV.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. V.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Aen. VII.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Aen. VIII.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Aen. IX.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Aen. X.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Aen. XI.txt" />
+    <Content Include="Elisio\fixtures\sources\Verg. Aen. XII.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Buc. I 2.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Buc. I 3.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Buc. I 4.txt" />
