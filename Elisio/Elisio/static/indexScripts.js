@@ -60,6 +60,13 @@ function getScan(poem, verse) {
     });
 }
 
+function getScanRaw(txt) {
+    var url = "/json/scanraw/" + txt;
+    $.getJSON(url, function (result) {
+        $("#scannedVerse").text(result);
+    });
+}
+
 function validateVerseNumber(val) {
     var regex = /^[0-9]+$/;
     if (!regex.test(val)) {
@@ -98,7 +105,8 @@ $(document).ready(function () {
     });
 
     $("#verse").focusout(function () {
-        getScan($("#poem").val(), $("#verseNumber").val());
+        // getScan($("#poem").val(), $("#verseNumber").val());
+        getScanRaw($("#verse").val());
     });
 
     $("#author").change();

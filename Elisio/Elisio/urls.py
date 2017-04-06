@@ -14,5 +14,6 @@ urlpatterns = [#'',
     url(r'^json/([a-zA-Z]+)/([0-9]+)$', views.json_list),
     url(r'^json/verse/([0-9]+)/([0-9]+)$', views.json_verse),
     url(r'^json/scan/([0-9]+)/([0-9]+)$', views.json_scan),
+    url(r'^json/scanraw/(.+)$', views.json_scan_rawtext),
     url(r'^admin/', admin.site.urls),
 ]

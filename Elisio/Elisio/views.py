@@ -56,12 +56,16 @@ def json_verse(request, poem, verse):
     data = json.dumps(obj)
     return HttpResponse(data, content_type='application/json')
 
+def json_scan_rawtext(request, txt):
+    # watch out before doing ANYTHING related to the db
+    verse = VerseFactory.create(txt, False, True, classes=HexameterCreator)
+    s = TextDecorator(verse).decorate()
+    data = json.dumps(s)
+    return HttpResponse(data, content_type='application/json')
+
 def json_scan(request, poem, verse):
     """ get a verse through a JSON request """
     primary = int(verse)
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
-    verse = VerseFactory.create(obj, False, True, classes=HexameterCreator)
-    s = TextDecorator(verse).decorate()
-    data = json.dumps(s)
-    return HttpResponse(data, content_type='application/json')
+    return respond(obj)
