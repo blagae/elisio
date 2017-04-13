@@ -63,6 +63,9 @@ You may also notice in the version history that I have committed very often with
 The longest-running test is `test_hexameter_scan_all`, which will take a while during the first run if you're on SQLite.
 On subsequent runs, you'll get performance comparable to Postgres and presumably the other DBMS.
 
+Since git commit `596adfe1`, you will probably need the folder containing `git.sh` or `git.exe` on the path of your OS.
+More investigation is needed as to how common this is and how to make the code work across different hosts.
+
 ## PTVS
 
 Original development of Elisio took place with the Python Tools for Visual Studio (PTVS), which allows advanced Python editing from that IDE.

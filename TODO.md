@@ -8,6 +8,7 @@ This is a high-level list of tasks that are on the roadmap. There is no priority
 
 * build instructions: develop & deploy on Linux VM
 * Vagrant file
+* investigate whether path requirement is prohibitive for users to complete builds
 
 ### Engine
 
