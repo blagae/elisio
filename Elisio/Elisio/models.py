@@ -4,6 +4,7 @@ import re
 from Elisio.engine.Syllable import Weight, Syllable
 from Elisio.exceptions import WordException
 from enumfields import EnumField
+from Elisio.utils import get_commit
 
 class DeviantWord(Model):
     """ model class for the Engine: highest level """
@@ -121,7 +122,7 @@ class WordOccurrence(Model):
 class ScanSession(Model):
     timing = DateTimeField(auto_now=True)
     initiator = CharField(max_length=40) # user id, or hashed IP address ?
-    commit = CharField(max_length=40)
+    commit = CharField(max_length=40, default=get_commit)
 
 class ScanVerseResult(Model):
     verse = ForeignKey(DatabaseVerse)

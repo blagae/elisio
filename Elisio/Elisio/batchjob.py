@@ -98,7 +98,6 @@ def scan_verses(dbverses, initiator, commit=""):
     failed = 0
     session = ScanSession()
     session.initiator = initiator
-    session.commit = commit
     session.save()
     for dbverse in dbverses:
         verse_saved = dbverse.saved
