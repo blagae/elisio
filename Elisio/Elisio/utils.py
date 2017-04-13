@@ -28,3 +28,10 @@ def recreate_db():
     set_django()
     from django.core.management import call_command
     call_command('migrate')
+
+def get_commit():
+    import subprocess
+    try:
+        return subprocess.check_output(['git', 'rev-parse', 'HEAD'], shell=True)[:39]
+    except subprocess.CalledProcessError as grepexc:
+        return "could not find git commit"
