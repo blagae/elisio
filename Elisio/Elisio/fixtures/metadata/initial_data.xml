@@ -292,11 +292,6 @@
   </object>
 
   <!-- Poems -->
-  <object pk="1" model="Elisio.Poem">
-    <field type="ForeignKey" name="book">1</field>
-    <field type="IntegerField" name="number">1</field>
-    <field type="IntegerField" name="nickname">Tityre tu patulae</field>
-  </object>
   <object pk="2" model="Elisio.Poem">
     <field type="ForeignKey" name="book">2</field>
     <field type="IntegerField" name="number">1</field>
@@ -334,73 +329,78 @@
   </object>
   <object pk="9" model="Elisio.Poem">
     <field type="ForeignKey" name="book">9</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">2</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="10" model="Elisio.Poem">
     <field type="ForeignKey" name="book">10</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">3</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="11" model="Elisio.Poem">
     <field type="ForeignKey" name="book">11</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">4</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="12" model="Elisio.Poem">
     <field type="ForeignKey" name="book">12</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">5</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="13" model="Elisio.Poem">
     <field type="ForeignKey" name="book">13</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">6</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="14" model="Elisio.Poem">
     <field type="ForeignKey" name="book">14</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">7</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="15" model="Elisio.Poem">
     <field type="ForeignKey" name="book">15</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">8</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="16" model="Elisio.Poem">
     <field type="ForeignKey" name="book">16</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">9</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="17" model="Elisio.Poem">
     <field type="ForeignKey" name="book">17</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">10</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="18" model="Elisio.Poem">
     <field type="ForeignKey" name="book">18</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">11</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="19" model="Elisio.Poem">
     <field type="ForeignKey" name="book">19</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">12</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="20" model="Elisio.Poem">
     <field type="ForeignKey" name="book">20</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">13</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="21" model="Elisio.Poem">
     <field type="ForeignKey" name="book">21</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">14</field>
     <field type="IntegerField" name="nickname">-</field>
   </object>
   <object pk="22" model="Elisio.Poem">
     <field type="ForeignKey" name="book">22</field>
-    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="number">15</field>
     <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="23" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">1</field>
+    <field type="IntegerField" name="number">1</field>
+    <field type="IntegerField" name="nickname">Tityre tu patulae</field>
   </object>
   <object pk="24" model="Elisio.Poem">
     <field type="ForeignKey" name="book">1</field>

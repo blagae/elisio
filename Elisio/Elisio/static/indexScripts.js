@@ -80,13 +80,29 @@ function validateVerseNumber(val) {
     return $("#warning").text() == "";
 }
 
+function adapt(id, vl) {
+    $(id).val(vl);
+    $(id).change();
+}
+
 $(document).ready(function () {
+    $("#randomVerse").click(function () {
+        var url = "/json/random/";
+        $.getJSON(url, function (result) {
+            // TODO: chain methods
+            adapt("#author", result.author);
+            adapt("#opus", result.opus);
+            adapt("#book", result.book);
+            adapt("#poem", result.poem);
+            adapt("#verseNumber", result.number);
+            $("#verse").val(result.verse);
+            adapt("#warning").empty();
+        });
+    });
 
     $("#author").change(function () {
         getOpera(this.value);
-        // new <
         getMaxVerseNumber($("#poem").val());
-        // new >
     });
     $("#opus").change(function () {
         getBooks(this.value);

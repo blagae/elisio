@@ -7,6 +7,7 @@ from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse
 from Elisio.engine.TextDecorator import TextDecorator
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.engine.Hexameter import HexameterCreator
+from random import randint
 #from Elisio.models import *
 
 CONTEXT = {}
@@ -67,5 +68,25 @@ def json_scan(request, poem, verse):
     """ get a verse through a JSON request """
     primary = int(verse)
     poem_pk = int(poem)
-    obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
-    return respond(obj)
+    obj = DatabaseVerse.get_verse_from_db(poem_pk, primary).get_verse()
+    return json_scan_rawtext(request, obj)
+
+def json_get_random_verse(request):
+    count = DatabaseVerse.objects.count()
+    if count < 2:
+        return Http404()
+    verse = None
+    while verse is None:
+        verseNum = randint(1, count)
+        try:
+            verse = DatabaseVerse.objects.get(id=verseNum)
+        except Exception:
+            pass
+    content = {'verse': verse.contents,
+               'number': verse.number,
+               'poem': verse.poem.id,
+               'book': verse.poem.book.id,
+               'opus': verse.poem.book.opus.id,
+               'author': verse.poem.book.opus.author.id
+               }
+    return HttpResponse(json.dumps(content), content_type='application/json')
