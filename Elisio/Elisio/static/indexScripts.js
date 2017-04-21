@@ -57,8 +57,10 @@ function getMaxVerseNumber(key) {
 
 function getVerse(poem, verse) {
     var url = "/json/verse/" + poem + "/" + verse;
-    $.getJSON(url, function (result) {
+    $.when($.getJSON(url, function (result) {
         $("#verse").val(result);
+    })).then(function () {
+        getScan(poem, verse);
     });
 }
 

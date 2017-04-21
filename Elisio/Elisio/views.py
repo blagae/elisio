@@ -68,7 +68,7 @@ def json_scan(request, poem, verse):
     """ get a verse through a JSON request """
     primary = int(verse)
     poem_pk = int(poem)
-    obj = DatabaseVerse.get_verse_from_db(poem_pk, primary).get_verse()
+    obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
     return json_scan_rawtext(request, obj)
 
 def json_get_random_verse(request):
