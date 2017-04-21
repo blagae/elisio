@@ -96,7 +96,7 @@ $(document).ready(function () {
             adapt("#poem", result.poem);
             adapt("#verseNumber", result.number);
             $("#verse").val(result.verse);
-            adapt("#warning").empty();
+            $("#warning").empty();
         });
     });
 
