@@ -103,8 +103,7 @@ class DatabaseVerse(Model):
     @classmethod
     def get_maximum_verse_num(cls, poem):
         """ get the highest verse number in this poem """
-        #from django.db.models import Max
-        return (DatabaseVerse.objects.filter()
+        return (DatabaseVerse.objects.filter(poem=poem)
                 .aggregate(Max('number'))['number__max'])
 
     @classmethod
