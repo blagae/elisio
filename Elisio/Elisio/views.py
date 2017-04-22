@@ -1,8 +1,9 @@
 """ standard Django views module for back-end logic """
 import json
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseServerError
 from django.core import serializers
+from Elisio.exceptions import ScansionException
 from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse
 from Elisio.engine.TextDecorator import TextDecorator
 from Elisio.engine.VerseFactory import VerseFactory
@@ -59,8 +60,11 @@ def json_verse(request, poem, verse):
 
 def json_scan_rawtext(request, txt):
     # watch out before doing ANYTHING related to the db
-    verse = VerseFactory.create(txt, False, True, classes=HexameterCreator)
-    s = TextDecorator(verse).decorate()
+    try:
+        verse = VerseFactory.create(txt, False, True, classes=HexameterCreator)
+        s = TextDecorator(verse).decorate()
+    except ScansionException as ex:
+        s = str(ex)
     data = json.dumps(s)
     return HttpResponse(data, content_type='application/json')
 

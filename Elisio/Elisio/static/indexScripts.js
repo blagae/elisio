@@ -64,18 +64,21 @@ function getVerse(poem, verse) {
     });
 }
 
-function getScan(poem, verse) {
-    var url = "/json/scan/" + poem + "/" + verse;
-    $.getJSON(url, function (result) {
-        $("#scannedVerse").text(result);
+function doScan(loc) {
+    $.getJSON(loc, function (result) {
+        if (result.includes('\n')) {
+            result = result.replace('\n', '<br />');
+        }
+        $("#scannedVerse").html(result);
     });
 }
 
+function getScan(poem, verse) {
+    doScan("/json/scan/" + poem + "/" + verse);
+}
+
 function getScanRaw(txt) {
-    var url = "/json/scanraw/" + txt;
-    $.getJSON(url, function (result) {
-        $("#scannedVerse").text(result);
-    });
+    doScan("/json/scanraw/" + txt);
 }
 
 function validateVerseNumber(val) {

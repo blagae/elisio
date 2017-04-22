@@ -13,7 +13,7 @@ class ScansionException(Exception):
         if self.exceptions:
             for excepts in self.exceptions:
                 for exc in excepts:
-                    result += str("\n{0}: {1}".format(type(exc), exc))
+                    result += str("\n{0}: {1}".format(exc.__class__.__name__, exc))
         return result
 
 
