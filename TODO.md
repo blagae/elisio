@@ -25,6 +25,9 @@ This is a high-level list of tasks that are on the roadmap. There is no priority
 * beautify
     * create UI
     * modern style
+* security
+    * HTTPS everywhere including logins etc
+    * cookie warnings (when we start using cookies)
 
 ## Pipe dreams
 
