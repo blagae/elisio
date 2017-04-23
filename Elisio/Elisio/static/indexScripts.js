@@ -103,6 +103,7 @@ $(document).ready(function () {
             getOpera(result.author, result.opus, result.book, result.poem);
             $("#verseNumber").val(result.number);
             $("#verse").val(result.verse);
+            $("#verse").focusout();
         });
     });
 
