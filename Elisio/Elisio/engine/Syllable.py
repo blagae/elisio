@@ -157,19 +157,27 @@ class Syllable(object):
         """ first sound of the syllable is a double consonant letter """
         return self.sounds[0].is_heavy_making()
 
-    def get_vowel(self):
-        """ get the vocalic sound from a syllable """
+    def get_vowel_location(self):
         semivowel = None
-        for sound in reversed(self.sounds):
+        id = None
+        for idx, sound in enumerate(reversed(self.sounds)):
             if sound.is_vowel():
-                return sound
+                id = idx
+                break
             if sound.is_semivowel():
                 if semivowel:
-                    return semivowel
+                    id = idx
+                    break
                 semivowel = sound
-        if semivowel:
-            return semivowel
+                id = idx
+                break
+        if id is not None:
+            return len(self.sounds) - id - 1
         raise SyllableException("no vowel found in Syllable"+str(self.sounds))
+
+    def get_vowel(self):
+        """ get the vocalic sound from a syllable """
+        return self.sounds[self.get_vowel_location()]
 
     def is_heavy(self, next_syllable=None):
         """

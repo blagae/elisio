@@ -300,3 +300,25 @@ class TestSyllable(unittest.TestCase):
         syll.add_sound(SoundFactory.create('c'))
         with self.assertRaises(SyllableException):
             syll.add_sound(SoundFactory.create('u'))
+
+    def test_syll_get_vowel_loc_easy(self):
+        self.assertEqual(Syllable('a').get_vowel_location(), 0)
+        self.assertEqual(Syllable('am').get_vowel_location(), 0)
+        self.assertEqual(Syllable('u').get_vowel_location(), 0)
+        self.assertEqual(Syllable('um').get_vowel_location(), 0)
+        self.assertEqual(Syllable('tu').get_vowel_location(), 1)
+        self.assertEqual(Syllable('tum').get_vowel_location(), 1)
+
+    def test_syll_get_vowel_loc_counterint(self):
+        # s-pr-au
+        self.assertEqual(Syllable('sprau').get_vowel_location(), 2)
+        self.assertEqual(Syllable('spraux').get_vowel_location(), 2)
+        # qu-a
+        self.assertEqual(Syllable('qua').get_vowel_location(), 1)
+        self.assertEqual(Syllable('quam').get_vowel_location(), 1)
+
+    def test_syll_get_vowel_loc_svwl(self):
+        self.assertEqual(Syllable('ua').get_vowel_location(), 1)
+        self.assertEqual(Syllable('ui').get_vowel_location(), 1)
+        self.assertEqual(Syllable('ia').get_vowel_location(), 1)
+        self.assertEqual(Syllable('iu').get_vowel_location(), 1)

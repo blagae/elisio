@@ -16,20 +16,16 @@ class TextDecorator(object):
                 lettercount += 1
             for syll in word.syllables:
                 vowel = False
-                for sound in syll.sounds:
-                    if vowel and not sound.is_consonant():
-                        result = result[:-1]
+                for id, sound in enumerate(syll.sounds):
                     for letter in sound.letters:
                         result += vrs[idx][lettercount]
                         lettercount += 1
-
-                    if not sound.is_consonant():
-                        vowel = True
+                    if id == syll.get_vowel_location():
                         result += self.glyph(syll.weight)
             if len(vrs[idx]) > lettercount:
                 result += vrs[idx][-1]
             result += ' '
-        return result
+        return result.strip()
 
     def glyph(self, weight):
         if weight == Weight.HEAVY:
