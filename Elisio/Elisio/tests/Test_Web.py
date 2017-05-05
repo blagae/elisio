@@ -25,4 +25,4 @@ class TestWeb(unittest.TestCase):
     def test_go(self):
         from Elisio.batchjob import find_all_verses_containing as find
         # TODO: more robust test
-        self.assertEqual(len(find('^uolu.*$', False)), 167)
+        self.assertGreater(len(find('^uolu.*$', False)), 167)
