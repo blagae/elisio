@@ -61,7 +61,8 @@ def json_verse(request, poem, verse):
 def json_scan_rawtext(request, txt):
     # watch out before doing ANYTHING related to the db
     try:
-        verse = VerseFactory.create(txt, False, True, classes=HexameterCreator)
+        dict = 'disableDict' not in request.GET
+        verse = VerseFactory.create(txt, False, dict, classes=HexameterCreator)
         s = TextDecorator(verse).decorate()
     except ScansionException as ex:
         s = str(ex)

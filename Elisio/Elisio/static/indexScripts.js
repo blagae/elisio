@@ -1,4 +1,5 @@
 ﻿var maxVerseNumber = 0;
+var dict = true;
 
 function getOpera(key, op, bk, po) {
     var objects = $("#opus");
@@ -74,17 +75,24 @@ function doScan(loc) {
 }
 
 function getScan(poem, verse) {
-    doScan("/json/scan/" + poem + "/" + verse);
+    doScan(useDict("/json/scan/" + poem + "/" + verse));
 }
 
 function getScanRaw(txt) {
-    doScan("/json/scanraw/" + txt);
+    doScan(useDict("/json/scanraw/" + txt));
+}
+
+function useDict(url) {
+    if (dict === false) {
+        url += "?disableDict=true";
+    }
+    return url;
 }
 
 function validateVerseNumber(val) {
     var regex = /^[0-9]+$/;
     if (!regex.test(val)) {
-        $("#warning").text("Voer hier een cijfer in!");
+        $("#warning").text("Insert a number please");
     } else {
         $("#warning").empty();
     };
@@ -135,5 +143,9 @@ $(document).ready(function () {
     $("#author").change();
     $("#opus").change();
     $("#book").change();
+
+    $("#dict").change(function () {
+        dict = this.checked;
+    });
 
 });

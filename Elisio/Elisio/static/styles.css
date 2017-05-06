@@ -26,7 +26,7 @@ nav a {
     padding: 5px;
 }
 
-select, input {
+select, input, label {
     background-color: #E9E980;
     padding: 10px;
     border: none;
