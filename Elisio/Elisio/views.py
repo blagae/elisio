@@ -1,8 +1,10 @@
 """ standard Django views module for back-end logic """
 import json
 from django.shortcuts import render
-from django.http import HttpResponse, Http404, HttpResponseServerError
+from django.http import HttpResponse, Http404, HttpResponseServerError, HttpResponseRedirect
 from django.core import serializers
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from Elisio.exceptions import ScansionException
 from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse
 from Elisio.engine.TextDecorator import TextDecorator
@@ -33,6 +35,25 @@ def help_page(request):
 def about(request):
     """ return about page """
     return render(request, 'about.html', CONTEXT)
+
+def inlog(request):
+    redirecter = request.GET.get('next', '/')
+    if 'login' in redirecter:
+        redirecter = '/'
+    if request.method == 'POST':
+        username = request.POST.get('username', None)
+        password = request.POST.get('password', None)
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+        return HttpResponseRedirect(redirecter)
+    return render(request, 'login.html', CONTEXT)
+
+def outlog(request):
+    redirecter = request.GET.get('next', '/')
+    if request.user.is_authenticated:
+        logout(request)
+    return HttpResponseRedirect(redirecter)
 
 def json_list(request, obj_type, key):
     """ get a list of the requested Object Type """

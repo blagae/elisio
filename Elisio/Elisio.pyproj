@@ -189,6 +189,7 @@
     <Content Include="Elisio\templates\faq.html" />
     <Content Include="Elisio\templates\help.html" />
     <Content Include="Elisio\templates\index.html" />
+    <Content Include="Elisio\templates\login.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
