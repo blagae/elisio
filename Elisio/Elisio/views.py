@@ -55,6 +55,21 @@ def outlog(request):
         logout(request)
     return HttpResponseRedirect(redirecter)
 
+def register(request):
+    if request.method == 'POST':
+        try:
+            username = request.POST['username']
+            email = request.POST['email']
+            password = request.POST['password']
+            User.objects.create_user(username, email, password)
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return index(request)
+        except Exception as e:
+            # TODO: handle in error message
+            pass
+    return render(request, 'register.html', CONTEXT)
+
 def json_list(request, obj_type, key):
     """ get a list of the requested Object Type """
     primary = int(key)

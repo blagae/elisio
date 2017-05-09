@@ -14,15 +14,17 @@
         <section id="menu">
             <div id="menu_wrapper">
                 <nav>
-                    <a href="/" class="scroll">Scanning tool</a>
-                    <a href="/faq/" class="scroll">Info</a>
-                    <a href="/batch/" class="scroll">Data analysis</a>
-                    <a href="/help/" class="scroll">Contribute</a>
-                    <a href="/about/" class="scroll">About</a>
+                    <a href="/">Scanning tool</a>
+                    <a href="/faq/">Info</a>
+                    <a href="/batch/">Data analysis</a>
+                    <a href="/help/">Contribute</a>
+                    <a href="/about/">About</a>
                     {% if request.user.is_authenticated %}
+                    <a href="/profile/">Profile of {{request.user.username}}</a>
                     <a href="/logout/?next={{request.path}}">Log out</a>
                     {% else %}
                     <a href="/login/?next={{request.path}}">Log in</a>
+                    <a href="/register/">Register</a>
                     {% endif %}
                 </nav>
             </div>
