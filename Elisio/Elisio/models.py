@@ -5,6 +5,8 @@ from Elisio.engine.Syllable import Weight, Syllable
 from Elisio.exceptions import WordException
 from enumfields import EnumField
 from Elisio.utils import get_commit
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 class DeviantWord(Model):
     """ model class for the Engine: highest level """
@@ -120,8 +122,15 @@ class WordOccurrence(Model):
 
 class ScanSession(Model):
     timing = DateTimeField(auto_now=True)
-    initiator = CharField(max_length=40) # user id, or hashed IP address ?
+    initiator = CharField(max_length=40, null=True) # hashed IP address
+    user = ForeignKey(User, null=True)
     commit = CharField(max_length=40, default=get_commit)
+
+    def clean(self):
+        initiator = self.cleaned_data['initiator']
+        user = self.cleaned_data['user']
+        if initiator is None and user is None:
+            raise ValidationError('we need some sort of origin, either initiator or user')
 
 class ScanVerseResult(Model):
     verse = ForeignKey(DatabaseVerse)
