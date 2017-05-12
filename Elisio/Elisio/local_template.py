@@ -32,3 +32,6 @@ KEY = 'abc'
 # if this doesn't apply to you, then you can leave this empty, or set it to None
 ALLOWED = []
 # example: ['myaccount.example.com']
+
+# in order to use file-based session management, we need a folder on the server that can store these files
+SESSION_PATH = "/path/to/temp_folder/"

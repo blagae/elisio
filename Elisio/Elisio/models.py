@@ -113,7 +113,7 @@ class DatabaseVerse(Model):
         """ django.core.serializers requires this return value
         to be iterable (i.e. a resultset) """
         result = DatabaseVerse.objects.get(poem=poem, number=verse)
-        return result.contents
+        return result
 
 class WordOccurrence(Model):
     verse = ForeignKey(DatabaseVerse, null=True)

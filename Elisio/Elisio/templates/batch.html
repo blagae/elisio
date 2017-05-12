@@ -1,6 +1,11 @@
 ﻿{% extends "base.html" %}
 {% block content %}
         <section id="batch">
-            <p>We would love to look into creating an interactive query tool to analyze data.</p>
+            <p>These are the verses you've analyzed in this session</p>
+            <ol>
+            {% for verse in request.session.verses %}
+                <li>{{ verse }}</li>
+            {% endfor %}
+            </ol>
         </section>
 {% endblock %}

@@ -91,11 +91,21 @@ def json_verse(request, poem, verse):
     primary = int(verse)
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
-    data = json.dumps(obj)
+    if 'verses' not in request.session:
+        request.session['verses'] = []
+    s = request.session['verses']
+    s.append(str(obj.id))
+    request.session['verses'] = s
+    data = json.dumps(obj.contents)
     return HttpResponse(data, content_type='application/json')
 
 def json_scan_rawtext(request, txt):
     # watch out before doing ANYTHING related to the db
+    if 'verses' not in request.session:
+        request.session['verses'] = []
+    s = request.session['verses']
+    s.append(txt)
+    request.session['verses'] = s
     try:
         dict = 'disableDict' not in request.GET
         verse = VerseFactory.create(txt, False, dict, classes=HexameterCreator)
@@ -110,7 +120,7 @@ def json_scan(request, poem, verse):
     primary = int(verse)
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
-    return json_scan_rawtext(request, obj)
+    return json_scan_rawtext(request, obj.contents)
 
 def json_get_random_verse(request):
     count = DatabaseVerse.objects.count()
