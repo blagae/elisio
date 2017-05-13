@@ -86,26 +86,25 @@ def json_list(request, obj_type, key):
     data = serializers.serialize('json', objects)
     return HttpResponse(data, content_type='application/json')
 
+def update_req_with_verse(request, data):
+    if 'verses' not in request.session:
+        request.session['verses'] = []
+    request.session['verses'].append(data)
+    # https://stackoverflow.com/questions/43904060/editing-session-variable-in-django
+    request.session.modified = True
+
+
 def json_verse(request, poem, verse):
     """ get a verse through a JSON request """
     primary = int(verse)
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
-    if 'verses' not in request.session:
-        request.session['verses'] = []
-    s = request.session['verses']
-    s.append(str(obj.id))
-    request.session['verses'] = s
     data = json.dumps(obj.contents)
     return HttpResponse(data, content_type='application/json')
 
 def json_scan_rawtext(request, txt):
     # watch out before doing ANYTHING related to the db
-    if 'verses' not in request.session:
-        request.session['verses'] = []
-    s = request.session['verses']
-    s.append(txt)
-    request.session['verses'] = s
+    update_req_with_verse(request, txt)
     try:
         dict = 'disableDict' not in request.GET
         verse = VerseFactory.create(txt, False, dict, classes=HexameterCreator)
