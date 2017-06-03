@@ -1,11 +1,26 @@
 ﻿{% extends "base.html" %}
+{% load staticfiles %}
+{% block extra_scripts %}
+        <script src="{% static 'indexScripts.js' %}" type="text/javascript"></script>{% endblock %}
 {% block content %}
         <section id="batch">
+            {% if request.session.verses|length > 0 %}
             <p>These are the verses you've analyzed in this session</p>
             <ol>
             {% for verse in request.session.verses %}
                 <li>{{ verse }}</li>
             {% endfor %}
             </ol>
+            {% else %}
+            <p>You haven't analyzed any verses yet.
+            Head over to <a href="/">interactive verse selection</a> to start analyzing.</p>
+            {% endif %}
+        </section>
+        <section id="query">
+            {% if request.user.is_authenticated %}
+            {% include "./query.html" %}
+            {% else %}
+            <p>Hint: if you <a href="/login">log in</a>, then you get access to the kickass query tool.</p>
+            {% endif %}
         </section>
 {% endblock %}
