@@ -36,6 +36,10 @@ def about(request):
     """ return about page """
     return render(request, 'about.html', CONTEXT)
 
+def profile(request):
+    """ return about page """
+    return render(request, 'profile.html', CONTEXT)
+
 def inlog(request):
     redirecter = request.GET.get('next', '/')
     if 'login' in redirecter:
