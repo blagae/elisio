@@ -37,8 +37,10 @@ def about(request):
     return render(request, 'about.html', CONTEXT)
 
 def profile(request):
-    """ return about page """
-    return render(request, 'profile.html', CONTEXT)
+    """ return profile page if logged in """
+    if request.user.is_authenticated:
+        return render(request, 'profile.html', CONTEXT)
+    return render(request, 'index.html', CONTEXT)
 
 def inlog(request):
     redirecter = request.GET.get('next', '/')
