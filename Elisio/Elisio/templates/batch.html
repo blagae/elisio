@@ -32,14 +32,19 @@
             </table>
             {% else %}
             <p>You haven't analyzed any verses yet.
-            Head over to <a href="/">interactive verse selection</a> to start analyzing.</p>
+            Head over to the <a href="/">interactive verse selector</a> to start analyzing.</p>
             {% endif %}
         </section>
         <section id="query">
             {% if request.user.is_authenticated %}
             {% include "./query.html" %}
             {% else %}
-            <p>Hint: if you <a href="/login">log in</a>, then you get access to the kickass query tool.</p>
+            <p>Hint: if you <a href="/login">log in</a> or <a href="/register">register</a>, then you will later be able to:</p>
+            <ol>
+                <li>access the kickass query builder</li>
+                <li>edit your batches</li>
+                <li>schedule larger batch runs, and re-execute existing ones</li>
+            </ol>
             {% endif %}
         </section>
 {% endblock %}
