@@ -12,6 +12,7 @@ from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.engine.Hexameter import HexameterCreator
 from random import randint
 #from Elisio.models import *
+from Elisio.numerals import int_to_roman
 
 CONTEXT = {}
 
@@ -92,10 +93,10 @@ def json_list(request, obj_type, key):
     data = serializers.serialize('json', objects)
     return HttpResponse(data, content_type='application/json')
 
-def update_req_with_verse(request, data, metadata):
+def update_req_with_verse(request, metadata):
     if 'verses' not in request.session:
         request.session['verses'] = []
-    request.session['verses'].append(data)
+    request.session['verses'].append(metadata)
     # https://stackoverflow.com/questions/43904060/editing-session-variable-in-django
     request.session.modified = True
 
@@ -108,9 +109,10 @@ def json_verse(request, poem, verse):
     data = json.dumps(obj.contents)
     return HttpResponse(data, content_type='application/json')
 
-def json_scan_rawtext(request, txt, metadata=None):
+def json_scan_rawtext(request, txt):
     # watch out before doing ANYTHING related to the db
-    update_req_with_verse(request, txt, metadata)
+    metadata = {'verse': {'text': txt}}
+    update_req_with_verse(request, metadata)
     try:
         dict = 'disableDict' not in request.GET
         verse = VerseFactory.create(txt, False, dict, classes=HexameterCreator)
@@ -125,8 +127,8 @@ def json_scan(request, poem, verse):
     primary = int(verse)
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
-    metadata = get_metadata(verse)
-    return json_scan_rawtext(request, obj.contents, metadata)
+    metadata = get_metadata(obj)
+    return json_scan_rawtext(request, obj.contents)
 
 def json_get_random_verse(request):
     count = DatabaseVerse.objects.count()
@@ -140,16 +142,21 @@ def json_get_random_verse(request):
         except Exception:
             pass
     metadata = get_metadata(verse)
+    update_req_with_verse(request, metadata)
     return HttpResponse(json.dumps(metadata), content_type='application/json')
 
 def get_metadata(verse):
     if isinstance(verse, DatabaseVerse):
-        metadata = {'verse': verse.contents,
-                    'number': verse.number,
-                    'poem': verse.poem.id,
-                    'book': verse.poem.book.id,
-                    'opus': verse.poem.book.opus.id,
-                    'author': verse.poem.book.opus.author.id
+        metadata = {'verse': {'text': verse.contents,
+                               'number': verse.number},
+                    'poem': {'id': verse.poem.id,
+                               'number': verse.poem.number},
+                    'book': {'id': verse.poem.book.id,
+                               'number': int_to_roman(verse.poem.book.number)},
+                    'opus': {'id': verse.poem.book.opus.id,
+                               'name': verse.poem.book.opus.full_name},
+                    'author': {'id': verse.poem.book.opus.author.id,
+                               'name': verse.poem.book.opus.author.short_name}
                     }
         return metadata
     return None

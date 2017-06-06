@@ -6,9 +6,28 @@
         <section id="batch">
             {% if request.session.verses|length > 0 %}
             <table>
-            <caption>These are the verses you've analyzed in this session</caption>
+            <caption>These are the verses you've analyzed so far in this session</caption>
+                <thead>
+                    <tr>
+                        <td>Author</td>
+                        <td>Opus</td>
+                        <td>Book</td>
+                        <td>Poem</td>
+                        <td>Verse number</td>
+                        <td>Text</td>
+                    </tr>
+                </thead>
             {% for verse in request.session.verses %}
-                <tr><td>{{ verse }}</td></tr>
+                <tbody>
+                    <tr>
+                        <td>{{ verse.author.name }}</td>
+                        <td>{{ verse.opus.name }}</td>
+                        <td>{{ verse.book.number }}</td>
+                        <td>{{ verse.poem.number }}</td>
+                        <td>{{ verse.verse.number }}</td>
+                        <td>{{ verse.verse.text }}</td>
+                    </tr>
+                </tbody>
             {% endfor %}
             </table>
             {% else %}

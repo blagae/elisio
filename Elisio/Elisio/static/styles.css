@@ -1,7 +1,12 @@
-﻿body
-{
+﻿html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
     background-color: #F5F5F5;
     font-family: "Noto Sans", Arial, sans-serif;
+    margin: 0 0 120px;
 }
 nav {
     width: 100%;
@@ -47,9 +52,11 @@ select, input, label {
 }
 
 #footer {
-	position:absolute;
-	bottom:0;
-	height:100px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 100px;
+    width: 100%;
 }
 
 #footer p {
@@ -68,4 +75,8 @@ dd {
     float: left;
     width: 80%;
     margin: 0;
+}
+
+td {
+    padding: 10px;
 }
