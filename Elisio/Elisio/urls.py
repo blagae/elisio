@@ -8,7 +8,6 @@ urlpatterns = [#'',
     # Examples:
     url(r'^$', views.index),
     url(r'^batch/$', views.batch),
-    url(r'^faq/$', views.faq),
     url(r'^help/$', views.help_page),
     url(r'^about/$', views.about),
     url(r'^login/$', views.inlog),

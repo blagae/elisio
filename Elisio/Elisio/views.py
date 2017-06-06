@@ -25,10 +25,6 @@ def batch(request):
     """ return batch page """
     return render(request, 'batch.html', CONTEXT)
 
-def faq(request):
-    """ return FAQ page """
-    return render(request, 'faq.html', CONTEXT)
-
 def help_page(request):
     """ return help page """
     return render(request, 'help.html', CONTEXT)
