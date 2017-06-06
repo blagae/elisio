@@ -5,12 +5,12 @@
 {% block content %}
         <section id="batch">
             {% if request.session.verses|length > 0 %}
-            <p>These are the verses you've analyzed in this session</p>
-            <ol>
+            <table>
+            <caption>These are the verses you've analyzed in this session</caption>
             {% for verse in request.session.verses %}
-                <li>{{ verse }}</li>
+                <tr><td>{{ verse }}</td></tr>
             {% endfor %}
-            </ol>
+            </table>
             {% else %}
             <p>You haven't analyzed any verses yet.
             Head over to <a href="/">interactive verse selection</a> to start analyzing.</p>

@@ -92,7 +92,7 @@ def json_list(request, obj_type, key):
     data = serializers.serialize('json', objects)
     return HttpResponse(data, content_type='application/json')
 
-def update_req_with_verse(request, data):
+def update_req_with_verse(request, data, metadata):
     if 'verses' not in request.session:
         request.session['verses'] = []
     request.session['verses'].append(data)
@@ -108,9 +108,9 @@ def json_verse(request, poem, verse):
     data = json.dumps(obj.contents)
     return HttpResponse(data, content_type='application/json')
 
-def json_scan_rawtext(request, txt):
+def json_scan_rawtext(request, txt, metadata=None):
     # watch out before doing ANYTHING related to the db
-    update_req_with_verse(request, txt)
+    update_req_with_verse(request, txt, metadata)
     try:
         dict = 'disableDict' not in request.GET
         verse = VerseFactory.create(txt, False, dict, classes=HexameterCreator)
@@ -125,7 +125,8 @@ def json_scan(request, poem, verse):
     primary = int(verse)
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
-    return json_scan_rawtext(request, obj.contents)
+    metadata = get_metadata(verse)
+    return json_scan_rawtext(request, obj.contents, metadata)
 
 def json_get_random_verse(request):
     count = DatabaseVerse.objects.count()
@@ -138,11 +139,17 @@ def json_get_random_verse(request):
             verse = DatabaseVerse.objects.get(id=verseNum)
         except Exception:
             pass
-    content = {'verse': verse.contents,
-               'number': verse.number,
-               'poem': verse.poem.id,
-               'book': verse.poem.book.id,
-               'opus': verse.poem.book.opus.id,
-               'author': verse.poem.book.opus.author.id
-               }
-    return HttpResponse(json.dumps(content), content_type='application/json')
+    metadata = get_metadata(verse)
+    return HttpResponse(json.dumps(metadata), content_type='application/json')
+
+def get_metadata(verse):
+    if isinstance(verse, DatabaseVerse):
+        metadata = {'verse': verse.contents,
+                    'number': verse.number,
+                    'poem': verse.poem.id,
+                    'book': verse.poem.book.id,
+                    'opus': verse.poem.book.opus.id,
+                    'author': verse.poem.book.opus.author.id
+                    }
+        return metadata
+    return None
