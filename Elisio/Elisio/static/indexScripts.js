@@ -52,8 +52,10 @@ function getPoems(key, po) {
 
 function getMaxVerseNumber(key) {
     maxVerseNumber = 0;
-    $.getJSON("/json/poem/" + key, function (result) {
+    $.when($.getJSON("/json/poem/" + key, function (result) {
         maxVerseNumber = result;
+    })).then(function () {
+        $("#verseNumber").change();
     });
 }
 
@@ -91,7 +93,7 @@ function useDict(url) {
 }
 
 function validateVerseNumber(val) {
-    var regex = /^[0-9]+$/;
+    var regex = /^[0-9]*$/;
     if (!regex.test(val)) {
         $("#warning").text("Insert a number please");
     } else {
@@ -109,10 +111,9 @@ $(document).ready(function () {
         var url = "/json/random/";
         $.getJSON(url, function (result) {
             $("#author").val(result.author.id);
-            getOpera(result.author.id, result.opus.id, result.book.id, result.poem.id);
             $("#verseNumber").val(result.verse.number);
             $("#verse").val(result.verse.text);
-            $("#verse").focusout();
+            getOpera(result.author.id, result.opus.id, result.book.id, result.poem.id);
         });
     });
 

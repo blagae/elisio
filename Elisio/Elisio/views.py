@@ -109,9 +109,10 @@ def json_verse(request, poem, verse):
     data = json.dumps(obj.contents)
     return HttpResponse(data, content_type='application/json')
 
-def json_scan_rawtext(request, txt):
+def json_scan_rawtext(request, txt, metadata=None):
     # watch out before doing ANYTHING related to the db
-    metadata = {'verse': {'text': txt}}
+    if not metadata:
+        metadata = {'verse': {'text': txt}}
     update_req_with_verse(request, metadata)
     try:
         dict = 'disableDict' not in request.GET
@@ -128,7 +129,7 @@ def json_scan(request, poem, verse):
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
     metadata = get_metadata(obj)
-    return json_scan_rawtext(request, obj.contents)
+    return json_scan_rawtext(request, obj.contents, metadata)
 
 def json_get_random_verse(request):
     count = DatabaseVerse.objects.count()
@@ -142,7 +143,6 @@ def json_get_random_verse(request):
         except Exception:
             pass
     metadata = get_metadata(verse)
-    update_req_with_verse(request, metadata)
     return HttpResponse(json.dumps(metadata), content_type='application/json')
 
 def get_metadata(verse):
