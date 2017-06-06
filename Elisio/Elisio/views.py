@@ -40,7 +40,7 @@ def profile(request):
     """ return profile page if logged in """
     if request.user.is_authenticated:
         return render(request, 'profile.html', CONTEXT)
-    return render(request, 'index.html', CONTEXT)
+    return HttpResponseRedirect('/')
 
 def inlog(request):
     redirecter = request.GET.get('next', '/')
