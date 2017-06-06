@@ -1,11 +1,13 @@
 ﻿{% extends "base.html" %}
 {% load staticfiles %}
 {% block extra_scripts %}
-        <script src="{% static 'indexScripts.js' %}" type="text/javascript"></script>{% endblock %}
+        <script src="{% static 'indexScripts.js' %}" type="text/javascript"></script>
+        <script src="{% static 'batchScripts.js' %}" type="text/javascript"></script>{% endblock %}
 {% block content %}
         <section id="batch">
             {% if request.session.verses|length > 0 %}
-            <table>
+            <button id="clearSession">Clear current batch run</button>
+            <table id="batchTable">
             <caption>These are the verses you've analyzed so far in this session</caption>
                 <thead>
                     <tr>

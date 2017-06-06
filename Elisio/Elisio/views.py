@@ -73,6 +73,10 @@ def register(request):
             pass
     return render(request, 'register.html', CONTEXT)
 
+def json_clear_session(request):
+    request.session['verses'] = []
+    return HttpResponse(status=204) # empty response
+
 def json_list(request, obj_type, key):
     """ get a list of the requested Object Type """
     primary = int(key)

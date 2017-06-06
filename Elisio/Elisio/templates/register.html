@@ -1,9 +1,9 @@
 ﻿{% extends "base.html" %}
 {% block content %}
+        <section id="register">
         {% if request.user.is_authenticated %}
-        <p>You are already logged in - why would you need to register ?</p>
+            <p>You are already logged in - why would you need to register ?</p>
         {% else %}
-        <section id="registerForm">
             <form method="post" action="/register/">
                 <dt>Username</dt><dd><input type="text" name="username" /></dd>
                 <dt>Password</dt><dd><input type="password" name="password" /></dd>
@@ -12,6 +12,6 @@
                 <input type="submit" value="Register" />
                 {% csrf_token %}
             </form>
-        </section>
         {% endif %}
+        </section>
 {% endblock %}
