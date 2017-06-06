@@ -59,3 +59,13 @@ select, input, label {
 #scannedVerse {
     height: 40px;
 }
+
+dt {
+    float: left;
+    width: 20%;
+}
+dd {
+    float: left;
+    width: 80%;
+    margin: 0;
+}

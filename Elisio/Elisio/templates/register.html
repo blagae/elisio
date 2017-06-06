@@ -1,9 +1,10 @@
 ﻿{% extends "base.html" %}
 {% block content %}
 <form method="post" action="/register/">
-    <input type="text" name="username" />
-    <input type="text" name="email" />
-    <input type="password" name="password" />
+    <dt>Username</dt><dd><input type="text" name="username" /></dd>
+    <dt>Password</dt><dd><input type="password" name="password" /></dd>
+    <dt>E-mail address</dt><dd><input type="text" name="email" /></dd>
+    <br />
     <input type="submit" value="Register" />
     {% csrf_token %}
 </form>

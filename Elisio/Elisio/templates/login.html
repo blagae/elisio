@@ -1,8 +1,8 @@
 ﻿{% extends "base.html" %}
 {% block content %}
 <form method="post" action="/login/?next={{request.GET.next}}">
-    <input type="text" name="username" />
-    <input type="password" name="password" />
+    <dt>Username</dt><dd><input type="text" name="username" /></dd>
+    <dt>Password</dt><dd><input type="password" name="password" /></dd>
     <input type="submit" value="Login" />
     {% csrf_token %}
 </form>
