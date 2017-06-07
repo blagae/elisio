@@ -92,6 +92,13 @@ class Verse(object):
                     entries.append(WordOccurrence(word=txt, struct=strct))
             if len(entries) > 0:
                 WordOccurrence.objects.bulk_create(entries)
+        if len(wrd.syllables) < 3:
+            wrd.syllables[0].stressed = True
+        else:
+            if wrd.syllables[-2].weight == Weight.HEAVY:
+                wrd.syllables[-2].stressed = True
+            else:
+                wrd.syllables[-3].stressed = True
 
     def preparse(self):
         pass
@@ -130,3 +137,20 @@ class Verse(object):
                 if syll.weight != Weight.NONE:
                     syll.weight = self.flat_list[i]
                     i += 1
+
+    def get_zeleny_score(self):
+        score = []
+        current = 0
+        for word in self.words:
+            for syll in word.syllables:
+                if current > 0 and syll.stressed:
+                    score.append(current)
+                    current = 0
+                if syll.weight == Weight.NONE:
+                    continue
+                elif syll.weight == Weight.LIGHT:
+                    current += 1
+                else:
+                    current += 2
+        score.append(current)
+        return score

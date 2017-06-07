@@ -24,6 +24,7 @@ class Syllable(object):
         self.weight = weight
         self.syllable = syllable
         self.sounds = SoundFactory.find_sounds_for_text(syllable)
+        self.stressed = False
         if test and not self.is_valid():
             raise SyllableException("invalid Syllable object")
 
