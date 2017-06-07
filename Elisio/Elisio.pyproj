@@ -80,6 +80,9 @@
     <Compile Include="Elisio\numerals.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\tests\Test_Accent.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elisio\tests\Test_TextDecorator.py">
       <SubType>Code</SubType>
     </Compile>
@@ -123,6 +126,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\tests\Test_WordOccurrence.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\tests\Test_Zeleny.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\tests\__init__.py">

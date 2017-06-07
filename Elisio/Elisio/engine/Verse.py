@@ -92,13 +92,17 @@ class Verse(object):
                     entries.append(WordOccurrence(word=txt, struct=strct))
             if len(entries) > 0:
                 WordOccurrence.objects.bulk_create(entries)
-        if len(wrd.syllables) < 3:
-            wrd.syllables[0].stressed = True
-        else:
-            if wrd.syllables[-2].weight == Weight.HEAVY:
-                wrd.syllables[-2].stressed = True
+        self.add_accents()
+
+    def add_accents(self):
+        for wrd in self.words:
+            if len(wrd.syllables) < 3:
+                wrd.syllables[0].stressed = True
             else:
-                wrd.syllables[-3].stressed = True
+                if wrd.syllables[-2].weight == Weight.HEAVY:
+                    wrd.syllables[-2].stressed = True
+                else:
+                    wrd.syllables[-3].stressed = True
 
     def preparse(self):
         pass
