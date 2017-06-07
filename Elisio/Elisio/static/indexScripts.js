@@ -1,5 +1,6 @@
 ﻿var maxVerseNumber = 0;
 var dict = true;
+var avoidDouble = false;
 
 function getOpera(key, op, bk, po) {
     var objects = $("#opus");
@@ -51,8 +52,10 @@ function getPoems(key, po) {
 
 function getMaxVerseNumber(key) {
     maxVerseNumber = 0;
-    $.getJSON("/json/poem/" + key, function (result) {
+    $.when($.getJSON("/json/poem/" + key, function (result) {
         maxVerseNumber = result;
+    })).then(function () {
+        $("#verseNumber").change();
     });
 }
 
@@ -90,7 +93,7 @@ function useDict(url) {
 }
 
 function validateVerseNumber(val) {
-    var regex = /^[0-9]+$/;
+    var regex = /^[0-9]*$/;
     if (!regex.test(val)) {
         $("#warning").text("Insert a number please");
     } else {
@@ -104,14 +107,13 @@ function validateVerseNumber(val) {
 
 $(document).ready(function () {
     $("#randomVerse").click(function () {
+        avoidDouble = false;
         var url = "/json/random/";
         $.getJSON(url, function (result) {
-            // TODO: chain methods
-            $("#author").val(result.author);
-            getOpera(result.author, result.opus, result.book, result.poem);
-            $("#verseNumber").val(result.number);
-            $("#verse").val(result.verse);
-            $("#verse").focusout();
+            $("#author").val(result.author.id);
+            $("#verseNumber").val(result.verse.number);
+            $("#verse").val(result.verse.text);
+            getOpera(result.author.id, result.opus.id, result.book.id, result.poem.id);
         });
     });
 
@@ -133,11 +135,14 @@ $(document).ready(function () {
         if (validated) {
             getVerse($("#poem").val(), this.value);
         }
+        avoidDouble = true;
     });
 
     $("#verse").focusout(function () {
         // getScan($("#poem").val(), $("#verseNumber").val());
-        getScanRaw($("#verse").val());
+        if (!avoidDouble)
+            getScanRaw($("#verse").val());
+        avoidDouble = false;
     });
 
     $("#author").change();

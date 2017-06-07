@@ -12,6 +12,7 @@ from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.engine.Hexameter import HexameterCreator
 from random import randint
 #from Elisio.models import *
+from Elisio.numerals import int_to_roman
 
 CONTEXT = {}
 
@@ -24,10 +25,6 @@ def batch(request):
     """ return batch page """
     return render(request, 'batch.html', CONTEXT)
 
-def faq(request):
-    """ return FAQ page """
-    return render(request, 'faq.html', CONTEXT)
-
 def help_page(request):
     """ return help page """
     return render(request, 'help.html', CONTEXT)
@@ -35,6 +32,12 @@ def help_page(request):
 def about(request):
     """ return about page """
     return render(request, 'about.html', CONTEXT)
+
+def profile(request):
+    """ return profile page if logged in """
+    if request.user.is_authenticated:
+        return render(request, 'profile.html', CONTEXT)
+    return HttpResponseRedirect('/')
 
 def inlog(request):
     redirecter = request.GET.get('next', '/')
@@ -70,6 +73,10 @@ def register(request):
             pass
     return render(request, 'register.html', CONTEXT)
 
+def json_clear_session(request):
+    request.session['verses'] = []
+    return HttpResponse(status=204) # empty response
+
 def json_list(request, obj_type, key):
     """ get a list of the requested Object Type """
     primary = int(key)
@@ -86,16 +93,27 @@ def json_list(request, obj_type, key):
     data = serializers.serialize('json', objects)
     return HttpResponse(data, content_type='application/json')
 
+def update_req_with_verse(request, metadata):
+    if 'verses' not in request.session:
+        request.session['verses'] = []
+    request.session['verses'].append(metadata)
+    # https://stackoverflow.com/questions/43904060/editing-session-variable-in-django
+    request.session.modified = True
+
+
 def json_verse(request, poem, verse):
     """ get a verse through a JSON request """
     primary = int(verse)
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
-    data = json.dumps(obj)
+    data = json.dumps(obj.contents)
     return HttpResponse(data, content_type='application/json')
 
-def json_scan_rawtext(request, txt):
+def json_scan_rawtext(request, txt, metadata=None):
     # watch out before doing ANYTHING related to the db
+    if not metadata:
+        metadata = {'verse': {'text': txt}}
+    update_req_with_verse(request, metadata)
     try:
         dict = 'disableDict' not in request.GET
         verse = VerseFactory.create(txt, False, dict, classes=HexameterCreator)
@@ -110,7 +128,8 @@ def json_scan(request, poem, verse):
     primary = int(verse)
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
-    return json_scan_rawtext(request, obj)
+    metadata = get_metadata(obj)
+    return json_scan_rawtext(request, obj.contents, metadata)
 
 def json_get_random_verse(request):
     count = DatabaseVerse.objects.count()
@@ -123,11 +142,21 @@ def json_get_random_verse(request):
             verse = DatabaseVerse.objects.get(id=verseNum)
         except Exception:
             pass
-    content = {'verse': verse.contents,
-               'number': verse.number,
-               'poem': verse.poem.id,
-               'book': verse.poem.book.id,
-               'opus': verse.poem.book.opus.id,
-               'author': verse.poem.book.opus.author.id
-               }
-    return HttpResponse(json.dumps(content), content_type='application/json')
+    metadata = get_metadata(verse)
+    return HttpResponse(json.dumps(metadata), content_type='application/json')
+
+def get_metadata(verse):
+    if isinstance(verse, DatabaseVerse):
+        metadata = {'verse': {'text': verse.contents,
+                               'number': verse.number},
+                    'poem': {'id': verse.poem.id,
+                               'number': verse.poem.number},
+                    'book': {'id': verse.poem.book.id,
+                               'number': int_to_roman(verse.poem.book.number)},
+                    'opus': {'id': verse.poem.book.opus.id,
+                               'name': verse.poem.book.opus.full_name},
+                    'author': {'id': verse.poem.book.opus.author.id,
+                               'name': verse.poem.book.opus.author.short_name}
+                    }
+        return metadata
+    return None

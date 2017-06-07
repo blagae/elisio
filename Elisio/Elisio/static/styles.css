@@ -1,16 +1,46 @@
-﻿body
-{
+﻿html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
     background-color: #F5F5F5;
     font-family: "Noto Sans", Arial, sans-serif;
+    margin: 0 0 120px;
 }
+
+#menu {
+    top: 0;
+    height: 30px;
+}
+
+#main {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+#footer, #menu {
+    background-color: #392B2B;
+    width: 100%;
+    left: 0;
+}
+
+#footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 100px;
+    width: 100%;
+}
+
+    #footer p {
+        color: #F5F5F5;
+    }
+
 nav {
     width: 100%;
     display: table;
     table-layout: fixed;
-}
-
-#menu {
-    background-color: #392B2B;
 }
 
 a {
@@ -35,27 +65,20 @@ select, input, label {
     font-weight: 700;
 }
 
-#footer, #menu {
-    background-color: #392B2B;
-	width:100%;
-	left:0;
-}
-
-#menu {
-	top:0;
-	height:30px;
-}
-
-#footer {
-	position:absolute;
-	bottom:0;
-	height:100px;
-}
-
-#footer p {
-    color: #F5F5F5;
-}
-
 #scannedVerse {
     height: 40px;
+}
+
+dt {
+    float: left;
+    width: 20%;
+}
+dd {
+    float: left;
+    width: 80%;
+    margin: 0;
+}
+
+td {
+    padding: 10px;
 }

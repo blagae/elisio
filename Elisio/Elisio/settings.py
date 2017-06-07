@@ -7,18 +7,21 @@ MANAGERS = ()
 DEBUG = False
 SECRET_KEY = None
 HOSTS = []
+SESS = None
 
 try:
-    from Elisio.local import DATABASE_SETTINGS, ADMIN_LIST, DEBUG_SETTING, KEY, ALLOWED
+    from Elisio.local import DATABASE_SETTINGS, ADMIN_LIST, DEBUG_SETTING, KEY, ALLOWED, SESSION_PATH
     SECRET_KEY = KEY
     DATABASES = DATABASE_SETTINGS
     ADMINS = ADMIN_LIST
     MANAGERS = ADMIN_LIST
     DEBUG = DEBUG_SETTING
     HOSTS = ALLOWED
+    SESS = SESSION_PATH
 except ImportError:
     sys.exit("Deployment issue: You must create a local.py file with the required settings")
 
+SESSION_FILE_PATH = SESS
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver']
 if HOSTS is not None:
@@ -99,6 +102,8 @@ MIDDLEWARE = (
     # Uncomment the next line for simple clickjacking protection:
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+SESSION_ENGINE = "django.contrib.sessions.backends.file"
 
 ROOT_URLCONF = 'Elisio.urls'
 

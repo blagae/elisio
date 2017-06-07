@@ -4,40 +4,8 @@
         <script src="{% static 'indexScripts.js' %}" type="text/javascript"></script>{% endblock %}
 {% block content %}
         <section id="scantool">
-            <form id="verseScanner">
-                <table>
-                    <tr>
-                        <td colspan="2">Author</td>
-                        <td colspan="2">Opus</td>
-                        <td>Book</td>
-                        <td>Poem</td>
-                        <td>Verse</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <select name="author" id="author">
-                                {% for author in authors %}
-                                <option value="{{ author.id }}">{{ author.short_name }}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td colspan="2"><select name="opus" id="opus" /></td>
-                        <td><select name="book" id="book" /></td>
-                        <td><select name="poem" id="poem" /></td>
-                        <td><input name="verseNumber" id="verseNumber" /></td>
-                        <td><p id="warning"></p></td>
-                    </tr>
-                    <tr>
-                        <td colspan="5"><input type="text" name="verse" id="verse" size="60"/></td>
-                        <td><input type="button" value="Random verse" id="randomVerse" /></td>
-                        <td><label><input type="checkbox" name="dict" id="dict" checked="checked" />Use dictionary</label></td>
-                    </tr>
-                    <tr>
-                        <td colspan="7"><p id="scannedVerse"> </p></td>
-                    </tr>
-                </table>
-                {% csrf_token %}
-            </form>
+            {% include "./query.html" %}
+            <p>Hint: after analyzing a few verses, you can go to <a href="batch">the batch tool</a> to find relevant data.</p>
         </section>
         <section id="info">
             <h3>Elisio Project</h3>

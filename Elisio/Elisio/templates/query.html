@@ -1,0 +1,35 @@
+﻿
+            <form id="verseScanner">
+                <table>
+                    <tr>
+                        <td colspan="2">Author</td>
+                        <td colspan="2">Opus</td>
+                        <td>Book</td>
+                        <td>Poem</td>
+                        <td>Verse</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <select name="author" id="author">
+                                {% for author in authors %}
+                                <option value="{{ author.id }}">{{ author.short_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td colspan="2"><select name="opus" id="opus"></select></td>
+                        <td><select name="book" id="book"></select></td>
+                        <td><select name="poem" id="poem"></select></td>
+                        <td><input name="verseNumber" id="verseNumber" /></td>
+                        <td><p id="warning"></p></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5"><input type="text" name="verse" id="verse" size="60"/></td>
+                        <td><input type="button" value="Random verse" id="randomVerse" /></td>
+                        <td><label><input type="checkbox" name="dict" id="dict" checked="checked" />Use dictionary</label></td>
+                    </tr>
+                    <tr>
+                        <td colspan="7"><p id="scannedVerse"> </p></td>
+                    </tr>
+                </table>
+                {% csrf_token %}
+            </form>

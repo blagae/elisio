@@ -1,10 +1,17 @@
 ﻿{% extends "base.html" %}
 {% block content %}
-<form method="post" action="/register/">
-    <input type="text" name="username" />
-    <input type="text" name="email" />
-    <input type="password" name="password" />
-    <input type="submit" value="Register" />
-    {% csrf_token %}
-</form>
+        <section id="register">
+        {% if request.user.is_authenticated %}
+            <p>You are already logged in - why would you need to register ?</p>
+        {% else %}
+            <form method="post" action="/register/">
+                <dt>Username</dt><dd><input type="text" name="username" /></dd>
+                <dt>Password</dt><dd><input type="password" name="password" /></dd>
+                <dt>E-mail address</dt><dd><input type="text" name="email" /></dd>
+                <br />
+                <input type="submit" value="Register" />
+                {% csrf_token %}
+            </form>
+        {% endif %}
+        </section>
 {% endblock %}
