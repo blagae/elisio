@@ -69,11 +69,18 @@ function getVerse(poem, verse) {
 }
 
 function doScan(loc) {
-    $.getJSON(loc, function (result) {
-        if (result.includes('\n')) {
-            result = result.replace('\n', '<br />');
+    $.getJSON(loc, function (ret) {
+        if (ret.text) {
+            result = ret.text;
+            $("#scannedVerse").html(ret.text);
+            $("#zeleny").html(ret.zeleny);
+            $("#error").empty();
         }
-        $("#scannedVerse").html(result);
+        else {
+            $("#scannedVerse").empty();
+            $("#zeleny").empty();
+            $("#error").html(ret.error.replace('\n', '<br />'));
+        }
     });
 }
 

@@ -114,14 +114,16 @@ def json_scan_rawtext(request, txt, metadata=None):
     if not metadata:
         metadata = {'verse': {'text': txt}}
     update_req_with_verse(request, metadata)
+    data = {}
     try:
         dict = 'disableDict' not in request.GET
         verse = VerseFactory.create(txt, False, dict, classes=HexameterCreator)
         s = TextDecorator(verse).decorate()
+        data["text"] = s
+        data["zeleny"] = verse.get_zeleny_score()
     except ScansionException as ex:
-        s = str(ex)
-    data = json.dumps(s)
-    return HttpResponse(data, content_type='application/json')
+        data["error"] = str(ex)
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 def json_scan(request, poem, verse):
     """ get a verse through a JSON request """
