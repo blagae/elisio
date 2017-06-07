@@ -8,13 +8,10 @@ This is a high-level list of tasks that are on the roadmap. There is no priority
 
 * build instructions: develop & deploy on Linux VM
 * Vagrant file
-* investigate whether path requirement is prohibitive for users to complete builds
+* investigate whether session path requirement is prohibitive for users to complete builds
 
 ### Engine
 
-* accents
-    * calculate
-    * correlate to verse structure (Zeleny)
 * testing
     * unit testing specific hexameter cases (to prevent regressions)
     * unit test pentameter algorithm
@@ -23,10 +20,8 @@ This is a high-level list of tasks that are on the roadmap. There is no priority
 ### Website
 
 * beautify
-    * create UI
-    * modern style
+    * maybe go to angular, since we already have all JSON routes
 * security
-    * HTTPS everywhere including logins etc
     * cookie warnings (when we start using cookies)
 
 ## Pipe dreams
