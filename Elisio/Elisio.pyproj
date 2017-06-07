@@ -187,6 +187,7 @@
     <Content Include="Elisio\fixtures\sources\Verg. Buc. I 1.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. VI.txt" />
     <Content Include="Elisio\static\batchScripts.js" />
+    <Content Include="Elisio\static\delete.png" />
     <Content Include="Elisio\static\indexScripts.js" />
     <Content Include="Elisio\static\scripts.js" />
     <Content Include="Elisio\static\styles.css" />

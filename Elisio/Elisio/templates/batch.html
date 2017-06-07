@@ -17,17 +17,21 @@
                         <td>Poem</td>
                         <td>Verse number</td>
                         <td>Text</td>
+                        {% if request.user.is_authenticated %}<td> </td>{% endif %}
                     </tr>
                 </thead>
             {% for verse in request.session.verses %}
                 <tbody>
-                    <tr>
+                    <tr id="{{ verse.id }}">
                         <td>{{ verse.author.name }}</td>
                         <td>{{ verse.opus.name }}</td>
                         <td>{{ verse.book.number }}</td>
                         <td>{{ verse.poem.number }}</td>
                         <td>{{ verse.verse.number }}</td>
                         <td>{{ verse.verse.text }}</td>
+                    {% if request.user.is_authenticated %}
+                        <td><img src="{% static 'delete.png' %}" alt="{{ verse.id }}" height="16" width="16" class="delete"></td>
+                    {% endif %}
                     </tr>
                 </tbody>
             {% endfor %}

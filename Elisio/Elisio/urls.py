@@ -20,5 +20,6 @@ urlpatterns = [#'',
     url(r'^json/scanraw/(.+)$', views.json_scan_rawtext),
     url(r'^json/random/$', views.json_get_random_verse),
     url(r'^json/clearsession/$', views.json_clear_session),
+    url(r'^json/deleteverse/([a-f0-9]{64})$', views.json_delete_hash),
     url(r'^admin/', admin.site.urls),
 ]

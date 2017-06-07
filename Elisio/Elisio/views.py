@@ -13,6 +13,8 @@ from Elisio.engine.Hexameter import HexameterCreator
 from random import randint
 #from Elisio.models import *
 from Elisio.numerals import int_to_roman
+import hashlib
+import time
 
 CONTEXT = {}
 
@@ -96,6 +98,9 @@ def json_list(request, obj_type, key):
 def update_req_with_verse(request, metadata):
     if 'verses' not in request.session:
         request.session['verses'] = []
+    prehash = metadata["verse"]["text"] + (str(time.time() * 1000))
+    prehash = prehash.encode('utf-8')
+    metadata["id"] = hashlib.sha256(prehash).hexdigest()
     request.session['verses'].append(metadata)
     # https://stackoverflow.com/questions/43904060/editing-session-variable-in-django
     request.session.modified = True
@@ -124,6 +129,17 @@ def json_scan_rawtext(request, txt, metadata=None):
     except ScansionException as ex:
         data["error"] = str(ex)
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+def json_delete_hash(request, hash):
+    result = False
+    for verse in request.session['verses']:
+        if verse["id"] == hash:
+            result = verse
+            break
+    if result:
+        request.session['verses'].remove(result)
+        request.session.modified = True
+    return HttpResponse(status=204) # empty response
 
 def json_scan(request, poem, verse):
     """ get a verse through a JSON request """
