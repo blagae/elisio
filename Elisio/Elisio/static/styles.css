@@ -69,6 +69,11 @@ select, input, label {
     height: 40px;
 }
 
+.centered {
+    text-align: center;
+    background-color: #E9E980;
+}
+
 dt {
     float: left;
     width: 20%;

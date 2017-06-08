@@ -18,8 +18,33 @@
                     An essential feature of Classical Latin verses is its <em>meter</em>, a sequence of light and heavy syllables in a semi-regular pattern.
                     The Elisio tool is written specifically to look for clues as to whether syllables are light or heavy,
                     and given enough clues it can deduce the rest of the verse's structure.
+                    Currently, Elisio can scan the classical <em>hexameter</em> and <em>pentameter</em> meters, though the latter is still unavailable.
+                    An example of the algorithm with <em>Verg. Aen. I, 1</em>:
                 </p>
-                <p>Currently, Elisio can scan the classical <em>hexameter</em> and <em>pentameter</em> meters, though the latter is still unavailable.</p>
+                <div>
+                    <p class="centered">Arma virumque cano, Troiae qui primus ab oris</p>
+                    <p>A few basic rules can be applied:</p>
+                    <ul>
+                        <li>ar-, -rum- stand before a consonant cluster that is not a <em>muta cum liquida</em>, and are thus heavy</li>
+                        <li>-que has a short vowel so it is light before a single consonant</li>
+                        <li>final -o is most always long, and thus heavy</li>
+                        <li>diphthongal ae is always long, and thus heavy</li>
+                        <li>the foreign name Troia has a long o (this is hard-coded)</li>
+                    </ul>
+                    <p class="centered">A̱rma viru̱mque̯ cano̱, Tro̱iae̱ qui primus ab oris</p>
+                    <p>This is already enough information to go further:</p>
+                    <ul>
+                        <li>Light syllables come in pairs, so ca- must be light, and this verse foot ends after it</li>
+                        <li>Hence, we know that the same foot started on -rum-</li>
+                        <li>There are only three syllables before this foot, so this must be a single dactylus. we now know the first two feet</li>
+                        <li>The third foot is a spondaeus since its second half, the o in Troia, is heavy</li>
+                        <li>Unless there is specific information to the contrary, we assume a regular 5-syllable clausula, and there is no such information here</li>
+                        <li>Hence qui is the second part of a spondaeus and heavy</li>
+                    </ul>
+                    <p class="centered">A̱rma vi/ru̱mque̯ ca/no̱, Tro̱i/ae̱ qui / primus ab / oris</p>
+                    <p>Then we fill in the missing information:</p>
+                    <p class="centered">A̱rma̯ vi̯/ru̱mque̯ ca̯/no̱, Tro̱i/ae̱ qui̱ / pri̱mu̯s a̯b / o̱ri̱s</p>
+                </div>
             </div>
         </section>
         <section id="zelenyInfo">
