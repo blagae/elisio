@@ -1,11 +1,60 @@
 ﻿{% extends "base.html" %}
 {% block content %}
-        <section id="about">
+        <section id="generalInfo">
+            <h1>General</h1>
             <div>
-                <p>Elisio is a way too ambitious project that aims to provide an online verse scanning tool for Latin metrical verses.</p>
-                <p>The project started in 2014 as a rewrite of an older Java program that was pretty good at scanning hexameters but not much else.</p>
-                <p>The current engine was written with Python 3, and the front-end (website) was composed with Django.</p>
-                <p>Main dev is <a href="http://github.com/blagae">Benoit Lagae</a>, a Latin enthousiast who wrote his MA thesis about elision.</p>
+                <p>
+                    Elisio is a way too ambitious project that aims to provide an online verse scanning tool for Latin metrical verses.
+                    The project started in 2014 as a rewrite of an older Java program that was pretty good at scanning hexameters but not much else.
+                    The current engine was written with Python 3, and the front-end (website) was composed with Django.
+                </p>
+                <p>Main dev is <a href="http://github.com/blagae">Benoit Lagae</a>, a Latin enthousiast from Belgium who wrote his MA thesis about elision.</p>
+            </div>
+        </section>
+        <section id="scansionInfo">
+            <h1>Scanning a verse</h1>
+            <div>
+                <p>
+                    An essential feature of Classical Latin verses is its <em>meter</em>, a sequence of light and heavy syllables in a semi-regular pattern.
+                    The Elisio tool is written specifically to look for clues as to whether syllables are light or heavy,
+                    and given enough clues it can deduce the rest of the verse's structure.
+                </p>
+                <p>Currently, Elisio can scan the classical <em>hexameter</em> and <em>pentameter</em> meters, though the latter is still unavailable.</p>
+            </div>
+        </section>
+        <section id="zelenyInfo">
+            <h1>Zeleny codes</h1>
+            <div>
+                <p>
+                    An additional part of the scansion process, not normally covered when scanning a verse, is the distribution of word accents.
+                    This system was pioneered by Karin Zeleny in her doctoral dissertation <a href="https://verlag.oeaw.ac.at/Itali-Modi">Itali Modi</a> (2008),
+                    wherein she argues that accent placement was very relevant to Latin poets at composition time and that certain distribution types were avoided.
+                </p>
+                <p>
+                    The Zeleny code is a numerical representation of the moraic distances between consecutive accented syllables in the verse.
+                    Light syllables count as 1 mora, heavy syllables as 2.
+                    The moraic distance is seldom higher than 9, so there is very little confusion possible when stringing the numbers together, like 66444.
+                </p>
+                <p>
+                    The morae from the beginning of the verse are also counted, as are those between the last stressed syllable and the end of the verse.
+                    That means that, for a verse form with a fixed mora count, such as the hexameter with 24 and the pentameter with 20 morae,
+                    the sum of these numbers will correspond with the mora count.
+                    If the first word accent falls on the first syllable on the verse, then the initial moraic space of 0 is not written by Zeleny.
+                    This introduces the situation where verses with the same amount of lexical words can have a Zeleny code of a different length:
+                </p>
+                <blockquote>
+                    <p>in<u>sig</u>nem pie<u>ta</u>te <u>vi</u>rum, <u>tot</u> a<u>di</u>re la<u>bo</u>res</p>
+                    <footer><cite>Verg. Aen. I, 10</cite> — Zeleny code: 2633244</footer>
+                </blockquote>
+                <blockquote>
+                    <p><u>tan</u>tae <u>mo</u>lis <u>e</u>rat Ro<u>ma</u>nam <u>con</u>dere <u>gen</u>tem.</p>
+                    <footer><cite>Verg. Aen. I, 33</cite> — Zeleny code: 435444</footer>
+               </blockquote>
+                <p>
+                    As of June 2017, the implementation in this web tool is still rudimentary:
+                    it assigns a word accent to each word, which is most unlikely to represent actual diction of verses,
+                    especially in the case of monosyllabic 'grammar words' such as prepositions and conjunctions.
+                </p>
             </div>
         </section>
 {% endblock %}
