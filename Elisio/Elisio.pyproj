@@ -137,9 +137,11 @@
     <Compile Include="Elisio\utils.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Elisio\views.py">
+    <Compile Include="Elisio\views\json.py" />
+    <Compile Include="Elisio\views\page.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elisio\views\__init__.py" />
     <Compile Include="manage.py" />
     <Compile Include="Elisio\__init__.py" />
     <Compile Include="Elisio\settings.py" />
@@ -210,6 +212,7 @@
     <Folder Include="Elisio\fixtures\sources\" />
     <Folder Include="Elisio\fixtures\verses\" />
     <Folder Include="Elisio\fixtures\deviant\" />
+    <Folder Include="Elisio\views\" />
     <Folder Include="Elisio\templates\" />
     <Folder Include="Elisio\static\" />
     <Folder Include="Elisio\tests\" />
