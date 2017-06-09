@@ -23,6 +23,10 @@ This is a high-level list of tasks that are on the roadmap. There is no priority
     * maybe go to angular, since we already have all JSON routes
 * security
     * cookie warnings (when we start using cookies)
+* batch management
+    * kickass query builder
+    * editing batches
+    * scheduling batches
 
 ## Pipe dreams
 
