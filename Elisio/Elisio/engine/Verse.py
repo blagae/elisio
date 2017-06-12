@@ -39,13 +39,12 @@ class Verse(object):
     A verse is the representation of the Latin text of a verse
     It has no knowledge of its surroundings or context
     """
-    def __init__(self, text, saved=False):
+    def __init__(self, text):
         """ construct a Verse by its contents """
         if not isinstance(text, str):
             raise VerseException("Verse must be initialized with text data")
         self.text = text
         self.words = []
-        self.saved = saved
         self.structure = None
 
     def __repr__(self):
@@ -57,12 +56,12 @@ class Verse(object):
         """ Verses are equal if they have exactly the same characters """
         return self.text == other.text
 
-    def parse(self, save=False, verse=None):
+    def parse(self, verse=None):
         self.preparse()
         self.scan()
         self.save_structure()
         self.structure = self.save_feet()
-        if save and not self.saved:
+        if verse and not verse.saved:
             from Elisio.models import WordOccurrence
             entries = []
             for count, wrd in enumerate(self.words):
@@ -86,10 +85,7 @@ class Verse(object):
                 if wrd.ends_in_variable_declension():
                     strct = strct[:-1]
                     strct += str(Weight.ANCEPS.value)
-                if verse:
-                    entries.append(WordOccurrence(word=txt, struct=strct, verse=verse))
-                else:
-                    entries.append(WordOccurrence(word=txt, struct=strct))
+                entries.append(WordOccurrence(word=txt, struct=strct, verse=verse))
             if len(entries) > 0:
                 WordOccurrence.objects.bulk_create(entries)
         self.add_accents()

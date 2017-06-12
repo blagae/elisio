@@ -54,7 +54,7 @@ class TestHexameter(unittest.TestCase):
         21: hinc populum late regem belloque superbum
         """
         dbverse = DatabaseVerse.objects.get(pk=1)
-        verse = VerseFactory.create(dbverse.contents, False, True, classes=VerseType.HEXAMETER)
+        verse = VerseFactory.create(dbverse, classes=VerseType.HEXAMETER)
 
     def test_hexameter_structure(self):
         lst = [Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,

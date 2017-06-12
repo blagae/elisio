@@ -32,15 +32,15 @@ class VerseFactory(object):
     def get_split_syllables(cls, text):
         return VerseFactoryImpl(text).get_split_syllables()
     @classmethod
-    def create(cls, text, save=False, useDict=False, dbverse=None, classes=None):
-        return VerseFactoryImpl(text, useDict, classes=classes).create(save, dbverse)
+    def create(cls, verse, useDict=False, classes=None):
+        return VerseFactoryImpl(verse, useDict, classes=classes).create()
 
 class VerseFactoryImpl(object):
-    def __init__(self, text, usedict=False, classes=None):
-        self.text = text
+    def __init__(self, verse, useDict=False, classes=None):
+        self.verse = verse
+        self.use_dict = useDict
         self.words = []
         self.layers = [[]]
-        self.use_dict = usedict
         self.flat_list = []
         # https://docs.python.org/3/tutorial/controlflow.html#default-argument-values
         if isinstance(classes, VerseType):
@@ -50,16 +50,20 @@ class VerseFactoryImpl(object):
             for clazz in classes:
                 self.classes.update(clazz.get_creators())
         else:
-            classes = VerseType.UNKNOWN.get_creators()
-            self.classes = [classes]
+            self.classes = VerseType.UNKNOWN.get_creators()
 
-    def create(self, save, dbverse=None):
-        self.dbverse = dbverse
-        return self.__create_verse(save)
+    def is_from_db(self):
+        from Elisio.models import DatabaseVerse
+        return isinstance(self.verse, DatabaseVerse)
+
+    def get_text(self):
+        if self.is_from_db():
+            return self.verse.contents
+        return self.verse
 
     def split(self):
         """ Split a Verse into Words, remembering only the letter characters """
-        txt = self.text.strip()
+        txt = self.get_text().strip()
         array = re.split('[^a-zA-Z]+', txt)
         for word in array:
             if word.isalpha():
@@ -89,17 +93,20 @@ class VerseFactoryImpl(object):
                     self.flat_list.append(weight)
         return self.flat_list
 
-    def __create_verse(self, save):
+    def create(self):
         self.getlist()
         problems = []
         for creator in self.classes:
             item = creator(self.flat_list)
             cls = item.get_subtype()
-            verse = cls(self.text)
+            verse = cls(self.get_text())
             verse.words = self.words
             verse.flat_list = self.flat_list.copy()
             try:
-                verse.parse(save, self.dbverse)
+                if self.is_from_db():
+                    verse.parse(self.verse)
+                else:
+                    verse.parse()
                 return verse
             except ScansionException as exc:
                 problems.append(exc)

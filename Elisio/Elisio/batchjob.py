@@ -113,13 +113,13 @@ def scan_verses(dbverses, initiator, commit=""):
         scanResult.session = session
         scanResult.verse = dbverse
         try:
-            verse = VerseFactory.create(dbverse.contents, not dbverse.saved, False, dbverse, classes=VerseType.HEXAMETER)
+            verse = VerseFactory.create(dbverse, False, classes=VerseType.HEXAMETER)
             dbverse.saved = True
             scanResult.structure = verse.structure
             worked_without_dict += 1
         except VerseException:
             try:
-                verse = VerseFactory.create(dbverse.contents, not dbverse.saved, True, dbverse, classes=VerseType.HEXAMETER)
+                verse = VerseFactory.create(dbverse, True, classes=VerseType.HEXAMETER)
                 dbverse.saved = True
                 scanResult.structure = verse.structure
             except VerseException as exc:

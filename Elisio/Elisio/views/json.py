@@ -58,7 +58,7 @@ def scan_rawtext(request, txt, metadata=None):
     data = {}
     try:
         dict = 'disableDict' not in request.GET
-        verse = VerseFactory.create(txt, False, dict, classes=VerseType.HEXAMETER)
+        verse = VerseFactory.create(txt, dict, classes=VerseType.HEXAMETER)
         s = TextDecorator(verse).decorate()
         data["text"] = s
         data["zeleny"] = verse.get_zeleny_score()
