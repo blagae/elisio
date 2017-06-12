@@ -6,6 +6,8 @@ import Elisio.utils
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
+import Elisio.engine.VerseFactory
+import enumfields.fields
 
 
 class Migration(migrations.Migration):
@@ -30,5 +32,11 @@ class Migration(migrations.Migration):
             model_name='scansession',
             name='initiator',
             field=models.CharField(max_length=40, null=True),
+        ),
+        migrations.AddField(
+            model_name='scanverseresult',
+            name='scanned_as',
+            field=enumfields.fields.EnumField(default=1, enum=Elisio.engine.VerseFactory.VerseType, max_length=10),
+            preserve_default=False,
         ),
     ]

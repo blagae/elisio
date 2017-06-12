@@ -120,6 +120,7 @@ $(document).ready(function () {
             $("#author").val(result.author.id);
             $("#verseNumber").val(result.verse.number);
             $("#verse").val(result.verse.text);
+            $("input[name=verseType][value='"+ result.verse.type +"']").prop("checked", true);
             getOpera(result.author.id, result.opus.id, result.book.id, result.poem.id);
         });
     });

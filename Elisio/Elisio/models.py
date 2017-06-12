@@ -7,6 +7,7 @@ from enumfields import EnumField
 from Elisio.utils import get_commit
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from Elisio.engine.VerseFactory import VerseType
 
 class DeviantWord(Model):
     """ model class for the Engine: highest level """
@@ -97,6 +98,7 @@ class DatabaseVerse(Model):
     alternative = CharField(max_length=1)
     contents = CharField(max_length=70)
     saved = BooleanField(default=False)
+    verseType = EnumField(VerseType, default=VerseType.HEXAMETER)
 
     def get_verse(self):
         """ create a Verse object from this DatabaseVerse """
@@ -138,3 +140,4 @@ class ScanVerseResult(Model):
     failure = CharField(max_length=70, blank=True)
     structure = CharField(max_length=8)
     zeleny = CharField(max_length=17)
+    scanned_as = EnumField(VerseType)

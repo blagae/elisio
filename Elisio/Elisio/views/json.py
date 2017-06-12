@@ -102,7 +102,8 @@ def get_random_verse(request):
 def get_metadata(verse):
     if isinstance(verse, DatabaseVerse):
         metadata = {'verse': {'text': verse.contents,
-                               'number': verse.number},
+                               'number': verse.number,
+                               'type': verse.verseType.name},
                     'poem': {'id': verse.poem.id,
                                'number': verse.poem.number},
                     'book': {'id': verse.poem.book.id,

@@ -3,6 +3,8 @@
 from __future__ import unicode_literals
 from django.db import migrations
 import os
+import enumfields.fields
+import Elisio.engine.VerseFactory
 
 def load_initial_data(self, orm):
     try:
@@ -21,5 +23,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.AddField(
+            model_name='databaseverse',
+            name='verseType',
+            field=enumfields.fields.EnumField(default=1, enum=Elisio.engine.VerseFactory.VerseType, max_length=10),
+        ),
         migrations.RunPython(load_initial_data)
     ]

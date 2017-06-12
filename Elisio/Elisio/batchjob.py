@@ -98,7 +98,7 @@ def find_all_verses_containing(regex, must_be_parsed=False):
     return total
 
 def scan_verses(dbverses, initiator, commit=""):
-    from Elisio.engine.VerseFactory import VerseFactory, VerseType
+    from Elisio.engine.VerseFactory import VerseFactory
     from Elisio.exceptions import HexameterException, VerseException, ScansionException
     from Elisio.models import ScanVerseResult, ScanSession
     worked = 0
@@ -112,14 +112,15 @@ def scan_verses(dbverses, initiator, commit=""):
         scanResult = ScanVerseResult()
         scanResult.session = session
         scanResult.verse = dbverse
+        scanResult.scanned_as = dbverse.verseType
         try:
-            verse = VerseFactory.create(dbverse, False, classes=VerseType.HEXAMETER)
+            verse = VerseFactory.create(dbverse, False, classes=dbverse.verseType)
             dbverse.saved = True
             scanResult.structure = verse.structure
             worked_without_dict += 1
         except VerseException:
             try:
-                verse = VerseFactory.create(dbverse, True, classes=VerseType.HEXAMETER)
+                verse = VerseFactory.create(dbverse, True, classes=dbverse.verseType)
                 dbverse.saved = True
                 scanResult.structure = verse.structure
             except VerseException as exc:
