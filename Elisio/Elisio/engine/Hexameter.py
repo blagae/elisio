@@ -1,7 +1,7 @@
 ﻿from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Verse, Foot
 from Elisio.exceptions import HexameterException
-from Elisio.engine.VerseFactory import VerseCreator
+from Elisio.engine.VerseFactory import VerseCreator, VerseType
 
 
 
@@ -12,6 +12,9 @@ class HexameterCreator(VerseCreator):
         self.max_syllables = HexameterCreator.MAX_SYLL
         self.min_syllables = HexameterCreator.MIN_SYLL
         self.list = lst
+        
+    def get_type(self):
+        return VerseType.HEXAMETER
 
     def get_subtype(self):
         if len(self.list) > self.max_syllables:

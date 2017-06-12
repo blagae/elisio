@@ -4,7 +4,7 @@ from Elisio.engine.Verse import Verse, Foot
 from Elisio.engine.Syllable import Weight
 from Elisio.utils import set_django
 from Elisio.engine.Hexameter import Hexameter, HexameterCreator
-from Elisio.engine.VerseFactory import VerseFactory
+from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from Elisio.tests.Test_Verse import TYPICAL_VERSE
 from Elisio.exceptions import HexameterException, VerseException, ScansionException
 
@@ -16,7 +16,7 @@ class TestHexameter(unittest.TestCase):
     """ testing specifically for the hexameter """
     def construct_hexameter(self, text=TYPICAL_VERSE):
         """ Construct a Hexameter object from a given text """
-        constructed_verse = VerseFactory.create(text, classes=HexameterCreator)
+        constructed_verse = VerseFactory.create(text, classes=VerseType.HEXAMETER)
 
         return constructed_verse
 
@@ -54,7 +54,7 @@ class TestHexameter(unittest.TestCase):
         21: hinc populum late regem belloque superbum
         """
         dbverse = DatabaseVerse.objects.get(pk=1)
-        verse = VerseFactory.create(dbverse.contents, False, True, classes=HexameterCreator)
+        verse = VerseFactory.create(dbverse.contents, False, True, classes=VerseType.HEXAMETER)
 
     def test_hexameter_structure(self):
         lst = [Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,

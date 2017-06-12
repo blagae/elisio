@@ -1,7 +1,7 @@
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Verse, Foot
 from Elisio.exceptions import PentameterException
-from Elisio.engine.VerseFactory import VerseCreator
+from Elisio.engine.VerseFactory import VerseCreator, VerseType
 
 class PentameterCreator(VerseCreator):
     MAX_SYLL = 14
@@ -10,6 +10,9 @@ class PentameterCreator(VerseCreator):
         self.max_syllables = PentameterCreator.MAX_SYLL
         self.min_syllables = PentameterCreator.MIN_SYLL
         self.list = lst
+
+    def get_type(self):
+        return VerseType.PENTAMETER
 
     def get_subtype(self):
         if len(self.list) > self.max_syllables:

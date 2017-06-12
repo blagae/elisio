@@ -2,7 +2,21 @@
 import collections
 from Elisio.engine.Word import Word, Weight
 from Elisio.exceptions import ScansionException, VerseException
+import enum
 
+class VerseType(enum.Enum):
+    UNKNOWN = 0
+    HEXAMETER = 1
+    PENTAMETER = 2
+
+    def get_creators(self):
+        from Elisio.engine.Hexameter import HexameterCreator
+        from Elisio.engine.Pentameter import PentameterCreator
+        if self == VerseType.HEXAMETER:
+            return [HexameterCreator]
+        if self == VerseType.PENTAMETER:
+            return [PentameterCreator]
+        return [HexameterCreator, PentameterCreator]
 
 class VerseFactory(object):
     @classmethod
@@ -29,11 +43,14 @@ class VerseFactoryImpl(object):
         self.use_dict = usedict
         self.flat_list = []
         # https://docs.python.org/3/tutorial/controlflow.html#default-argument-values
-        if classes is None:
-            classes = []
-        if isinstance(classes, collections.Iterable):
-            self.classes = classes
+        if isinstance(classes, VerseType):
+            self.classes = classes.get_creators()
+        elif isinstance(classes, collections.Iterable):
+            self.classes = set()
+            for clazz in classes:
+                self.classes.update(clazz.get_creators())
         else:
+            classes = VerseType.UNKNOWN.get_creators()
             self.classes = [classes]
 
     def create(self, save, dbverse=None):
@@ -102,5 +119,8 @@ class VerseFactoryImpl(object):
         return result
 
 class VerseCreator(object):
+    def get_type(self):
+        raise Exception("must be overridden")
     def get_subtype(self):
         raise Exception("must be overridden")
+    

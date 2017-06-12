@@ -5,8 +5,7 @@ from django.core import serializers
 from Elisio.exceptions import ScansionException
 from Elisio.models import Book, Opus, Poem, DatabaseVerse
 from Elisio.engine.TextDecorator import TextDecorator
-from Elisio.engine.VerseFactory import VerseFactory
-from Elisio.engine.Hexameter import HexameterCreator
+from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from random import randint
 from Elisio.numerals import int_to_roman
 import hashlib
@@ -59,7 +58,7 @@ def scan_rawtext(request, txt, metadata=None):
     data = {}
     try:
         dict = 'disableDict' not in request.GET
-        verse = VerseFactory.create(txt, False, dict, classes=HexameterCreator)
+        verse = VerseFactory.create(txt, False, dict, classes=VerseType.HEXAMETER)
         s = TextDecorator(verse).decorate()
         data["text"] = s
         data["zeleny"] = verse.get_zeleny_score()

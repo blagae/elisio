@@ -1,12 +1,11 @@
 import unittest
-from Elisio.engine.Hexameter import HexameterCreator
 from Elisio.engine.Syllable import Weight
-from Elisio.engine.VerseFactory import VerseFactory
+from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from Elisio.tests.Test_Verse import TYPICAL_VERSE
 
 class TestAccent(unittest.TestCase):
     def test_accent_armavirumque(self):
-        verse = VerseFactory.create(TYPICAL_VERSE, classes=HexameterCreator)
+        verse = VerseFactory.create(TYPICAL_VERSE, classes=VerseType.HEXAMETER)
         verse.parse()
         # arma
         self.assertEqual(verse.words[0].syllables[0].stressed, True)
@@ -33,7 +32,7 @@ class TestAccent(unittest.TestCase):
         self.assertEqual(verse.words[7].syllables[1].stressed, False)
         
     def test_accent_lavinia(self):
-        verse = VerseFactory.create("Italiam fato profugus Laviniaque venit", classes=HexameterCreator)
+        verse = VerseFactory.create("Italiam fato profugus Laviniaque venit", classes=VerseType.HEXAMETER)
         verse.parse()
         # italiam
         self.assertEqual(verse.words[0].syllables[0].stressed, False)
@@ -56,7 +55,7 @@ class TestAccent(unittest.TestCase):
         self.assertEqual(verse.words[4].syllables[1].stressed, False)
         
     def test_accent_litora(self):
-        verse = VerseFactory.create("litora, multum ille et terris iactatus et alto", classes=HexameterCreator)
+        verse = VerseFactory.create("litora, multum ille et terris iactatus et alto", classes=VerseType.HEXAMETER)
         verse.parse()
         # litora
         self.assertEqual(verse.words[0].syllables[0].stressed, True)
