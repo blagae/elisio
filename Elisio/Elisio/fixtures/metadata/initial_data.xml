@@ -487,4 +487,15 @@
     <field type="IntegerField" name="nickname">-</field>
     <field type="enum.EnumField" name="verseForm">2</field>
   </object>
+  <object pk="40" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">29</field>
+    <field type="IntegerField" name="number">66</field>
+    <field type="IntegerField" name="nickname">-</field>
+    <field type="enum.EnumField" name="verseForm">2</field>
+  </object>
+  <object pk="41" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">29</field>
+    <field type="IntegerField" name="number">64</field>
+    <field type="IntegerField" name="nickname">-</field>
+  </object>
 </django-objects>

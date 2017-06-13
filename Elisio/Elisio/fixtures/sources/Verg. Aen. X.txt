@@ -657,12 +657,12 @@ huc sese trepida Aeneae fugientis imago
 conicit in latebras, nec Turnus segnior instat
 exsuperatque moras et pontis transilit altos.
 vix proram attigerat, rumpit Saturnia funem
-660|avulsamque rapit revoluta per aequora navem.
-663|tum levis haud ultra latebras iam quaerit imago,
-664|sed sublime volans nubi se immiscuit atrae,
-661|illum autem Aeneas absentem in proelia poscit;
-662|obvia multa virum demittit corpora morti,
-665|cum Turnum medio interea fert aequore turbo.
+660$avulsamque rapit revoluta per aequora navem.
+663$tum levis haud ultra latebras iam quaerit imago,
+664$sed sublime volans nubi se immiscuit atrae,
+661$illum autem Aeneas absentem in proelia poscit;
+662$obvia multa virum demittit corpora morti,
+665$cum Turnum medio interea fert aequore turbo.
 respicit ignarus rerum ingratusque salutis
 et duplicis cum voce manus ad sidera tendit:
 «omnipotens genitor, tanton me crimine dignum
@@ -711,12 +711,12 @@ pascit harundinea, postquam inter retia ventum est,
 substitit infremuitque ferox et inhorruit armos,
 nec cuiquam irasci propiusve accedere virtus,
 sed iaculis tutisque procul clamoribus instant;
-717|ille autem impavidus partis cunctatur in omnis
-718|dentibus infrendens et tergo decutit hastas:
-714|haud aliter, iustae quibus est Mezentius irae,
-715|non ulli est animus stricto concurrere ferro,
-716|missilibus longe et vasto clamore lacessunt.
-719|Venerat antiquis Corythi de finibus Acron,
+717$ille autem impavidus partis cunctatur in omnis
+718$dentibus infrendens et tergo decutit hastas:
+714$haud aliter, iustae quibus est Mezentius irae,
+715$non ulli est animus stricto concurrere ferro,
+716$missilibus longe et vasto clamore lacessunt.
+719$Venerat antiquis Corythi de finibus Acron,
 Graius homo, infectos linquens profugus hymenaeos.
 hunc ubi miscentem longe media agmina vidit,
 purpureum pennis et pactae coniugis ostro,

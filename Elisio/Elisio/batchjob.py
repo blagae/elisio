@@ -34,7 +34,7 @@ def fill_xml_object():
     from os import listdir
     from os.path import isfile, join
     all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
-
+    # FYI if you get encoding exceptions with new files, manually set them to UTF-8
     for filename in all_filenames:
         with open(join(path, filename), "r") as file:
             verses = [line.replace('\n', '').strip() for line in file.readlines()]
@@ -51,7 +51,7 @@ def fill_xml_object():
             number_field = ET.SubElement(obj, "field",
                                          {'type': 'IntegerField',
                                           'name': 'number'})
-            parsed = verse.split('|')
+            parsed = verse.split('$')
             if (len(parsed) > 1):
                 try:
                     count = int(parsed[0])
@@ -68,11 +68,10 @@ def fill_xml_object():
                                         'name': 'verseType'})
             vf = poem.verseForm.get_verse_types()
             current_form = vf[count % len(vf)]
-            verseType_field.text = str(current_form)
+            verseType_field.text = str(current_form.value)
             verse_field = ET.SubElement(obj, "field",
                                         {'type': 'CharField',
                                          'name': 'contents',
-                                         'saved': 'False'
                                         })
             verse_field.text = parsed[-1]
 
