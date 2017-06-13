@@ -93,9 +93,15 @@ function getScanRaw(txt) {
 }
 
 function useDict(url) {
-    if (dict === false) {
-        url += "?disableDict=true";
+    var type = $('input[name="verseType"]:checked').val();
+    if (!type) {
+        type = 'UNKNOWN';
     }
+    url += "?type=" + type;
+    if (dict === false) {
+        url += "&disableDict=true";
+    }
+    alert(url);
     return url;
 }
 
