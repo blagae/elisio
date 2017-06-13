@@ -128,10 +128,7 @@ class SpondaicDominantHexameter(Hexameter):
             for count, weight in enumerate(self.flat_list):
                 if count > 0 and count < 9 and weight == Weight.HEAVY:
                     self.feet[(count-1)//2] = Foot.SPONDAEUS
-            heavies = 0
-            for i in range(0, 4):
-                if self.feet[i] == Foot.SPONDAEUS:
-                    heavies += 1
+            heavies = self.feet[0:4].count(Foot.SPONDAEUS)
             if heavies == 3:
                 self.fill_other_feet(Foot.SPONDAEUS, Foot.DACTYLUS)
             else:
@@ -185,10 +182,7 @@ class DactylicDominantHexameter(Hexameter):
                 return
 
         self.__do_basic_checks()
-        dactyls = 0
-        for i in range(0, 4):
-            if self.feet[i] == Foot.DACTYLUS:
-                dactyls += 1
+        dactyls = self.feet[0:4].count(Foot.DACTYLUS)
         if dactyls == 3:
             self.fill_other_feet(Foot.DACTYLUS, Foot.SPONDAEUS)
         else:
@@ -439,13 +433,8 @@ class BalancedHexameter(Hexameter):
 
     def __calculate(self):
         """ method that will try to fill the feet """
-        self.dactyls = 0
-        self.spondees = 0
-        for i in range(0, 4):
-            if self.feet[i] == Foot.SPONDAEUS:
-                self.spondees += 1
-            if self.feet[i] == Foot.DACTYLUS:
-                self.dactyls += 1
+        self.dactyls = self.feet[0:4].count(Foot.DACTYLUS)
+        self.spondees = self.feet[0:4].count(Foot.SPONDAEUS)
         if self.spondees > 2 or self.dactyls > 2:
             raise HexameterException(
                 "{0} spondaei and {1} dactyli in balanced verse"

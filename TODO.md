@@ -34,8 +34,9 @@ This is a high-level list of tasks that are on the roadmap. There is no priority
 
 essentially teach it Latin:
 
-* declensions: be able to correlate avo with avos
-* conjugations: be able to correlate laborat with laboravit
+* investigate Whitaker's Words
+    * declensions: be able to correlate avo with avos
+    * conjugations: be able to correlate laborat with laboravit
 
 parsing:
 

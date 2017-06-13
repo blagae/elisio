@@ -37,7 +37,8 @@ class TestHexameter(unittest.TestCase):
         """ frivolous check to see how many verses work """
         save = WordOccurrence.objects.count() > 0
         threshold = 14 if save else 12
-        verses = DatabaseVerse.objects.all()
+        # verses = DatabaseVerse.objects.all()
+        verses = DatabaseVerse.objects.filter(id__lte=50)
         worked, failed, worked_without_dict = scan_verses(verses, "test_hexameter_scan_all")
         # canary test: over 91% of verses must succeed
         result =  str(worked_without_dict) + " worked without dict, " + str(worked) + " worked, " + str(failed) + " failed"
@@ -56,15 +57,100 @@ class TestHexameter(unittest.TestCase):
         dbverse = DatabaseVerse.objects.get(pk=1)
         verse = VerseFactory.create(dbverse, classes=VerseType.HEXAMETER)
 
-    def test_hexameter_structure(self):
-        lst = [Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
-                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
-                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
-                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
-                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
-                         Weight.HEAVY, Weight.LIGHT]
+    def __parse(self, lst):
         hex_creator = HexameterCreator(lst)
         hex_class = hex_creator.get_subtype()
         hex = hex_class('')
         hex.flat_list = lst
         hex.parse()
+        return hex.feet
+    
+    def test_hex_struct_trivial(self):
+        sylls = [Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT]
+        feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.TROCHAEUS]
+        self.assertEqual(self.__parse(sylls), feet)
+
+    def test_hex_struct_final_anceps(self):
+        sylls = [Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.LIGHT, Weight.LIGHT,
+                         Weight.HEAVY, Weight.ANCEPS]
+        feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(self.__parse(sylls), feet)
+
+    def test_hex_struct_spondaic_16(self):
+        sylls = [Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.HEAVY,
+                         Weight.ANCEPS, Weight.ANCEPS]
+        feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(self.__parse(sylls), feet)
+
+    def test_hex_struct_dactylic_17(self):
+        sylls = [Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS]
+        feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(self.__parse(sylls), feet)
+        
+    def test_hex_struct_dactylic_13(self):
+        sylls = [Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS]
+        feet = [Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(self.__parse(sylls), feet)
+
+    def test_hex_struct_spondaic_12(self):
+        sylls = [Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.HEAVY, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS]
+        feet = [Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(self.__parse(sylls), feet)
+        
+    def test_hex_struct_bestclue_14(self):
+        sylls = [Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.LIGHT, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS]
+        feet = [Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(self.__parse(sylls), feet)
+
+    def test_hex_struct_bestclue2_14(self):
+        sylls = [Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.LIGHT, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS]
+        feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(self.__parse(sylls), feet)
+
+    def test_hex_struct_badclue_14(self):
+        sylls = [Weight.ANCEPS, Weight.HEAVY,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.HEAVY, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.HEAVY,
+                         Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                         Weight.ANCEPS, Weight.ANCEPS]
+        feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(self.__parse(sylls), feet)
