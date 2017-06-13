@@ -54,7 +54,6 @@ def scan_rawtext(request, txt, metadata=None):
     # watch out before doing ANYTHING related to the db
     if not metadata:
         metadata = {'verse': {'text': txt}}
-    update_req_with_verse(request, metadata)
     data = {}
     try:
         dict = 'disableDict' not in request.GET
@@ -62,6 +61,8 @@ def scan_rawtext(request, txt, metadata=None):
             verseType = VerseType[request.GET['type'].upper()]
         except:
             verseType = VerseType.UNKNOWN
+        metadata['verse']['type'] = verseType.name
+        update_req_with_verse(request, metadata)
         verse = VerseFactory.create(txt, dict, classes=verseType)
         s = TextDecorator(verse).decorate()
         data["text"] = s

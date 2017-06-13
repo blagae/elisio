@@ -17,6 +17,7 @@
                         <td>Poem</td>
                         <td>Verse number</td>
                         <td>Text</td>
+                        <td>Scanned as</td>
                         {% if request.user.is_authenticated %}<td> </td>{% endif %}
                     </tr>
                 </thead>
@@ -29,6 +30,7 @@
                         <td>{{ verse.poem.number }}</td>
                         <td>{{ verse.verse.number }}</td>
                         <td>{{ verse.verse.text }}</td>
+                        <td>{{ verse.verse.type }}</td>
                     {% if request.user.is_authenticated %}
                         <td><img src="{% static 'delete.png' %}" alt="{{ verse.id }}" height="16" width="16" class="delete"></td>
                     {% endif %}
