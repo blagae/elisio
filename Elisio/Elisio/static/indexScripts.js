@@ -101,7 +101,6 @@ function useDict(url) {
     if (dict === false) {
         url += "&disableDict=true";
     }
-    alert(url);
     return url;
 }
 
