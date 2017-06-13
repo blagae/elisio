@@ -18,6 +18,22 @@ class VerseType(enum.Enum):
             return [PentameterCreator]
         return [HexameterCreator, PentameterCreator]
 
+class VerseForm(enum.Enum):
+    UNKNOWN = 0
+    HEXAMETRIC = 1
+    ELEGIAC_DISTICHON = 2
+#    SAPPHIC_STOPHE = 3
+
+    def get_verse_types(self):
+        if self == VerseForm.UNKNOWN:
+            return [VerseType.UNKNOWN]
+        if self == VerseForm.HEXAMETRIC:
+            return [VerseType.HEXAMETER]
+        if self == VerseForm.ELEGIAC_DISTICHON:
+            return [VerseType.HEXAMETER, VerseType.PENTAMETER]
+#        if self == VerseForm.SAPPHIC_STOPHE:
+        return [VerseType.UNKNOWN]
+
 class VerseFactory(object):
     @classmethod
     def split(cls, text):

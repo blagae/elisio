@@ -62,7 +62,8 @@ function getMaxVerseNumber(key) {
 function getVerse(poem, verse) {
     var url = "/json/verse/" + poem + "/" + verse;
     $.when($.getJSON(url, function (result) {
-        $("#verse").val(result);
+        $("#verse").val(result.verse.text);
+        $("input[name=verseType][value='" + result.verse.type + "']").prop("checked", true);
     })).then(function () {
         getScan(poem, verse);
     });

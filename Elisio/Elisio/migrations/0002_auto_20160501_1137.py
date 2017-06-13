@@ -28,5 +28,10 @@ class Migration(migrations.Migration):
             name='verseType',
             field=enumfields.fields.EnumField(default=1, enum=Elisio.engine.VerseFactory.VerseType, max_length=10),
         ),
+        migrations.AddField(
+            model_name='poem',
+            name='verseForm',
+            field=enumfields.fields.EnumField(default=1, enum=Elisio.engine.VerseFactory.VerseForm, max_length=10),
+        ),
         migrations.RunPython(load_initial_data)
     ]

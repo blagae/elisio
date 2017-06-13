@@ -151,6 +151,9 @@
   <ItemGroup>
     <Content Include="Elisio\fixtures\deviant\initial_data.xml" />
     <Content Include="Elisio\fixtures\metadata\initial_data.xml" />
+    <Content Include="Elisio\fixtures\sources\Cat. Carm. I 65.txt">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Elisio\fixtures\sources\Ov. Met. I.txt" />
     <Content Include="Elisio\fixtures\sources\Ov. Met. II.txt" />
     <Content Include="Elisio\fixtures\sources\Ov. Met. III.txt" />

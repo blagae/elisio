@@ -47,8 +47,8 @@ def verse(request, poem, verse):
     primary = int(verse)
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
-    data = json.dumps(obj.contents)
-    return HttpResponse(data, content_type='application/json')
+    data = get_metadata(obj)
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 def scan_rawtext(request, txt, metadata=None):
     # watch out before doing ANYTHING related to the db

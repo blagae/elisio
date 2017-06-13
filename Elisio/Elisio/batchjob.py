@@ -23,8 +23,8 @@ def find_poem(file):
     book = Book.objects.get(opus=opus, number=roman_to_int(split[2]))
     poem = Poem.objects.filter(book=book)
     if len(poem) == 1:
-        return poem[0].id
-    return poem.get(number=split[3]).id
+        return poem[0]
+    return poem.get(number=split[3])
 
 def fill_xml_object():
     """ externally facing method """
@@ -38,7 +38,7 @@ def fill_xml_object():
     for filename in all_filenames:
         with open(join(path, filename), "r") as file:
             verses = [line.replace('\n', '').strip() for line in file.readlines()]
-        poem_number = find_poem(file.name)
+        poem = find_poem(file.name)
         count = 1
         for verse in verses:
             obj = ET.SubElement(root, "object",
@@ -47,7 +47,7 @@ def fill_xml_object():
             poem_field = ET.SubElement(obj, "field",
                                        {'type': 'ForeignKey',
                                         'name': 'poem'})
-            poem_field.text = str(poem_number)
+            poem_field.text = str(poem.id)
             number_field = ET.SubElement(obj, "field",
                                          {'type': 'IntegerField',
                                           'name': 'number'})
@@ -63,6 +63,12 @@ def fill_xml_object():
                     alt_field.text = parsed[0][-1]
             number_field.text = str(count)
             count += 1
+            verseType_field = ET.SubElement(obj, "field",
+                                       {'type': 'enum.EnumField',
+                                        'name': 'verseType'})
+            vf = poem.verseForm.get_verse_types()
+            current_form = vf[count % len(vf)]
+            verseType_field.text = str(current_form)
             verse_field = ET.SubElement(obj, "field",
                                         {'type': 'CharField',
                                          'name': 'contents',

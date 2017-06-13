@@ -7,7 +7,7 @@ from enumfields import EnumField
 from Elisio.utils import get_commit
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from Elisio.engine.VerseFactory import VerseType
+from Elisio.engine.VerseFactory import VerseType, VerseForm
 
 class DeviantWord(Model):
     """ model class for the Engine: highest level """
@@ -90,6 +90,7 @@ class Poem(Model):
     book = ForeignKey(Book)
     number = IntegerField()
     nickname = CharField(max_length=20)
+    verseForm = EnumField(VerseForm, default=VerseForm.HEXAMETRIC)
 
 class DatabaseVerse(Model):
     """ model class that contains a Verse """

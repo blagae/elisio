@@ -290,6 +290,10 @@
     <field type="ForeignKey" name="opus">6</field>
     <field type="IntegerField" name="number">12</field>
   </object>
+  <object pk="29" model="Elisio.Book">
+    <field type="ForeignKey" name="opus">4</field>
+    <field type="IntegerField" name="number">1</field>
+  </object>
 
   <!-- Poems -->
   <object pk="2" model="Elisio.Poem">
@@ -476,5 +480,11 @@
     <field type="ForeignKey" name="book">28</field>
     <field type="IntegerField" name="number">1</field>
     <field type="IntegerField" name="nickname">-</field>
+  </object>
+  <object pk="39" model="Elisio.Poem">
+    <field type="ForeignKey" name="book">29</field>
+    <field type="IntegerField" name="number">65</field>
+    <field type="IntegerField" name="nickname">-</field>
+    <field type="enum.EnumField" name="verseForm">2</field>
   </object>
 </django-objects>
