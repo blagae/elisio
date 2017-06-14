@@ -133,7 +133,6 @@ class Verse(object):
         i = 0
         for word in self.words:
             for syll in word.syllables:
-                #if not syll.weight or syll.weight == Weight.ANCEPS:
                 if syll.weight != Weight.NONE:
                     syll.weight = self.flat_list[i]
                     i += 1

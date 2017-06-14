@@ -235,7 +235,7 @@ class TestSyllable(unittest.TestCase):
         self.assertFalse(Syllable('tum').starts_with_vowel())
         self.assertFalse(Syllable('rau').starts_with_vowel())
 
-        # not sure if testing the right things here !
+    # not sure if testing the right things here !
     def test_syll_noninitial_starts_cons(self):
         self.assertFalse(Syllable('a').starts_with_consonant(False))
         self.assertFalse(Syllable('ha').starts_with_consonant(False))
@@ -255,13 +255,13 @@ class TestSyllable(unittest.TestCase):
 
     # not sure if testing the right things here !
     def test_syll_initial_starts_cons(self):
-        self.assertFalse(Syllable('a').starts_with_consonant()) #
-        self.assertFalse(Syllable('ha').starts_with_consonant()) #
-        self.assertFalse(Syllable('hu').starts_with_consonant()) #
+        self.assertFalse(Syllable('a').starts_with_consonant())
+        self.assertFalse(Syllable('ha').starts_with_consonant())
+        self.assertFalse(Syllable('hu').starts_with_consonant())
         self.assertTrue(Syllable('hra').starts_with_consonant())
         
-        self.assertFalse(Syllable('i').starts_with_consonant()) #
-        self.assertFalse(Syllable('ix').starts_with_consonant()) #
+        self.assertFalse(Syllable('i').starts_with_consonant())
+        self.assertFalse(Syllable('ix').starts_with_consonant())
         self.assertTrue(Syllable('ius').starts_with_consonant())
         self.assertTrue(Syllable('uus').starts_with_consonant())
         self.assertTrue(Syllable('vi').starts_with_consonant())

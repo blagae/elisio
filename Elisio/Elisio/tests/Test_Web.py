@@ -8,7 +8,6 @@ from django.test import Client
 
 class TestWeb(unittest.TestCase):
     """ tests for the frontend """
-    #client = None
 
     def setUp(self):
         self.client = Client()

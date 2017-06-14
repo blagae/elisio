@@ -79,7 +79,6 @@ class Word(object):
                                 if strc[count] != "3" and strc[count] != "0":
                                     val = "3"
                                     break
-                                    #raise WordException("different occurrences have different qualities")
                         except IndexError:
                             pass
                     if val:

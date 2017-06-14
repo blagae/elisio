@@ -42,8 +42,7 @@ def fill_xml_object():
         count = 1
         for verse in verses:
             obj = ET.SubElement(root, "object",
-                                {#'pk': str(count),
-                                    'model': 'Elisio.DatabaseVerse'})
+                                {'model': 'Elisio.DatabaseVerse'})
             poem_field = ET.SubElement(obj, "field",
                                        {'type': 'ForeignKey',
                                         'name': 'poem'})
@@ -74,9 +73,6 @@ def fill_xml_object():
                                          'name': 'contents',
                                         })
             verse_field.text = parsed[-1]
-
-    #tree = ET.ElementTree(root)
-
     create_output_file(root)
 
 def find_all_verses_containing(regex, must_be_parsed=False):
