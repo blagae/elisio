@@ -193,6 +193,7 @@
     <Content Include="Elisio\fixtures\sources\Verg. Buc. I 10.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Buc. I 1.txt" />
     <Content Include="Elisio\fixtures\sources\Verg. Aen. VI.txt" />
+    <Content Include="Elisio\static\manageScripts.js" />
     <Content Include="Elisio\static\batchScripts.js" />
     <Content Include="Elisio\static\delete.png" />
     <Content Include="Elisio\static\indexScripts.js" />
@@ -204,6 +205,7 @@
     <Content Include="Elisio\templates\help.html" />
     <Content Include="Elisio\templates\index.html" />
     <Content Include="Elisio\templates\login.html" />
+    <Content Include="Elisio\templates\manage.html" />
     <Content Include="Elisio\templates\profile.html" />
     <Content Include="Elisio\templates\query.html" />
     <Content Include="Elisio\templates\register.html" />

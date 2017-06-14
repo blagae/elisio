@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^register/$', page.register),
     url(r'^profile/$', page.profile),
     url(r'^admin/', admin.site.urls),
+    url(r'^manage/', page.manage),
     url(r'^json/([a-zA-Z]+)/([0-9]+)$', json.list),
     url(r'^json/verse/([0-9]+)/([0-9]+)$', json.verse),
     url(r'^json/scan/([0-9]+)/([0-9]+)$', json.scan),
@@ -21,4 +22,6 @@ urlpatterns = [
     url(r'^json/random/$', json.get_random_verse),
     url(r'^json/clearsession/$', json.clear_session),
     url(r'^json/deleteverse/([a-f0-9]{64})$', json.delete_hash),
+    url(r'^json/admin/syncFiles/$', json.syncFiles),
+    url(r'^json/admin/syncDb/$', json.syncDb),
 ]

@@ -1,6 +1,6 @@
 """ standard Django views module for back-end logic """
 import json
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.core import serializers
 from Elisio.exceptions import ScansionException
 from Elisio.models import Book, Opus, Poem, DatabaseVerse
@@ -10,6 +10,7 @@ from random import randint
 from Elisio.numerals import int_to_roman
 import hashlib
 import time
+from Elisio.batchjob import sync_db, sync_files
 
 def clear_session(request):
     request.session['verses'] = []
@@ -120,3 +121,15 @@ def get_metadata(verse):
                     }
         return metadata
     return None
+
+def syncFiles(request):
+    if request.user.is_superuser:
+        sync_files()
+        return HttpResponse(status=204)
+    return HttpResponseForbidden()
+
+def syncDb(request):
+    if request.user.is_superuser:
+        sync_db()
+        return HttpResponse(status=204)
+    return HttpResponseForbidden()

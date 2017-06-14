@@ -63,3 +63,8 @@ def register(request):
             # TODO: handle in error message
             pass
     return render(request, 'register.html', CONTEXT)
+
+def manage(request):
+    if request.user.is_superuser:
+        return render(request, 'manage.html', CONTEXT)
+    return HttpResponseRedirect('/')

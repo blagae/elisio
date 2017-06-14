@@ -1,7 +1,11 @@
 """ module for creating an xml file from given input """
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as mini
-from Elisio.numerals import roman_to_int
+from Elisio.numerals import roman_to_int, int_to_roman
+from Elisio.models import DatabaseVerse, Author, Book, Opus, Poem
+from os import listdir
+from os.path import isfile, join
+
 
 def create_output_file(tree):
     """ create the file from the given xml tree """
@@ -13,7 +17,6 @@ def create_output_file(tree):
         raise IOError("Invalid XML Tree object")
 
 def find_poem(file):
-    from Elisio.models import Author, Book, Opus, Poem
     # Verg. Aen. I
     split = file.split('/')
     split = split[-1].split()
@@ -26,13 +29,21 @@ def find_poem(file):
         return poem[0]
     return poem.get(number=split[3])
 
+def name_poem(poem):
+    book = poem.book
+    opus = book.opus
+    author = opus.author
+    res = "{0} {1} {2}".format(author.abbreviation, opus.abbreviation, int_to_roman(book.number))
+    poems = book.poem_set.count()
+    if poems > 1:
+        res += " " + str(poem.number)
+    return res
+
 def fill_xml_object():
     """ externally facing method """
     root = ET.Element("django-objects", {'version': '1.0'})
     path = 'Elisio/fixtures/sources/'
     # https://stackoverflow.com/questions/3207219/how-to-list-all-files-of-a-directory-in-python
-    from os import listdir
-    from os.path import isfile, join
     all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
     # FYI if you get encoding exceptions with new files, manually set them to UTF-8
     for filename in all_filenames:
@@ -75,10 +86,53 @@ def fill_xml_object():
             verse_field.text = parsed[-1]
     create_output_file(root)
 
+def sync_files():
+    path = 'Elisio/fixtures/sources/'
+    for poem in Poem.objects.all():
+        name = join(path, name_poem(poem) + ".txt")
+        if isfile(name):
+            continue
+        f = open(name, 'w')
+        previous_verse = 0
+        for verse in poem.verses:
+            item = verse.contents + '\n'
+            if verse.number != previous_verse + 1 or verse.alternative:
+                prefix = str(verse.number) + verse.alternative + '$'
+                item = prefix + item
+            f.write(item)
+        f.close()
+
+def sync_db():
+    path = 'Elisio/fixtures/sources/'
+    all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
+    for filename in all_filenames:
+        verses = [line for line in open(join(path, filename)) if line.rstrip()]
+        poem = find_poem(filename) # see if this is problematic
+        db_lines = DatabaseVerse.objects.filter(poem=poem)
+        if len(verses) == db_lines.count():
+            continue
+        db_lines.delete()
+        count = 1
+        for verse in verses:
+            item = DatabaseVerse()
+            item.poem = poem
+            parsed = verse.split('$')
+            if (len(parsed) > 1):
+                try:
+                    count = int(parsed[0])
+                except:
+                    count = int(parsed[0][:-1])
+                    item.alternative = parsed[0][-1]
+            item.number = count
+            count += 1
+            item.contents = parsed[-1]
+            vf = poem.verseForm.get_verse_types()
+            item.verseType = vf[count % len(vf)]
+            item.save()
+
 def find_all_verses_containing(regex, must_be_parsed=False):
     from Elisio.utils import set_django
     from Elisio.engine.VerseFactory import VerseFactory
-    from Elisio.models import DatabaseVerse
     from Elisio.exceptions import ScansionException
     import re
     set_django()

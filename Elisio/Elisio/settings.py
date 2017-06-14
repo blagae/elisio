@@ -89,7 +89,6 @@ STATICFILES_FINDERS = (
 FIXTURE_DIRS = (
     'Elisio/fixtures/deviant/',
     'Elisio/fixtures/metadata/',
-    'Elisio/fixtures/verses/',
 )
 
 MIDDLEWARE = (
