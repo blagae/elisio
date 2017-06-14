@@ -1,0 +1,57 @@
+﻿        <section id="kickass">
+            <form>
+                <table>
+                    <caption>Verse characteristics</caption>
+                    <tr>
+                        <td id="bracketsOpen">
+                            <button>(</button>
+                            <button><s>(</s></button>
+                        </td>
+                        <td><select name="author" id="author">
+                                <option value="contains">Contains text:</option>
+                                <option value="zeleny">Has Zeleny code:</option>
+                                <option value="feet">Has foot structure:</option>
+                                <option value="elisions">Has elisions:</option>
+                            </select>
+                        </td>
+                        <td colspan="2"><input type="text" /></td>
+                        <td id="bracketsClose">
+                            <button>)</button>
+                            <button><s>)</s></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><select name="boolop"><option value="and">And</option><option value="or">Or</option></select></td>
+                        <td><input type="checkbox" />Not</td>
+                    </tr>
+                </table>
+                <table>
+                    <caption>Corpus</caption>
+                    <tr>
+                        <td id="bracketsOpen">
+                            <button>(</button>
+                            <button><s>(</s></button>
+                        </td>
+                        <td><select name="author" id="author">
+                                <option value="all">All</option>
+                                {% for author in authors %}
+                                <option value="{{ author.id }}">{{ author.short_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td colspan="2"><select name="opus" id="opus"><option value="all">All</option></select></td>
+                        <td><select name="book" id="book"><option value="all">All</option></select></td>
+                        <td><select name="poem" id="poem"><option value="all">All</option></select></td>
+                        <td><input name="verseNumber" id="verseNumber" /></td>
+                        <td id="bracketsClose">
+                            <button>)</button>
+                            <button><s>)</s></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><select name="boolop"><option value="and">And</option><option value="or">Or</option></select></td>
+                        <td><input type="checkbox" />Not</td>
+                    </tr>
+                </table>
+            </form>
+        </section>

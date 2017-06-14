@@ -1,8 +1,6 @@
 ﻿{% extends "base.html" %}
 {% load staticfiles %}
-{% block extra_scripts %}
-        <script src="{% static 'indexScripts.js' %}" type="text/javascript"></script>
-        <script src="{% static 'batchScripts.js' %}" type="text/javascript"></script>{% endblock %}
+{% block extra_scripts %}<script src="{% static 'batchScripts.js' %}" type="text/javascript"></script>{% endblock %}
 {% block content %}
         <section id="batch">
             {% if request.session.verses|length > 0 %}
@@ -45,7 +43,7 @@
         </section>
         <section id="query">
             {% if request.user.is_authenticated %}
-            {% include "./query.html" %}
+            {% include "./kickass.html" %}
             {% else %}
             <p>Hint: if you <a href="/login">log in</a> or <a href="/register">register</a>, then you'll be able to do the interactive verse selection on this page.
             In addition, in the future you will also be able to:</p>
