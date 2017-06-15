@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom as mini
 from Elisio.numerals import roman_to_int, int_to_roman
 from Elisio.models import DatabaseVerse, Author, Book, Opus, Poem
-from os import listdir
+from os import listdir, getcwd
 from os.path import isfile, join
 
 
@@ -87,7 +87,7 @@ def fill_xml_object():
     create_output_file(root)
 
 def sync_files():
-    path = 'Elisio/fixtures/sources/'
+    path = join(getcwd(), 'Elisio', 'fixtures', 'sources')
     for poem in Poem.objects.all():
         name = join(path, name_poem(poem) + ".txt")
         if isfile(name):
@@ -105,7 +105,7 @@ def sync_files():
         f.close()
 
 def sync_db():
-    path = 'Elisio/fixtures/sources/'
+    path = join(getcwd(), 'Elisio', 'fixtures', 'sources')
     all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
     for filename in all_filenames:
         verses = [line for line in open(join(path, filename)) if line.rstrip()]
