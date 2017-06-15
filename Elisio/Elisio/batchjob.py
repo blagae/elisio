@@ -94,12 +94,14 @@ def sync_files():
             continue
         f = open(name, 'w')
         previous_verse = 0
-        for verse in poem.verses:
-            item = verse.contents + '\n'
+        # force order in which they were inserted
+        for verse in poem.databaseverse_set.order_by('id').all():
+            item = verse.contents
             if verse.number != previous_verse + 1 or verse.alternative:
                 prefix = str(verse.number) + verse.alternative + '$'
                 item = prefix + item
             f.write(item)
+            previous_verse = verse.number
         f.close()
 
 def sync_db():
@@ -107,12 +109,13 @@ def sync_db():
     all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
     for filename in all_filenames:
         verses = [line for line in open(join(path, filename)) if line.rstrip()]
-        poem = find_poem(filename) # see if this is problematic
+        poem = find_poem(filename)
         db_lines = DatabaseVerse.objects.filter(poem=poem)
         if len(verses) == db_lines.count():
             continue
         db_lines.delete()
         count = 1
+        entries = []
         for verse in verses:
             item = DatabaseVerse()
             item.poem = poem
@@ -128,7 +131,8 @@ def sync_db():
             item.contents = parsed[-1]
             vf = poem.verseForm.get_verse_types()
             item.verseType = vf[count % len(vf)]
-            item.save()
+            entries.append(item)
+        DatabaseVerse.objects.bulk_create(entries)
 
 def find_all_verses_containing(regex, must_be_parsed=False):
     from Elisio.utils import set_django

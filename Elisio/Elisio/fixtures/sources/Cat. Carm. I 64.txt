@@ -22,7 +22,7 @@ tum Thetidi pater ipse iugandum Pelea sensit.
 o nimis optato saeclorum tempore nati
 23a$heroes, salvete, deum genus, o bona matrum
 23b$progenies, salvete iterum, <salvete, bonarum!>
-24$vos ego saepe meo, vos carmine compellabo,
+vos ego saepe meo, vos carmine compellabo,
 teque adeo eximie, taedis felicibus aucte
 Thessaliae columen Peleu, cui Iuppiter ipse,
 ipse suos divum genitor concessit amores.

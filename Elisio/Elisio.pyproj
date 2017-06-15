@@ -217,7 +217,6 @@
     <Folder Include="Elisio\engine\" />
     <Folder Include="Elisio\fixtures\metadata\" />
     <Folder Include="Elisio\fixtures\sources\" />
-    <Folder Include="Elisio\fixtures\verses\" />
     <Folder Include="Elisio\fixtures\deviant\" />
     <Folder Include="Elisio\views\" />
     <Folder Include="Elisio\templates\" />
