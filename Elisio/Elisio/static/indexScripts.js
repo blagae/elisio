@@ -168,8 +168,6 @@ $(document).ready(function () {
         });
     })).then(function () {
         $("#authorScannerField").change();
-        $("#opusScannerField").change();
-        $("#bookScannerField").change();
     });
     $("#useDictCheckbox").change(function () {
         dict = this.checked;
