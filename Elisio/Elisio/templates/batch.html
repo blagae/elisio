@@ -5,6 +5,9 @@
         <section id="batch">
             {% if request.session.verses|length > 0 %}
             <button id="clearSession">Clear current batch run</button>
+            {% if request.user.is_authenticated %}
+            <button id="saveBatch">Save current verses as a batch</button>
+            {% endif %}
             <table id="batchTable">
             <caption>These are the verses you've analyzed so far in this session</caption>
                 <thead>
@@ -16,11 +19,11 @@
                         <td>Verse number</td>
                         <td>Text</td>
                         <td>Scanned as</td>
-                        {% if request.user.is_authenticated %}<td> </td>{% endif %}
+                        {% if request.user.is_authenticated %}<td>Delete</td>{% endif %}
                     </tr>
                 </thead>
-            {% for verse in request.session.verses %}
                 <tbody>
+                    {% for verse in request.session.verses %}
                     <tr id="{{ verse.id }}">
                         <td>{{ verse.author.name }}</td>
                         <td>{{ verse.opus.name }}</td>
@@ -33,14 +36,39 @@
                         <td><img src="{% static 'delete.png' %}" alt="{{ verse.id }}" height="16" width="16" class="delete"></td>
                     {% endif %}
                     </tr>
+                    {% endfor %}
                 </tbody>
-            {% endfor %}
             </table>
             {% else %}
             <p>You haven't analyzed any verses yet.
             Head over to the <a href="/">interactive verse selector</a> to start analyzing.</p>
             {% endif %}
         </section>
+        {% if request.user.is_authenticated %}
+        <section id="batches">
+            <table id="batchesTable">
+            <caption>These are the batches you have created in the past</caption>
+                <thead>
+                    <tr>
+                        <td>Batch name</td>
+                        <td>Time</td>
+                        <td>Number of verses at creation time</td>
+                        <td>Number of verses now</td>
+                        <td>Has been run</td>
+                        <td>Run</td>
+                        <td>Delete</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for batch in request.session.batches %}
+                    <tr id="{{ batch.id }}">
+                        <td>{{ batch.date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        {% endif %}
         <section id="query">
             {% if request.user.is_authenticated %}
             {% include "./kickass.html" %}

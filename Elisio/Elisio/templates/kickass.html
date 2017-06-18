@@ -1,7 +1,7 @@
 ﻿        <section id="kickass">
             <form>
                 <table>
-                    <caption>Verse characteristics</caption>
+                    <caption>Verse criteria</caption>
                     <tr>
                         <td id="bracketsOpen">
                             <button>(</button>
@@ -26,7 +26,7 @@
                     </tr>
                 </table>
                 <table>
-                    <caption>Corpus</caption>
+                    <caption>Corpus criteria</caption>
                     <tr>
                         <td id="bracketsOpen">
                             <button>(</button>
@@ -53,5 +53,34 @@
                         <td><input type="checkbox" />Not</td>
                     </tr>
                 </table>
+                <p>Output information</p>
+                <ul>
+                    <li>
+                        <input type="checkbox" />a list of verses
+                        <ul>
+                            <li><input type="checkbox" />including weight diacritics</li>
+                            <li><input type="checkbox" />including zeleny code</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <input type="checkbox" />statistics
+                        <ul>
+                            <li><input type="checkbox" />average</li>
+                            <li><input type="checkbox" />median</li>
+                            <li><input type="checkbox" />quartiles</li>
+                            <li><input type="checkbox" />standard deviation</li>
+                            <li><input type="checkbox" />variance</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Group statistics</p>
+                        <ul>
+                            <li><input type="checkbox" />group per author</li>
+                            <li><input type="checkbox" />group per opus</li>
+                            <li><input type="checkbox" />group per book</li>
+                            <li><input type="checkbox" />group per poem</li>
+                        </ul>
+                    </li>
+                </ul>
             </form>
         </section>
