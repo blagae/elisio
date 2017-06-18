@@ -134,17 +134,20 @@ $(document).ready(function () {
 
     $("#authorScannerField").change(function () {
         getOpera(this.value);
-        getMaxVerseNumber($("#poemScannerField").val());
     });
+
     $("#opusScannerField").change(function () {
         getBooks(this.value);
     });
+
     $("#bookScannerField").change(function () {
         getPoems(this.value);
     });
+
     $("#poemScannerField").change(function () {
         getMaxVerseNumber(this.value);
     });
+
     $("#verseNumberScannerField").change(function () {
         var validated = validateVerseNumber(this.value);
         if (validated) {
@@ -154,7 +157,6 @@ $(document).ready(function () {
     });
 
     $("#verseContentsScannerField").focusout(function () {
-        // getScan($("#poemScannerField").val(), $("#verseNumberScannerField").val());
         if (!avoidDouble)
             getScanRaw($("#verseContentsScannerField").val());
         avoidDouble = false;
@@ -169,6 +171,7 @@ $(document).ready(function () {
     })).then(function () {
         $("#authorScannerField").change();
     });
+
     $("#useDictCheckbox").change(function () {
         dict = this.checked;
     });
