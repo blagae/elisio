@@ -5,6 +5,16 @@
     return objects;
 }
 
+function getAllAuthors() {
+    var objects = $("#authorBatchField");
+    $.when($.getJSON("/json/authors/", function (result) {
+        $.each(result, function () {
+            objects.append($("<option />").val(this.pk).text(this.fields.short_name));
+        });
+        $('#authorBatchField option:first-child').attr("selected", "selected");
+    }));
+}
+
 function getAllOpera(key) {
     var objects = resetBatchField("#opusBatchField");
     if (key !== "All") {
@@ -57,6 +67,8 @@ $(document).ready(function () {
             $("#"+hash).remove();
         });
     });
+
+    getAllAuthors();
 
     $("#authorBatchField").change(function () {
         getAllOpera(this.value);

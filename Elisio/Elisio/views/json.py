@@ -3,7 +3,7 @@ import json
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.core import serializers
 from Elisio.exceptions import ScansionException
-from Elisio.models import Book, Opus, Poem, DatabaseVerse
+from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse
 from Elisio.engine.TextDecorator import TextDecorator
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from random import randint
@@ -25,10 +25,20 @@ def get_list_type(request, obj_type, key):
         objects = Book.objects.filter(opus=primary).order_by('number')
     elif obj_type == 'book':
         objects = Poem.objects.filter(book=primary).order_by('number')
-    elif obj_type == 'poem':
-        return HttpResponse(DatabaseVerse.get_maximum_verse_num(poem=primary))
     else:
         raise Http404
+    return wrap_in_response(objects)
+
+def get_poem_length(request, key):
+    primary = int(key)
+    return HttpResponse(DatabaseVerse.get_maximum_verse_num(poem=primary))
+
+
+def get_authors(request):
+    objects = Author.objects.filter(opus__book__gt=0).order_by('floruit_start').distinct()
+    return wrap_in_response(objects)
+
+def wrap_in_response(objects):
     data = serializers.serialize('json', objects)
     return HttpResponse(data, content_type='application/json')
 

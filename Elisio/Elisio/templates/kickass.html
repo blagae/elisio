@@ -12,6 +12,7 @@
                                 <option value="zeleny">Has Zeleny code:</option>
                                 <option value="feet">Has foot structure:</option>
                                 <option value="elisions">Has elisions:</option>
+                                <option value="type">Is of verse type:</option>
                             </select>
                         </td>
                         <td colspan="2"><input type="text" /></td>
@@ -27,29 +28,13 @@
                 </table>
                 <table>
                     <caption>Corpus criteria</caption>
-                    <tr>
-                        <td>
-                            <button>(</button>
-                            <button><s>(</s></button>
-                        </td>
-                        <td><select name="author" id="authorBatchField">
-                                <option value="All">All</option>
-                                {% for author in authors %}
-                                <option value="{{ author.id }}">{{ author.short_name }}</option>
-                                {% endfor %}
-                            </select>
+                    <tr class="criterium" id="criterium1">
+                        <td><select name="author" id="authorBatchField"><option value="All">All</option></select>
                         </td>
                         <td colspan="2"><select name="opus" id="opusBatchField"><option value="All">All</option></select></td>
                         <td><select name="book" id="bookBatchField"><option value="All">All</option></select></td>
                         <td><select name="poem" id="poemBatchField"><option value="All">All</option></select></td>
-                        <td>
-                            <button>)</button>
-                            <button><s>)</s></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><select name="boolop"><option value="and">And</option><option value="or">Or</option></select></td>
-                        <td><input type="checkbox" />Not</td>
+                        <td><input type="button" value="Except" /><input type="button" value="Or" /></td>
                     </tr>
                 </table>
                 <p>Output information</p>

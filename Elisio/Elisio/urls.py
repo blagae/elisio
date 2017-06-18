@@ -15,7 +15,9 @@ urlpatterns = [
     url(r'^profile/$', pages.profile_page),
     url(r'^manage/', pages.manage_page),
     url(r'^admin/', admin.site.urls),
-    url(r'^json/([a-zA-Z]+)/([0-9]+)$', json.get_list_type), # author, opus, book, poem
+    url(r'^json/poem/([0-9]+)$', json.get_poem_length),
+    url(r'^json/([a-zA-Z]+)/([0-9]+)$', json.get_list_type), # author, opus, book
+    url(r'^json/authors/$', json.get_authors),
     url(r'^json/verse/([0-9]+)/([0-9]+)$', json.get_verse),
     url(r'^json/verse/random/$', json.get_random_verse),
     url(r'^json/scan/dbverse/([0-9]+)/([0-9]+)$', json.scan_verse),

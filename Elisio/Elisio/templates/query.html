@@ -8,13 +8,7 @@
                         <td>Verse</td>
                     </tr>
                     <tr>
-                        <td colspan="2">
-                            <select name="author" id="authorScannerField">
-                                {% for author in authors %}
-                                <option value="{{ author.id }}">{{ author.short_name }}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
+                        <td colspan="2"><select name="author" id="authorScannerField"></select></td>
                         <td colspan="2"><select name="opus" id="opusScannerField"></select></td>
                         <td><select name="book" id="bookScannerField"></select></td>
                         <td><select name="poem" id="poemScannerField"></select></td>

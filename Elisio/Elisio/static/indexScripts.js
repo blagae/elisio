@@ -106,7 +106,7 @@ function useDict(url) {
 }
 
 function validateVerseNumber(val) {
-    var regex = /^[0-9]*$/;
+    var regex = /^[0-9]+$/;
     if (!regex.test(val)) {
         $("#warningScannerField").text("Insert a number please");
     } else {
@@ -119,6 +119,7 @@ function validateVerseNumber(val) {
 }
 
 $(document).ready(function () {
+
     $("#randomVerseScannerButton").click(function () {
         avoidDouble = false;
         var url = "/json/verse/random/";
@@ -159,10 +160,17 @@ $(document).ready(function () {
         avoidDouble = false;
     });
 
-    $("#authorScannerField").change();
-    $("#opusScannerField").change();
-    $("#bookScannerField").change();
 
+    $.when($.getJSON("/json/authors/", function (result) {
+        var objects = $("#authorScannerField");
+        $.each(result, function () {
+            objects.append($("<option />").val(this.pk).text(this.fields.short_name));
+        });
+    })).then(function () {
+        $("#authorScannerField").change();
+        $("#opusScannerField").change();
+        $("#bookScannerField").change();
+    });
     $("#useDictCheckbox").change(function () {
         dict = this.checked;
     });
