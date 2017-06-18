@@ -4,6 +4,8 @@
             <p>dummy profile page of {{request.user.username}}</p>
         </section>
         <section id="extraFunctionsSection">
-
+            {% if request.user.is_superuser %}
+            <p><a href="/manage">Go to management portal</a></p>
+            {% endif %}
         </section>
 {% endblock %}
