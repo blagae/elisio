@@ -11,8 +11,8 @@
         {% block extra_scripts %}{% endblock %}
     </head>
     <body>
-        <section id="menu">
-            <div id="menu_wrapper">
+        <section id="menuSection">
+            <div id="menuDiv">
                 <nav>
                     <a href="/">Scanning tool</a>
                     <a href="/batch/">Data analysis</a>
@@ -28,11 +28,11 @@
                 </nav>
             </div>
         </section>
-        <section id="main">
+        <section id="mainSection">
         {% block content %}
         {% endblock %}
         </section>
-        <section id="footer">
+        <section id="footerSection">
             <p>This website's source code is licensed under the AGPL and available on <a href="http://github.com/blagae/elisio">Github</a>.</p>
             <p>Made by blagae in 2017.</p>
         </section>

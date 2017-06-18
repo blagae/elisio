@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
-    $("#clearSession").click(function () {
+    $("#clearCurrentBatchButton").click(function () {
         $.getJSON("/json/clearsession", function (result) {
-            $("#batchTable").remove();
+            $("#currentBatchTable").remove();
         });
     });
     $(".delete").click(function () {

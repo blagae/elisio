@@ -1,13 +1,13 @@
-﻿        <section id="kickass">
+﻿        <section id="kickassSection">
             <form>
                 <table>
                     <caption>Verse criteria</caption>
                     <tr>
-                        <td id="bracketsOpen">
+                        <td>
                             <button>(</button>
                             <button><s>(</s></button>
                         </td>
-                        <td><select name="author" id="author">
+                        <td><select name="author">
                                 <option value="contains">Contains text:</option>
                                 <option value="zeleny">Has Zeleny code:</option>
                                 <option value="feet">Has foot structure:</option>
@@ -15,7 +15,7 @@
                             </select>
                         </td>
                         <td colspan="2"><input type="text" /></td>
-                        <td id="bracketsClose">
+                        <td>
                             <button>)</button>
                             <button><s>)</s></button>
                         </td>
@@ -28,22 +28,22 @@
                 <table>
                     <caption>Corpus criteria</caption>
                     <tr>
-                        <td id="bracketsOpen">
+                        <td>
                             <button>(</button>
                             <button><s>(</s></button>
                         </td>
-                        <td><select name="author" id="author">
+                        <td><select name="author">
                                 <option value="all">All</option>
                                 {% for author in authors %}
                                 <option value="{{ author.id }}">{{ author.short_name }}</option>
                                 {% endfor %}
                             </select>
                         </td>
-                        <td colspan="2"><select name="opus" id="opus"><option value="all">All</option></select></td>
-                        <td><select name="book" id="book"><option value="all">All</option></select></td>
-                        <td><select name="poem" id="poem"><option value="all">All</option></select></td>
-                        <td><input name="verseNumber" id="verseNumber" /></td>
-                        <td id="bracketsClose">
+                        <td colspan="2"><select name="opus"><option value="all">All</option></select></td>
+                        <td><select name="book"><option value="all">All</option></select></td>
+                        <td><select name="poem"><option value="all">All</option></select></td>
+                        <td><input name="verseNumber" /></td>
+                        <td>
                             <button>)</button>
                             <button><s>)</s></button>
                         </td>

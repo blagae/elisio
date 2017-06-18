@@ -3,11 +3,11 @@
 {% block extra_scripts %}
         <script src="{% static 'indexScripts.js' %}" type="text/javascript"></script>{% endblock %}
 {% block content %}
-        <section id="scantool">
+        <section id="scantoolSection">
             {% include "./query.html" %}
             <p>Hint: after analyzing a few verses, you can go to <a href="batch">the batch tool</a> to find relevant data.</p>
         </section>
-        <section id="info">
+        <section id="basicInfoSection">
             <h3>Elisio Project</h3>
             <p>The Elisio project is an attempt to teach computers to scan Latin verses, and to share the results publicly with those who are interested.
             Scanning a Latin verse means, in this technical context, to analyze its structural variation of light and heavy syllables.

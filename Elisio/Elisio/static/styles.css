@@ -9,23 +9,23 @@ body {
     margin: 0 0 120px;
 }
 
-#menu {
+#menuSection {
     top: 0;
     height: 30px;
 }
 
-#main {
+#mainSection {
     margin-left: 30px;
     margin-right: 30px;
 }
 
-#footer, #menu {
+#footerSection, #menuSection {
     background-color: #392B2B;
     width: 100%;
     left: 0;
 }
 
-#footer {
+#footerSection {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -33,9 +33,9 @@ body {
     width: 100%;
 }
 
-    #footer p {
-        color: #F5F5F5;
-    }
+#footerSection p {
+    color: #F5F5F5;
+}
 
 nav {
     width: 100%;
@@ -65,7 +65,7 @@ select, input, label {
     font-weight: 700;
 }
 
-#scannedVerse {
+#scannedVerseResultField {
     height: 40px;
 }
 

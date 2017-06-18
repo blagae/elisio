@@ -3,50 +3,50 @@ var dict = true;
 var avoidDouble = false;
 
 function getOpera(key, op, bk, po) {
-    var objects = $("#opus");
+    var objects = $("#opusScannerField");
     objects.empty();
     $.when($.getJSON("/json/author/" + key, function (result) {
         $.each(result, function () {
             objects.append($("<option />").val(this.pk).text(this.fields.full_name));
         });
         if (typeof op === "undefined")
-            $('#opus option:first-child').attr("selected", "selected");
+            $('#opusScannerField option:first-child').attr("selected", "selected");
         else
-            $("#opus").val(op);
+            $("#opusScannerField").val(op);
     })).then(function () {
-        getBooks($("#opus").val(), bk, po);
+        getBooks($("#opusScannerField").val(), bk, po);
     });
 }
 
 function getBooks(key, bk, po) {
-    var objects = $("#book");
+    var objects = $("#bookScannerField");
     objects.empty();
     $.when($.getJSON("/json/opus/" + key, function (result) {
         $.each(result, function () {
             objects.append($("<option />").val(this.pk).text(this.fields.number));
         });
         if (typeof bk === "undefined")
-            $('#book option:first-child').attr("selected", "selected");
+            $('#bookScannerField option:first-child').attr("selected", "selected");
         else
-            $("#book").val(bk);
+            $("#bookScannerField").val(bk);
     })).then(function () {
-        getPoems($("#book").val(), po);
+        getPoems($("#bookScannerField").val(), po);
     });
 }
 
 function getPoems(key, po) {
-    var objects = $("#poem");
+    var objects = $("#poemScannerField");
     objects.empty();
     $.when($.getJSON("/json/book/" + key, function (result) {
         $.each(result, function () {
             objects.append($("<option />").val(this.pk).text(this.fields.number));
         });
         if (typeof po === "undefined")
-            $('#poem option:first-child').attr("selected", "selected");
+            $('#poemScannerField option:first-child').attr("selected", "selected");
         else
-            $("#poem").val(po);
+            $("#poemScannerField").val(po);
     })).then(function () {
-        getMaxVerseNumber($("#poem").val());
+        getMaxVerseNumber($("#poemScannerField").val());
     });
 }
 
@@ -55,14 +55,14 @@ function getMaxVerseNumber(key) {
     $.when($.getJSON("/json/poem/" + key, function (result) {
         maxVerseNumber = result;
     })).then(function () {
-        $("#verseNumber").change();
+        $("#verseNumberScannerField").change();
     });
 }
 
 function getVerse(poem, verse) {
     var url = "/json/verse/" + poem + "/" + verse;
     $.when($.getJSON(url, function (result) {
-        $("#verse").val(result.verse.text);
+        $("#verseContentsScannerField").val(result.verse.text);
         $("input[name=verseType][value='" + result.verse.type + "']").prop("checked", true);
     })).then(function () {
         getScan(poem, verse);
@@ -73,14 +73,14 @@ function doScan(loc) {
     $.getJSON(loc, function (ret) {
         if (ret.text) {
             result = ret.text;
-            $("#scannedVerse").html(ret.text);
-            $("#zeleny").html(ret.zeleny);
-            $("#error").empty();
+            $("#scannedVerseResultField").html(ret.text);
+            $("#zelenyResultField").html(ret.zeleny);
+            $("#errorResultField").empty();
         }
         else {
-            $("#scannedVerse").empty();
-            $("#zeleny").empty();
-            $("#error").html(ret.error.replace('\n', '<br />'));
+            $("#scannedVerseResultField").empty();
+            $("#zelenyResultField").empty();
+            $("#errorResultField").html(ret.error.replace('\n', '<br />'));
         }
     });
 }
@@ -108,62 +108,62 @@ function useDict(url) {
 function validateVerseNumber(val) {
     var regex = /^[0-9]*$/;
     if (!regex.test(val)) {
-        $("#warning").text("Insert a number please");
+        $("#warningScannerField").text("Insert a number please");
     } else {
-        $("#warning").empty();
+        $("#warningScannerField").empty();
     };
     if (val > maxVerseNumber) {
-        $("#warning").text("Maximum verse number is " + maxVerseNumber);
+        $("#warningScannerField").text("Maximum verse number is " + maxVerseNumber);
     }
-    return $("#warning").text() == "";
+    return $("#warningScannerField").text() == "";
 }
 
 $(document).ready(function () {
-    $("#randomVerse").click(function () {
+    $("#randomVerseScannerButton").click(function () {
         avoidDouble = false;
         var url = "/json/random/";
         $.getJSON(url, function (result) {
-            $("#author").val(result.author.id);
-            $("#verseNumber").val(result.verse.number);
-            $("#verse").val(result.verse.text);
+            $("#authorScannerField").val(result.author.id);
+            $("#verseNumberScannerField").val(result.verse.number);
+            $("#verseContentsScannerField").val(result.verse.text);
             $("input[name=verseType][value='"+ result.verse.type +"']").prop("checked", true);
             getOpera(result.author.id, result.opus.id, result.book.id, result.poem.id);
         });
     });
 
-    $("#author").change(function () {
+    $("#authorScannerField").change(function () {
         getOpera(this.value);
-        getMaxVerseNumber($("#poem").val());
+        getMaxVerseNumber($("#poemScannerField").val());
     });
-    $("#opus").change(function () {
+    $("#opusScannerField").change(function () {
         getBooks(this.value);
     });
-    $("#book").change(function () {
+    $("#bookScannerField").change(function () {
         getPoems(this.value);
     });
-    $("#poem").change(function () {
+    $("#poemScannerField").change(function () {
         getMaxVerseNumber(this.value);
     });
-    $("#verseNumber").change(function () {
+    $("#verseNumberScannerField").change(function () {
         var validated = validateVerseNumber(this.value);
         if (validated) {
-            getVerse($("#poem").val(), this.value);
+            getVerse($("#poemScannerField").val(), this.value);
         }
         avoidDouble = true;
     });
 
-    $("#verse").focusout(function () {
-        // getScan($("#poem").val(), $("#verseNumber").val());
+    $("#verseContentsScannerField").focusout(function () {
+        // getScan($("#poemScannerField").val(), $("#verseNumberScannerField").val());
         if (!avoidDouble)
-            getScanRaw($("#verse").val());
+            getScanRaw($("#verseContentsScannerField").val());
         avoidDouble = false;
     });
 
-    $("#author").change();
-    $("#opus").change();
-    $("#book").change();
+    $("#authorScannerField").change();
+    $("#opusScannerField").change();
+    $("#bookScannerField").change();
 
-    $("#dict").change(function () {
+    $("#useDictCheckbox").change(function () {
         dict = this.checked;
     });
 
