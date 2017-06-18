@@ -32,17 +32,16 @@
                             <button>(</button>
                             <button><s>(</s></button>
                         </td>
-                        <td><select name="author">
-                                <option value="all">All</option>
+                        <td><select name="author" id="authorBatchField">
+                                <option value="All">All</option>
                                 {% for author in authors %}
                                 <option value="{{ author.id }}">{{ author.short_name }}</option>
                                 {% endfor %}
                             </select>
                         </td>
-                        <td colspan="2"><select name="opus"><option value="all">All</option></select></td>
-                        <td><select name="book"><option value="all">All</option></select></td>
-                        <td><select name="poem"><option value="all">All</option></select></td>
-                        <td><input name="verseNumber" /></td>
+                        <td colspan="2"><select name="opus" id="opusBatchField"><option value="All">All</option></select></td>
+                        <td><select name="book" id="bookBatchField"><option value="All">All</option></select></td>
+                        <td><select name="poem" id="poemBatchField"><option value="All">All</option></select></td>
                         <td>
                             <button>)</button>
                             <button><s>)</s></button>

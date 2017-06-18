@@ -9,7 +9,7 @@ CONTEXT = {}
 
 def index_page(request):
     """ return index page """
-    CONTEXT['authors'] = Author.objects.filter(opus__book__gt=0).distinct()
+    CONTEXT['authors'] = Author.objects.filter(opus__book__gt=0).order_by('floruit_start').distinct()
     return render(request, 'index.html', CONTEXT)
 
 def batch_page(request):

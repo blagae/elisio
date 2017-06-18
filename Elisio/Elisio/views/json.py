@@ -20,11 +20,11 @@ def get_list_type(request, obj_type, key):
     """ get a list of the requested Object Type """
     primary = int(key)
     if obj_type == 'author':
-        objects = Opus.objects.filter(author=primary)
+        objects = Opus.objects.filter(author=primary).order_by('publication')
     elif obj_type == 'opus':
-        objects = Book.objects.filter(opus=primary)
+        objects = Book.objects.filter(opus=primary).order_by('number')
     elif obj_type == 'book':
-        objects = Poem.objects.filter(book=primary)
+        objects = Poem.objects.filter(book=primary).order_by('number')
     elif obj_type == 'poem':
         return HttpResponse(DatabaseVerse.get_maximum_verse_num(poem=primary))
     else:
