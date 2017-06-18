@@ -86,11 +86,11 @@ function doScan(loc) {
 }
 
 function getScan(poem, verse) {
-    doScan(useDict("/json/scan/" + poem + "/" + verse));
+    doScan(useDict("/json/scan/dbverse/" + poem + "/" + verse));
 }
 
 function getScanRaw(txt) {
-    doScan(useDict("/json/scanraw/" + txt));
+    doScan(useDict("/json/scan/text/" + txt));
 }
 
 function useDict(url) {
@@ -121,7 +121,7 @@ function validateVerseNumber(val) {
 $(document).ready(function () {
     $("#randomVerseScannerButton").click(function () {
         avoidDouble = false;
-        var url = "/json/random/";
+        var url = "/json/verse/random/";
         $.getJSON(url, function (result) {
             $("#authorScannerField").val(result.author.id);
             $("#verseNumberScannerField").val(result.verse.number);

@@ -10,13 +10,13 @@ from random import randint
 from Elisio.numerals import int_to_roman
 import hashlib
 import time
-from Elisio.batchjob import sync_db, sync_files
+from Elisio.batchjob import syncDb, syncFiles
 
-def clear_session(request):
+def clear_batch_session(request):
     request.session['verses'] = []
     return HttpResponse(status=204) # empty response
 
-def list(request, obj_type, key):
+def get_list_type(request, obj_type, key):
     """ get a list of the requested Object Type """
     primary = int(key)
     if obj_type == 'author':
@@ -43,7 +43,7 @@ def update_req_with_verse(request, metadata):
     request.session.modified = True
 
 
-def verse(request, poem, verse):
+def get_verse(request, poem, verse):
     """ get a verse through a JSON request """
     primary = int(verse)
     poem_pk = int(poem)
@@ -51,7 +51,7 @@ def verse(request, poem, verse):
     data = get_metadata(obj)
     return HttpResponse(json.dumps(data), content_type='application/json')
 
-def scan_rawtext(request, txt, metadata=None):
+def scan_verse_text(request, txt, metadata=None):
     # watch out before doing ANYTHING related to the db
     if not metadata:
         metadata = {'verse': {'text': txt}}
@@ -72,7 +72,7 @@ def scan_rawtext(request, txt, metadata=None):
         data["error"] = str(ex)
     return HttpResponse(json.dumps(data), content_type='application/json')
 
-def delete_hash(request, hash):
+def delete_verse_hash(request, hash):
     result = False
     for verse in request.session['verses']:
         if verse["id"] == hash:
@@ -83,13 +83,13 @@ def delete_hash(request, hash):
         request.session.modified = True
     return HttpResponse(status=204) # empty response
 
-def scan(request, poem, verse):
+def scan_verse(request, poem, verse):
     """ get a verse through a JSON request """
     primary = int(verse)
     poem_pk = int(poem)
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
     metadata = get_metadata(obj)
-    return scan_rawtext(request, obj.contents, metadata)
+    return scan_verse_text(request, obj.contents, metadata)
 
 def get_random_verse(request):
     count = DatabaseVerse.objects.count()
@@ -122,14 +122,14 @@ def get_metadata(verse):
         return metadata
     return None
 
-def syncFiles(request):
+def sync_files(request):
     if request.user.is_superuser:
-        sync_files()
+        syncFiles()
         return HttpResponse(status=204)
     return HttpResponseForbidden()
 
-def syncDb(request):
+def sync_db(request):
     if request.user.is_superuser:
-        sync_db()
+        syncDb()
         return HttpResponse(status=204)
     return HttpResponseForbidden()

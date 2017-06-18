@@ -86,7 +86,7 @@ def fill_xml_object():
             verse_field.text = parsed[-1]
     create_output_file(root)
 
-def sync_files():
+def syncFiles():
     path = join(getcwd(), 'Elisio', 'fixtures', 'sources')
     for poem in Poem.objects.all():
         name = join(path, name_poem(poem) + ".txt")
@@ -104,7 +104,7 @@ def sync_files():
             previous_verse = verse.number
         f.close()
 
-def sync_db():
+def syncDb():
     path = join(getcwd(), 'Elisio', 'fixtures', 'sources')
     all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
     for filename in all_filenames:

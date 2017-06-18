@@ -138,7 +138,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\views\json.py" />
-    <Compile Include="Elisio\views\page.py">
+    <Compile Include="Elisio\views\pages.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elisio\views\__init__.py" />
