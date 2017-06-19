@@ -7,11 +7,28 @@
 
 function getAllAuthors() {
     var objects = $("#authorBatchField");
-    $.when($.getJSON("/json/authors/", function (result) {
+    $.getJSON("/json/authors/", function (result) {
         $.each(result, function () {
             objects.append($("<option />").val(this.pk).text(this.fields.short_name));
         });
         $('#authorBatchField option:first-child').attr("selected", "selected");
+    });
+}
+
+function saveCurrentBatch() {
+    $.getJSON("/json/batch/save/", function (result) {
+        alert("batch saved");
+    });
+}
+
+function getAllBatches() {
+    var objects = $("#existingBatchesTable");
+    var content = "";
+    $.when($.getJSON("/json/batches/", function (result) {
+        $.each(result, function () {
+            content += "<tr><td>" + this.fields.timing + "</td></tr>";
+            objects.append(content);
+        });
     }));
 }
 
@@ -69,14 +86,21 @@ $(document).ready(function () {
     });
 
     getAllAuthors();
+    getAllBatches();
 
     $("#authorBatchField").change(function () {
         getAllOpera(this.value);
     });
+
     $("#opusBatchField").change(function () {
         getAllBooks(this.value);
     });
+
     $("#bookBatchField").change(function () {
         getAllPoems(this.value);
+    });
+
+    $("#saveCurrentBatchButton").click(function () {
+        saveCurrentBatch();
     });
 });

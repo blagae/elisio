@@ -3,7 +3,7 @@ import json
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.core import serializers
 from Elisio.exceptions import ScansionException
-from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse
+from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse, ScanSession, ScanVerseResult
 from Elisio.engine.TextDecorator import TextDecorator
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from random import randint
@@ -33,6 +33,11 @@ def get_poem_length(request, key):
     primary = int(key)
     return HttpResponse(DatabaseVerse.get_maximum_verse_num(poem=primary))
 
+def get_batches(request):
+    if request.user.is_authenticated:
+        objects = ScanSession.objects.filter(user=request.user).order_by('timing')
+        return wrap_in_response(objects)
+    return HttpResponseForbidden()
 
 def get_authors(request):
     objects = Author.objects.filter(opus__book__gt=0).order_by('floruit_start').distinct()
@@ -52,14 +57,33 @@ def update_req_with_verse(request, metadata):
     # https://stackoverflow.com/questions/43904060/editing-session-variable-in-django
     request.session.modified = True
 
-
 def get_verse(request, poem, verse):
     """ get a verse through a JSON request """
-    primary = int(verse)
-    poem_pk = int(poem)
-    obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
+    obj = get_verse_local(poem, verse)
     data = get_metadata(obj)
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_verse_local(poem, verse):
+    primary = int(verse)
+    poem_pk = int(poem)
+    return DatabaseVerse.get_verse_from_db(poem_pk, primary)
+
+def save_batch(request):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+    if not request.session['verses'] or len(request.session['verses']) < 1:
+        return Http404()
+    sess = ScanSession()
+    sess.user = request.user
+    sess.save()
+    for verse in request.session['verses']:
+        res = ScanVerseResult()
+        res.session = sess
+        res.verse = get_verse_local(verse['poem']['id'], verse['verse']['number'])
+        res.scanned_as = VerseType[verse['verse']['type']]
+        res.save()
+    request.session['verses'] = []
+    return HttpResponse(status=204)
 
 def scan_verse_text(request, txt, metadata=None):
     # watch out before doing ANYTHING related to the db
