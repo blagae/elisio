@@ -125,12 +125,12 @@ class WordOccurrence(Model):
 
 class Batch(Model):
     timing = DateTimeField(auto_now=True)
-    user = ForeignKey(User, blank=True)
-    items_at_creation_time = IntegerField()
+    user = ForeignKey(User, null=True)
+    items_at_creation_time = IntegerField(null=True)
 
 class BatchItem(Model):
     batch = ForeignKey(Batch)
-    dependent_on = ForeignKey("self", blank=True)
+    dependent_on = ForeignKey("self", null=True)
 
 class DatabaseBatchItem(BatchItem):
     object_type = CharField(max_length=10)
@@ -143,7 +143,7 @@ class InputBatchItem(BatchItem):
     scanned_as = EnumField(VerseType, null=True)
 
 class ScanSession(Model):
-    batch = ForeignKey(Batch, blank=True, default=None)
+    batch = ForeignKey(Batch, null=True, default=None)
     timing = DateTimeField(auto_now=True)
     initiator = CharField(max_length=40, default='')
     commit = CharField(max_length=40, default=get_commit)
@@ -151,7 +151,7 @@ class ScanSession(Model):
 class ScanVerseResult(Model):
     verse = ForeignKey(DatabaseVerse)
     session = ForeignKey(ScanSession)
-    batch_item = ForeignKey(BatchItem, blank=True, default=None)
+    batch_item = ForeignKey(BatchItem, null=True, default=None)
     failure = CharField(max_length=70, blank=True)
     structure = CharField(max_length=8, blank=True)
     zeleny = CharField(max_length=17, blank=True)

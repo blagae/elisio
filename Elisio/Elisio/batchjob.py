@@ -159,11 +159,20 @@ def find_all_verses_containing(regex, must_be_parsed=False):
 def scan_verses(dbverses, initiator, commit=""):
     from Elisio.engine.VerseFactory import VerseFactory
     from Elisio.exceptions import HexameterException, VerseException, ScansionException
-    from Elisio.models import ScanVerseResult, ScanSession
+    from Elisio.models import ScanVerseResult, ScanSession, Batch, DatabaseBatchItem
     worked = 0
     worked_without_dict = 0
     failed = 0
+    batch = Batch()
+    batch.save()
+    batchItem = DatabaseBatchItem()
+    batchItem.batch = batch
+    batchItem.object_type = 'author'
+    batchItem.object_id = '0'
+    batchItem.relation = 'dominant'
+    batchItem.save()
     session = ScanSession()
+    session.batch = batch
     session.initiator = initiator
     session.save()
     for dbverse in dbverses:
@@ -172,6 +181,7 @@ def scan_verses(dbverses, initiator, commit=""):
         scanResult.session = session
         scanResult.verse = dbverse
         scanResult.scanned_as = dbverse.verseType
+        scanResult.batchItem = batchItem
         try:
             verse = VerseFactory.create(dbverse, False, classes=dbverse.verseType)
             dbverse.saved = True

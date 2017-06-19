@@ -22,8 +22,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('timing', models.DateTimeField(auto_now=True)),
-                ('items_at_creation_time', models.IntegerField()),
-                ('user', models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('items_at_creation_time', models.IntegerField(null=True)),
+                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -79,16 +79,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='batchitem',
             name='dependent_on',
-            field=models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, to='Elisio.BatchItem'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='Elisio.BatchItem'),
         ),
         migrations.AddField(
             model_name='scansession',
             name='batch',
-            field=models.ForeignKey(blank=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='Elisio.Batch'),
+            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='Elisio.Batch'),
         ),
         migrations.AddField(
             model_name='scanverseresult',
             name='batch_item',
-            field=models.ForeignKey(blank=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='Elisio.BatchItem'),
+            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='Elisio.BatchItem'),
         ),
     ]
