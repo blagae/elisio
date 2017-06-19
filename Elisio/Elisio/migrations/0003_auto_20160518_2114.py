@@ -5,8 +5,8 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 def load_initial_data(self, orm):
-    from Elisio.batchjob import sync_db
-    sync_db()
+    from Elisio.batchjob import syncDb
+    syncDb()
 
 class Migration(migrations.Migration):
 

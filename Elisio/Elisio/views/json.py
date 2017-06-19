@@ -4,7 +4,7 @@ from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.core import serializers
 from django.db.models import ObjectDoesNotExist
 from Elisio.exceptions import ScansionException
-from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse, ScanSession, ScanVerseResult
+from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse, Batch, DatabaseBatchItem, InputBatchItem
 from Elisio.engine.TextDecorator import TextDecorator
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from random import randint
@@ -36,7 +36,7 @@ def get_poem_length(request, key):
 
 def get_batches(request):
     if request.user.is_authenticated:
-        objects = ScanSession.objects.filter(user=request.user).order_by('timing').distinct()
+        objects = Batch.objects.filter(user=request.user).order_by('timing').distinct()
         return wrap_in_response(objects)
     return HttpResponseForbidden()
 
@@ -76,14 +76,19 @@ def save_batch(request):
         return HttpResponse(status=405)
     if not request.session['verses'] or len(request.session['verses']) < 1:
         return Http404()
-    sess = ScanSession()
+    sess = Batch()
     sess.user = request.user
     sess.save()
     for verse in request.session['verses']:
-        res = ScanVerseResult()
-        res.session = sess
-        res.verse = get_verse_object(verse['poem']['id'], verse['verse']['number'])
-        res.scanned_as = VerseType[verse['verse']['type']]
+        if 'id' in verse['verse']:
+            res = DatabaseBatchItem()
+            res.contents = verse['verse']['id']
+            res.object_type = 'verse'
+        else:
+            res = InputBatchItem()
+            res.contents = verse['verse']['text']
+            res.scanned_as = VerseType[verse['verse']['type']]
+        res.batch = sess
         res.save()
     request.session['verses'] = []
     return HttpResponse(status=204)
@@ -94,7 +99,7 @@ def delete_batch(request, id):
     if request.method != 'DELETE':
         return HttpResponse(status=405)
     try:
-        sess = ScanSession.objects.get(pk=id)
+        sess = Batch.objects.get(pk=id)
         if sess.user == request.user:
             sess.delete()
             code = 204
@@ -162,6 +167,7 @@ def get_metadata(verse):
     if isinstance(verse, DatabaseVerse):
         metadata = {'verse': {'text': verse.contents,
                                'number': verse.number,
+                               'id': verse.id,
                                'type': verse.verseType.name},
                     'poem': {'id': verse.poem.id,
                                'number': verse.poem.number},
