@@ -2,6 +2,7 @@
 import json
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.core import serializers
+from django.db.models import ObjectDoesNotExist
 from Elisio.exceptions import ScansionException
 from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse, ScanSession, ScanVerseResult
 from Elisio.engine.TextDecorator import TextDecorator
@@ -35,7 +36,7 @@ def get_poem_length(request, key):
 
 def get_batches(request):
     if request.user.is_authenticated:
-        objects = ScanSession.objects.filter(user=request.user).order_by('timing')
+        objects = ScanSession.objects.filter(user=request.user).order_by('timing').distinct()
         return wrap_in_response(objects)
     return HttpResponseForbidden()
 
@@ -59,11 +60,11 @@ def update_req_with_verse(request, metadata):
 
 def get_verse(request, poem, verse):
     """ get a verse through a JSON request """
-    obj = get_verse_local(poem, verse)
+    obj = get_verse_object(poem, verse)
     data = get_metadata(obj)
     return HttpResponse(json.dumps(data), content_type='application/json')
 
-def get_verse_local(poem, verse):
+def get_verse_object(poem, verse):
     primary = int(verse)
     poem_pk = int(poem)
     return DatabaseVerse.get_verse_from_db(poem_pk, primary)
@@ -71,6 +72,8 @@ def get_verse_local(poem, verse):
 def save_batch(request):
     if not request.user.is_authenticated:
         return HttpResponseForbidden()
+    if request.method != 'POST':
+        return HttpResponse(status=405)
     if not request.session['verses'] or len(request.session['verses']) < 1:
         return Http404()
     sess = ScanSession()
@@ -79,11 +82,27 @@ def save_batch(request):
     for verse in request.session['verses']:
         res = ScanVerseResult()
         res.session = sess
-        res.verse = get_verse_local(verse['poem']['id'], verse['verse']['number'])
+        res.verse = get_verse_object(verse['poem']['id'], verse['verse']['number'])
         res.scanned_as = VerseType[verse['verse']['type']]
         res.save()
     request.session['verses'] = []
     return HttpResponse(status=204)
+
+def delete_batch(request, id):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+    if request.method != 'DELETE':
+        return HttpResponse(status=405)
+    try:
+        sess = ScanSession.objects.get(pk=id)
+        if sess.user == request.user:
+            sess.delete()
+            code = 204
+        else:
+            code = 401
+    except ObjectDoesNotExist:
+        code = 404
+    return HttpResponse(status=code)
 
 def scan_verse_text(request, txt, metadata=None):
     # watch out before doing ANYTHING related to the db

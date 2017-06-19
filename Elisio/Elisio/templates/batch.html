@@ -60,11 +60,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for batch in request.session.batches %}
-                    <tr id="{{ batch.id }}">
-                        <td>{{ batch.date }}</td>
-                    </tr>
-                    {% endfor %}
                 </tbody>
             </table>
         </section>

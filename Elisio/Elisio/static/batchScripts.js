@@ -1,4 +1,23 @@
-﻿function resetBatchField(id) {
+﻿function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) c_end = document.cookie.length;
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+
+$(function () {
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": getCookie("csrftoken") }
+    });
+});
+
+function resetBatchField(id) {
     var objects = $(id);
     objects.empty();
     objects.append($("<option />").val("All").text("All"));
@@ -16,7 +35,7 @@ function getAllAuthors() {
 }
 
 function saveCurrentBatch() {
-    $.getJSON("/json/batch/save/", function (result) {
+    $.post("/json/batch/save/", function (result) {
         alert("batch saved");
     });
 }
@@ -26,21 +45,39 @@ function getAllBatches() {
     var content = "";
     $.when($.getJSON("/json/batches/", function (result) {
         $.each(result, function () {
-            content += "<tr><td>" + this.fields.timing + "</td></tr>";
-            objects.append(content);
+            content += "<tr id=batch" + this.pk + ">";
+            content += "<td>" + this.fields.timing + "</td>";
+            content += "<td>" + this.pk + "</td>";
+            content += "<td><img src='/static/delete.png' class='deleteBatch' alt='" + this.pk + "' height='16' width='16'/></td>";
+            content += "</tr>";
         });
-    }));
+        objects.append(content);
+    })).then(function () {
+        $(".deleteBatch").click(function () {
+            var id = $(this).attr("alt");
+            $.ajax({
+                url: '/json/batch/delete/' + id,
+                type: 'DELETE',
+                success: function (response) {
+                    $("#batch" + id).remove();
+                },
+                complete: function (response, text) {
+                    alert("batch deleted ?" + response.status);
+                }
+            });
+        });
+    });
 }
 
 function getAllOpera(key) {
     var objects = resetBatchField("#opusBatchField");
     if (key !== "All") {
-        $.when($.getJSON("/json/author/" + key, function (result) {
+        $.getJSON("/json/author/" + key, function (result) {
             $.each(result, function () {
                 objects.append($("<option />").val(this.pk).text(this.fields.full_name));
             });
             $('#opusBatchField option:first-child').attr("selected", "selected");
-        }));
+        });
     }
     resetBatchField("#bookBatchField");
     resetBatchField("#poemBatchField");
@@ -49,12 +86,12 @@ function getAllOpera(key) {
 function getAllBooks(key) {
     var objects = resetBatchField("#bookBatchField");
     if (key !== "All") {
-        $.when($.getJSON("/json/opus/" + key, function (result) {
+        $.getJSON("/json/opus/" + key, function (result) {
             $.each(result, function () {
                 objects.append($("<option />").val(this.pk).text(this.fields.number));
             });
             $('#bookBatchField option:first-child').attr("selected", "selected");
-        }));
+        });
     }
     resetBatchField("#poemBatchField");
 }
@@ -62,12 +99,12 @@ function getAllBooks(key) {
 function getAllPoems(key) {
     var objects = resetBatchField("#poemBatchField");
     if (key !== "All") {
-        $.when($.getJSON("/json/book/" + key, function (result) {
+        $.getJSON("/json/book/" + key, function (result) {
             $.each(result, function () {
                 objects.append($("<option />").val(this.pk).text(this.fields.number));
             });
             $('#poemBatchField option:first-child').attr("selected", "selected");
-        }));
+        });
     }
 }
 
