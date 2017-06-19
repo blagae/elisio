@@ -123,22 +123,36 @@ class WordOccurrence(Model):
     word = CharField(max_length=20)
     struct = CharField(max_length=10)
 
-class ScanSession(Model):
+class Batch(Model):
     timing = DateTimeField(auto_now=True)
-    initiator = CharField(max_length=40, null=True) # hashed IP address
-    user = ForeignKey(User, null=True)
-    commit = CharField(max_length=40, default=get_commit)
+    user = ForeignKey(User, blank=True)
+    items_at_creation_time = IntegerField()
 
-    def clean(self):
-        initiator = self.cleaned_data['initiator']
-        user = self.cleaned_data['user']
-        if initiator is None and user is None:
-            raise ValidationError('we need some sort of origin, either initiator or user')
+class BatchItem(Model):
+    batch = ForeignKey(Batch)
+    dependent_on = ForeignKey("self", blank=True)
+
+class DatabaseBatchItem(BatchItem):
+    object_type = CharField(max_length=10)
+    object_id = IntegerField(blank=True)
+    relation = CharField(max_length=10)
+    negation = BooleanField(default=False)
+
+class InputBatchItem(BatchItem):
+    contents = CharField(max_length=70)
+    scanned_as = EnumField(VerseType, null=True)
+
+class ScanSession(Model):
+    batch = ForeignKey(Batch, blank=True, default=None)
+    timing = DateTimeField(auto_now=True)
+    initiator = CharField(max_length=40, default='')
+    commit = CharField(max_length=40, default=get_commit)
 
 class ScanVerseResult(Model):
     verse = ForeignKey(DatabaseVerse)
     session = ForeignKey(ScanSession)
+    batch_item = ForeignKey(BatchItem, blank=True, default=None)
     failure = CharField(max_length=70, blank=True)
-    structure = CharField(max_length=8)
-    zeleny = CharField(max_length=17)
+    structure = CharField(max_length=8, blank=True)
+    zeleny = CharField(max_length=17, blank=True)
     scanned_as = EnumField(VerseType)
