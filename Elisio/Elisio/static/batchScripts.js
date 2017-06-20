@@ -45,10 +45,15 @@ function getAllBatches() {
     var content = "";
     $.when($.getJSON("/json/batches/", function (result) {
         $.each(result, function () {
-            content += "<tr id=batch" + this.pk + ">";
-            content += "<td>" + this.fields.timing + "</td>";
-            content += "<td>" + this.pk + "</td>";
-            content += "<td><img src='/static/delete.png' class='deleteBatch' alt='" + this.pk + "' height='16' width='16'/></td>";
+            content += "<tr id=batch" + this.id + ">";
+            content += "<td>" + this.timing + "</td>";
+            content += "<td>" + this.id + "</td>";
+            content += "<td>" + this.items + "</td>";
+            if (this.scans) {
+                content += "<td>" + this.scans.number + "</td>";
+                content += "<td>" + this.scans.recent + "</td>";
+            }
+            content += "<td><img src='/static/delete.png' class='deleteBatch' alt='" + this.id + "' height='16' width='16'/></td>";
             content += "</tr>";
         });
         objects.append(content);

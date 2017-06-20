@@ -132,15 +132,36 @@ class BatchItem(Model):
     batch = ForeignKey(Batch)
     dependent_on = ForeignKey("self", null=True)
 
+    def get_number_of_verses(self):
+        raise Exception("must be overridden")
+
 class DatabaseBatchItem(BatchItem):
     object_type = CharField(max_length=10)
     object_id = IntegerField(blank=True)
     relation = CharField(max_length=10)
     negation = BooleanField(default=False)
+    
+    def get_number_of_verses(self):
+        if self.object_type == 'verse':
+            return 1
+        if self.object_type == 'poem':
+            return Verse.objects.filter(poem_id=self.object_id).count()
+        if self.object_type == 'book':
+            return Verse.objects.filter(poem__book_id=self.object_id).count()
+        if self.object_type == 'opus':
+            return Verse.objects.filter(poem__book__opus_id=self.object_id).count()
+        if self.object_type == 'author':
+            if self.object_id == 0:
+                return Verse.objects.count()
+            return Verse.objects.filter(poem__book__opus__author_id=self.object_id).count()
+        return 0
 
 class InputBatchItem(BatchItem):
     contents = CharField(max_length=70)
     scanned_as = EnumField(VerseType, null=True)
+    
+    def get_number_of_verses(self):
+        return 1
 
 class ScanSession(Model):
     batch = ForeignKey(Batch, null=True, default=None)

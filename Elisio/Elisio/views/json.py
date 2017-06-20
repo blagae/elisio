@@ -4,7 +4,7 @@ from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.core import serializers
 from django.db.models import ObjectDoesNotExist
 from Elisio.exceptions import ScansionException
-from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse, Batch, DatabaseBatchItem, InputBatchItem
+from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse, Batch, DatabaseBatchItem, InputBatchItem, ScanSession
 from Elisio.engine.TextDecorator import TextDecorator
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from random import randint
@@ -36,8 +36,20 @@ def get_poem_length(request, key):
 
 def get_batches(request):
     if request.user.is_authenticated:
-        objects = Batch.objects.filter(user=request.user).order_by('timing').distinct()
-        return wrap_in_response(objects)
+        batches = Batch.objects.filter(user=request.user).order_by('timing')
+        objects = []
+        for batch in batches:
+            data = { 'id': batch.id,
+                    'timing': str(batch.timing),
+                    'items': batch.items_at_creation_time
+                    }
+            scans = ScanSession.objects.filter(batch=batch).order_by('timing')
+            if scans.count() > 0:
+                data['scans'] = {'number': scans.count(),
+                                'recent': scans[-1].timing
+                                }
+            objects.append(data)
+        return HttpResponse(json.dumps(objects), content_type='application/json')
     return HttpResponseForbidden()
 
 def get_authors(request):
@@ -79,10 +91,11 @@ def save_batch(request):
     sess = Batch()
     sess.user = request.user
     sess.save()
+    count = 0
     for verse in request.session['verses']:
         if 'id' in verse['verse']:
             res = DatabaseBatchItem()
-            res.contents = verse['verse']['id']
+            res.object_id = verse['verse']['id']
             res.object_type = 'verse'
         else:
             res = InputBatchItem()
@@ -90,6 +103,9 @@ def save_batch(request):
             res.scanned_as = VerseType[verse['verse']['type']]
         res.batch = sess
         res.save()
+        count += res.get_number_of_verses()
+    sess.items_at_creation_time = count
+    sess.save()
     request.session['verses'] = []
     return HttpResponse(status=204)
 
