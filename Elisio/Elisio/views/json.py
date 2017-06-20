@@ -110,6 +110,14 @@ def save_batch(request):
     request.session['verses'] = []
     return HttpResponse(status=204)
 
+def run_batch(request, id):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+    # dummy method for now
+    return HttpResponse(status=204)
+
 def delete_batch(request, id):
     if not request.user.is_authenticated:
         return HttpResponseForbidden()

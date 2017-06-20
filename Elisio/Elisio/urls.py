@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^json/batch/clearcurrentsession$', json.clear_batch_session),
     url(r'^json/batch/save', json.save_batch),
     url(r'^json/batch/delete/([0-9]+)$', json.delete_batch),
+    url(r'^json/batch/run/([0-9]+)$', json.run_batch),
     url(r'^json/batch/deleteverse/([a-f0-9]{64})$', json.delete_verse_hash),
     url(r'^json/batches/$', json.get_batches),
     url(r'^json/admin/sync/files/$', json.sync_files),

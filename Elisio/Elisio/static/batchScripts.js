@@ -51,13 +51,12 @@ function getAllBatches() {
             content += "<td>" + this.itemsAtCreation + "</td>";
             content += "<td>" + this.itemsNow + "</td>";
             if (this.scans && this.scans.number > 0) {
-                content += "<td>" + this.scans.number + "</td>";
                 content += "<td>" + this.scans.recent + "</td>";
             }
             else {
-                content += "<td>0</td>";
                 content += "<td>N/A</td>";
             }
+            content += "<td><img src='/static/delete.png' class='runBatch' alt='" + this.id + "' height='16' width='16'/></td>";
             content += "<td><img src='/static/delete.png' class='deleteBatch' alt='" + this.id + "' height='16' width='16'/></td>";
             content += "</tr>";
         });
@@ -73,6 +72,16 @@ function getAllBatches() {
                 },
                 complete: function (response, text) {
                     alert("batch deleted ?" + response.status);
+                }
+            });
+        });
+        $(".runBatch").click(function () {
+            var id = $(this).attr("alt");
+            $.ajax({
+                url: '/json/batch/run/' + id,
+                type: 'POST',
+                complete: function (response, text) {
+                    alert("batch run:" + response.status);
                 }
             });
         });
