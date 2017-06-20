@@ -8,6 +8,7 @@ from Elisio.utils import get_commit
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from Elisio.engine.VerseFactory import VerseType, VerseForm
+from model_utils.managers import InheritanceManager
 
 class DeviantWord(Model):
     """ model class for the Engine: highest level """
@@ -127,10 +128,15 @@ class Batch(Model):
     timing = DateTimeField(auto_now=True)
     user = ForeignKey(User, null=True)
     items_at_creation_time = IntegerField(null=True)
+    name = CharField(max_length=30)
+    
+    def get_number_of_verses(self):
+        return sum(x.get_number_of_verses() for x in self.batchitem_set.select_subclasses())
 
 class BatchItem(Model):
     batch = ForeignKey(Batch)
     dependent_on = ForeignKey("self", null=True)
+    objects = InheritanceManager()
 
     def get_number_of_verses(self):
         raise Exception("must be overridden")

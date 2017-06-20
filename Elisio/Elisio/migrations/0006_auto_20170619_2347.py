@@ -24,6 +24,7 @@ class Migration(migrations.Migration):
                 ('timing', models.DateTimeField(auto_now=True)),
                 ('items_at_creation_time', models.IntegerField(null=True)),
                 ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('name', models.CharField(max_length=30)),
             ],
         ),
         migrations.CreateModel(

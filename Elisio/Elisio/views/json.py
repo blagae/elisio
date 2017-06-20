@@ -41,7 +41,9 @@ def get_batches(request):
         for batch in batches:
             data = { 'id': batch.id,
                     'timing': str(batch.timing),
-                    'items': batch.items_at_creation_time
+                    'itemsAtCreation': batch.items_at_creation_time,
+                    'itemsNow': batch.get_number_of_verses(),
+                    'name': batch.name
                     }
             scans = ScanSession.objects.filter(batch=batch).order_by('timing')
             if scans.count() > 0:
@@ -90,8 +92,8 @@ def save_batch(request):
         return Http404()
     sess = Batch()
     sess.user = request.user
+    sess.name = request.user.username + str(randint(1,20))
     sess.save()
-    count = 0
     for verse in request.session['verses']:
         if 'id' in verse['verse']:
             res = DatabaseBatchItem()
@@ -103,8 +105,7 @@ def save_batch(request):
             res.scanned_as = VerseType[verse['verse']['type']]
         res.batch = sess
         res.save()
-        count += res.get_number_of_verses()
-    sess.items_at_creation_time = count
+    sess.items_at_creation_time = sess.get_number_of_verses()
     sess.save()
     request.session['verses'] = []
     return HttpResponse(status=204)

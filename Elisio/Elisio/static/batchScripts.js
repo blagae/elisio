@@ -46,12 +46,17 @@ function getAllBatches() {
     $.when($.getJSON("/json/batches/", function (result) {
         $.each(result, function () {
             content += "<tr id=batch" + this.id + ">";
+            content += "<td>" + this.name + "</td>";
             content += "<td>" + this.timing + "</td>";
-            content += "<td>" + this.id + "</td>";
-            content += "<td>" + this.items + "</td>";
-            if (this.scans) {
+            content += "<td>" + this.itemsAtCreation + "</td>";
+            content += "<td>" + this.itemsNow + "</td>";
+            if (this.scans && this.scans.number > 0) {
                 content += "<td>" + this.scans.number + "</td>";
                 content += "<td>" + this.scans.recent + "</td>";
+            }
+            else {
+                content += "<td>0</td>";
+                content += "<td>N/A</td>";
             }
             content += "<td><img src='/static/delete.png' class='deleteBatch' alt='" + this.id + "' height='16' width='16'/></td>";
             content += "</tr>";
