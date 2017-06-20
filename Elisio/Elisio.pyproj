@@ -137,7 +137,16 @@
     <Compile Include="Elisio\utils.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Elisio\views\json.py" />
+    <Compile Include="Elisio\views\json\manage.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\views\json\batch.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\views\json\index.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elisio\views\json\__init__.py" />
     <Compile Include="Elisio\views\pages.py">
       <SubType>Code</SubType>
     </Compile>
@@ -223,6 +232,7 @@
     <Folder Include="Elisio\templates\" />
     <Folder Include="Elisio\static\" />
     <Folder Include="Elisio\tests\" />
+    <Folder Include="Elisio\views\json\" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env3664\">
