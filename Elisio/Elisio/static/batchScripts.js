@@ -17,20 +17,19 @@ $(function () {
     });
 });
 
-function resetBatchField(id) {
-    var objects = $(id);
+function resetBatchField(objects) {
     objects.empty();
     objects.append($("<option />").val("All").text("All"));
     return objects;
 }
 
 function getAllAuthors() {
-    var objects = $("#authorBatchField");
+    var objects = $(".authorBatchField");
     $.getJSON("/json/authors/", function (result) {
         $.each(result, function () {
             objects.append($("<option />").val(this.pk).text(this.fields.short_name));
         });
-        $('#authorBatchField option:first-child').attr("selected", "selected");
+        $('.authorBatchField option:first-child').attr("selected", "selected");
     });
 }
 
@@ -41,7 +40,7 @@ function saveCurrentBatch() {
 }
 
 function getAllBatches() {
-    var objects = $("#existingBatchesTable");
+    var objects = $(".existingBatchesTable");
     var content = "";
     $.when($.getJSON("/json/batches/", function (result) {
         $.each(result, function () {
@@ -88,41 +87,47 @@ function getAllBatches() {
     });
 }
 
-function getAllOpera(key) {
-    var objects = resetBatchField("#opusBatchField");
-    if (key !== "All") {
-        $.getJSON("/json/author/" + key, function (result) {
+function getAllOpera(item) {
+    var row = $(item).parent().parent();
+    var opus = row.find(".opusBatchField");
+    var objects = resetBatchField(opus);
+    if (item.value !== "All") {
+        $.getJSON("/json/author/" + item.value, function (result) {
             $.each(result, function () {
                 objects.append($("<option />").val(this.pk).text(this.fields.full_name));
             });
-            $('#opusBatchField option:first-child').attr("selected", "selected");
+            opus.find('option:first-child').attr("selected", "selected");
         });
     }
-    resetBatchField("#bookBatchField");
-    resetBatchField("#poemBatchField");
+    resetBatchField(row.find(".bookBatchField"));
+    resetBatchField(row.find(".poemBatchField"));
 }
 
-function getAllBooks(key) {
-    var objects = resetBatchField("#bookBatchField");
-    if (key !== "All") {
-        $.getJSON("/json/opus/" + key, function (result) {
+function getAllBooks(item) {
+    var row = $(item).parent().parent();
+    var book = row.find(".bookBatchField");
+    var objects = resetBatchField(book);
+    if (item.value !== "All") {
+        $.getJSON("/json/opus/" + item.value, function (result) {
             $.each(result, function () {
                 objects.append($("<option />").val(this.pk).text(this.fields.number));
             });
-            $('#bookBatchField option:first-child').attr("selected", "selected");
+            book.find('option:first-child').attr("selected", "selected");
         });
     }
-    resetBatchField("#poemBatchField");
+    resetBatchField(row.find(".poemBatchField"));
 }
 
-function getAllPoems(key) {
-    var objects = resetBatchField("#poemBatchField");
-    if (key !== "All") {
-        $.getJSON("/json/book/" + key, function (result) {
+function getAllPoems(item) {
+    var row = $(item).parent().parent();
+    var poem = row.find(".poemBatchField");
+    var objects = resetBatchField(poem);
+    if (item.value !== "All") {
+        $.getJSON("/json/book/" + item.value, function (result) {
             $.each(result, function () {
                 objects.append($("<option />").val(this.pk).text(this.fields.number));
             });
-            $('#poemBatchField option:first-child').attr("selected", "selected");
+            poem.find('option:first-child').attr("selected", "selected");
         });
     }
 }
@@ -144,16 +149,16 @@ $(document).ready(function () {
     getAllAuthors();
     getAllBatches();
 
-    $("#authorBatchField").change(function () {
-        getAllOpera(this.value);
+    $(".authorBatchField").change(function () {
+        getAllOpera(this);
     });
 
-    $("#opusBatchField").change(function () {
-        getAllBooks(this.value);
+    $(".opusBatchField").change(function () {
+        getAllBooks(this);
     });
 
-    $("#bookBatchField").change(function () {
-        getAllPoems(this.value);
+    $(".bookBatchField").change(function () {
+        getAllPoems(this);
     });
 
     $("#saveCurrentBatchButton").click(function () {
