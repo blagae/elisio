@@ -7,6 +7,7 @@ from django.db.models import ObjectDoesNotExist
 
 def clear_batch_session(request):
     request.session['verses'] = []
+    request.session['batchitems'] = []
     return HttpResponse(status=204) # empty response
 
 def get_batches(request):
@@ -29,12 +30,28 @@ def get_batches(request):
         return HttpResponse(json.dumps(objects), content_type='application/json')
     return HttpResponseForbidden()
 
+
+def save_batchitems(request, type, id):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+    if type not in ('author', 'opus', 'book', 'poem'):
+        return HttpResponseForbidden()
+    if not 'batchitems' in request.session:
+        request.session['batchitems'] = []
+    data = { 'type': type,
+            'id': id}
+    request.session['batchitems'].append(data)
+    request.session.modified = True
+    return HttpResponse(status=204) # empty response
+
 def save_batch(request):
     if not request.user.is_authenticated:
         return HttpResponseForbidden()
     if request.method != 'POST':
         return HttpResponse(status=405)
-    if not request.session['verses'] or len(request.session['verses']) < 1:
+    if not 'verses' in request.session or len(request.session['verses']) < 1:
         return Http404()
     sess = Batch()
     sess.user = request.user
@@ -51,10 +68,15 @@ def save_batch(request):
             res.scanned_as = VerseType[verse['verse']['type']]
         res.batch = sess
         res.save()
+    for item in request.session['batchitems']:
+        res = DatabaseBatchItem()
+        res.object_id = item['id']
+        res.object_type = item['type']
+        res.batch = sess
+        res.save()
     sess.items_at_creation_time = sess.get_number_of_verses()
     sess.save()
-    request.session['verses'] = []
-    return HttpResponse(status=204)
+    return clear_batch_session(request)
 
 def run_batch(request, id):
     if not request.user.is_authenticated:

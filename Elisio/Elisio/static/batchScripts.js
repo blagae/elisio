@@ -39,8 +39,41 @@ function saveCurrentBatch() {
     });
 }
 
+function saveCurrentBatchItems() {
+    $(".criterium").each(function () {
+        var query = "";
+        var author = $(this).find(".authorBatchField").val();
+        if (author === 'All') {
+            query = "author/0";
+        }
+        else {
+            var opus = $(this).find(".opusBatchField").val();
+            if (opus === 'All') {
+                query = "author/" + author;
+            } else {
+                var book = $(this).find(".bookBatchField").val();
+                if (book === 'All') {
+                    query = "opus/" + opus;
+                } else {
+                    var poem = $(this).find(".poemBatchField").val();
+                    if (poem === 'All') {
+                        query = "book/" + book;
+                    }
+                    else {
+                        query = "poem/" + poem;
+                    }
+                }
+            }
+        }
+        alert(query);
+        $.post("/json/batchitem/save/"+query, function (result) {
+            alert("batchitem saved: " + query);
+        });
+    });
+}
+
 function getAllBatches() {
-    var objects = $(".existingBatchesTable");
+    var objects = $("#existingBatchesTable");
     var content = "";
     $.when($.getJSON("/json/batches/", function (result) {
         $.each(result, function () {
@@ -163,5 +196,9 @@ $(document).ready(function () {
 
     $("#saveCurrentBatchButton").click(function () {
         saveCurrentBatch();
+    });
+
+    $("#saveitems").click(function () {
+        saveCurrentBatchItems();
     });
 });

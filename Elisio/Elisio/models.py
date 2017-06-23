@@ -151,15 +151,15 @@ class DatabaseBatchItem(BatchItem):
         if self.object_type == 'verse':
             return 1
         if self.object_type == 'poem':
-            return Verse.objects.filter(poem_id=self.object_id).count()
+            return DatabaseVerse.objects.filter(poem_id=self.object_id).count()
         if self.object_type == 'book':
-            return Verse.objects.filter(poem__book_id=self.object_id).count()
+            return DatabaseVerse.objects.filter(poem__book_id=self.object_id).count()
         if self.object_type == 'opus':
-            return Verse.objects.filter(poem__book__opus_id=self.object_id).count()
+            return DatabaseVerse.objects.filter(poem__book__opus_id=self.object_id).count()
         if self.object_type == 'author':
             if self.object_id == 0:
-                return Verse.objects.count()
-            return Verse.objects.filter(poem__book__opus__author_id=self.object_id).count()
+                return DatabaseVerse.objects.count()
+            return DatabaseVerse.objects.filter(poem__book__opus__author_id=self.object_id).count()
         return 0
 
 class InputBatchItem(BatchItem):

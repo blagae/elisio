@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^json/batch/run/([0-9]+)$', batch.run_batch),
     url(r'^json/batch/deleteverse/([a-f0-9]{64})$', batch.delete_verse_hash),
     url(r'^json/batches/$', batch.get_batches),
+    url(r'^json/batchitem/save/([a-zA-Z]+)/([0-9]+)$', batch.save_batchitems),
     url(r'^json/admin/sync/files/$', manage.sync_files),
     url(r'^json/admin/sync/db/$', manage.sync_db),
 ]
