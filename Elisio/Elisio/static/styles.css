@@ -6,7 +6,7 @@
 body {
     background-color: #F5F5F5;
     font-family: "Noto Sans", Arial, sans-serif;
-    margin: 0 0 120px;
+    margin: 0 0 160px;
 }
 
 #menuSection {
@@ -29,7 +29,7 @@ body {
     position: fixed;
     left: 0;
     bottom: 0;
-    height: 100px;
+    height: 140px;
     width: 100%;
 }
 
