@@ -32,4 +32,5 @@ urlpatterns = [
     url(r'^json/batchitem/save/([a-zA-Z]+)/([0-9]+)$', batch.save_batchitems),
     url(r'^json/admin/sync/files/$', manage.sync_files),
     url(r'^json/admin/sync/db/$', manage.sync_db),
+    url(r'^json/admin/users/$', manage.get_member_list),
 ]

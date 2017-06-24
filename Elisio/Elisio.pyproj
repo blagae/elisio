@@ -206,7 +206,6 @@
     <Content Include="Elisio\static\batchScripts.js" />
     <Content Include="Elisio\static\delete.png" />
     <Content Include="Elisio\static\indexScripts.js" />
-    <Content Include="Elisio\static\scripts.js" />
     <Content Include="Elisio\static\styles.css" />
     <Content Include="Elisio\templates\base.html" />
     <Content Include="Elisio\templates\about.html" />
