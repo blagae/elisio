@@ -19,6 +19,10 @@ class Migration(migrations.Migration):
             model_name='batchitem',
             name='dependent_on',
         ),
+        migrations.RemoveField(
+            model_name='databasebatchitem',
+            name='negation',
+        ),
         migrations.AddField(
             model_name='databasebatchitem',
             name='dependent_on',

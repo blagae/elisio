@@ -149,6 +149,7 @@ class ObjectType(enum.Enum):
     BOOK = 3
     OPUS = 4
     AUTHOR = 5
+    ALL = 9 # keep leeway for intermediate types
     def __lt__(self, other):
         if self.__class__ is other.__class__:
             return self.value < other.value
@@ -163,20 +164,56 @@ class DatabaseBatchItem(BatchItem):
     object_type = EnumField(ObjectType, null=True)
     object_id = IntegerField(blank=True)
     relation = EnumField(RelationType, null=True)
-    negation = BooleanField(default=False)
     dependent_on = ForeignKey("self", null=True)
+
+    def save(self, *args, **kwargs):
+        self.pre_save_hook()
+        super(DatabaseBatchItem, self).save(*args, **kwargs)
+
+    def pre_save_hook(self):
+        # rules for relations
+        if self.relation == RelationType.AND:
+            raise ValidationError("cannot have corpus conditions in an AND relation")
+        if self.relation and not self.dependent_on:
+            # redeem impossible "[] except self"
+            inter = DatabaseBatchItem()
+            inter.object_type = ObjectType.ALL
+            inter.save()
+            self.dependent_on = inter
+            self.relation = RelationType.EXCEPT
+        if self.dependent_on and not self.relation:
+            raise ValidationError("must have a relationship to its master")
+        if (self.relation == RelationType.EXCEPT and
+            (self.dependent_on.object_type <= self.object_type or not self.__is_in(self.dependent_on))):
+                raise ValidationError("the except clause must be more specific than its master")
+        if self.relation == RelationType.OR and self.__is_in(self.dependent_on):
+            raise ValidationError("the or clause must be distinct from its master")
+        try:
+            obj = self.get_object()
+        except Exception as e:
+            raise ValidationError("the object you're trying to save a BatchItem for doesn't exist")
+
+    def __is_in(self, other):
+        if self.object_type > other.object_type:
+            # only look one way
+            return other.__is_in(self)
+        if self.object_type == other.object_type:
+            return self.object_id == other.object_id
+        if other.object_type == ObjectType.ALL:
+            return True
+        # TODO
+
 
     def get_number_of_verses(self):
         result = self.get_verse_count()
-        master = self.dependent_on
-        if self.negation:
-            if master and master.object_type <= self.object_type:
-                return 0
+        if self.relation == RelationType.EXCEPT:
             result *= -1
         return result
 
     def get_object(self):
-        return self.get_object_manager().get(self.object_id)
+        if self.get_object_manager():
+            return self.get_object_manager().get(self.object_id)
+        return None
 
     def get_object_manager(self):
         if self.object_type == ObjectType.VERSE:
@@ -189,6 +226,9 @@ class DatabaseBatchItem(BatchItem):
             return Opus.objects
         if self.object_type == ObjectType.AUTHOR:
             return Author.objects
+        if self.object_type == ObjectType.ALL:
+            return None
+        raise ValidationError()
 
     def get_verse_count(self):
         if self.object_type == ObjectType.VERSE:
