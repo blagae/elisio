@@ -3,11 +3,12 @@
 {% block extra_scripts %}<script src="{% static 'batchScripts.js' %}" type="text/javascript"></script>{% endblock %}
 {% block content %}
         <section id="currentBatchSection">
+            {% if request.user.is_authenticated %}
+            {% if request.session.verses|length > 0 or request.session.batchitems|length > 0 %}
+            <button id="saveCurrentBatchButton">Save current verses as a batch</button>
+            {% endif %}{% endif %}
             {% if request.session.verses|length > 0 %}
             <button id="clearCurrentBatchButton">Clear current batch run</button>
-            {% if request.user.is_authenticated %}
-            <button id="saveCurrentBatchButton">Save current verses as a batch</button>
-            {% endif %}
             <table id="currentBatchTable">
             <caption>These are the verses you've analyzed so far in this session</caption>
                 <thead>

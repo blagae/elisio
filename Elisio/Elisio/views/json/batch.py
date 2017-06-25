@@ -51,7 +51,8 @@ def save_batch(request):
         return HttpResponseForbidden()
     if request.method != 'POST':
         return HttpResponse(status=405)
-    if not 'verses' in request.session or len(request.session['verses']) < 1:
+    if ((not 'verses' in request.session or len(request.session['verses']) < 1) and
+        (not 'batchitems' in request.session or len(request.session['batchitems']) < 1)):
         return Http404()
     sess = Batch()
     sess.user = request.user
