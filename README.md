@@ -65,6 +65,11 @@ please check [the license terms](./LICENSE.md) to make yourself acquainted with 
 
 **Ignorance is not a valid excuse.**
 
+## Code of Conduct
+
+This project includes a [code of conduct](./CODE_OF_CONDUCT.md)
+and tries to adhere to it strictly.
+
 ## Further developments
 
 If you're feeling Pythonic, you can look at [the CONTRIBUTING file](./CONTRIBUTING.md) for the contributor guide,
