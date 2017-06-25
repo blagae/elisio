@@ -1,6 +1,6 @@
 import json
 from django.http import HttpResponse, Http404, HttpResponseForbidden
-from Elisio.models import Batch, DatabaseBatchItem, InputBatchItem, ScanSession
+from Elisio.models import Batch, DatabaseBatchItem, InputBatchItem, ScanSession, ObjectType
 from random import randint
 from Elisio.engine.VerseFactory import VerseType
 from django.db.models import ObjectDoesNotExist
@@ -62,7 +62,7 @@ def save_batch(request):
         if 'id' in verse['verse']:
             res = DatabaseBatchItem()
             res.object_id = verse['verse']['id']
-            res.object_type = 'verse'
+            res.object_type = ObjectType.VERSE
         else:
             res = InputBatchItem()
             res.contents = verse['verse']['text']
@@ -72,7 +72,7 @@ def save_batch(request):
     for item in request.session['batchitems']:
         res = DatabaseBatchItem()
         res.object_id = item['id']
-        res.object_type = item['type']
+        res.object_type = ObjectType[item['type'].upper()]
         res.batch = sess
         res.save()
     sess.items_at_creation_time = sess.get_number_of_verses()

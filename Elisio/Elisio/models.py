@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from Elisio.engine.VerseFactory import VerseType, VerseForm
 from model_utils.managers import InheritanceManager
+import enum
+from functools import total_ordering
 
 class DeviantWord(Model):
     """ model class for the Engine: highest level """
@@ -135,28 +137,69 @@ class Batch(Model):
 
 class BatchItem(Model):
     batch = ForeignKey(Batch)
-    dependent_on = ForeignKey("self", null=True)
     objects = InheritanceManager()
 
     def get_number_of_verses(self):
         raise Exception("must be overridden")
 
+@total_ordering
+class ObjectType(enum.Enum):
+    VERSE = 1
+    POEM = 2
+    BOOK = 3
+    OPUS = 4
+    AUTHOR = 5
+    def __lt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value < other.value
+        return NotImplemented
+
+class RelationType(enum.Enum):
+    EXCEPT = 1
+    AND = 2
+    OR = 3
+
 class DatabaseBatchItem(BatchItem):
-    object_type = CharField(max_length=10)
+    object_type = EnumField(ObjectType, null=True)
     object_id = IntegerField(blank=True)
-    relation = CharField(max_length=10)
+    relation = EnumField(RelationType, null=True)
     negation = BooleanField(default=False)
-    
+    dependent_on = ForeignKey("self", null=True)
+
     def get_number_of_verses(self):
-        if self.object_type == 'verse':
+        result = self.get_verse_count()
+        master = self.dependent_on
+        if self.negation:
+            if master and master.object_type <= self.object_type:
+                return 0
+            result *= -1
+        return result
+
+    def get_object(self):
+        return self.get_object_manager().get(self.object_id)
+
+    def get_object_manager(self):
+        if self.object_type == ObjectType.VERSE:
+            return DatabaseVerse.objects
+        if self.object_type == ObjectType.POEM:
+            return Poem.objects
+        if self.object_type == ObjectType.BOOK:
+            return Book.objects
+        if self.object_type == ObjectType.OPUS:
+            return Opus.objects
+        if self.object_type == ObjectType.AUTHOR:
+            return Author.objects
+
+    def get_verse_count(self):
+        if self.object_type == ObjectType.VERSE:
             return 1
-        if self.object_type == 'poem':
+        if self.object_type == ObjectType.POEM:
             return DatabaseVerse.objects.filter(poem_id=self.object_id).count()
-        if self.object_type == 'book':
+        if self.object_type == ObjectType.BOOK:
             return DatabaseVerse.objects.filter(poem__book_id=self.object_id).count()
-        if self.object_type == 'opus':
+        if self.object_type == ObjectType.OPUS:
             return DatabaseVerse.objects.filter(poem__book__opus_id=self.object_id).count()
-        if self.object_type == 'author':
+        if self.object_type == ObjectType.AUTHOR:
             if self.object_id == 0:
                 return DatabaseVerse.objects.count()
             return DatabaseVerse.objects.filter(poem__book__opus__author_id=self.object_id).count()
