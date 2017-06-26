@@ -30,13 +30,12 @@ def get_batches(request):
         return HttpResponse(json.dumps(objects), content_type='application/json')
     return HttpResponseForbidden()
 
-
 def save_batchitems(request, type, id):
     if not request.user.is_authenticated:
         return HttpResponseForbidden()
     if request.method != 'POST':
         return HttpResponse(status=405)
-    if type not in ('author', 'opus', 'book', 'poem'):
+    if type not in ('all', 'author', 'opus', 'book', 'poem'):
         return HttpResponseForbidden()
     if not 'batchitems' in request.session:
         request.session['batchitems'] = []
@@ -86,7 +85,7 @@ def save_batch(request):
                 res.dependent_on = prev
                 res.relation = RelationType[item['relation'].upper()]
             res.save()
-            prev = item
+            prev = res
     sess.items_at_creation_time = sess.get_number_of_verses()
     sess.save()
     return clear_batch_session(request)

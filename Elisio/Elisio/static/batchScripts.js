@@ -44,7 +44,7 @@ function saveCurrentBatchItems() {
         var query = "";
         var author = $(this).find(".authorBatchField").val();
         if (author === 'All') {
-            query = "author/0";
+            query = "all/0";
         }
         else {
             var opus = $(this).find(".opusBatchField").val();
