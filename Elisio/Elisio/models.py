@@ -234,7 +234,7 @@ class DatabaseBatchItem(BatchItem):
 
     def get_object(self):
         if self.get_object_manager():
-            return self.get_object_manager().get(self.object_id)
+            return self.get_object_manager().get(pk=self.object_id)
         return None
 
     def get_object_manager(self):

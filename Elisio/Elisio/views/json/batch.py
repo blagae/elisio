@@ -58,23 +58,25 @@ def save_batch(request):
     sess.user = request.user
     sess.name = request.user.username + str(randint(1,20))
     sess.save()
-    for verse in request.session['verses']:
-        if 'id' in verse['verse']:
+    if 'verses' in request.session:
+        for verse in request.session['verses']:
+            if 'id' in verse['verse']:
+                res = DatabaseBatchItem()
+                res.object_id = verse['verse']['id']
+                res.object_type = ObjectType.VERSE
+            else:
+                res = InputBatchItem()
+                res.contents = verse['verse']['text']
+                res.scanned_as = VerseType[verse['verse']['type']]
+            res.batch = sess
+            res.save()
+    if 'batchitems' in request.session:
+        for item in request.session['batchitems']:
             res = DatabaseBatchItem()
-            res.object_id = verse['verse']['id']
-            res.object_type = ObjectType.VERSE
-        else:
-            res = InputBatchItem()
-            res.contents = verse['verse']['text']
-            res.scanned_as = VerseType[verse['verse']['type']]
-        res.batch = sess
-        res.save()
-    for item in request.session['batchitems']:
-        res = DatabaseBatchItem()
-        res.object_id = item['id']
-        res.object_type = ObjectType[item['type'].upper()]
-        res.batch = sess
-        res.save()
+            res.object_id = item['id']
+            res.object_type = ObjectType[item['type'].upper()]
+            res.batch = sess
+            res.save()
     sess.items_at_creation_time = sess.get_number_of_verses()
     sess.save()
     return clear_batch_session(request)
