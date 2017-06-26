@@ -69,6 +69,9 @@ class Author(Model):
     floruit_start = IntegerField()
     floruit_end = IntegerField()
 
+    def get_parent(self):
+        return None
+
 class Genre(Model):
     """ model class that contains a Genre """
     name = CharField(max_length=20)
@@ -83,10 +86,16 @@ class Opus(Model):
     publication = IntegerField()
     genre = ForeignKey(Genre)
 
+    def get_parent(self):
+        return self.author
+
 class Book(Model):
     """ model class that contains a Book """
     opus = ForeignKey(Opus)
     number = IntegerField()
+
+    def get_parent(self):
+        return self.opus
 
 class Poem(Model):
     """ model class that contains a Poem """
@@ -94,6 +103,9 @@ class Poem(Model):
     number = IntegerField()
     nickname = CharField(max_length=20)
     verseForm = EnumField(VerseForm, default=VerseForm.HEXAMETRIC)
+
+    def get_parent(self):
+        return self.book
 
 class DatabaseVerse(Model):
     """ model class that contains a Verse """
@@ -103,6 +115,9 @@ class DatabaseVerse(Model):
     contents = CharField(max_length=70)
     saved = BooleanField(default=False)
     verseType = EnumField(VerseType, default=VerseType.HEXAMETER)
+
+    def get_parent(self):
+        return self.poem
 
     def get_verse(self):
         """ create a Verse object from this DatabaseVerse """
@@ -183,9 +198,11 @@ class DatabaseBatchItem(BatchItem):
             self.relation = RelationType.EXCEPT
         if self.dependent_on and not self.relation:
             raise ValidationError("must have a relationship to its master")
-        if (self.relation == RelationType.EXCEPT and
-            (self.dependent_on.object_type <= self.object_type or not self.__is_in(self.dependent_on))):
+        if self.relation == RelationType.EXCEPT:
+            if self.dependent_on.object_type <= self.object_type:
                 raise ValidationError("the except clause must be more specific than its master")
+            if not self.__is_in(self.dependent_on):
+                raise ValidationError("the except clause must be part of its master")
         if self.relation == RelationType.OR and self.__is_in(self.dependent_on):
             raise ValidationError("the or clause must be distinct from its master")
         try:
@@ -201,8 +218,13 @@ class DatabaseBatchItem(BatchItem):
             return self.object_id == other.object_id
         if other.object_type == ObjectType.ALL:
             return True
-        # TODO
-
+        me = self.get_object()
+        you = other.get_object()
+        while me:
+            if me == you:
+                return True
+            me = me.get_parent()
+        return False
 
     def get_number_of_verses(self):
         result = self.get_verse_count()
