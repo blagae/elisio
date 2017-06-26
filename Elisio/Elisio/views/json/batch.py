@@ -41,7 +41,10 @@ def save_batchitems(request, type, id):
     if not 'batchitems' in request.session:
         request.session['batchitems'] = []
     data = { 'type': type,
-            'id': id}
+            'id': id,
+            }
+    if 'relation' in request.POST and len(request.session['batchitems']) > 0:
+        data['relation'] = request.POST['relation']
     request.session['batchitems'].append(data)
     request.session.modified = True
     return HttpResponse(status=204) # empty response
@@ -71,12 +74,19 @@ def save_batch(request):
             res.batch = sess
             res.save()
     if 'batchitems' in request.session:
+        prev = None
         for item in request.session['batchitems']:
             res = DatabaseBatchItem()
             res.object_id = item['id']
             res.object_type = ObjectType[item['type'].upper()]
             res.batch = sess
+            if prev:
+                if not 'relation' in item:
+                    continue
+                res.dependent_on = prev
+                res.relation = RelationType[item['relation'].upper()]
             res.save()
+            prev = item
     sess.items_at_creation_time = sess.get_number_of_verses()
     sess.save()
     return clear_batch_session(request)

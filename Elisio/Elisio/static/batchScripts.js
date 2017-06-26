@@ -67,9 +67,9 @@ function saveCurrentBatchItems() {
         }
         var relationField = $(this).find(".relationBatchField");
         var extra = {};
-        if (relationField.css("display") !== "None") {
-            extra = { rel: relationField.val() };
-        }//*/
+        if (relationField.css("display") !== "none") {
+            extra = { relation: relationField.val() };
+        }
         $.ajax({
             url: "/json/batchitem/save/" + query,
             type: "POST",
