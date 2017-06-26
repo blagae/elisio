@@ -1,5 +1,6 @@
 ﻿{% extends "base.html" %}
 {% load staticfiles %}
+{% block extra_styles %}<link rel="stylesheet" href="{% static 'batchStyles.css' %}" />{% endblock %}
 {% block extra_scripts %}<script src="{% static 'batchScripts.js' %}" type="text/javascript"></script>{% endblock %}
 {% block content %}
         <section id="currentBatchSection">

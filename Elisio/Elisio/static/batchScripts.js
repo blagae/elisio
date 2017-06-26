@@ -65,9 +65,18 @@ function saveCurrentBatchItems() {
                 }
             }
         }
-        alert(query);
-        $.post("/json/batchitem/save/"+query, function (result) {
-            alert("batchitem saved: " + query);
+        var relationField = $(this).find(".relationBatchField");
+        var extra = {};
+        if (relationField.css("display") !== "None") {
+            extra = { rel: relationField.val() };
+        }//*/
+        $.ajax({
+            url: "/json/batchitem/save/" + query,
+            type: "POST",
+            data: extra,
+            success: function (data, status, xhr) {
+
+            }
         });
     });
 }

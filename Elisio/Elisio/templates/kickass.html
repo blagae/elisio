@@ -27,14 +27,14 @@
                     </tr>
                 </table>
                 <input type="button" value="Save" id="saveitems" />
-                <table>
+                <table id="corpusCriteriaTable">
                     <caption>Corpus criteria</caption>
                     <tr class="criterium">
+                        <td><select name="relation" class="relationBatchField"><option value="EXCEPT">Except</option><option value="OR">Or</option></select></td>
                         <td><select name="author" class="authorBatchField"><option value="All">All</option></select></td>
                         <td><select name="opus" class="opusBatchField"><option value="All">All</option></select></td>
                         <td><select name="book" class="bookBatchField"><option value="All">All</option></select></td>
                         <td><select name="poem" class="poemBatchField"><option value="All">All</option></select></td>
-                        <td><input type="button" value="Except" /><input type="button" value="Or" /></td>
                     </tr>
                 </table>
                 <p>Output information</p>
