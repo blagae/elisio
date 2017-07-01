@@ -2,12 +2,12 @@
 <html lang="en"> {% load staticfiles %}
     <head>
         <meta charset="UTF-8" />
+        <meta name="keywords" content="{% block meta-keywords %}{% endblock meta-keywords %}" />
         <title>{% block title %}The Elisio Project{% endblock %}</title>
         <link href='https://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css' />
         <link rel="stylesheet" href="{% static 'styles.css' %}" />
-        {% block extra_styles %}{% endblock %}
         <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-        {% block extra_scripts %}{% endblock %}
+        {% block extra_head %}{% endblock %}
     </head>
     <body>
         <section id="menuSection">
@@ -15,6 +15,7 @@
                 <nav>
                     <a href="/">Scanning tool</a>
                     <a href="/batch/">Data analysis</a>
+                    <a href="/blog/">Blog</a>
                     <a href="/help/">Contribute</a>
                     <a href="/about/">About</a>
                     {% if request.user.is_authenticated %}
@@ -27,8 +28,12 @@
                 </nav>
             </div>
         </section>
+        <section id="sideSection">
+        {% block sidebar %}
+        {% endblock %}
+        </section>
         <section id="mainSection">
-        {% block content %}
+        {% block mainContent %}
         {% endblock %}
         </section>
         <section id="footerSection">

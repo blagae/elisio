@@ -17,6 +17,13 @@ body {
 #mainSection {
     margin-left: 30px;
     margin-right: 30px;
+    overflow: hidden;
+}
+
+#sideSection {
+    width: 220px;
+    margin-left: 30px;
+    float: right;
 }
 
 #footerSection, #menuSection {

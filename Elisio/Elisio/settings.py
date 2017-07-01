@@ -128,6 +128,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request',
+                'zinnia.context_processors.version',  # Optional
             ],
             'debug': DEBUG
         },
@@ -146,6 +147,10 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'Elisio',
+    'django_comments',
+    'mptt',
+    'tagging',
+    'zinnia',
 )
 
 # A sample logging configuration. The only tangible logging

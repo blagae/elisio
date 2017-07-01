@@ -219,6 +219,7 @@
     <Content Include="Elisio\templates\profile.html" />
     <Content Include="Elisio\templates\query.html" />
     <Content Include="Elisio\templates\register.html" />
+    <Content Include="Elisio\templates\zinnia\base.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -228,6 +229,7 @@
     <Folder Include="Elisio\fixtures\metadata\" />
     <Folder Include="Elisio\fixtures\sources\" />
     <Folder Include="Elisio\fixtures\deviant\" />
+    <Folder Include="Elisio\templates\zinnia\" />
     <Folder Include="Elisio\views\" />
     <Folder Include="Elisio\templates\" />
     <Folder Include="Elisio\static\" />
