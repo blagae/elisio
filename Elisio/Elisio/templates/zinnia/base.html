@@ -93,7 +93,7 @@
                         </h3>
                         {% get_categories %}
                     </aside>
-                        <aside id="widget-authors" class="widget">
+                    <aside id="widget-authors" class="widget">
                         <h3>
                         <a href="{% url 'zinnia:author_list' %}">{% trans "Authors" %}</a>
                         </h3>
@@ -102,6 +102,7 @@
                     <aside id="widget-recents" class="widget">
                         <h3>{% trans "Recent entries" %}</h3>
                         {% get_recent_entries %}
+                    </aside>
                     {% if user.is_authenticated %}
                     <aside id="widget-linkbacks" class="widget">
                         <h3>{% trans "Recent linkbacks" %}</h3>
@@ -129,7 +130,7 @@
                                 {% trans "Post an entry" %}
                                 </a>
                             </li>
-                        {% endif %}
+                            {% endif %}
                         {% block admin-tools %}
                         {% endblock admin-tools %}
                         </ul>
