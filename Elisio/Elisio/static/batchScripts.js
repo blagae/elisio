@@ -40,44 +40,55 @@ function saveCurrentBatch() {
 }
 
 function saveCurrentBatchItems() {
+    var arr = [];
     $(".criterium").each(function () {
-        var query = "";
+        var queryType = "";
+        var queryObj = 0;
         var author = $(this).find(".authorBatchField").val();
         if (author === 'All') {
-            query = "all/0";
+            queryType = "all";
         }
         else {
             var opus = $(this).find(".opusBatchField").val();
             if (opus === 'All') {
-                query = "author/" + author;
+                queryType = "author";
+                queryObj = author;
             } else {
                 var book = $(this).find(".bookBatchField").val();
                 if (book === 'All') {
-                    query = "opus/" + opus;
+                    queryType = "opus";
+                    queryObj = opus;
                 } else {
                     var poem = $(this).find(".poemBatchField").val();
                     if (poem === 'All') {
-                        query = "book/" + book;
+                        queryType = "book";
+                        queryObj = book;
                     }
                     else {
-                        query = "poem/" + poem;
+                        queryType = "poem";
+                        queryObj = poem;
                     }
                 }
             }
         }
+        var extra = {
+            type: queryType,
+            id: queryObj
+        };
         var relationField = $(this).find(".relationBatchField");
-        var extra = {};
         if (relationField.css("display") !== "none") {
-            extra = { relation: relationField.val() };
+            extra.relation = relationField.val();
         }
-        $.ajax({
-            url: "/json/batchitem/save/" + query,
-            type: "POST",
-            data: extra,
-            success: function (data, status, xhr) {
+        arr.push(extra);
+    });
+    arr = arr;
+    $.ajax({
+        url: "/json/batchitem/save/",
+        type: "POST",
+        data: JSON.stringify(arr),
+        success: function (data, status, xhr) {
 
-            }
-        });
+        }
     });
 }
 

@@ -1,9 +1,10 @@
 import json
 from django.http import HttpResponse, Http404, HttpResponseForbidden
-from Elisio.models import Batch, DatabaseBatchItem, InputBatchItem, ScanSession, ObjectType
+from Elisio.models import Batch, DatabaseBatchItem, InputBatchItem, ScanSession, ObjectType, RelationType
 from random import randint
 from Elisio.engine.VerseFactory import VerseType
 from django.db.models import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 
 def clear_batch_session(request):
     request.session['verses'] = []
@@ -30,21 +31,26 @@ def get_batches(request):
         return HttpResponse(json.dumps(objects), content_type='application/json')
     return HttpResponseForbidden()
 
-def save_batchitems(request, type, id):
+def save_batchitems(request):
     if not request.user.is_authenticated:
         return HttpResponseForbidden()
     if request.method != 'POST':
         return HttpResponse(status=405)
-    if type not in ('all', 'author', 'opus', 'book', 'poem'):
-        return HttpResponseForbidden()
     if not 'batchitems' in request.session:
         request.session['batchitems'] = []
-    data = { 'type': type,
-            'id': id,
-            }
-    if 'relation' in request.POST and len(request.session['batchitems']) > 0:
-        data['relation'] = request.POST['relation']
-    request.session['batchitems'].append(data)
+    for item in json.loads(request.body):
+        type = item["type"]
+        id = item["id"]
+        relation = item.get("relation", None)
+        if type not in ('all', 'author', 'opus', 'book', 'poem'):
+            return HttpResponseForbidden()
+        if type == 'all' and relation == 'except':
+            continue
+        data = { 'type': type,
+                'id': id,
+                'relation': relation
+                }
+        request.session['batchitems'].append(data)
     request.session.modified = True
     return HttpResponse(status=204) # empty response
 
@@ -84,8 +90,11 @@ def save_batch(request):
                     continue
                 res.dependent_on = prev
                 res.relation = RelationType[item['relation'].upper()]
-            res.save()
-            prev = res
+            try:
+                res.save()
+                prev = res
+            except ValidationError:
+                pass # TODO: investigate whether to pass
     sess.items_at_creation_time = sess.get_number_of_verses()
     sess.save()
     return clear_batch_session(request)
