@@ -147,6 +147,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'Elisio',
+    'django_markdown',
     'django_comments',
     'mptt',
     'tagging',
@@ -185,3 +186,5 @@ LOGGING = {
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SECURE_SSL_REDIRECT = not DEBUG
+
+ZINNIA_MARKUP_LANGUAGE = 'markdown'
