@@ -23,6 +23,7 @@
         <link rel="stylesheet" type="text/css" media="screen, projection" href="{% static "zinnia/theme/css/screen.css" %}" />
         {% get_archives_entries "zinnia/tags/entries_archives_link.html" %}
 {% endblock link %}
+{% block bodytag %}class="zinnia {% block theme-class %}default{% endblock theme-class %} {% block color-class %}blue{% endblock color-class %} {% block sidebar-class %}right-sidebar{% endblock sidebar-class %} {% block body-class %}{% endblock body-class %}"{% endblock bodytag %}
 
 {% block mainContent %}
             <div class="container">
