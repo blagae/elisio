@@ -207,6 +207,7 @@
     <Content Include="Elisio\static\delete.png" />
     <Content Include="Elisio\static\indexScripts.js" />
     <Content Include="Elisio\static\batchStyles.css" />
+    <Content Include="Elisio\static\overrideZinniaStyles.css" />
     <Content Include="Elisio\static\styles.css" />
     <Content Include="Elisio\templates\base.html" />
     <Content Include="Elisio\templates\about.html" />

@@ -1,0 +1,16 @@
+.zinnia {
+    font-family: "Noto Sans", Arial, sans-serif;
+    font-size: 100%;
+}
+
+    .zinnia p {
+        margin: 0 0 1.5em;
+    }
+
+    .zinnia.right-sidebar #sidebar {
+        width: 100%;
+    }
+
+    .zinnia #header nav {
+        display: block;
+    }

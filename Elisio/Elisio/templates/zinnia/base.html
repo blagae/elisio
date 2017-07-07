@@ -11,7 +11,6 @@
 
 {% block link %}
         <link rel="pingback" href="/xmlrpc/" />
-        <link rel="shortcut icon" href="{% static "zinnia/theme/img/favicon.ico" %}" />
         <link rel="home" href="{% url 'zinnia:entry_archive_index' %}" />
         <link rel="index" href="{% url 'zinnia:entry_archive_index' %}" />
         <link rel="author" type="text/plain" href="{% url 'zinnia:humans' %}" />
@@ -21,9 +20,10 @@
         <link rel="alternate" type="application/rss+xml" title="{% trans "RSS feed of last entries" %}" href="{% url 'zinnia:entry_feed' %}" />
         <link rel="alternate" type="application/rss+xml" title="{% trans "RSS feed of last discussions" %}" href="{% url 'zinnia:discussion_feed' %}" />
         <link rel="stylesheet" type="text/css" media="screen, projection" href="{% static "zinnia/theme/css/screen.css" %}" />
+        <link rel="stylesheet" type="text/css" media="screen, projection" href="{% static "overrideZinniaStyles.css" %}" />
         {% get_archives_entries "zinnia/tags/entries_archives_link.html" %}
 {% endblock link %}
-{% block bodytag %}class="zinnia {% block theme-class %}default{% endblock theme-class %} {% block color-class %}blue{% endblock color-class %} {% block sidebar-class %}right-sidebar{% endblock sidebar-class %} {% block body-class %}{% endblock body-class %}"{% endblock bodytag %}
+{% block bodytag %}class="zinnia {% block sidebar-class %}right-sidebar{% endblock sidebar-class %} {% block body-class %}{% endblock body-class %}"{% endblock bodytag %}
 
 {% block mainContent %}
             <div class="container">
@@ -48,12 +48,6 @@
                             <input type="submit" class="submitbutton" value="OK" />
                         </p>
                     </form>
-                    <h1>
-                        <a href="{% url 'zinnia:entry_archive_index' %}" title="Blog" rel="home">
-                        Elisio blog
-                        </a>
-                    </h1>
-                    <blockquote><p>Blog for the Elisio project</p></blockquote>
                     {% block breadcrumbs %}
                     {% trans "Blog" as root_name %}
                     {% zinnia_breadcrumbs root_name %}
