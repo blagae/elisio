@@ -58,6 +58,9 @@ class Period(Model):
     end_year = IntegerField()
     description = CharField(max_length=200)
 
+    def __str__(self):
+        return self.name
+
 class Author(Model):
     """ model class that contains an Author """
     full_name = CharField(max_length=45)
@@ -71,13 +74,21 @@ class Author(Model):
 
     def get_parent(self):
         return None
+    
+    def __str__(self):
+        return self.short_name
 
 class Genre(Model):
     """ model class that contains a Genre """
     name = CharField(max_length=20)
     description = CharField(max_length=200)
 
+    def __str__(self):
+        return self.name
+
 class Opus(Model):
+    class Meta:
+        verbose_name_plural = "opera"
     """ model class that contains an Opus """
     full_name = CharField(max_length=40)
     abbreviation = CharField(max_length=10)
@@ -89,6 +100,9 @@ class Opus(Model):
     def get_parent(self):
         return self.author
 
+    def __str__(self):
+        return self.full_name
+
 class Book(Model):
     """ model class that contains a Book """
     opus = ForeignKey(Opus)
@@ -96,6 +110,9 @@ class Book(Model):
 
     def get_parent(self):
         return self.opus
+    
+    def __str__(self):
+        return self.opus.__str__() + " " + str(self.number)
 
 class Poem(Model):
     """ model class that contains a Poem """
@@ -106,6 +123,9 @@ class Poem(Model):
 
     def get_parent(self):
         return self.book
+    
+    def __str__(self):
+        return self.number
 
 class DatabaseVerse(Model):
     """ model class that contains a Verse """
