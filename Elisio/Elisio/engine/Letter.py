@@ -46,6 +46,10 @@ class Letter(object):
         'ë' : LetterType.VOWEL
         }
 
+    liquida = ['r', 'l']
+    hard_muta = ['p', 't', 'c']
+    muta = ['b', 'd', 'g', 'f'] + hard_muta
+
     def __init__(self, ltr):
         """ construct a Letter by its contents """
         if not (isinstance(ltr, str) and len(ltr) == 1 and ltr.isalpha()):

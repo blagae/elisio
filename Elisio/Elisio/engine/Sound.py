@@ -20,10 +20,7 @@ class Sound(object):
 
     def get_text(self):
         """ get String representation for output purposes """
-        result = ""
-        for letter in self.letters:
-            result += letter.__str__()
-        return result
+        return ''.join(x.letter for x in self.letters)
 
     def is_valid_sound(self):
         """ is a given sound a valid sound
@@ -31,7 +28,7 @@ class Sound(object):
         in case that number is 2, it must be
         one of a fixed list of combinations
         """
-        raise NotImplementedError("Please Implement this method")
+        raise NotImplementedError("Please implement this method")
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
@@ -175,14 +172,7 @@ class ConsonantSound(Sound):
         """
         if len(self.letters) < 2:
             return False
-        first = self.letters[0].letter
-        second = self.letters[1]
-        return ((second == 'r' or second == 'l') and
-                (first == 't' or first == 'd' or
-                 first == 'p' or first == 'b' or
-                 first == 'c' or first == 'g' or
-                 first == 'f')
-               )
+        return ((self.letters[0] in Letter.muta) and (self.letters[1] in Letter.liquida))
 
     def is_valid_double_sound(self):
         """
@@ -193,17 +183,12 @@ class ConsonantSound(Sound):
         """
         if len(self.letters) != 2:
             return False
-        first = self.letters[0].letter
+        first = self.letters[0]
         second = self.letters[1]
-        return ((first == 'q' and second == 'u') or
-                (first == 'g' and second == 'u') or
+        return ((first in ['q', 'g'] and second == 'u') or
                 self.is_muta_cum_liquida() or
-                ((first == 't' or first == 'p' or first == 'c' or first == 'r')
-                 and second == 'h') #or
-                #(second == 'u' and (first == 'l' or first == 'g'))
-                ## for future reference: this gives many false positives
-                ## but maybe it will come in handy for a different method ?
-               )
+                ((first in Letter.hard_muta or first == 'r')
+                 and second == 'h'))
 
 class HeavyMakerSound(ConsonantSound):
     """
