@@ -174,6 +174,9 @@ class BatchItem(Model):
     batch = ForeignKey(Batch)
     objects = InheritanceManager()
 
+    class Meta:
+        base_manager_name = 'objects'
+
     def get_number_of_verses(self):
         raise Exception("must be overridden")
 
