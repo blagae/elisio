@@ -92,8 +92,7 @@ class VowelSound(Sound):
         """
         if len(self.letters) != 1:
             return False
-        first = self.letters[0].letter
-        return Letter.letters[first] == LetterType.VOWEL
+        return self.letters[0].get_type() == LetterType.VOWEL
 
 class Diphthong(VowelSound):
     """
@@ -115,7 +114,8 @@ class Diphthong(VowelSound):
             return False
         first = self.letters[0].letter
         second = self.letters[1].letter
-        return ((second == 'u' and first == 'a') or
+        return ((first == 'a' and second == 'u') or
+                # lazy and: second is more likely to fail
                 (second == 'e' and (first == 'a' or first == 'o')))
 
 class SemivowelSound(Sound):
@@ -137,8 +137,7 @@ class SemivowelSound(Sound):
         """
         if len(self.letters) != 1:
             return False
-        first = self.letters[0].letter
-        return Letter.letters[first] == LetterType.SEMIVOWEL
+        return self.letters[0].get_type() == LetterType.SEMIVOWEL
 
 class ConsonantSound(Sound):
     """
@@ -157,8 +156,7 @@ class ConsonantSound(Sound):
         """
         if len(self.letters) != 1:
             return self.is_valid_double_sound()
-        first = self.letters[0].letter
-        return Letter.letters[first] == LetterType.CONSONANT
+        return self.letters[0].get_type() == LetterType.CONSONANT
 
     def is_h(self):
         """
@@ -185,10 +183,10 @@ class ConsonantSound(Sound):
             return False
         first = self.letters[0]
         second = self.letters[1]
-        return ((first in ['q', 'g'] and second == 'u') or
+        return ((second == 'u' and first in ['q', 'g']) or
                 self.is_muta_cum_liquida() or
-                ((first in Letter.hard_muta or first == 'r')
-                 and second == 'h'))
+                (second == 'h' and
+                (first == 'r' or first in Letter.hard_muta)))
 
 class HeavyMakerSound(ConsonantSound):
     """
@@ -209,8 +207,8 @@ class HeavyMakerSound(ConsonantSound):
         """
         if len(self.letters) != 1:
             return False
-        first = self.letters[0].letter
-        return Letter.letters[first] == LetterType.HEAVYMAKER
+        return self.letters[0].get_type() == LetterType.HEAVYMAKER
+
 
 
 class SoundFactory(object):
