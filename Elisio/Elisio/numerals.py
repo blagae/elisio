@@ -2,6 +2,7 @@
 # licensed under the PSF License, which is compatible with the (A)GPL
 # This file includes minor porting alterations for Python 3
 
+
 def int_to_roman(input):
     """
     Convert an integer to Roman numerals.
@@ -60,7 +61,6 @@ def int_to_roman(input):
     return result
 
 
-
 def roman_to_int(input):
     """
     Convert a roman numeral to an integer.
@@ -92,7 +92,7 @@ def roman_to_int(input):
         raise TypeError("expected string, got %s" % type(input))
     input = input.upper()
     nums = ['M', 'D', 'C', 'L', 'X', 'V', 'I']
-    ints = [1000, 500, 100, 50,  10,  5,   1]
+    ints = [1000, 500, 100, 50, 10, 5, 1]
     places = []
     for c in input:
         if not c in nums:
@@ -102,7 +102,7 @@ def roman_to_int(input):
         value = ints[nums.index(c)]
         # If the next place holds a larger number, this value is negative.
         try:
-            nextvalue = ints[nums.index(input[i +1])]
+            nextvalue = ints[nums.index(input[i + 1])]
             if nextvalue > value:
                 value *= -1
         except IndexError:

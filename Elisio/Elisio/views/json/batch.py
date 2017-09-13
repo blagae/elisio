@@ -6,17 +6,19 @@ from Elisio.engine.VerseFactory import VerseType
 from django.db.models import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 
+
 def clear_batch_session(request):
     request.session['verses'] = []
     request.session['batchitems'] = []
-    return HttpResponse(status=204) # empty response
+    return HttpResponse(status=204)  # empty response
+
 
 def get_batches(request):
     if request.user.is_authenticated:
         batches = Batch.objects.filter(user=request.user).order_by('timing')
         objects = []
         for batch in batches:
-            data = { 'id': batch.id,
+            data = {'id': batch.id,
                     'timing': str(batch.timing),
                     'itemsAtCreation': batch.items_at_creation_time,
                     'itemsNow': batch.get_number_of_verses(),
@@ -25,11 +27,12 @@ def get_batches(request):
             scans = ScanSession.objects.filter(batch=batch).order_by('timing')
             if scans.count() > 0:
                 data['scans'] = {'number': scans.count(),
-                                'recent': scans[-1].timing
-                                }
+                                 'recent': scans[-1].timing
+                                 }
             objects.append(data)
         return HttpResponse(json.dumps(objects), content_type='application/json')
     return HttpResponseForbidden()
+
 
 def save_batchitems(request):
     if not request.user.is_authenticated:
@@ -46,13 +49,14 @@ def save_batchitems(request):
             return HttpResponseForbidden()
         if type == 'all' and relation == 'except':
             continue
-        data = { 'type': type,
+        data = {'type': type,
                 'id': id,
                 'relation': relation
                 }
         request.session['batchitems'].append(data)
     request.session.modified = True
-    return HttpResponse(status=204) # empty response
+    return HttpResponse(status=204)  # empty response
+
 
 def save_batch(request):
     if not request.user.is_authenticated:
@@ -60,11 +64,11 @@ def save_batch(request):
     if request.method != 'POST':
         return HttpResponse(status=405)
     if ((not 'verses' in request.session or len(request.session['verses']) < 1) and
-        (not 'batchitems' in request.session or len(request.session['batchitems']) < 1)):
+            (not 'batchitems' in request.session or len(request.session['batchitems']) < 1)):
         return Http404()
     sess = Batch()
     sess.user = request.user
-    sess.name = request.user.username + str(randint(1,20))
+    sess.name = request.user.username + str(randint(1, 20))
     sess.save()
     if 'verses' in request.session:
         for verse in request.session['verses']:
@@ -94,10 +98,11 @@ def save_batch(request):
                 res.save()
                 prev = res
             except ValidationError:
-                pass # TODO: investigate whether to pass
+                pass  # TODO: investigate whether to pass
     sess.items_at_creation_time = sess.get_number_of_verses()
     sess.save()
     return clear_batch_session(request)
+
 
 def run_batch(request, id):
     if not request.user.is_authenticated:
@@ -106,6 +111,7 @@ def run_batch(request, id):
         return HttpResponse(status=405)
     # dummy method for now
     return HttpResponse(status=204)
+
 
 def delete_batch(request, id):
     if not request.user.is_authenticated:
@@ -123,6 +129,7 @@ def delete_batch(request, id):
         code = 404
     return HttpResponse(status=code)
 
+
 def delete_verse_hash(request, hash):
     result = False
     for verse in request.session['verses']:
@@ -132,4 +139,4 @@ def delete_verse_hash(request, hash):
     if result:
         request.session['verses'].remove(result)
         request.session.modified = True
-    return HttpResponse(status=204) # empty response
+    return HttpResponse(status=204)  # empty response

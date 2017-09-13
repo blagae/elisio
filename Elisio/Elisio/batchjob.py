@@ -16,6 +16,7 @@ def create_output_file(tree):
     else:
         raise IOError("Invalid XML Tree object")
 
+
 def find_poem(file):
     # Verg. Aen. I
     split = file.split('/')
@@ -29,6 +30,7 @@ def find_poem(file):
         return poem[0]
     return poem.get(number=split[3])
 
+
 def name_poem(poem):
     book = poem.book
     opus = book.opus
@@ -38,6 +40,7 @@ def name_poem(poem):
     if poems > 1:
         res += " " + str(poem.number)
     return res
+
 
 def fill_xml_object():
     """ externally facing method """
@@ -62,29 +65,30 @@ def fill_xml_object():
                                          {'type': 'IntegerField',
                                           'name': 'number'})
             parsed = verse.split('$')
-            if (len(parsed) > 1):
+            if len(parsed) > 1:
                 try:
                     count = int(parsed[0])
                 except:
                     count = int(parsed[0][:-1])
                     alt_field = ET.SubElement(obj, "field",
-                                         {'type': 'CharField',
-                                          'name': 'alternative'})
+                                              {'type': 'CharField',
+                                               'name': 'alternative'})
                     alt_field.text = parsed[0][-1]
             number_field.text = str(count)
             count += 1
             verseType_field = ET.SubElement(obj, "field",
-                                       {'type': 'enum.EnumField',
-                                        'name': 'verseType'})
+                                            {'type': 'enum.EnumField',
+                                             'name': 'verseType'})
             vf = poem.verseForm.get_verse_types()
             current_form = vf[count % len(vf)]
             verseType_field.text = str(current_form.value)
             verse_field = ET.SubElement(obj, "field",
                                         {'type': 'CharField',
                                          'name': 'contents',
-                                        })
+                                         })
             verse_field.text = parsed[-1]
     create_output_file(root)
+
 
 def syncFiles():
     path = join(getcwd(), 'Elisio', 'fixtures', 'sources')
@@ -103,6 +107,7 @@ def syncFiles():
             f.write(item)
             previous_verse = verse.number
         f.close()
+
 
 def syncDb():
     path = join(getcwd(), 'Elisio', 'fixtures', 'sources')
@@ -134,6 +139,7 @@ def syncDb():
             entries.append(item)
         DatabaseVerse.objects.bulk_create(entries)
 
+
 def find_all_verses_containing(regex, must_be_parsed=False):
     from Elisio.utils import set_django
     from Elisio.engine.VerseFactory import VerseFactory
@@ -155,6 +161,7 @@ def find_all_verses_containing(regex, must_be_parsed=False):
         if boolean:
             total.append(dbverse.contents)
     return total
+
 
 def scan_verses(dbverses, initiator, commit=""):
     from Elisio.engine.VerseFactory import VerseFactory

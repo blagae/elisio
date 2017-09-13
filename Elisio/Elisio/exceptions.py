@@ -1,6 +1,9 @@
 """ special Exceptions module omg """
+
+
 class ScansionException(Exception):
     """description of class"""
+
     def __init__(self, message, *exceptions):
         super(ScansionException, self).__init__(message, *exceptions)
         self.message = message
@@ -21,29 +24,36 @@ class LetterException(ScansionException):
     """description of class"""
     pass
 
+
 class SoundException(ScansionException):
     """description of class"""
     pass
+
 
 class SyllableException(ScansionException):
     """description of class"""
     pass
 
+
 class WordException(ScansionException):
     """description of class"""
     pass
+
 
 class VerseException(ScansionException):
     """description of class"""
     pass
 
+
 class HexameterException(VerseException):
     """description of class"""
     pass
 
+
 class PentameterException(VerseException):
     """description of class"""
     pass
+
 
 class IllegalFootException(ScansionException):
     """description of class"""

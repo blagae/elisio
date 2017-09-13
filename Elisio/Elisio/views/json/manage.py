@@ -1,8 +1,9 @@
-from django.http import HttpResponse, HttpResponseForbidden
-from Elisio.batchjob import syncDb, syncFiles
 from django.contrib.auth.models import User
-from Elisio.models import Author
 from django.core import serializers
+from django.http import HttpResponse, HttpResponseForbidden
+
+from Elisio.batchjob import syncDb, syncFiles
+
 
 def sync_files(request):
     if request.user.is_superuser:
@@ -10,11 +11,13 @@ def sync_files(request):
         return HttpResponse(status=204)
     return HttpResponseForbidden()
 
+
 def sync_db(request):
     if request.user.is_superuser:
         syncDb()
         return HttpResponse(status=204)
     return HttpResponseForbidden()
+
 
 def get_member_list(request):
     if request.user.is_superuser:

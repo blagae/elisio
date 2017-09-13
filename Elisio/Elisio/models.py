@@ -12,6 +12,7 @@ from model_utils.managers import InheritanceManager
 import enum
 from functools import total_ordering
 
+
 class DeviantWord(Model):
     """ model class for the Engine: highest level """
     words = []
@@ -43,6 +44,7 @@ class DeviantWord(Model):
         if len(DeviantWord.words) < 1:
             DeviantWord.words = DeviantWord.objects.all()
 
+
 class DeviantSyllable(Model):
     """ model class for the Engine: lowest level """
     word = ForeignKey(DeviantWord)
@@ -50,6 +52,7 @@ class DeviantSyllable(Model):
     contents = CharField(max_length=8)
     sequence = IntegerField()
     index_together = [["word", "sequence"]]
+
 
 class Period(Model):
     """ model class that contains a Period """
@@ -60,6 +63,7 @@ class Period(Model):
 
     def __str__(self):
         return self.name
+
 
 class Author(Model):
     """ model class that contains an Author """
@@ -74,9 +78,10 @@ class Author(Model):
 
     def get_parent(self):
         return None
-    
+
     def __str__(self):
         return self.short_name
+
 
 class Genre(Model):
     """ model class that contains a Genre """
@@ -86,9 +91,11 @@ class Genre(Model):
     def __str__(self):
         return self.name
 
+
 class Opus(Model):
     class Meta:
         verbose_name_plural = "opera"
+
     """ model class that contains an Opus """
     full_name = CharField(max_length=40)
     abbreviation = CharField(max_length=10)
@@ -103,6 +110,7 @@ class Opus(Model):
     def __str__(self):
         return self.full_name
 
+
 class Book(Model):
     """ model class that contains a Book """
     opus = ForeignKey(Opus)
@@ -110,9 +118,10 @@ class Book(Model):
 
     def get_parent(self):
         return self.opus
-    
+
     def __str__(self):
         return self.opus.__str__() + " " + str(self.number)
+
 
 class Poem(Model):
     """ model class that contains a Poem """
@@ -123,9 +132,10 @@ class Poem(Model):
 
     def get_parent(self):
         return self.book
-    
+
     def __str__(self):
         return self.number
+
 
 class DatabaseVerse(Model):
     """ model class that contains a Verse """
@@ -156,19 +166,22 @@ class DatabaseVerse(Model):
         result = DatabaseVerse.objects.get(poem=poem, number=verse)
         return result
 
+
 class WordOccurrence(Model):
     verse = ForeignKey(DatabaseVerse, null=True)
     word = CharField(max_length=20)
     struct = CharField(max_length=10)
+
 
 class Batch(Model):
     timing = DateTimeField(auto_now=True)
     user = ForeignKey(User, null=True)
     items_at_creation_time = IntegerField(null=True)
     name = CharField(max_length=30)
-    
+
     def get_number_of_verses(self):
         return sum(x.get_number_of_verses() for x in self.batchitem_set.select_subclasses())
+
 
 class BatchItem(Model):
     batch = ForeignKey(Batch)
@@ -180,6 +193,7 @@ class BatchItem(Model):
     def get_number_of_verses(self):
         raise Exception("must be overridden")
 
+
 @total_ordering
 class ObjectType(enum.Enum):
     VERSE = 1
@@ -187,16 +201,19 @@ class ObjectType(enum.Enum):
     BOOK = 3
     OPUS = 4
     AUTHOR = 5
-    ALL = 9 # keep leeway for intermediate types
+    ALL = 9  # keep leeway for intermediate types
+
     def __lt__(self, other):
         if self.__class__ is other.__class__:
             return self.value < other.value
         return NotImplemented
 
+
 class RelationType(enum.Enum):
     EXCEPT = 1
     AND = 2
     OR = 3
+
 
 class DatabaseBatchItem(BatchItem):
     object_type = EnumField(ObjectType, null=True)
@@ -290,18 +307,21 @@ class DatabaseBatchItem(BatchItem):
             return DatabaseVerse.objects.filter(poem__book__opus__author_id=self.object_id).count()
         return 0
 
+
 class InputBatchItem(BatchItem):
     contents = CharField(max_length=70)
     scanned_as = EnumField(VerseType, null=True)
-    
+
     def get_number_of_verses(self):
         return 1
+
 
 class ScanSession(Model):
     batch = ForeignKey(Batch, null=True, default=None)
     timing = DateTimeField(auto_now=True)
     initiator = CharField(max_length=40, default='')
     commit = CharField(max_length=40, default=get_commit)
+
 
 class ScanVerseResult(Model):
     verse = ForeignKey(DatabaseVerse)

@@ -1,15 +1,18 @@
 """ standard Django views module for back-end logic """
+import hashlib
 import json
-from django.http import HttpResponse, Http404, HttpResponseForbidden
+import time
+from random import randint
+
 from django.core import serializers
-from Elisio.exceptions import ScansionException
-from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse
+from django.http import HttpResponse, Http404
+
 from Elisio.engine.TextDecorator import TextDecorator
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
-from random import randint
+from Elisio.exceptions import ScansionException
+from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse
 from Elisio.numerals import int_to_roman
-import hashlib
-import time
+
 
 def get_list_type(request, obj_type, key):
     """ get a list of the requested Object Type """
@@ -24,17 +27,21 @@ def get_list_type(request, obj_type, key):
         raise Http404
     return wrap_in_response(objects)
 
+
 def get_poem_length(request, key):
     primary = int(key)
     return HttpResponse(DatabaseVerse.get_maximum_verse_num(poem=primary))
+
 
 def get_authors(request):
     objects = Author.objects.filter(opus__book__gt=0).order_by('floruit_start').distinct()
     return wrap_in_response(objects)
 
+
 def wrap_in_response(objects):
     data = serializers.serialize('json', objects)
     return HttpResponse(data, content_type='application/json')
+
 
 def update_req_with_verse(request, metadata):
     if 'verses' not in request.session:
@@ -46,16 +53,19 @@ def update_req_with_verse(request, metadata):
     # https://stackoverflow.com/questions/43904060/editing-session-variable-in-django
     request.session.modified = True
 
+
 def get_verse(request, poem, verse):
     """ get a verse through a JSON request """
     obj = get_verse_object(poem, verse)
     data = get_metadata(obj)
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+
 def get_verse_object(poem, verse):
     primary = int(verse)
     poem_pk = int(poem)
     return DatabaseVerse.get_verse_from_db(poem_pk, primary)
+
 
 def scan_verse_text(request, txt, metadata=None):
     # watch out before doing ANYTHING related to the db
@@ -78,6 +88,7 @@ def scan_verse_text(request, txt, metadata=None):
         data["error"] = str(ex)
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+
 def scan_verse(request, poem, verse):
     """ get a verse through a JSON request """
     primary = int(verse)
@@ -85,6 +96,7 @@ def scan_verse(request, poem, verse):
     obj = DatabaseVerse.get_verse_from_db(poem_pk, primary)
     metadata = get_metadata(obj)
     return scan_verse_text(request, obj.contents, metadata)
+
 
 def get_random_verse(request):
     count = DatabaseVerse.objects.count()
@@ -100,21 +112,21 @@ def get_random_verse(request):
     metadata = get_metadata(verse)
     return HttpResponse(json.dumps(metadata), content_type='application/json')
 
+
 def get_metadata(verse):
     if isinstance(verse, DatabaseVerse):
         metadata = {'verse': {'text': verse.contents,
-                               'number': verse.number,
-                               'id': verse.id,
-                               'type': verse.verseType.name},
+                              'number': verse.number,
+                              'id': verse.id,
+                              'type': verse.verseType.name},
                     'poem': {'id': verse.poem.id,
-                               'number': verse.poem.number},
+                             'number': verse.poem.number},
                     'book': {'id': verse.poem.book.id,
-                               'number': int_to_roman(verse.poem.book.number)},
+                             'number': int_to_roman(verse.poem.book.number)},
                     'opus': {'id': verse.poem.book.opus.id,
-                               'name': verse.poem.book.opus.full_name},
+                             'name': verse.poem.book.opus.full_name},
                     'author': {'id': verse.poem.book.opus.author.id,
                                'name': verse.poem.book.opus.author.short_name}
                     }
         return metadata
     return None
-
