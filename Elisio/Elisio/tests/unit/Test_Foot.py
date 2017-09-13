@@ -3,6 +3,7 @@ from Elisio.engine.Verse import Foot
 from Elisio.engine.Syllable import Weight
 from Elisio.exceptions import IllegalFootException
 
+
 class TestFoot(unittest.TestCase):
     def test_unknown_struc_fails(self):
         with self.assertRaises(IllegalFootException):

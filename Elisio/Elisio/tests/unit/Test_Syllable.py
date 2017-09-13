@@ -4,14 +4,16 @@ from Elisio.engine.Syllable import Syllable
 from Elisio.engine.Sound import SoundFactory
 from Elisio.exceptions import SyllableException
 
+
 class TestSyllable(unittest.TestCase):    
     def test_syll_constr_init(self):
         """ regular syllable """
         self.assertTrue(isinstance(Syllable('ti'), Syllable))
+
     def test_syll_constr_final(self):
         """ regular syllable """
         self.assertTrue(isinstance(Syllable('it'), Syllable))
-        
+
     def test_syll_constr_free(self):
         """ regular syllable """
         self.assertTrue(isinstance(Syllable('o'), Syllable))
@@ -19,7 +21,7 @@ class TestSyllable(unittest.TestCase):
     def test_syll_constr_free_diph(self):
         """ regular syllable """
         self.assertTrue(isinstance(Syllable('oe'), Syllable))
-        
+
     def test_syll_constr_diph(self):
         """ regular syllable with diphthong """
         self.assertTrue(isinstance(Syllable('aen'), Syllable))

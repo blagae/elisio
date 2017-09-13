@@ -1,10 +1,11 @@
 import unittest
-from Elisio.engine.Letter import Letter, LetterType
 from Elisio.engine.Sound import *
 from Elisio.exceptions import SoundException, LetterException
 
+
 class TestSoundFactory(unittest.TestCase):
-    def construct_sound(self, *texts):
+    @staticmethod
+    def construct_sound(*texts):
         """ convenience method """
         letters = []
         for text in texts:
@@ -114,46 +115,32 @@ class TestSoundFactory(unittest.TestCase):
         
     def test_sound_factory(self):
         """ integration test for finding sounds """
-        expected_sounds = []
-        expected_sounds.append(SoundFactory.create('f'))
-        expected_sounds.append(SoundFactory.create('o'))
-        expected_sounds.append(SoundFactory.create('r'))
-        expected_sounds.append(SoundFactory.create('s'))
+        expected_sounds = [SoundFactory.create('f'), SoundFactory.create('o'),
+                           SoundFactory.create('r'), SoundFactory.create('s')]
         sounds = SoundFactory.find_sounds_for_text('fors')
         self.assertEqual(sounds, expected_sounds)
         
     def test_sound_factory_digraphs(self):
         """ digraphs must work out well """
-        expected_sounds = []
-        expected_sounds.append(SoundFactory.create('qu'))
-        expected_sounds.append(SoundFactory.create('ae'))
+        expected_sounds = [SoundFactory.create('qu'), SoundFactory.create('ae')]
         sounds = SoundFactory.find_sounds_for_text('quae')
         self.assertEqual(sounds, expected_sounds)
 
     def test_sound_factory_no_diph(self):
         """ digraphs must work out well """
-        expected_sounds = []
-        expected_sounds.append(SoundFactory.create('th'))
-        expected_sounds.append(SoundFactory.create('e'))
-        expected_sounds.append(SoundFactory.create('a'))
+        expected_sounds = [SoundFactory.create('th'), SoundFactory.create('e'), SoundFactory.create('a')]
         sounds = SoundFactory.find_sounds_for_text('thea')
         self.assertEqual(sounds, expected_sounds)
         
     def test_sound_factory_many_vowels(self):
         """ digraphs must work out well """
-        expected_sounds = []
-        expected_sounds.append(SoundFactory.create('ae'))
-        expected_sounds.append(SoundFactory.create('u'))
-        expected_sounds.append(SoundFactory.create('m'))
+        expected_sounds = [SoundFactory.create('ae'), SoundFactory.create('u'), SoundFactory.create('m')]
         sounds = SoundFactory.find_sounds_for_text('aeum')
         self.assertEqual(sounds, expected_sounds)
 
     def test_sound_factory_many_semivowels(self):
         """ digraphs must work out well """
-        expected_sounds = []
-        expected_sounds.append(SoundFactory.create('ae'))
-        expected_sounds.append(SoundFactory.create('u'))
-        expected_sounds.append(SoundFactory.create('u'))
-        expected_sounds.append(SoundFactory.create('m'))
+        expected_sounds = [SoundFactory.create('ae'), SoundFactory.create('u'),
+                           SoundFactory.create('u'), SoundFactory.create('m')]
         sounds = SoundFactory.find_sounds_for_text('aevum')
         self.assertEqual(sounds, expected_sounds)

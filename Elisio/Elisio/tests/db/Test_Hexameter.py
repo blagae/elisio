@@ -1,9 +1,8 @@
 ﻿import unittest
 from Elisio.batchjob import scan_verses
 from Elisio.engine.Verse import Verse, Foot
-from Elisio.engine.Syllable import Weight
 from Elisio.utils import set_django
-from Elisio.engine.Hexameter import Hexameter, HexameterCreator
+from Elisio.engine.Hexameter import Hexameter
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from Elisio.tests.db.Test_Verse import TYPICAL_VERSE
 

@@ -1,7 +1,8 @@
 """ test module for class Letter """
 import unittest
 from Elisio.engine.Letter import Letter
-from Elisio.exceptions import *
+from Elisio.exceptions import LetterException
+
 
 class TestLetter(unittest.TestCase):
 

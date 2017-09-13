@@ -17,8 +17,8 @@ class TestVerse(unittest.TestCase):
     commit 1 (blagae): BLI 9
     reason: creation
     """
-
-    def construct_verse(self, text=TYPICAL_VERSE):
+    @staticmethod
+    def construct_verse(text=TYPICAL_VERSE):
         """ Construct a verse object from a given text """
         constructed_verse = Verse(text)
         return constructed_verse
