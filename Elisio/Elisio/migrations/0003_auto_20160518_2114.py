@@ -4,12 +4,13 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
+
 def load_initial_data(self, orm):
     from Elisio.batchjob import syncDb
     syncDb()
 
-class Migration(migrations.Migration):
 
+class Migration(migrations.Migration):
     dependencies = [
         ('Elisio', '0001_initial'),
         ('Elisio', '0002_auto_20160501_1137'),

@@ -6,12 +6,13 @@ import os
 import enumfields.fields
 import Elisio.engine.VerseFactory
 
+
 def load_initial_data(self, orm):
     from django.core.management import call_command
     call_command('loaddata', 'initial_data.xml')
 
-class Migration(migrations.Migration):
 
+class Migration(migrations.Migration):
     dependencies = [
         ('Elisio', '0001_initial'),
     ]
