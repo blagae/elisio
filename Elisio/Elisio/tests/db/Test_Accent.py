@@ -1,7 +1,6 @@
 import unittest
-from Elisio.engine.Syllable import Weight
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
-from Elisio.tests.Test_Verse import TYPICAL_VERSE
+from Elisio.tests.db.Test_Verse import TYPICAL_VERSE
 
 class TestAccent(unittest.TestCase):
     def test_accent_armavirumque(self):

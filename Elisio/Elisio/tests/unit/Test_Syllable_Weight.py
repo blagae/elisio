@@ -1,7 +1,6 @@
 import unittest
 from Elisio.engine.Syllable import Syllable
-from Elisio.engine.Sound import SoundFactory
-from Elisio.exceptions import SyllableException
+
 
 class TestSyllableWeight(unittest.TestCase):
     def test_syllw_heavy_isolated(self):
