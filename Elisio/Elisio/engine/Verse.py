@@ -4,6 +4,7 @@ from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Weight
 from Elisio.exceptions import VerseException, IllegalFootException
 
+
 class Foot(enum.Enum):
     """ Types of verse foot """
     UNKNOWN = 0
@@ -34,11 +35,13 @@ class Foot(enum.Enum):
             return [Weight.HEAVY]
         raise IllegalFootException("currently illegal foot structure: " + self.name)
 
+
 class Verse(object):
     """ Verse class
     A verse is the representation of the Latin text of a verse
     It has no knowledge of its surroundings or context
     """
+
     def __init__(self, text):
         """ construct a Verse by its contents """
         if not isinstance(text, str):
@@ -49,6 +52,7 @@ class Verse(object):
 
     def __repr__(self):
         return self.words
+
     def __str__(self):
         return self.words
 
@@ -69,8 +73,8 @@ class Verse(object):
                 txt = wrd.text
                 for cnt, syll in enumerate(wrd.syllables):
                     strct += str(syll.weight.value)
-                    if cnt == len(wrd.syllables)-1 and count < len(self.words) - 1:
-                        if wrd.may_be_heavy_by_position(self.words[count+1]):
+                    if cnt == len(wrd.syllables) - 1 and count < len(self.words) - 1:
+                        if wrd.may_be_heavy_by_position(self.words[count + 1]):
                             if syll.weight != Weight.NONE:
                                 strct = strct[:-1]
                                 strct += str(Weight.ANCEPS.value)
@@ -113,7 +117,7 @@ class Verse(object):
         return result
 
     def save_structure(self):
-                # control mechanism and syllable filler
+        # control mechanism and syllable filler
         start = 0
         for feet_num, foot in enumerate(self.feet):
             if foot is None:
@@ -121,14 +125,14 @@ class Verse(object):
                                      " number {0}".format(feet_num))
             for count, weight in enumerate(foot.get_structure()):
                 if (weight != Weight.ANCEPS and
-                        self.flat_list[count+start] != Weight.ANCEPS and
-                        weight != self.flat_list[count+start]):
+                            self.flat_list[count + start] != Weight.ANCEPS and
+                            weight != self.flat_list[count + start]):
                     raise VerseException("weight #{0} was already {1}"
                                          ", tried to assign {2}"
-                                         .format(count+start,
-                                                    str(self.flat_list[count+start]),
-                                                    str(weight)))
-                self.flat_list[count+start] = weight
+                                         .format(count + start,
+                                                 str(self.flat_list[count + start]),
+                                                 str(weight)))
+                self.flat_list[count + start] = weight
             start += foot.get_length()
         i = 0
         for word in self.words:

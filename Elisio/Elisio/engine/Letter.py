@@ -1,6 +1,7 @@
 import enum
 from Elisio.exceptions import LetterException
 
+
 class LetterType(enum.Enum):
     """
     The possible types of letters
@@ -20,31 +21,31 @@ class Letter(object):
     letters = {
         # This list is sorted by relative prevalence of letters
         # so that the most frequent letters have more optimal search
-        'e' : LetterType.VOWEL,
-        'a' : LetterType.VOWEL,
-        'i' : LetterType.SEMIVOWEL,
-        'u' : LetterType.SEMIVOWEL,
-        't' : LetterType.CONSONANT,
-        's' : LetterType.CONSONANT,
-        'r' : LetterType.CONSONANT,
-        'n' : LetterType.CONSONANT,
-        'o' : LetterType.VOWEL,
-        'm' : LetterType.CONSONANT,
-        'c' : LetterType.CONSONANT,
-        'l' : LetterType.CONSONANT,
-        'p' : LetterType.CONSONANT,
-        'd' : LetterType.CONSONANT,
-        'q' : LetterType.CONSONANT,
-        'b' : LetterType.CONSONANT,
-        'g' : LetterType.CONSONANT,
-        'f' : LetterType.CONSONANT,
-        'h' : LetterType.CONSONANT,
-        'x' : LetterType.HEAVYMAKER,
-        'y' : LetterType.VOWEL,
-        'k' : LetterType.CONSONANT,
-        'z' : LetterType.HEAVYMAKER,
-        'ë' : LetterType.VOWEL
-        }
+        'e': LetterType.VOWEL,
+        'a': LetterType.VOWEL,
+        'i': LetterType.SEMIVOWEL,
+        'u': LetterType.SEMIVOWEL,
+        't': LetterType.CONSONANT,
+        's': LetterType.CONSONANT,
+        'r': LetterType.CONSONANT,
+        'n': LetterType.CONSONANT,
+        'o': LetterType.VOWEL,
+        'm': LetterType.CONSONANT,
+        'c': LetterType.CONSONANT,
+        'l': LetterType.CONSONANT,
+        'p': LetterType.CONSONANT,
+        'd': LetterType.CONSONANT,
+        'q': LetterType.CONSONANT,
+        'b': LetterType.CONSONANT,
+        'g': LetterType.CONSONANT,
+        'f': LetterType.CONSONANT,
+        'h': LetterType.CONSONANT,
+        'x': LetterType.HEAVYMAKER,
+        'y': LetterType.VOWEL,
+        'k': LetterType.CONSONANT,
+        'z': LetterType.HEAVYMAKER,
+        'ë': LetterType.VOWEL
+    }
 
     liquida = ['r', 'l']
     hard_muta = ['p', 't', 'c']
@@ -71,6 +72,7 @@ class Letter(object):
 
     def __str__(self):
         return self.letter
+
     def __repr__(self):
         return self.letter
 

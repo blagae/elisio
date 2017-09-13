@@ -1,6 +1,7 @@
 from Elisio.engine.Verse import Verse
 from Elisio.engine.Syllable import Weight
 
+
 class TextDecorator(object):
     def __init__(self, verse):
         if isinstance(verse, Verse):
@@ -27,7 +28,8 @@ class TextDecorator(object):
             result += ' '
         return result.strip()
 
-    def glyph(self, weight):
+    @staticmethod
+    def glyph(weight):
         if weight == Weight.HEAVY:
             return u'\u0331'
         elif weight == Weight.LIGHT:

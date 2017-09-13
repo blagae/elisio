@@ -4,6 +4,7 @@ import re
 from Elisio.engine.Sound import SoundFactory
 from Elisio.exceptions import SyllableException
 
+
 class Weight(enum.Enum):
     """
     The possible types of syllable weights
@@ -13,12 +14,14 @@ class Weight(enum.Enum):
     HEAVY = 2
     ANCEPS = 3
 
+
 class Syllable(object):
     """ Syllable class
     A syllable knows its sounds and can determine
     if the specific combination of them is a valid one
     """
     final_heavy = ('.*os$', '.*as$')
+
     def __init__(self, syllable, test=True, weight=None):
         """ construct a Syllable by its contents """
         self.weight = weight
@@ -69,14 +72,14 @@ class Syllable(object):
             elif sound.is_vowel():
                 if (contains_vowel or
                         (contains_final_consonant and
-                         contains_semivowel)):
+                             contains_semivowel)):
                     return False
                 contains_vowel = True
                 only_consonants = False
             elif sound.is_semivowel():
                 if (contains_vowel or
                         (contains_final_consonant and
-                         contains_semivowel)):
+                             contains_semivowel)):
                     return False
                 if count > 0:
                     contains_vowel = True
@@ -109,7 +112,7 @@ class Syllable(object):
         return (self.ends_with_vowel() or
                 (self.sounds[-1] == SoundFactory.create('m') and
                  (self.sounds[-2].is_vowel() or self.sounds[-2].is_semivowel()))
-               )
+                )
 
     def has_diphthong(self):
         return self.get_vowel().is_diphthong()
@@ -130,12 +133,12 @@ class Syllable(object):
         if self.sounds[0].is_vowel():
             return True
         if (self.sounds[0].is_h() and
-                 len(self.sounds) > 1 and
-                 not self.sounds[1].is_consonant()):
+                    len(self.sounds) > 1 and
+                not self.sounds[1].is_consonant()):
             return True
         if (self.sounds[0].is_semivowel() and
-                 (not initial or (len(self.sounds) == 1 or
-                  self.sounds[1].is_consonant()))):
+                (not initial or (len(self.sounds) == 1 or
+                                     self.sounds[1].is_consonant()))):
             return True
         return False
 
@@ -152,7 +155,7 @@ class Syllable(object):
                 ((len(self.sounds) > 1 and self.sounds[1].is_consonant()) or
                  self.makes_previous_heavy())
                 and self.sounds[0] != SoundFactory.create('gu')
-               )
+                )
 
     def makes_previous_heavy(self):
         """ first sound of the syllable is a double consonant letter """
@@ -174,7 +177,7 @@ class Syllable(object):
                 break
         if id is not None:
             return len(self.sounds) - id - 1
-        raise SyllableException("no vowel found in Syllable"+str(self.sounds))
+        raise SyllableException("no vowel found in Syllable" + str(self.sounds))
 
     def get_vowel(self):
         """ get the vocalic sound from a syllable """
@@ -218,7 +221,7 @@ class Syllable(object):
         return (self.ends_with_vowel() and
                 not self.get_vowel().is_diphthong() and
                 self.get_vowel().letters[0] in SyllableSplitter.shortEndVowels
-               )
+                )
 
     def add_sound(self, sound):
         """ add a sound to a syllable if the syllable stays
@@ -293,21 +296,21 @@ class SyllableSplitter(object):
         redistribute the sounds of a list of syllables
         in order to use the correct syllables, not the longest possible
         """
-        for count in range(len(syllables)-1):
-            if (count == len(syllables)-2 and
-                    syllables[count+1] == Syllable('ve')):
+        for count in range(len(syllables) - 1):
+            if (count == len(syllables) - 2 and
+                        syllables[count + 1] == Syllable('ve')):
                 continue
             if (syllables[count].ends_with_vowel() and
-                    syllables[count+1].starts_with_consonant_cluster()):
-                SyllableSplitter.__switch_sound(syllables[count], syllables[count+1], True)
+                    syllables[count + 1].starts_with_consonant_cluster()):
+                SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], True)
             elif syllables[count].ends_with_consonant():
-                if (syllables[count+1].sounds[0] == SoundFactory.create('u') and
-                        len(syllables[count+1].sounds) > 1 and
+                if (syllables[count + 1].sounds[0] == SoundFactory.create('u') and
+                            len(syllables[count + 1].sounds) > 1 and
                         not syllables[count].ends_with_consonant_cluster() and
-                        not syllables[count+1].sounds[1].is_consonant()):
+                        not syllables[count + 1].sounds[1].is_consonant()):
                     pass
-                elif syllables[count+1].starts_with_vowel(False):
-                    SyllableSplitter.__switch_sound(syllables[count], syllables[count+1], False)
+                elif syllables[count + 1].starts_with_vowel(False):
+                    SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], False)
         return syllables
 
     @classmethod

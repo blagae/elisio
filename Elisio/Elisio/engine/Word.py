@@ -3,13 +3,15 @@ from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Syllable, SyllableSplitter, Weight
 from Elisio.exceptions import WordException, SyllableException
 
+
 class Word(object):
     """ Word class
     A word is the representation of the Latin word
     It has extensive knowledge of its sounds, which it can join into syllables
     """
     enclitics = ('que', 'ue')
-    proclitics = ('ab', 'ad', 'con', 'dis', 'in', 'ob', 'sub') #circum?, de?, e-?,ob?per?prae?pro?
+    proclitics = ('ab', 'ad', 'con', 'dis', 'in', 'ob', 'sub')  # circum?, de?, e-?,ob?per?prae?pro?
+
     def __init__(self, text, use_dict=False):
         """ construct a Word by its contents """
         self.syllables = []
@@ -22,6 +24,7 @@ class Word(object):
 
     def __repr__(self):
         return self.syllables
+
     def __str__(self):
         return self.syllables
 
@@ -138,7 +141,7 @@ class Word(object):
                   self.syllables[-1].ends_with_vowel()) or
                  (self.syllables[-1].ends_with_consonant() and
                   next_word.syllables[0].starts_with_consonant()
-                 )))
+                  )))
 
     def get_syllable_structure(self, next_word=None):
         """ get the list of syllable weights based on the syllable list """
@@ -147,7 +150,7 @@ class Word(object):
             self.split()
         for count, syllable in enumerate(self.syllables):
             try:
-                syll_struct.append(syllable.get_weight(self.syllables[count+1]))
+                syll_struct.append(syllable.get_weight(self.syllables[count + 1]))
             except IndexError:
                 syll_struct.append(syllable.get_weight())
         if next_word and isinstance(next_word, Word):
@@ -164,20 +167,20 @@ class Word(object):
                 syll_struct[-1] = Weight.HEAVY
             elif last_syllable.ends_with_consonant():
                 if (not last_syllable.ends_with_consonant_cluster() and
-                   not last_syllable.has_diphthong() and
-                   first_syllable.starts_with_vowel()):
+                        not last_syllable.has_diphthong() and
+                        first_syllable.starts_with_vowel()):
                     # consonant de facto redistributed
                     if syll_struct[-1] != Weight.LIGHT:
                         syll_struct[-1] = Weight.ANCEPS
                 elif first_syllable.starts_with_consonant():
                     syll_struct[-1] = Weight.HEAVY
             elif (last_syllable.ends_with_vowel() and
-                  first_syllable.starts_with_consonant_cluster()):
+                      first_syllable.starts_with_consonant_cluster()):
                 syll_struct[-1] = Weight.HEAVY
             if last_syllable == Syllable('que') and syll_struct[-1] != Weight.NONE:
                 syll_struct[-1] = Weight.LIGHT
         if self.name:
-            for count in range(len(syll_struct)-1):
+            for count in range(len(syll_struct) - 1):
                 if syll_struct[count] == Weight.LIGHT:
                     syll_struct[count] = Weight.ANCEPS
         for count, syll in enumerate(self.syllables):
@@ -222,8 +225,10 @@ class Word(object):
                     except SyllableException:
                         pass
 
+
 class FallbackWord(Word):
     def __init__(self, text, use_dict=False):
         super(FallbackWord, self).__init__(text, use_dict)
+
     def check_consistency(self):
         pass

@@ -4,6 +4,7 @@ from Elisio.engine.Word import Word, Weight
 from Elisio.exceptions import ScansionException, VerseException
 import enum
 
+
 class VerseType(enum.Enum):
     UNKNOWN = 0
     HEXAMETER = 1
@@ -18,11 +19,13 @@ class VerseType(enum.Enum):
             return [PentameterCreator]
         return [HexameterCreator, PentameterCreator]
 
+
 class VerseForm(enum.Enum):
     UNKNOWN = 0
     HEXAMETRIC = 1
     ELEGIAC_DISTICHON = 2
-#    SAPPHIC_STOPHE = 3
+
+    #    SAPPHIC_STOPHE = 3
 
     def get_verse_types(self):
         if self == VerseForm.UNKNOWN:
@@ -31,12 +34,14 @@ class VerseForm(enum.Enum):
             return [VerseType.HEXAMETER]
         if self == VerseForm.ELEGIAC_DISTICHON:
             return [VerseType.HEXAMETER, VerseType.PENTAMETER]
-#        if self == VerseForm.SAPPHIC_STOPHE:
+        #        if self == VerseForm.SAPPHIC_STOPHE:
         return [VerseType.UNKNOWN]
+
 
 class VerseFactory(object):
     def something(self):
         pass
+
     class VerseFactoryImpl(object):
         def __init__(self, verse, useDict=False, classes=None):
             self.verse = verse
@@ -78,7 +83,7 @@ class VerseFactory(object):
             result = []
             for count, word in enumerate(self.words):
                 try:
-                    syll_struct = word.get_syllable_structure(self.words[count+1])
+                    syll_struct = word.get_syllable_structure(self.words[count + 1])
                 except IndexError:
                     syll_struct = word.get_syllable_structure()
                 result.append(syll_struct)
@@ -126,25 +131,31 @@ class VerseFactory(object):
                     result += "-"
                 result = result[:-1] + " "
             return result
+
     @classmethod
     def split(cls, text):
         return VerseFactory.VerseFactoryImpl(text).split()
+
     @classmethod
     def layer(cls, text):
         return VerseFactory.VerseFactoryImpl(text).layer()
+
     @classmethod
     def getlist(cls, text):
         return VerseFactory.VerseFactoryImpl(text).getlist()
+
     @classmethod
     def get_split_syllables(cls, text):
         return VerseFactory.VerseFactoryImpl(text).get_split_syllables()
+
     @classmethod
     def create(cls, verse, useDict=False, classes=None):
         return VerseFactory.VerseFactoryImpl(verse, useDict, classes).create()
 
+
 class VerseCreator(object):
     def get_type(self):
         raise Exception("must be overridden")
+
     def get_subtype(self):
         raise Exception("must be overridden")
-    
