@@ -2,6 +2,7 @@ import unittest
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from Elisio.tests.db.Test_Verse import TYPICAL_VERSE
 
+
 class TestAccent(unittest.TestCase):
     def test_accent_armavirumque(self):
         verse = VerseFactory.create(TYPICAL_VERSE, classes=VerseType.HEXAMETER)
@@ -29,7 +30,7 @@ class TestAccent(unittest.TestCase):
         # oris
         self.assertEqual(verse.words[7].syllables[0].stressed, True)
         self.assertEqual(verse.words[7].syllables[1].stressed, False)
-        
+
     def test_accent_lavinia(self):
         verse = VerseFactory.create("Italiam fato profugus Laviniaque venit", classes=VerseType.HEXAMETER)
         verse.parse()
@@ -52,7 +53,7 @@ class TestAccent(unittest.TestCase):
         # venit
         self.assertEqual(verse.words[4].syllables[0].stressed, True)
         self.assertEqual(verse.words[4].syllables[1].stressed, False)
-        
+
     def test_accent_litora(self):
         verse = VerseFactory.create("litora, multum ille et terris iactatus et alto", classes=VerseType.HEXAMETER)
         verse.parse()

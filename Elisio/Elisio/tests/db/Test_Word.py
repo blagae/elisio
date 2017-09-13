@@ -16,14 +16,17 @@ EXPECTED_WEIGHTS = [Weight.ANCEPS, Weight.HEAVY,
 for syllable in SYLLABLES:
     EXPECTED_SYLLABLE_LIST.append(Syllable(syllable))
 
+
 class TestWord(unittest.TestCase):
     """ class for integration tests of Word """
+
     @classmethod
     def setUpClass(cls):
         """ we need django for this class """
         set_django()
 
-    def construct_word(self, word=TYPICAL_WORD):
+    @staticmethod
+    def construct_word(word=TYPICAL_WORD):
         """ Construct a word object from a given text """
         constructed_word = Word(word)
         return constructed_word
@@ -31,7 +34,7 @@ class TestWord(unittest.TestCase):
     def test_word_construct(self):
         """ typical word """
         self.assertTrue(isinstance(self.construct_word(), Word))
-        
+
     def test_word_fail_object(self):
         """ incorrect input breaks word """
         with self.assertRaises(WordException):
@@ -79,23 +82,17 @@ class TestWord(unittest.TestCase):
         word = self.construct_word()
         word.split()
         self.assertEqual(word.syllables, EXPECTED_SYLLABLE_LIST)
-        
+
     def test_word_create_deviant(self):
         word = self.construct_word('lavinia')
         word.split()
-        expected = []
-        expected.append(Syllable('la'))
-        expected.append(Syllable('vin'))
-        expected.append(Syllable('ia'))
+        expected = [Syllable('la'), Syllable('vin'), Syllable('ia')]
         self.assertEqual(word.syllables, expected)
 
     def test_word_create_deviant_smvl(self):
         word = self.construct_word('lauinja')
         word.split()
-        expected = []
-        expected.append(Syllable('la'))
-        expected.append(Syllable('vin'))
-        expected.append(Syllable('ia'))
+        expected = [Syllable('la'), Syllable('vin'), Syllable('ia')]
         self.assertEqual(word.syllables, expected)
 
     def test_word_has_enclitic(self):
@@ -194,7 +191,7 @@ class TestWord(unittest.TestCase):
         syllable_list = [Syllable('cu'), Syllable('ius')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
-        
+
     def test_word_split_intervoc_v(self):
         word = self.construct_word('achivis')
         syllable_list = [Syllable('a'), Syllable('chi'), Syllable('vis')]
@@ -240,7 +237,7 @@ class TestWord(unittest.TestCase):
         weights = [Weight.HEAVY, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
-        
+
     def test_word_split_no_lexical_exc(self):
         """ diphthong way too rare for a rule """
         word = self.construct_word('prout')
@@ -366,7 +363,7 @@ class TestWord(unittest.TestCase):
         syllable_list = [Syllable('me'), Syllable('mor')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
-        
+
     def test_word_split_proclitic(self):
         word = self.construct_word('adiuvat')
         syllable_list = [Syllable('ad'), Syllable('iu'), Syllable('vat')]
@@ -416,7 +413,6 @@ class TestWord(unittest.TestCase):
         weights = [Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
-
 
     def test_word_scan_weird_word_two(self):
         """ proper name scanning """
@@ -487,7 +483,7 @@ class TestWord(unittest.TestCase):
         syllable_list = [Syllable('vol'), Syllable('ve'), Syllable('re')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
-        
+
     def test_word_scan_cons_sv(self):
         """ scan words with internal consonantal semivowels """
         word = self.construct_word('volvere')
@@ -500,7 +496,7 @@ class TestWord(unittest.TestCase):
         syllable_list = [Syllable('ar'), Syllable('va')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
-        
+
     def test_word_scan_debug(self):
         """ scan words with internal consonantal semivowels """
         word = self.construct_word('pinguis')

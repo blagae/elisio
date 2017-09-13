@@ -5,6 +5,7 @@ from Elisio.engine.VerseFactory import VerseFactory, VerseType
 
 set_django()
 
+
 class TestTextDecorator(unittest.TestCase):
     def test_dec_basic(self):
         verse = VerseFactory.create("Arma virumque cano, Troiae qui primus ab oris", classes=VerseType.HEXAMETER)

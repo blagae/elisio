@@ -1,10 +1,11 @@
 ﻿import unittest
-from Elisio.utils import set_django
+
 from Elisio.engine.Syllable import Syllable
 from Elisio.engine.Word import Word, Weight
-from Elisio.exceptions import WordException
+from Elisio.utils import set_django
+
 set_django()
-from Elisio.models import DeviantWord
+
 
 class TestDeviantWord(unittest.TestCase):
     # TODO: build tests for words that are actually deviant (i.e. not names)

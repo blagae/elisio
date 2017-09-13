@@ -13,10 +13,10 @@ from Elisio.models import DatabaseVerse, WordOccurrence
 
 class TestHexameter(unittest.TestCase):
     """ testing specifically for the hexameter """
-    def construct_hexameter(self, text=TYPICAL_VERSE):
+    @staticmethod
+    def construct_hexameter(text=TYPICAL_VERSE):
         """ Construct a Hexameter object from a given text """
         constructed_verse = VerseFactory.create(text, classes=VerseType.HEXAMETER)
-
         return constructed_verse
 
     def test_hexameter_construct(self):
@@ -54,4 +54,4 @@ class TestHexameter(unittest.TestCase):
         21: hinc populum late regem belloque superbum
         """
         dbverse = DatabaseVerse.objects.get(pk=1)
-        verse = VerseFactory.create(dbverse, classes=VerseType.HEXAMETER)
+        VerseFactory.create(dbverse, classes=VerseType.HEXAMETER)
