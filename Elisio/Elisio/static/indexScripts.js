@@ -72,7 +72,6 @@ function getVerse(poem, verse) {
 function doScan(loc) {
     $.getJSON(loc, function (ret) {
         if (ret.text) {
-            result = ret.text;
             $("#scannedVerseResultField").html(ret.text);
             $("#zelenyResultField").html(ret.zeleny);
             $("#errorResultField").empty();
@@ -111,7 +110,7 @@ function validateVerseNumber(val) {
         $("#warningScannerField").text("Insert a number please");
     } else {
         $("#warningScannerField").empty();
-    };
+    }
     if (val > maxVerseNumber) {
         $("#warningScannerField").text("Maximum verse number is " + maxVerseNumber);
     }

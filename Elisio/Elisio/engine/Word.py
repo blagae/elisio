@@ -146,7 +146,7 @@ class Word(object):
     def get_syllable_structure(self, next_word=None):
         """ get the list of syllable weights based on the syllable list """
         syll_struct = []
-        if self.syllables == []:
+        if not self.syllables:
             self.split()
         for count, syllable in enumerate(self.syllables):
             try:

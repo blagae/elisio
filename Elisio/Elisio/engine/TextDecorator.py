@@ -17,11 +17,11 @@ class TextDecorator(object):
                 lettercount += 1
             for syll in word.syllables:
                 vowel = False
-                for id, sound in enumerate(syll.sounds):
+                for indx, sound in enumerate(syll.sounds):
                     for letter in sound.letters:
                         result += vrs[idx][lettercount]
                         lettercount += 1
-                    if id == syll.get_vowel_location():
+                    if indx == syll.get_vowel_location():
                         result += self.glyph(syll.weight)
             if len(vrs[idx]) > lettercount:
                 result += vrs[idx][-1]

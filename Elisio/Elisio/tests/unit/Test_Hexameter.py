@@ -7,7 +7,8 @@ from Elisio.engine.Hexameter import HexameterCreator
 class TestHexameter(unittest.TestCase):
     """ testing specifically for the hexameter """
 
-    def __parse(self, lst):
+    @staticmethod
+    def __parse(lst):
         hex_creator = HexameterCreator(lst)
         hex_class = hex_creator.get_subtype()
         hexa = hex_class('')

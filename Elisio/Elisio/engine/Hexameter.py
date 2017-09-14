@@ -128,7 +128,7 @@ class SpondaicDominantHexameter(Hexameter):
     def scan_for_real(self):
         dact = False
         for count, weight in enumerate(self.flat_list):
-            if count > 0 and count < 9 and weight == Weight.LIGHT:
+            if 0 < count < 9 and weight == Weight.LIGHT:
                 self.feet[(count - 1) // 2] = Foot.DACTYLUS
                 dact = True
                 break
@@ -136,7 +136,7 @@ class SpondaicDominantHexameter(Hexameter):
             self.fill_other_feet(Foot.DACTYLUS, Foot.SPONDAEUS)
         else:
             for count, weight in enumerate(self.flat_list):
-                if count > 0 and count < 9 and weight == Weight.HEAVY:
+                if 0 < count < 9 and weight == Weight.HEAVY:
                     self.feet[(count - 1) // 2] = Foot.SPONDAEUS
             heavies = self.feet[0:4].count(Foot.SPONDAEUS)
             if heavies == 3:

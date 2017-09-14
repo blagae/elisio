@@ -68,7 +68,7 @@ class SpondaicPentameter(Pentameter):
     def scan_first_half(self):
         for i in range(0, 4):
             if self.flat_list[i] == Weight.LIGHT:
-                raise PentameterException("no light syllable allowed on pos " + i + " of Spondaic Pentameter")
+                raise PentameterException("no light syllable allowed on pos " + str(i) + " of Spondaic Pentameter")
         self.feet[0] = Foot.SPONDAEUS
         self.feet[1] = Foot.SPONDAEUS
 

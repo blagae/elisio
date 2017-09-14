@@ -42,15 +42,15 @@ def save_batchitems(request):
     if not 'batchitems' in request.session:
         request.session['batchitems'] = []
     for item in json.loads(request.body):
-        type = item["type"]
-        id = item["id"]
+        itemtype = item["type"]
+        itemid = item["id"]
         relation = item.get("relation", None)
-        if type not in ('all', 'author', 'opus', 'book', 'poem'):
+        if itemtype not in ('all', 'author', 'opus', 'book', 'poem'):
             return HttpResponseForbidden()
-        if type == 'all' and relation == 'except':
+        if itemtype == 'all' and relation == 'except':
             continue
-        data = {'type': type,
-                'id': id,
+        data = {'type': itemtype,
+                'id': itemid,
                 'relation': relation
                 }
         request.session['batchitems'].append(data)
@@ -104,7 +104,7 @@ def save_batch(request):
     return clear_batch_session(request)
 
 
-def run_batch(request, id):
+def run_batch(request, batchid):
     if not request.user.is_authenticated:
         return HttpResponseForbidden()
     if request.method != 'POST':
@@ -113,13 +113,13 @@ def run_batch(request, id):
     return HttpResponse(status=204)
 
 
-def delete_batch(request, id):
+def delete_batch(request, batchid):
     if not request.user.is_authenticated:
         return HttpResponseForbidden()
     if request.method != 'DELETE':
         return HttpResponse(status=405)
     try:
-        sess = Batch.objects.get(pk=id)
+        sess = Batch.objects.get(pk=batchid)
         if sess.user == request.user:
             sess.delete()
             code = 204
@@ -130,10 +130,10 @@ def delete_batch(request, id):
     return HttpResponse(status=code)
 
 
-def delete_verse_hash(request, hash):
+def delete_verse_hash(request, hashvalue):
     result = False
     for verse in request.session['verses']:
-        if verse["id"] == hash:
+        if verse["id"] == hashvalue:
             result = verse
             break
     if result:

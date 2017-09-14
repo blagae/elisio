@@ -290,7 +290,7 @@ class DatabaseBatchItem(BatchItem):
             return Author.objects
         if self.object_type == ObjectType.ALL:
             return None
-        raise ValidationError()
+        raise ValidationError("Incorrect object type")
 
     def get_verse_count(self):
         if self.object_type == ObjectType.VERSE:

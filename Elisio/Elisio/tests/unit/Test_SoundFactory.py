@@ -51,7 +51,7 @@ class TestSoundFactory(unittest.TestCase):
         with self.assertRaises(SoundException):
             self.construct_sound('gy')
 
-    def test_sound_fail_constr_illegal(self):
+    def test_sound_fail_constr_illegal2(self):
         """ not a valid list of Letters """
         with self.assertRaises(SoundException):
             self.construct_sound('xr')

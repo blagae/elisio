@@ -7,7 +7,8 @@ from Elisio.exceptions import LetterException
 class TestLetter(unittest.TestCase):
 
     """ test class for Letter """
-    def construct_letter(self, letter):
+    @staticmethod
+    def construct_letter(letter):
         """ Construct a letter object from a given text """
         constructed_letter = Letter(letter)
         return constructed_letter

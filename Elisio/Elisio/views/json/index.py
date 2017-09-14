@@ -73,14 +73,14 @@ def scan_verse_text(request, txt, metadata=None):
         metadata = {'verse': {'text': txt}}
     data = {}
     try:
-        dict = 'disableDict' not in request.GET
+        dic = 'disableDict' not in request.GET
         try:
             verseType = VerseType[request.GET['type'].upper()]
         except:
             verseType = VerseType.UNKNOWN
         metadata['verse']['type'] = verseType.name
         update_req_with_verse(request, metadata)
-        verse = VerseFactory.create(txt, dict, classes=verseType)
+        verse = VerseFactory.create(txt, dic, classes=verseType)
         s = TextDecorator(verse).decorate()
         data["text"] = s
         data["zeleny"] = verse.get_zeleny_score()

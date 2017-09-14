@@ -3,7 +3,7 @@
 # This file includes minor porting alterations for Python 3
 
 
-def int_to_roman(input):
+def int_to_roman(input_int):
     """
     Convert an integer to Roman numerals.
 
@@ -47,21 +47,21 @@ def int_to_roman(input):
     >>> print int_to_roman(1999)
     MCMXCIX
     """
-    if type(input) != type(1):
-        raise TypeError("expected integer, got %s" % type(input))
-    if not 0 < input < 4000:
+    if type(input_int) != type(1):
+        raise TypeError("expected integer, got %s" % type(input_int))
+    if not 0 < input_int < 4000:
         raise ValueError("Argument must be between 1 and 3999")
     ints = (1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
     nums = ('M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I')
     result = ""
     for i in range(len(ints)):
-        count = int(input / ints[i])
+        count = int(input_int / ints[i])
         result += nums[i] * count
-        input -= ints[i] * count
+        input_int -= ints[i] * count
     return result
 
 
-def roman_to_int(input):
+def roman_to_int(input_roman):
     """
     Convert a roman numeral to an integer.
    
@@ -88,21 +88,21 @@ def roman_to_int(input):
     ...
     ValueError: input is not a valid roman numeral: IL
     """
-    if type(input) != type(""):
-        raise TypeError("expected string, got %s" % type(input))
-    input = input.upper()
+    if type(input_roman) != type(""):
+        raise TypeError("expected string, got %s" % type(input_roman))
+    input_roman = input_roman.upper()
     nums = ['M', 'D', 'C', 'L', 'X', 'V', 'I']
     ints = [1000, 500, 100, 50, 10, 5, 1]
     places = []
-    for c in input:
+    for c in input_roman:
         if not c in nums:
-            raise ValueError("input is not a valid roman numeral: %s" % input)
-    for i in range(len(input)):
-        c = input[i]
+            raise ValueError("input is not a valid roman numeral: %s" % input_roman)
+    for i in range(len(input_roman)):
+        c = input_roman[i]
         value = ints[nums.index(c)]
         # If the next place holds a larger number, this value is negative.
         try:
-            nextvalue = ints[nums.index(input[i + 1])]
+            nextvalue = ints[nums.index(input_roman[i + 1])]
             if nextvalue > value:
                 value *= -1
         except IndexError:
@@ -112,7 +112,7 @@ def roman_to_int(input):
     sum = 0
     for n in places: sum += n
     # Easiest test for validity...
-    if int_to_roman(sum) == input:
+    if int_to_roman(sum) == input_roman:
         return sum
     else:
-        raise ValueError('input is not a valid roman numeral: %s' % input)
+        raise ValueError('input is not a valid roman numeral: %s' % input_roman)

@@ -185,7 +185,7 @@ class ConsonantSound(Sound):
         """
         if len(self.letters) < 2:
             return False
-        return ((self.letters[0] in Letter.muta) and (self.letters[1] in Letter.liquida))
+        return (self.letters[0] in Letter.muta) and (self.letters[1] in Letter.liquida)
 
     def is_valid_double_sound(self):
         """

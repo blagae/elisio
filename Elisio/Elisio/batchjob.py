@@ -125,7 +125,7 @@ def syncDb():
             item = DatabaseVerse()
             item.poem = poem
             parsed = verse.split('$')
-            if (len(parsed) > 1):
+            if len(parsed) > 1:
                 try:
                     count = int(parsed[0])
                 except:

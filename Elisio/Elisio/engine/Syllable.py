@@ -163,20 +163,19 @@ class Syllable(object):
 
     def get_vowel_location(self):
         semivowel = None
-        id = None
+        indx = None
         for idx, sound in enumerate(reversed(self.sounds)):
             if sound.is_vowel():
-                id = idx
+                indx = idx
                 break
             if sound.is_semivowel():
                 if semivowel:
-                    id = idx
+                    indx = idx
                     break
-                semivowel = sound
-                id = idx
+                indx = idx
                 break
-        if id is not None:
-            return len(self.sounds) - id - 1
+        if indx is not None:
+            return len(self.sounds) - indx - 1
         raise SyllableException("no vowel found in Syllable" + str(self.sounds))
 
     def get_vowel(self):

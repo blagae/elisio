@@ -32,13 +32,6 @@ class TestWordOccurrence(TestCase):
         weights = [Weight.HEAVY]
         self.assertEqual(word.get_syllable_structure(), weights)
 
-    def test_se_dict_heavy(self):
-        WordOccurrence.objects.create(word="se", struct="2")
-        word = Word("se", True)
-        word.split()
-        weights = [Weight.HEAVY]
-        self.assertEqual(word.get_syllable_structure(), weights)
-
     def test_se_dict_order1(self):
         WordOccurrence.objects.create(word="se", struct="2")
         WordOccurrence.objects.create(word="se", struct="3")
