@@ -109,10 +109,11 @@ def roman_to_int(input_roman):
             # there is no next place.
             pass
         places.append(value)
-    sum = 0
-    for n in places: sum += n
+    result = 0
+    for n in places:
+        result += n
     # Easiest test for validity...
-    if int_to_roman(sum) == input_roman:
-        return sum
+    if int_to_roman(result) == input_roman:
+        return result
     else:
         raise ValueError('input is not a valid roman numeral: %s' % input_roman)

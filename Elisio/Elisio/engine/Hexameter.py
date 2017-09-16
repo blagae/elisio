@@ -22,8 +22,8 @@ class HexameterCreator(VerseCreator):
         elif len(self.list) < self.min_syllables:
             raise HexameterException("too few syllables in first pass")
         if (self.list[-3] == Weight.HEAVY or
-                    self.list[-4] == Weight.HEAVY or
-                    self.list[-5] == Weight.LIGHT):
+            self.list[-4] == Weight.HEAVY or
+                self.list[-5] == Weight.LIGHT):
             self.max_syllables -= 1
         else:
             self.min_syllables += 1
@@ -74,8 +74,8 @@ class Hexameter(Verse):
         """ main outward-facing method to be used for scanning purposes """
         # should be refactored
         if (self.flat_list[-3] == Weight.HEAVY or
-                    self.flat_list[-4] == Weight.HEAVY or
-                    self.flat_list[-5] == Weight.LIGHT):
+            self.flat_list[-4] == Weight.HEAVY or
+                self.flat_list[-5] == Weight.LIGHT):
             self.feet[4] = Foot.SPONDAEUS
         else:
             self.feet[4] = Foot.DACTYLUS
@@ -155,38 +155,38 @@ class DactylicDominantHexameter(Hexameter):
     def __do_basic_checks(self):
         """ do easy pickings for DD hexameter """
         if (self.flat_list[1] == Weight.LIGHT or
-                    self.flat_list[2] == Weight.LIGHT or
-                    self.flat_list[3] == Weight.HEAVY):
+            self.flat_list[2] == Weight.LIGHT or
+                self.flat_list[3] == Weight.HEAVY):
             self.feet[0] = Foot.DACTYLUS
         if self.flat_list[4] == Weight.LIGHT:
             self.feet[1] = Foot.DACTYLUS
         if self.flat_list[7] == Weight.LIGHT:
             self.feet[2] = Foot.DACTYLUS
         if (self.flat_list[9] == Weight.LIGHT or
-                    self.flat_list[10] == Weight.LIGHT or
-                    self.flat_list[8] == Weight.HEAVY):
+            self.flat_list[10] == Weight.LIGHT or
+                self.flat_list[8] == Weight.HEAVY):
             self.feet[3] = Foot.DACTYLUS
         if (self.flat_list[5] == Weight.LIGHT or
-                    self.flat_list[6] == Weight.HEAVY):
+                self.flat_list[6] == Weight.HEAVY):
             self.feet[0] = Foot.DACTYLUS
             self.feet[1] = Foot.DACTYLUS
         if (self.flat_list[5] == Weight.HEAVY or
-                    self.flat_list[6] == Weight.LIGHT):
+                self.flat_list[6] == Weight.LIGHT):
             self.feet[2] = Foot.DACTYLUS
             self.feet[3] = Foot.DACTYLUS
 
     def scan_for_real(self):
         if (self.flat_list[1] == Weight.HEAVY or
-                    self.flat_list[2] == Weight.HEAVY or
-                    self.flat_list[3] == Weight.LIGHT):
+            self.flat_list[2] == Weight.HEAVY or
+                self.flat_list[3] == Weight.LIGHT):
             self.feet[0] = Foot.SPONDAEUS
         elif self.flat_list[4] == Weight.HEAVY:
             self.feet[1] = Foot.SPONDAEUS
         elif self.flat_list[7] == Weight.HEAVY:
             self.feet[2] = Foot.SPONDAEUS
         elif (self.flat_list[9] == Weight.HEAVY or
-                      self.flat_list[10] == Weight.HEAVY or
-                      self.flat_list[8] == Weight.LIGHT):
+                self.flat_list[10] == Weight.HEAVY or
+              self.flat_list[8] == Weight.LIGHT):
             self.feet[3] = Foot.SPONDAEUS
         for i in range(0, 4):
             if self.feet[i] == Foot.SPONDAEUS:
@@ -213,8 +213,8 @@ class BalancedHexameter(Hexameter):
     def __do_stab_in_the_dark(self):
         """ a reasonably prevalent scenario that can shortcut all logic """
         if (self.flat_list[3] == Weight.HEAVY and
-                    self.flat_list[5] == Weight.HEAVY and
-                    self.flat_list[7] == Weight.HEAVY):
+            self.flat_list[5] == Weight.HEAVY and
+                self.flat_list[7] == Weight.HEAVY):
             self.feet[0] = Foot.DACTYLUS
             self.feet[1] = Foot.SPONDAEUS
             self.feet[2] = Foot.SPONDAEUS
@@ -224,10 +224,10 @@ class BalancedHexameter(Hexameter):
     def __do_basic_checks(self):
         """ find easy pickings for balanced hexameters """
         if (self.flat_list[1] == Weight.HEAVY or
-                    self.flat_list[2] == Weight.HEAVY):
+                self.flat_list[2] == Weight.HEAVY):
             self.feet[0] = Foot.SPONDAEUS
         elif (self.flat_list[1] == Weight.LIGHT or
-                      self.flat_list[2] == Weight.LIGHT):
+              self.flat_list[2] == Weight.LIGHT):
             self.feet[0] = Foot.DACTYLUS
         if self.flat_list[3] == Weight.LIGHT:
             self.feet[0] = Foot.SPONDAEUS
@@ -244,10 +244,10 @@ class BalancedHexameter(Hexameter):
             self.feet[2] = Foot.DACTYLUS
             self.feet[3] = Foot.SPONDAEUS
         if (self.flat_list[8] == Weight.HEAVY or
-                    self.flat_list[9] == Weight.HEAVY):
+                self.flat_list[9] == Weight.HEAVY):
             self.feet[3] = Foot.SPONDAEUS
         elif (self.flat_list[8] == Weight.LIGHT or
-                      self.flat_list[9] == Weight.LIGHT):
+              self.flat_list[9] == Weight.LIGHT):
             self.feet[3] = Foot.DACTYLUS
 
     def scan_for_real(self):
@@ -261,25 +261,25 @@ class BalancedHexameter(Hexameter):
             return
 
         elif (self.flat_list[3] == Weight.HEAVY and
-                      self.flat_list[5] == Weight.HEAVY and
-                      self.flat_list[7] == Weight.HEAVY):
+              self.flat_list[5] == Weight.HEAVY and
+              self.flat_list[7] == Weight.HEAVY):
             self.feet[0] = Foot.DACTYLUS
             self.feet[1] = Foot.SPONDAEUS
             self.feet[2] = Foot.SPONDAEUS
             self.feet[3] = Foot.DACTYLUS
         elif ((self.feet[0] == Foot.SPONDAEUS or
-                       self.feet[1] == Foot.SPONDAEUS or
-                       self.feet[2] == Foot.DACTYLUS or
-                       self.feet[3] == Foot.DACTYLUS) and
-                      self.flat_list[5] == Weight.LIGHT):
+               self.feet[1] == Foot.SPONDAEUS or
+               self.feet[2] == Foot.DACTYLUS or
+               self.feet[3] == Foot.DACTYLUS) and
+                self.flat_list[5] == Weight.LIGHT):
             self.feet[0] = Foot.SPONDAEUS
             self.feet[1] = Foot.SPONDAEUS
             self.feet[2] = Foot.DACTYLUS
             self.feet[3] = Foot.DACTYLUS
 
         elif ((self.feet[0] == Foot.DACTYLUS or self.feet[1] == Foot.DACTYLUS or
-                       self.feet[2] == Foot.SPONDAEUS or self.feet[3] == Foot.SPONDAEUS)
-              and self.flat_list[5] == Weight.LIGHT):
+               self.feet[2] == Foot.SPONDAEUS or self.feet[3] == Foot.SPONDAEUS) and
+              self.flat_list[5] == Weight.LIGHT):
             self.feet[0] = Foot.DACTYLUS
             self.feet[1] = Foot.DACTYLUS
             self.feet[2] = Foot.SPONDAEUS
@@ -311,7 +311,7 @@ class BalancedHexameter(Hexameter):
                 self.feet[1] = Foot.DACTYLUS
 
         elif ((self.feet[0] == Foot.DACTYLUS and self.feet[1] == Foot.SPONDAEUS) or
-                  (self.feet[0] == Foot.SPONDAEUS and self.feet[1] == Foot.DACTYLUS)):
+              (self.feet[0] == Foot.SPONDAEUS and self.feet[1] == Foot.DACTYLUS)):
             if self.flat_list[6] == Weight.HEAVY or self.flat_list[7] == Weight.HEAVY:
                 self.feet[2] = Foot.SPONDAEUS
                 self.feet[3] = Foot.DACTYLUS
@@ -327,7 +327,7 @@ class BalancedHexameter(Hexameter):
 
         elif self.feet[0] == Foot.SPONDAEUS and self.feet[2] == Foot.DACTYLUS:
             if (self.flat_list[3] == Weight.HEAVY or
-                        self.flat_list[7] == Weight.HEAVY):
+                    self.flat_list[7] == Weight.HEAVY):
                 self.feet[1] = Foot.SPONDAEUS
                 self.feet[3] = Foot.DACTYLUS
 
@@ -354,8 +354,8 @@ class BalancedHexameter(Hexameter):
                 self.feet[3] = Foot.SPONDAEUS
 
         elif (self.feet[1] == Foot.SPONDAEUS and
-                      self.feet[3] == Foot.DACTYLUS and
-                      self.flat_list[5] == Weight.HEAVY):
+              self.feet[3] == Foot.DACTYLUS and
+              self.flat_list[5] == Weight.HEAVY):
             self.feet[0] = Foot.DACTYLUS
             self.feet[2] = Foot.SPONDAEUS
         else:
@@ -388,7 +388,7 @@ class BalancedHexameter(Hexameter):
 
         elif self.feet[1] == Foot.DACTYLUS and self.feet[3] == Foot.SPONDAEUS:
             if (self.flat_list[3] == Weight.HEAVY or
-                        self.flat_list[7] == Weight.HEAVY):
+                    self.flat_list[7] == Weight.HEAVY):
                 self.feet[0] = Foot.DACTYLUS
                 self.feet[2] = Foot.SPONDAEUS
 
@@ -399,18 +399,18 @@ class BalancedHexameter(Hexameter):
     def __do_last_resort(self):
         """ only execute method if we've only found one foot so far"""
         if ((self.feet[0] == Foot.SPONDAEUS and
-                     self.flat_list[3] == Weight.HEAVY) or
+             self.flat_list[3] == Weight.HEAVY) or
                 (self.feet[2] == Foot.DACTYLUS and
-                         self.flat_list[7] == Weight.HEAVY)):
+                 self.flat_list[7] == Weight.HEAVY)):
             self.feet[0] = Foot.SPONDAEUS
             self.feet[1] = Foot.SPONDAEUS
             self.feet[2] = Foot.DACTYLUS
             self.feet[3] = Foot.DACTYLUS
 
         elif ((self.feet[1] == Foot.DACTYLUS and
-                       self.flat_list[3] == Weight.HEAVY) or
-                  (self.feet[3] == Foot.SPONDAEUS and
-                           self.flat_list[7] == Weight.HEAVY)):
+               self.flat_list[3] == Weight.HEAVY) or
+              (self.feet[3] == Foot.SPONDAEUS and
+               self.flat_list[7] == Weight.HEAVY)):
             self.feet[0] = Foot.DACTYLUS
             self.feet[1] = Foot.DACTYLUS
             self.feet[2] = Foot.SPONDAEUS
@@ -418,27 +418,27 @@ class BalancedHexameter(Hexameter):
 
         elif self.flat_list[5] == Weight.HEAVY:
             if ((self.feet[2] == Foot.DACTYLUS or
-                         self.feet[3] == Foot.SPONDAEUS) and
-                        self.flat_list[3] == Weight.HEAVY):
+                 self.feet[3] == Foot.SPONDAEUS) and
+                    self.flat_list[3] == Weight.HEAVY):
                 self.feet[0] = Foot.DACTYLUS
                 self.feet[1] = Foot.SPONDAEUS
                 self.feet[2] = Foot.DACTYLUS
                 self.feet[3] = Foot.SPONDAEUS
 
             elif ((self.feet[0] == Foot.SPONDAEUS or
-                           self.feet[1] == Foot.DACTYLUS) and
-                          self.flat_list[5] == Weight.HEAVY):
+                   self.feet[1] == Foot.DACTYLUS) and
+                    self.flat_list[5] == Weight.HEAVY):
                 self.feet[0] = Foot.SPONDAEUS
                 self.feet[1] = Foot.DACTYLUS
                 self.feet[2] = Foot.SPONDAEUS
                 self.feet[3] = Foot.DACTYLUS
 
             elif (((self.feet[2] == Foot.SPONDAEUS or
-                            self.feet[3] == Foot.DACTYLUS) and
-                           self.flat_list[3] == Weight.HEAVY) or
-                      ((self.feet[0] == Foot.DACTYLUS or
-                                self.feet[1] == Foot.SPONDAEUS) and
-                               self.flat_list[7] == Weight.HEAVY)):
+                    self.feet[3] == Foot.DACTYLUS) and
+                    self.flat_list[3] == Weight.HEAVY) or
+                  ((self.feet[0] == Foot.DACTYLUS or
+                    self.feet[1] == Foot.SPONDAEUS) and
+                    self.flat_list[7] == Weight.HEAVY)):
                 self.feet[0] = Foot.DACTYLUS
                 self.feet[1] = Foot.SPONDAEUS
                 self.feet[2] = Foot.SPONDAEUS
@@ -450,8 +450,7 @@ class BalancedHexameter(Hexameter):
         self.spondees = self.feet[0:4].count(Foot.SPONDAEUS)
         if self.spondees > 2 or self.dactyls > 2:
             raise HexameterException(
-                "{0} spondaei and {1} dactyli in balanced verse"
-                    .format(self.spondees, self.dactyls))
+                "{0} spondaei and {1} dactyli in balanced verse".format(self.spondees, self.dactyls))
         if self.spondees == 2 and self.dactyls == 2:
             return True
         if self.spondees == 2:

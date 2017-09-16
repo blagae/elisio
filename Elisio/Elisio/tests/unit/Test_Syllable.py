@@ -147,10 +147,12 @@ class TestSyllable(unittest.TestCase):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
             Syllable('b')
+
     def test_syll_fail_only_cons_h(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):
             Syllable('rh')
+
     def test_syll_fail_only_cons_digraph(self):
         """ this is not a single syllable """
         with self.assertRaises(SyllableException):

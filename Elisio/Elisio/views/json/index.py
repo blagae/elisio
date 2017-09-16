@@ -75,12 +75,12 @@ def scan_verse_text(request, txt, metadata=None):
     try:
         dic = 'disableDict' not in request.GET
         try:
-            verseType = VerseType[request.GET['type'].upper()]
+            verse_type = VerseType[request.GET['type'].upper()]
         except:
-            verseType = VerseType.UNKNOWN
-        metadata['verse']['type'] = verseType.name
+            verse_type = VerseType.UNKNOWN
+        metadata['verse']['type'] = verse_type.name
         update_req_with_verse(request, metadata)
-        verse = VerseFactory.create(txt, dic, classes=verseType)
+        verse = VerseFactory.create(txt, dic, classes=verse_type)
         s = TextDecorator(verse).decorate()
         data["text"] = s
         data["zeleny"] = verse.get_zeleny_score()
@@ -104,9 +104,9 @@ def get_random_verse(request):
         return Http404()
     verse = None
     while verse is None:
-        verseNum = randint(1, count)
+        verse_num = randint(1, count)
         try:
-            verse = DatabaseVerse.objects.get(id=verseNum)
+            verse = DatabaseVerse.objects.get(id=verse_num)
         except Exception:
             pass
     metadata = get_metadata(verse)

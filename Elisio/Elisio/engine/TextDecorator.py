@@ -16,9 +16,8 @@ class TextDecorator(object):
                 result += vrs[idx][lettercount]
                 lettercount += 1
             for syll in word.syllables:
-                vowel = False
                 for indx, sound in enumerate(syll.sounds):
-                    for letter in sound.letters:
+                    for i in range(len(sound.letters)):
                         result += vrs[idx][lettercount]
                         lettercount += 1
                     if indx == syll.get_vowel_location():

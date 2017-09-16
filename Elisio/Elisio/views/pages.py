@@ -63,7 +63,7 @@ def register_page(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             return index_page(request)
-        except Exception as e:
+        except Exception:
             # TODO: handle in error message
             pass
     return render(request, 'register.html')

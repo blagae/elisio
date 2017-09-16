@@ -39,7 +39,7 @@ def save_batchitems(request):
         return HttpResponseForbidden()
     if request.method != 'POST':
         return HttpResponse(status=405)
-    if not 'batchitems' in request.session:
+    if 'batchitems' not in request.session:
         request.session['batchitems'] = []
     for item in json.loads(request.body):
         itemtype = item["type"]
@@ -63,8 +63,8 @@ def save_batch(request):
         return HttpResponseForbidden()
     if request.method != 'POST':
         return HttpResponse(status=405)
-    if ((not 'verses' in request.session or len(request.session['verses']) < 1) and
-            (not 'batchitems' in request.session or len(request.session['batchitems']) < 1)):
+    if (('verses' not in request.session or len(request.session['verses']) < 1) and
+            ('batchitems' not in request.session or len(request.session['batchitems']) < 1)):
         return Http404()
     sess = Batch()
     sess.user = request.user
@@ -90,7 +90,7 @@ def save_batch(request):
             res.object_type = ObjectType[item['type'].upper()]
             res.batch = sess
             if prev:
-                if not 'relation' in item:
+                if 'relation' not in item:
                     continue
                 res.dependent_on = prev
                 res.relation = RelationType[item['relation'].upper()]

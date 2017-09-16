@@ -21,6 +21,8 @@ class Word(object):
         self.enclitic = None
         self.use_dict = use_dict
         self.name = text.istitle()
+        self.sounds = []
+        self.text = None
 
     def __repr__(self):
         return self.syllables
@@ -65,7 +67,7 @@ class Word(object):
                     continue
                 if len(strc) > 1 and (strc[-1] == "3" or strc[-1] == "0"):
                     strc = strc[:-1]
-                if not strc in structs:
+                if strc not in structs:
                     structs.append(strc)
             if len(structs) == 1:
                 for count, wght in enumerate(structs[0]):
@@ -175,7 +177,7 @@ class Word(object):
                 elif first_syllable.starts_with_consonant():
                     syll_struct[-1] = Weight.HEAVY
             elif (last_syllable.ends_with_vowel() and
-                      first_syllable.starts_with_consonant_cluster()):
+                  first_syllable.starts_with_consonant_cluster()):
                 syll_struct[-1] = Weight.HEAVY
             if last_syllable == Syllable('que') and syll_struct[-1] != Weight.NONE:
                 syll_struct[-1] = Weight.LIGHT

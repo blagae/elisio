@@ -72,14 +72,14 @@ class Syllable(object):
             elif sound.is_vowel():
                 if (contains_vowel or
                         (contains_final_consonant and
-                             contains_semivowel)):
+                         contains_semivowel)):
                     return False
                 contains_vowel = True
                 only_consonants = False
             elif sound.is_semivowel():
                 if (contains_vowel or
                         (contains_final_consonant and
-                             contains_semivowel)):
+                         contains_semivowel)):
                     return False
                 if count > 0:
                     contains_vowel = True
@@ -133,12 +133,12 @@ class Syllable(object):
         if self.sounds[0].is_vowel():
             return True
         if (self.sounds[0].is_h() and
-                    len(self.sounds) > 1 and
+            len(self.sounds) > 1 and
                 not self.sounds[1].is_consonant()):
             return True
         if (self.sounds[0].is_semivowel() and
                 (not initial or (len(self.sounds) == 1 or
-                                     self.sounds[1].is_consonant()))):
+                                 self.sounds[1].is_consonant()))):
             return True
         return False
 
@@ -297,14 +297,14 @@ class SyllableSplitter(object):
         """
         for count in range(len(syllables) - 1):
             if (count == len(syllables) - 2 and
-                        syllables[count + 1] == Syllable('ve')):
+                    syllables[count + 1] == Syllable('ve')):
                 continue
             if (syllables[count].ends_with_vowel() and
                     syllables[count + 1].starts_with_consonant_cluster()):
                 SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], True)
             elif syllables[count].ends_with_consonant():
                 if (syllables[count + 1].sounds[0] == SoundFactory.create('u') and
-                            len(syllables[count + 1].sounds) > 1 and
+                        len(syllables[count + 1].sounds) > 1 and
                         not syllables[count].ends_with_consonant_cluster() and
                         not syllables[count + 1].sounds[1].is_consonant()):
                     pass

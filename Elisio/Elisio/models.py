@@ -246,8 +246,8 @@ class DatabaseBatchItem(BatchItem):
         if self.relation == RelationType.OR and self.__is_in(self.dependent_on):
             raise ValidationError("the or clause must be distinct from its master")
         try:
-            obj = self.get_object()
-        except Exception as e:
+            self.get_object()
+        except Exception:
             raise ValidationError("the object you're trying to save a BatchItem for doesn't exist")
 
     def __is_in(self, other):

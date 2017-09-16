@@ -48,6 +48,8 @@ class Verse(object):
             raise VerseException("Verse must be initialized with text data")
         self.text = text
         self.words = []
+        self.flat_list = []
+        self.feet = []
         self.structure = None
 
     def __repr__(self):
@@ -125,8 +127,8 @@ class Verse(object):
                                      " number {0}".format(feet_num))
             for count, weight in enumerate(foot.get_structure()):
                 if (weight != Weight.ANCEPS and
-                            self.flat_list[count + start] != Weight.ANCEPS and
-                            weight != self.flat_list[count + start]):
+                    self.flat_list[count + start] != Weight.ANCEPS and
+                        weight != self.flat_list[count + start]):
                     raise VerseException("weight #{0} was already {1}"
                                          ", tried to assign {2}"
                                          .format(count + start,

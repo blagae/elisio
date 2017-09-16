@@ -47,17 +47,13 @@ class Pentameter(Verse):
             or self.flat_list[-5] == Weight.HEAVY
             or self.flat_list[-6] == Weight.HEAVY
             or self.flat_list[-7] == Weight.LIGHT
-            or self.flat_list[-8] == Weight.LIGHT):
+                or self.flat_list[-8] == Weight.LIGHT):
             raise PentameterException("problem in second half with syllable weight")
 
     def scan(self):
         self.scan_first_half()
-        self.fill()
 
     def scan_first_half(self):
-        pass
-
-    def fill(self):
         pass
 
 
@@ -69,8 +65,7 @@ class SpondaicPentameter(Pentameter):
         for i in range(0, 4):
             if self.flat_list[i] == Weight.LIGHT:
                 raise PentameterException("no light syllable allowed on pos " + str(i) + " of Spondaic Pentameter")
-        self.feet[0] = Foot.SPONDAEUS
-        self.feet[1] = Foot.SPONDAEUS
+        self.feet[0] = self.feet[1] = Foot.SPONDAEUS
 
 
 class DactylicPentameter(Pentameter):
@@ -83,7 +78,7 @@ class DactylicPentameter(Pentameter):
             or self.flat_list[2] == Weight.HEAVY
             or self.flat_list[3] == Weight.LIGHT
             or self.flat_list[4] == Weight.HEAVY
-            or self.flat_list[5] == Weight.HEAVY):
+                or self.flat_list[5] == Weight.HEAVY):
             raise PentameterException("problem with first half of Dactylic Pentameter")
         self.feet[0] = self.feet[1] = Foot.DACTYLUS
 

@@ -5,8 +5,8 @@ from Elisio.exceptions import LetterException
 
 
 class TestLetter(unittest.TestCase):
-
     """ test class for Letter """
+
     @staticmethod
     def construct_letter(letter):
         """ Construct a letter object from a given text """
@@ -17,7 +17,7 @@ class TestLetter(unittest.TestCase):
     def test_letter_construct1(self):
         """ normal construct works """
         self.assertIsInstance(self.construct_letter('a'), Letter)
-        
+
     def test_letter_construct2(self):
         """ normal construct works """
         self.assertTrue(isinstance(self.construct_letter('D'), Letter))
@@ -66,7 +66,7 @@ class TestLetter(unittest.TestCase):
         """ w is an invalid letter """
         with self.assertRaises(LetterException):
             self.construct_letter('w')
-            
+
     # spaces and punctuation
     def test_letter_fail_space(self):
         """ space is not a letter """
@@ -82,12 +82,12 @@ class TestLetter(unittest.TestCase):
         """ letters are in [a-zA-Z] """
         with self.assertRaises(LetterException):
             self.construct_letter(',')
-            
+
     def test_letter_fail_non_alpha2(self):
         """ letters are in [a-zA-Z] """
         with self.assertRaises(LetterException):
             self.construct_letter('"')
-            
+
     def test_letter_fail_non_alpha3(self):
         """ letters are in [a-zA-Z] """
         with self.assertRaises(LetterException):
@@ -97,31 +97,33 @@ class TestLetter(unittest.TestCase):
         """ letters are in [a-zA-Z] """
         with self.assertRaises(LetterException):
             self.construct_letter('2')
-            
+
     def test_letter_fail_non_alpha5(self):
         """ letters are in [a-zA-Z] """
         with self.assertRaises(LetterException):
             self.construct_letter(8)
-            
+
     # letters with accents
     def test_letter_fail_accent(self):
         """ letters are in [a-zA-Z] """
         with self.assertRaises(LetterException):
             self.construct_letter('\u00E9')
 
-            
     def test_letter_fail_other_writing1(self):
         # Greek letter
         with self.assertRaises(LetterException):
             self.construct_letter(u'?')
-        # Greek letter
+            # Greek letter
+
     def test_letter_fail_other_writing2(self):
         with self.assertRaises(LetterException):
             self.construct_letter(u'\u0391')
+
     def test_letter_fail_other_writing3(self):
         # Hindi letter
         with self.assertRaises(LetterException):
             self.construct_letter(u'\u0917')
+
     def test_letter_fail_other_writing4(self):
         # Arabic letter
         with self.assertRaises(LetterException):
@@ -138,7 +140,7 @@ class TestLetter(unittest.TestCase):
         letter1 = self.construct_letter('a')
         letter2 = self.construct_letter('c')
         self.assertNotEqual(letter1, letter2)
-        
+
     def test_letter_equal_case_insens(self):
         """ letters are case insensitive """
         letter1 = self.construct_letter('a')

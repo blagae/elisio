@@ -6,9 +6,9 @@ def set_django():
     import pymysql
     pymysql.install_as_MySQLdb()
     import os
-    module = 'DJANGO_SETTINGS_MODULE'
-    if module not in os.environ or os.environ[module] != settings.__name__:
-        os.environ[module] = settings.__name__
+    mod = 'DJANGO_SETTINGS_MODULE'
+    if mod not in os.environ or os.environ[mod] != settings.__name__:
+        os.environ[mod] = settings.__name__
     import django
     if django.VERSION[:2] >= (1, 7):
         django.setup()

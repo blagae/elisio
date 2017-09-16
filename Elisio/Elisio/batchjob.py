@@ -163,9 +163,9 @@ def find_all_verses_containing(regex, must_be_parsed=False):
     return total
 
 
-def scan_verses(dbverses, initiator, commit=""):
+def scan_verses(dbverses, initiator):
     from Elisio.engine.VerseFactory import VerseFactory
-    from Elisio.exceptions import HexameterException, VerseException, ScansionException
+    from Elisio.exceptions import VerseException, ScansionException
     from Elisio.models import ScanVerseResult, ScanSession, Batch, DatabaseBatchItem, ObjectType
     worked = 0
     worked_without_dict = 0
@@ -200,7 +200,7 @@ def scan_verses(dbverses, initiator, commit=""):
                 scanResult.structure = verse.structure
             except VerseException as exc:
                 failed += 1
-                verse = VerseFactory.get_split_syllables(dbverse.contents)
+                VerseFactory.get_split_syllables(dbverse.contents)
                 dbverse.saved = False
                 try:
                     scanResult.failure = exc.exceptions[0][0].message[:69]

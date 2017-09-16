@@ -43,9 +43,9 @@ class VerseFactory(object):
         pass
 
     class VerseFactoryImpl(object):
-        def __init__(self, verse, useDict=False, classes=None):
+        def __init__(self, verse, use_dict=False, classes=None):
             self.verse = verse
-            self.use_dict = useDict
+            self.use_dict = use_dict
             self.words = []
             self.layers = [[]]
             self.flat_list = []
@@ -149,8 +149,8 @@ class VerseFactory(object):
         return VerseFactory.VerseFactoryImpl(text).get_split_syllables()
 
     @classmethod
-    def create(cls, verse, useDict=False, classes=None):
-        return VerseFactory.VerseFactoryImpl(verse, useDict, classes).create()
+    def create(cls, verse, use_dict=False, classes=None):
+        return VerseFactory.VerseFactoryImpl(verse, use_dict, classes).create()
 
 
 class VerseCreator(object):

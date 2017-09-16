@@ -38,9 +38,9 @@ class TestHexameter(unittest.TestCase):
         threshold = 14 if save else 12
         # verses = DatabaseVerse.objects.all()
         verses = DatabaseVerse.objects.filter(id__lte=50)
-        worked, failed, worked_without_dict = scan_verses(verses, "test_hexameter_scan_all")
+        worked, failed, worked_wo_dict = scan_verses(verses, "test_hexameter_scan_all")
         # canary test: over 91% of verses must succeed
-        result = str(worked_without_dict) + " worked without dict, " + str(worked) + " worked, " + str(failed) + " failed"
+        result = str(worked_wo_dict) + " worked without dict, " + str(worked) + " worked, " + str(failed) + " failed"
         if worked / failed < threshold:
             self.fail(result)
         # canary test: if no verses fail, then we are probably too lax

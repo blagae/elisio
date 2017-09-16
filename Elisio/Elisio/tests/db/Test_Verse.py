@@ -49,10 +49,9 @@ class TestVerse(unittest.TestCase):
         A verse with unusual characters (diacritics)
         must be split into words correctly
         """
-        words = VerseFactory.split("litore aena locant "
-                                    "alii flammasque ministrant.")
-        expected_list = [Word("litore"),Word("aena"),Word("locant"),
-                         Word("alii"),Word("flammasque"),Word("ministrant")]
+        words = VerseFactory.split("litore aena locant alii flammasque ministrant.")
+        expected_list = [Word("litore"), Word("aena"), Word("locant"),
+                         Word("alii"), Word("flammasque"), Word("ministrant")]
         self.assertEqual(words, expected_list)
 
     def test_verse_scan_elis_reg(self):
@@ -130,16 +129,15 @@ class TestVerse(unittest.TestCase):
         Note that this archetypical verse does not test for a lot
         """
         layers = VerseFactory.layer(TYPICAL_VERSE)
-        expected_result = [[Weight.HEAVY, Weight.ANCEPS,],
-                           [Weight.ANCEPS, Weight.HEAVY, Weight.LIGHT,],
-                           [Weight.ANCEPS, Weight.HEAVY,],
-                           [Weight.HEAVY, Weight.HEAVY,],
-                           [Weight.HEAVY,],
-                           [Weight.ANCEPS, Weight.ANCEPS,],
-                           [Weight.ANCEPS,],
+        expected_result = [[Weight.HEAVY, Weight.ANCEPS, ],
+                           [Weight.ANCEPS, Weight.HEAVY, Weight.LIGHT, ],
+                           [Weight.ANCEPS, Weight.HEAVY, ],
+                           [Weight.HEAVY, Weight.HEAVY, ],
+                           [Weight.HEAVY, ],
+                           [Weight.ANCEPS, Weight.ANCEPS, ],
+                           [Weight.ANCEPS, ],
                            [Weight.ANCEPS, Weight.HEAVY]]
         self.assertEqual(layers, expected_result)
-
 
     def test_verse_database(self):
         """ Checks to see if a database object exists
@@ -159,8 +157,8 @@ class TestVerse(unittest.TestCase):
             words = VerseFactory.split(verse)
             for wording in words:
                 for letter in wording.text:
-                    if not letter in letterlist:
+                    if letter not in letterlist:
                         letterlist[letter] = 0
                     else:
                         letterlist[letter] += 1
-        letterlist = None
+        letterlist.clear()
