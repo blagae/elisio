@@ -68,7 +68,7 @@ def fill_xml_object():
             if len(parsed) > 1:
                 try:
                     count = int(parsed[0])
-                except:
+                except TypeError:
                     count = int(parsed[0][:-1])
                     alt_field = ET.SubElement(obj, "field",
                                               {'type': 'CharField',
@@ -128,7 +128,7 @@ def syncDb():
             if len(parsed) > 1:
                 try:
                     count = int(parsed[0])
-                except:
+                except TypeError:
                     count = int(parsed[0][:-1])
                     item.alternative = parsed[0][-1]
             item.number = count

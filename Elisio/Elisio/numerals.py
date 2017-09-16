@@ -47,7 +47,7 @@ def int_to_roman(input_int):
     >>> print int_to_roman(1999)
     MCMXCIX
     """
-    if type(input_int) != type(1):
+    if not isinstance(input_int, int):
         raise TypeError("expected integer, got %s" % type(input_int))
     if not 0 < input_int < 4000:
         raise ValueError("Argument must be between 1 and 3999")
@@ -88,14 +88,14 @@ def roman_to_int(input_roman):
     ...
     ValueError: input is not a valid roman numeral: IL
     """
-    if type(input_roman) != type(""):
+    if not isinstance(input_roman, str):
         raise TypeError("expected string, got %s" % type(input_roman))
     input_roman = input_roman.upper()
     nums = ['M', 'D', 'C', 'L', 'X', 'V', 'I']
     ints = [1000, 500, 100, 50, 10, 5, 1]
     places = []
     for c in input_roman:
-        if not c in nums:
+        if c not in nums:
             raise ValueError("input is not a valid roman numeral: %s" % input_roman)
     for i in range(len(input_roman)):
         c = input_roman[i]

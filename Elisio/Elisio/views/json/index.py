@@ -76,7 +76,7 @@ def scan_verse_text(request, txt, metadata=None):
         dic = 'disableDict' not in request.GET
         try:
             verse_type = VerseType[request.GET['type'].upper()]
-        except:
+        except KeyError:
             verse_type = VerseType.UNKNOWN
         metadata['verse']['type'] = verse_type.name
         update_req_with_verse(request, metadata)
