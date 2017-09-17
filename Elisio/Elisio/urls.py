@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^json/batch/deleteverse/([a-f0-9]{64})$', batch.delete_verse_hash),
     url(r'^json/batches/$', batch.get_batches),
     url(r'^json/batchitem/save/$', batch.save_batchitems),
-    url(r'^json/admin/sync/files/$', manage.syncFiles),
+    url(r'^json/admin/sync/files/$', manage.sync_files),
     url(r'^json/admin/sync/db/$', manage.sync_db),
     url(r'^json/admin/users/$', manage.get_member_list),
     url(r'^blog/', include('zinnia.urls')),

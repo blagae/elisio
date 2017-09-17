@@ -23,7 +23,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('timing', models.DateTimeField(auto_now=True)),
                 ('items_at_creation_time', models.IntegerField(null=True)),
-                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE,
+                                           to=settings.AUTH_USER_MODEL)),
                 ('name', models.CharField(max_length=30)),
             ],
         ),
@@ -55,7 +56,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DatabaseBatchItem',
             fields=[
-                ('batchitem_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='Elisio.BatchItem')),
+                ('batchitem_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE,
+                                                       parent_link=True, primary_key=True, serialize=False,
+                                                       to='Elisio.BatchItem')),
                 ('object_type', models.CharField(max_length=10)),
                 ('object_id', models.IntegerField(blank=True)),
                 ('relation', models.CharField(max_length=10)),
@@ -66,9 +69,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='InputBatchItem',
             fields=[
-                ('batchitem_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='Elisio.BatchItem')),
+                ('batchitem_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE,
+                                                       parent_link=True, primary_key=True, serialize=False,
+                                                       to='Elisio.BatchItem')),
                 ('contents', models.CharField(max_length=70)),
-                ('scanned_as', enumfields.fields.EnumField(enum=Elisio.engine.VerseFactory.VerseType, max_length=10, null=True)),
+                ('scanned_as', enumfields.fields.EnumField(enum=Elisio.engine.VerseFactory.VerseType, max_length=10,
+                                                           null=True)),
             ],
             bases=('Elisio.batchitem',),
         ),
@@ -85,11 +91,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='scansession',
             name='batch',
-            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='Elisio.Batch'),
+            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE,
+                                    to='Elisio.Batch'),
         ),
         migrations.AddField(
             model_name='scanverseresult',
             name='batch_item',
-            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='Elisio.BatchItem'),
+            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE,
+                                    to='Elisio.BatchItem'),
         ),
     ]

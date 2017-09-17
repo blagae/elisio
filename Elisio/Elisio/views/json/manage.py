@@ -2,19 +2,19 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseForbidden
 
-from Elisio.batchjob import syncDb, syncFiles
+import Elisio.batchjob
 
 
 def sync_files(request):
     if request.user.is_superuser:
-        syncFiles()
+        Elisio.batchjob.sync_files()
         return HttpResponse(status=204)
     return HttpResponseForbidden()
 
 
 def sync_db(request):
     if request.user.is_superuser:
-        syncDb()
+        Elisio.batchjob.sync_db()
         return HttpResponse(status=204)
     return HttpResponseForbidden()
 

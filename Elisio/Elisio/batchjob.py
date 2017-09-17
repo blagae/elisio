@@ -76,12 +76,12 @@ def fill_xml_object():
                     alt_field.text = parsed[0][-1]
             number_field.text = str(count)
             count += 1
-            verseType_field = ET.SubElement(obj, "field",
+            verse_type_field = ET.SubElement(obj, "field",
                                             {'type': 'enum.EnumField',
                                              'name': 'verseType'})
             vf = poem.verseForm.get_verse_types()
             current_form = vf[count % len(vf)]
-            verseType_field.text = str(current_form.value)
+            verse_type_field.text = str(current_form.value)
             verse_field = ET.SubElement(obj, "field",
                                         {'type': 'CharField',
                                          'name': 'contents',
@@ -90,7 +90,7 @@ def fill_xml_object():
     create_output_file(root)
 
 
-def syncFiles():
+def sync_files():
     path = join(getcwd(), 'Elisio', 'fixtures', 'sources')
     for poem in Poem.objects.all():
         name = join(path, name_poem(poem) + ".txt")
@@ -109,7 +109,7 @@ def syncFiles():
         f.close()
 
 
-def syncDb():
+def sync_db():
     path = join(getcwd(), 'Elisio', 'fixtures', 'sources')
     all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
     for filename in all_filenames:
@@ -172,50 +172,50 @@ def scan_verses(dbverses, initiator):
     failed = 0
     batch = Batch()
     batch.save()
-    batchItem = DatabaseBatchItem()
-    batchItem.batch = batch
-    batchItem.object_type = ObjectType.ALL
-    batchItem.object_id = 0
-    batchItem.save()
+    batch_item = DatabaseBatchItem()
+    batch_item.batch = batch
+    batch_item.object_type = ObjectType.ALL
+    batch_item.object_id = 0
+    batch_item.save()
     session = ScanSession()
     session.batch = batch
     session.initiator = initiator
     session.save()
     for dbverse in dbverses:
         verse_saved = dbverse.saved
-        scanResult = ScanVerseResult()
-        scanResult.session = session
-        scanResult.verse = dbverse
-        scanResult.scanned_as = dbverse.verseType
-        scanResult.batchItem = batchItem
+        scan_result = ScanVerseResult()
+        scan_result.session = session
+        scan_result.verse = dbverse
+        scan_result.scanned_as = dbverse.verseType
+        scan_result.batchItem = batch_item
         try:
             verse = VerseFactory.create(dbverse, False, classes=dbverse.verseType)
             dbverse.saved = True
-            scanResult.structure = verse.structure
+            scan_result.structure = verse.structure
             worked_without_dict += 1
         except VerseException:
             try:
                 verse = VerseFactory.create(dbverse, True, classes=dbverse.verseType)
                 dbverse.saved = True
-                scanResult.structure = verse.structure
+                scan_result.structure = verse.structure
             except VerseException as exc:
                 failed += 1
                 VerseFactory.get_split_syllables(dbverse.contents)
                 dbverse.saved = False
                 try:
-                    scanResult.failure = exc.exceptions[0][0].message[:69]
+                    scan_result.failure = exc.exceptions[0][0].message[:69]
                 except IndexError:
-                    scanResult.failure = exc.message[:69]
-                scanResult.structure = ""
+                    scan_result.failure = exc.message[:69]
+                scan_result.structure = ""
             else:
                 worked += 1
         except ScansionException as exc:
-            scanResult.failure = exc.message[:69]
+            scan_result.failure = exc.message[:69]
             dbverse.saved = False
-            scanResult.structure = ""
+            scan_result.structure = ""
         else:
             worked += 1
-        if verse_saved != dbverse.saved or scanResult.failure:
+        if verse_saved != dbverse.saved or scan_result.failure:
             dbverse.save()
-        scanResult.save()
+        scan_result.save()
     return worked, failed, worked_without_dict

@@ -107,7 +107,7 @@ def get_random_verse(request):
         verse_num = randint(1, count)
         try:
             verse = DatabaseVerse.objects.get(id=verse_num)
-        except Exception:
+        except DatabaseVerse.DoesNotExist:
             pass
     metadata = get_metadata(verse)
     return HttpResponse(json.dumps(metadata), content_type='application/json')

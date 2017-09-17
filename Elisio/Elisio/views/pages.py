@@ -1,6 +1,7 @@
 """ standard Django views module for back-end logic """
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -63,7 +64,7 @@ def register_page(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             return index_page(request)
-        except Exception:
+        except (IntegrityError, Exception):
             # TODO: handle in error message
             pass
     return render(request, 'register.html')

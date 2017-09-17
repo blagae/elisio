@@ -26,7 +26,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='databasebatchitem',
             name='dependent_on',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='Elisio.DatabaseBatchItem'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='Elisio.DatabaseBatchItem'),
         ),
         migrations.AlterField(
             model_name='databasebatchitem',
