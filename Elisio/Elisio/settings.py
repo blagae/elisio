@@ -1,31 +1,22 @@
 """ Django settings for Elisio project. """
 import sys
 
-DATABASES = None
-ADMINS = ()
-MANAGERS = ()
-DEBUG = False
-SECRET_KEY = None
-HOSTS = []
-SESS = None
-
 try:
-    from Elisio.local import DATABASE_SETTINGS, ADMIN_LIST, DEBUG_SETTING, KEY, ALLOWED, SESSION_PATH
-    SECRET_KEY = KEY
-    DATABASES = DATABASE_SETTINGS
-    ADMINS = ADMIN_LIST
-    MANAGERS = ADMIN_LIST
-    DEBUG = DEBUG_SETTING
-    HOSTS = ALLOWED
-    SESS = SESSION_PATH
+    from Elisio.local import DATABASES, ADMINS, DEBUG, SECRET_KEY, ALLOWED_HOSTS, SESSION_FILE_PATH
 except ImportError:
+    # next line explicitly for PyLint imo
+    DATABASES = ADMINS = MANAGERS = DEBUG = SECRET_KEY = ALLOWED_HOSTS = SESSION_FILE_PATH = None
     sys.exit("Deployment issue: You must create a local.py file with the required settings")
 
-SESSION_FILE_PATH = SESS
+MANAGERS = ADMINS
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver']
-if HOSTS is not None:
-    ALLOWED_HOSTS.extend(HOSTS)
+LOCAL_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver']
+
+if ALLOWED_HOSTS:
+    ALLOWED_HOSTS.extend(LOCAL_HOSTS)
+else:
+    ALLOWED_HOSTS = LOCAL_HOSTS
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
