@@ -1,5 +1,5 @@
 """ module for creating an xml file from given input """
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as Et
 import xml.dom.minidom as mini
 from Elisio.numerals import roman_to_int, int_to_roman
 from Elisio.models import DatabaseVerse, Author, Book, Opus, Poem
@@ -9,8 +9,8 @@ from os.path import isfile, join
 
 def create_output_file(tree):
     """ create the file from the given xml tree """
-    if isinstance(tree, ET.Element):
-        xml = mini.parseString(ET.tostring(tree)).toprettyxml()
+    if isinstance(tree, Et.Element):
+        xml = mini.parseString(Et.tostring(tree)).toprettyxml()
         with open('Elisio/fixtures/verses/initial_data.xml', "w") as file:
             file.writelines(xml)
     else:
@@ -44,7 +44,7 @@ def name_poem(poem):
 
 def fill_xml_object():
     """ externally facing method """
-    root = ET.Element("django-objects", {'version': '1.0'})
+    root = Et.Element("django-objects", {'version': '1.0'})
     path = 'Elisio/fixtures/sources/'
     # https://stackoverflow.com/questions/3207219/how-to-list-all-files-of-a-directory-in-python
     all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
@@ -55,13 +55,13 @@ def fill_xml_object():
         poem = find_poem(file.name)
         count = 1
         for verse in verses:
-            obj = ET.SubElement(root, "object",
+            obj = Et.SubElement(root, "object",
                                 {'model': 'Elisio.DatabaseVerse'})
-            poem_field = ET.SubElement(obj, "field",
+            poem_field = Et.SubElement(obj, "field",
                                        {'type': 'ForeignKey',
                                         'name': 'poem'})
             poem_field.text = str(poem.id)
-            number_field = ET.SubElement(obj, "field",
+            number_field = Et.SubElement(obj, "field",
                                          {'type': 'IntegerField',
                                           'name': 'number'})
             parsed = verse.split('$')
@@ -70,19 +70,19 @@ def fill_xml_object():
                     count = int(parsed[0])
                 except TypeError:
                     count = int(parsed[0][:-1])
-                    alt_field = ET.SubElement(obj, "field",
+                    alt_field = Et.SubElement(obj, "field",
                                               {'type': 'CharField',
                                                'name': 'alternative'})
                     alt_field.text = parsed[0][-1]
             number_field.text = str(count)
             count += 1
-            verse_type_field = ET.SubElement(obj, "field",
-                                            {'type': 'enum.EnumField',
+            verse_type_field = Et.SubElement(obj, "field",
+                                             {'type': 'enum.EnumField',
                                              'name': 'verseType'})
             vf = poem.verseForm.get_verse_types()
             current_form = vf[count % len(vf)]
             verse_type_field.text = str(current_form.value)
-            verse_field = ET.SubElement(obj, "field",
+            verse_field = Et.SubElement(obj, "field",
                                         {'type': 'CharField',
                                          'name': 'contents',
                                          })

@@ -8,13 +8,13 @@ DB_SUPERUSER_PASSWORD = 'mp'
 # change database settings at will
 # if you use something other than SQLite, you will need to
 # consult the Django docs for database settings
-DATABASES = {
+DATABASE_SettingS = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'mydb.db'
         }
     }
-
+DATABASES = {}
 # disable this when deploying to production
 DEBUG = True
 

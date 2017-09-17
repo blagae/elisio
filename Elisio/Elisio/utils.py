@@ -15,7 +15,7 @@ def set_django():
 
 
 def recreate_db():
-    if "psycopg2" in local.DATABASE_SETTINGS['default']['ENGINE']:
+    if "psycopg2" in local.DATABASES['default']['ENGINE']:
         import psycopg2
         # http://stackoverflow.com/q/22357856
         with psycopg2.connect(database="postgres", user="postgres", password=local.DB_SUPERUSER_PASSWORD) as conn:
@@ -24,11 +24,11 @@ def recreate_db():
                 # http://initd.org/psycopg/docs/connection.html#connection.autocommit
                 conn.autocommit = True
                 try:
-                    cur.execute("DROP DATABASE " + local.DATABASE_SETTINGS['default']['NAME'])
+                    cur.execute("DROP DATABASE " + local.DATABASES['default']['NAME'])
                 except psycopg2.ProgrammingError:
                     pass
-                cur.execute("CREATE DATABASE " + local.DATABASE_SETTINGS['default']['NAME'] + " WITH OWNER " +
-                            local.DATABASE_SETTINGS['default']['USER'])
+                cur.execute("CREATE DATABASE " + local.DATABASES['default']['NAME'] + " WITH OWNER " +
+                            local.DATABASES['default']['USER'])
     set_django()
     from django.core.management import call_command
     call_command('migrate')
