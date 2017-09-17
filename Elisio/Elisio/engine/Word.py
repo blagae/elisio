@@ -17,12 +17,12 @@ class Word(object):
         self.syllables = []
         if not (isinstance(text, str) and text.isalpha()):
             raise WordException("Word not initialized with alphatic data")
+        self.sounds = []
+        self.text = None
         self.find_sounds(text)
         self.enclitic = None
         self.use_dict = use_dict
         self.name = text.istitle()
-        self.sounds = []
-        self.text = None
 
     def __repr__(self):
         return self.syllables
