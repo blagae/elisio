@@ -1,11 +1,11 @@
 ﻿$(document).ready(function () {
     $("#syncFilesButton").click(function () {
-        $.getJSON("/json/admin/sync/files", function (result) {
+        $.getJSON("/json/admin/sync/files", function () {
             alert("done syncing files");
         });
     });
     $("#syncDbButton").click(function () {
-        $.getJSON("/json/admin/sync/db", function (result) {
+        $.getJSON("/json/admin/sync/db", function () {
             alert("done syncing db");
         });
     });

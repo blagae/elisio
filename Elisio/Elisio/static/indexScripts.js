@@ -10,11 +10,11 @@ function getOpera(key, op, bk, po) {
             objects.append($("<option />").val(this.pk).text(this.fields.full_name));
         });
         if (typeof op === "undefined")
-            $('#opusScannerField option:first-child').attr("selected", "selected");
+            objects.find('option:first-child').attr("selected", "selected");
         else
-            $("#opusScannerField").val(op);
+            objects.val(op);
     })).then(function () {
-        getBooks($("#opusScannerField").val(), bk, po);
+        getBooks(objects.val(), bk, po);
     });
 }
 
@@ -26,11 +26,11 @@ function getBooks(key, bk, po) {
             objects.append($("<option />").val(this.pk).text(this.fields.number));
         });
         if (typeof bk === "undefined")
-            $('#bookScannerField option:first-child').attr("selected", "selected");
+            objects.find('option:first-child').attr("selected", "selected");
         else
-            $("#bookScannerField").val(bk);
+            objects.val(bk);
     })).then(function () {
-        getPoems($("#bookScannerField").val(), po);
+        getPoems(objects.val(), po);
     });
 }
 
@@ -42,11 +42,11 @@ function getPoems(key, po) {
             objects.append($("<option />").val(this.pk).text(this.fields.number));
         });
         if (typeof po === "undefined")
-            $('#poemScannerField option:first-child').attr("selected", "selected");
+            objects.find('option:first-child').attr("selected", "selected");
         else
-            $("#poemScannerField").val(po);
+            objects.val(po);
     })).then(function () {
-        getMaxVerseNumber($("#poemScannerField").val());
+        getMaxVerseNumber(objects.val());
     });
 }
 
@@ -106,15 +106,16 @@ function useDict(url) {
 
 function validateVerseNumber(val) {
     var regex = /^[0-9]+$/;
+    var field = $("#warningScannerField");
     if (!regex.test(val)) {
-        $("#warningScannerField").text("Insert a number please");
+        field.text("Insert a number please");
     } else {
-        $("#warningScannerField").empty();
+        field.empty();
     }
     if (val > maxVerseNumber) {
-        $("#warningScannerField").text("Maximum verse number is " + maxVerseNumber);
+        field.text("Maximum verse number is " + maxVerseNumber);
     }
-    return $("#warningScannerField").text() == "";
+    return field.text() == "";
 }
 
 $(document).ready(function () {

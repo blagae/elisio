@@ -5,7 +5,7 @@
             c_start = c_start + c_name.length + 1;
             var c_end = document.cookie.indexOf(";", c_start);
             if (c_end == -1) c_end = document.cookie.length;
-            return unescape(document.cookie.substring(c_start, c_end));
+            return decodeURI(document.cookie.substring(c_start, c_end));
         }
     }
     return "";
@@ -29,12 +29,12 @@ function getAllAuthors() {
         $.each(result, function () {
             objects.append($("<option />").val(this.pk).text(this.fields.short_name));
         });
-        $('.authorBatchField option:first-child').attr("selected", "selected");
+        objects.find('option:first-child').attr("selected", "selected");
     });
 }
 
 function saveCurrentBatch() {
-    $.post("/json/batch/save/", function (result) {
+    $.post("/json/batch/save/", function () {
         alert("batch saved");
     });
 }
@@ -85,7 +85,7 @@ function saveCurrentBatchItems() {
         url: "/json/batchitem/save/",
         type: "POST",
         data: JSON.stringify(arr),
-        success: function (data, status, xhr) {
+        success: function () {
 
         }
     });
@@ -118,10 +118,10 @@ function getAllBatches() {
             $.ajax({
                 url: '/json/batch/delete/' + id,
                 type: 'DELETE',
-                success: function (response) {
+                success: function () {
                     $("#batch" + id).remove();
                 },
-                complete: function (response, text) {
+                complete: function (response) {
                     alert("batch deleted ?" + response.status);
                 }
             });
@@ -131,7 +131,7 @@ function getAllBatches() {
             $.ajax({
                 url: '/json/batch/run/' + id,
                 type: 'POST',
-                complete: function (response, text) {
+                complete: function (response) {
                     alert("batch run:" + response.status);
                 }
             });
@@ -186,14 +186,14 @@ function getAllPoems(item) {
 
 $(document).ready(function () {
     $("#clearCurrentBatchButton").click(function () {
-        $.getJSON("/json/batch/clearcurrentsession", function (result) {
+        $.getJSON("/json/batch/clearcurrentsession", function () {
             $("#currentBatchTable").remove();
         });
     });
 
     $(".deleteVerseFromCurrentBatch").click(function () {
         var hash = $(this).attr("alt");
-        $.getJSON("/json/batch/deleteverse/" + hash, function (result) {
+        $.getJSON("/json/batch/deleteverse/" + hash, function () {
             $("#"+hash).remove();
         });
     });
