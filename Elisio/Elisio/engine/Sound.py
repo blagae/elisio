@@ -230,8 +230,8 @@ class HeavyMakerSound(ConsonantSound):
 class SoundFactory(object):
     sound_dict = {}
 
-    @classmethod
-    def create(cls, letters):
+    @staticmethod
+    def create(letters):
         """
         outward-facing factory which preparses its parameters
         and passes them to the internal factory method
@@ -255,8 +255,8 @@ class SoundFactory(object):
                         letterlist.append(Letter(stri))
         return SoundFactory.__factory(letterlist)
 
-    @classmethod
-    def __factory(cls, letterlist):
+    @staticmethod
+    def __factory(letterlist):
         """
         private factory method that will eventually create a sound
         from a list of letters
@@ -288,11 +288,11 @@ class SoundFactory(object):
         SoundFactory.sound_dict[sound.get_text()] = sound
         return sound
 
-    @classmethod
-    def create_sounds_from_text(cls, text):
+    @staticmethod
+    def create_sounds_from_text(text):
         """
         try to create a Sound from given text string of maximally 3 letters
-        this is a classmethod because it acts as a (super-)Factory
+        this is a static method because it acts as a (super-)Factory
         returns an array of sounds
         """
         if len(text) > 3:
@@ -311,8 +311,8 @@ class SoundFactory(object):
             sound = SoundFactory.create(text[0])
         return [sound]
 
-    @classmethod
-    def find_sounds_for_text(cls, text):
+    @staticmethod
+    def find_sounds_for_text(text):
         """ iteratively allocate all text to a sound """
         i = 0
         sounds = []
@@ -320,7 +320,7 @@ class SoundFactory(object):
             added_sounds = SoundFactory.create_sounds_from_text(text[i:i + 3])
             for sound in added_sounds:
                 # dirty hack to prevent 'novae' type of word from being analyzed as 'no-va-e'
-                if len(sounds) > 0 and sound == SoundFactory.create('e') and sounds[-1] == SoundFactory.create('a'):
+                if sounds and sound.letters == ['e'] and sounds[-1].letters == ['a']:
                     sound = SoundFactory.create('ae')
                     sounds.pop()
                 sounds.append(sound)

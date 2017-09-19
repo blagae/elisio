@@ -252,6 +252,13 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
+    def test_word_split_semiv_diphthong(self):
+        """ diphthong must not be split """
+        word = self.construct_word('aevum')
+        syllable_list = [Syllable('ae'), Syllable('vum')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
     def test_word_split_same_vowels(self):
         """ semivowels should be analyzed correctly """
         word = self.construct_word('mortuus')

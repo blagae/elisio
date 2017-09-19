@@ -144,3 +144,9 @@ class TestSoundFactory(unittest.TestCase):
                            SoundFactory.create('u'), SoundFactory.create('m')]
         sounds = SoundFactory.find_sounds_for_text('aevum')
         self.assertEqual(sounds, expected_sounds)
+
+    def test_sound_factory_semiv_diph(self):
+        expected_sounds = [SoundFactory.create('n'), SoundFactory.create('o'),
+                           SoundFactory.create('v'), SoundFactory.create('ae')]
+        sounds = SoundFactory.find_sounds_for_text('novae')
+        self.assertEqual(sounds, expected_sounds)
