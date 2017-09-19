@@ -167,16 +167,12 @@ class Syllable(object):
         return self.sounds[0].is_heavy_making()
 
     def get_vowel_location(self):
-        semivowel = None
         indx = None
         for idx, sound in enumerate(reversed(self.sounds)):
             if sound.is_vowel():
                 indx = idx
                 break
             if sound.is_semivowel():
-                if semivowel:
-                    indx = idx
-                    break
                 indx = idx
                 break
         if indx is not None:
