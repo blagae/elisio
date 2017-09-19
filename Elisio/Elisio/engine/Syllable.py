@@ -325,7 +325,5 @@ class SyllableSplitter(object):
             syllable1.sounds.append(given_sound)
         else:
             given_sound = syllable1.sounds[-1]
-            syllable1.sounds.reverse()
-            syllable1.sounds.remove(given_sound)
-            syllable1.sounds.reverse()
+            syllable1.sounds = syllable1.sounds[:-1]
             syllable2.sounds.insert(0, given_sound)

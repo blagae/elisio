@@ -27,3 +27,10 @@ class TestSyllableSplitter(unittest.TestCase):
         syll = SyllableSplitter.join_into_syllables(txt)
         expected = [Syllable('i'), Syllable('it')]
         self.assertEqual(syll, expected)
+
+    def test_syllsplit_memor(self):
+        txt = SoundFactory.find_sounds_for_text('memor')
+        syll = SyllableSplitter.join_into_syllables(txt)
+        syll = SyllableSplitter.redistribute(syll)
+        expected = [Syllable('me'), Syllable('mor')]
+        self.assertEqual(syll, expected)
