@@ -21,3 +21,9 @@ class TestSyllableSplitter(unittest.TestCase):
         syll = SyllableSplitter.redistribute(syll)
         expected = [Syllable('a'), Syllable('thos'), Syllable('ve')]
         self.assertEqual(syll, expected)
+
+    def test_syllsplit_iit(self):
+        txt = SoundFactory.find_sounds_for_text('iit')
+        syll = SyllableSplitter.join_into_syllables(txt)
+        expected = [Syllable('i'), Syllable('it')]
+        self.assertEqual(syll, expected)

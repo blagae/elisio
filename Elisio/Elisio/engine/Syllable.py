@@ -20,16 +20,14 @@ class Syllable(object):
     A syllable knows its sounds and can determine
     if the specific combination of them is a valid one
     """
-    final_heavy = ('.*os$', '.*as$')
+    final_heavy = [re.compile('.*[ao]s$')]
 
-    def __init__(self, syllable, test=True, weight=None):
+    def __init__(self, syllable, validate=True, weight=None):
         """ construct a Syllable by its contents """
         self.weight = weight
         self.syllable = syllable
-        self.sounds = SoundFactory.find_sounds_for_text(syllable)
         self.stressed = False
-        if test and not self.is_valid():
-            raise SyllableException("invalid Syllable object")
+        self.sounds = self.fill_sounds(validate)
 
     def __eq__(self, other):
         return self.sounds == other.sounds
@@ -44,26 +42,33 @@ class Syllable(object):
             result += sound.get_text()
         return result
 
-    def is_valid(self, test=False):
+    def fill_sounds(self, validate):
+        sounds = SoundFactory.find_sounds_for_text(self.syllable)
+        if validate and not self.is_valid(sounds):
+            raise SyllableException("invalid Syllable object")
+        return sounds
+
+    @staticmethod
+    def is_valid(sounds, test=False):
         """
         a syllable is valid if it contains:
             * at most one consonant after the vocalic sound, and
             * a single vowel or semivowel
             * a semivowel and a vowel in that order
         """
-        if self.get_text().startswith('ii'):
+        if len(sounds) > 1 and sounds[0] == sounds[1] and sounds[0] == SoundFactory.create('i'):
             return False
-        if self.sounds[0] == SoundFactory.create('gu'):
-            copied = copy.deepcopy(self)
-            copied.sounds[0] = SoundFactory.create('u')
-            boole = copied.is_valid(test)
-            if boole:
-                self.sounds[0] = SoundFactory.create('g')
-                self.sounds.insert(1, SoundFactory.create('u'))
-            return boole
+        if sounds[0] == SoundFactory.create('gu'):
+            copied = copy.deepcopy(sounds)
+            copied[0] = SoundFactory.create('u')
+            valid = Syllable.is_valid(copied, test)
+            if valid:
+                sounds[0] = SoundFactory.create('g')
+                sounds.insert(1, SoundFactory.create('u'))
+            return valid
         contains_final_consonant = contains_vowel = contains_semivowel = False
         only_consonants = True
-        for count, sound in enumerate(self.sounds):
+        for count, sound in enumerate(sounds):
             if sound.is_consonant():
                 if contains_vowel or contains_semivowel:
                     if sound == SoundFactory.create('gu'):
@@ -99,7 +104,7 @@ class Syllable(object):
         if self.ends_with_heavymaker():
             return True
         for rgx in Syllable.final_heavy:
-            if re.compile(rgx).match(self.get_text()):
+            if rgx.match(self.get_text()):
                 return True
         return False
 
@@ -227,7 +232,7 @@ class Syllable(object):
         valid by the addition """
         test_syllable = copy.deepcopy(self)
         test_syllable.sounds.append(sound)
-        if test_syllable.is_valid(True):
+        if Syllable.is_valid(test_syllable.sounds, True):
             self.sounds.append(sound)
         else:
             raise SyllableException("syllable invalidated by last addition")
