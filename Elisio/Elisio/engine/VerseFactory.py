@@ -132,24 +132,24 @@ class VerseFactory(object):
                 result = result[:-1] + " "
             return result
 
-    @classmethod
-    def split(cls, text):
+    @staticmethod
+    def split(text):
         return VerseFactory.VerseFactoryImpl(text).split()
 
-    @classmethod
-    def layer(cls, text):
+    @staticmethod
+    def layer(text):
         return VerseFactory.VerseFactoryImpl(text).layer()
 
-    @classmethod
-    def getlist(cls, text):
+    @staticmethod
+    def getlist(text):
         return VerseFactory.VerseFactoryImpl(text).getlist()
 
-    @classmethod
-    def get_split_syllables(cls, text):
+    @staticmethod
+    def get_split_syllables(text):
         return VerseFactory.VerseFactoryImpl(text).get_split_syllables()
 
-    @classmethod
-    def create(cls, verse, use_dict=False, classes=None):
+    @staticmethod
+    def create(verse, use_dict=False, classes=None):
         return VerseFactory.VerseFactoryImpl(verse, use_dict, classes).create()
 
 

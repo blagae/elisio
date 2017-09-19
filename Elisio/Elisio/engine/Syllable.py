@@ -252,8 +252,8 @@ class Syllable(object):
         else:
             return Weight.ANCEPS
 
-    @classmethod
-    def create_syllable_from_database(cls, syll):
+    @staticmethod
+    def create_syllable_from_database(syll):
         """
         The factory method that will create a syllable from the database
         with its given weight (if stored in the database)
@@ -269,8 +269,8 @@ class SyllableSplitter(object):
     shortEndVowels = []
     longEndVowels = ['i', 'o', 'u']
 
-    @classmethod
-    def join_into_syllables(cls, sounds):
+    @staticmethod
+    def join_into_syllables(sounds):
         """
         join a list of sounds into a preliminary syllables
         keep adding sounds to the syllable until it becomes illegal
@@ -289,8 +289,8 @@ class SyllableSplitter(object):
         syllables.append(current_syllable)
         return syllables
 
-    @classmethod
-    def redistribute(cls, syllables):
+    @staticmethod
+    def redistribute(syllables):
         """
         redistribute the sounds of a list of syllables
         in order to use the correct syllables, not the longest possible
@@ -312,8 +312,8 @@ class SyllableSplitter(object):
                     SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], False)
         return syllables
 
-    @classmethod
-    def __switch_sound(cls, syllable1, syllable2, to_first):
+    @staticmethod
+    def __switch_sound(syllable1, syllable2, to_first):
         """ switch sounds from one syllable to another
         if toFirst is True, switch from the second to the first
         if toFirst is False, switch from the first to the second

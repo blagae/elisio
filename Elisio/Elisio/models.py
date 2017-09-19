@@ -18,8 +18,8 @@ class DeviantWord(Model):
     words = []
     stem = CharField(max_length=25)
 
-    @classmethod
-    def find(cls, text):
+    @staticmethod
+    def find(text):
         """ check for a regex in the db that matches this word """
         DeviantWord.get_list()
         result = [word for word in DeviantWord.words
@@ -38,8 +38,8 @@ class DeviantWord(Model):
             result.append(Syllable.create_syllable_from_database(syll))
         return result
 
-    @classmethod
-    def get_list(cls):
+    @staticmethod
+    def get_list():
         """ get full list of deviant words in memory """
         if len(DeviantWord.words) < 1:
             DeviantWord.words = DeviantWord.objects.all()
@@ -153,14 +153,14 @@ class DatabaseVerse(Model):
         """ create a Verse object from this DatabaseVerse """
         return self.contents
 
-    @classmethod
-    def get_maximum_verse_num(cls, poem):
+    @staticmethod
+    def get_maximum_verse_num(poem):
         """ get the highest verse number in this poem """
         return (DatabaseVerse.objects.filter(poem=poem)
                 .aggregate(Max('number'))['number__max'])
 
-    @classmethod
-    def get_verse_from_db(cls, poem, verse):
+    @staticmethod
+    def get_verse_from_db(poem, verse):
         """ django.core.serializers requires this return value
         to be iterable (i.e. a resultset) """
         result = DatabaseVerse.objects.get(poem=poem, number=verse)
