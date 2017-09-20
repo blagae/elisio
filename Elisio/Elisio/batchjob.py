@@ -128,7 +128,7 @@ def sync_db():
             if len(parsed) > 1:
                 try:
                     count = int(parsed[0])
-                except TypeError:
+                except (TypeError, ValueError):
                     count = int(parsed[0][:-1])
                     item.alternative = parsed[0][-1]
             item.number = count

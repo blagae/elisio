@@ -21,7 +21,6 @@ class Word(object):
         self.text = Word.reconstruct_text(self.sounds)
         self.enclitic = None
         self.use_dict = use_dict
-        self.name = text.istitle()
 
     def __repr__(self):
         return self.syllables
@@ -129,6 +128,7 @@ class Word(object):
                 wrd.split(False)
                 for syllab in wrd.syllables:
                     self.syllables.append(syllab)
+            self.recalculate_text()
             return True
 
     def __eq__(self, other):
@@ -182,7 +182,7 @@ class Word(object):
                 syll_struct[-1] = Weight.HEAVY
             if last_syllable == Syllable('que') and syll_struct[-1] != Weight.NONE:
                 syll_struct[-1] = Weight.LIGHT
-        if self.name:
+        if self.text.istitle():
             for count in range(len(syll_struct) - 1):
                 if syll_struct[count] == Weight.LIGHT:
                     syll_struct[count] = Weight.ANCEPS

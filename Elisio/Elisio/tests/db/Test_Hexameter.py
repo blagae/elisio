@@ -1,12 +1,13 @@
 ﻿import unittest
+from Elisio.utils import set_django
+set_django()
+
 from Elisio.batchjob import scan_verses
 from Elisio.engine.Verse import Verse, Foot
-from Elisio.utils import set_django
 from Elisio.engine.Hexameter import Hexameter
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from Elisio.tests.db.Test_Verse import TYPICAL_VERSE
 
-set_django()
 
 from Elisio.models import DatabaseVerse, WordOccurrence
 
@@ -36,8 +37,8 @@ class TestHexameter(unittest.TestCase):
         """ frivolous check to see how many verses work """
         save = WordOccurrence.objects.count() > 0
         threshold = 14 if save else 12
-        # verses = DatabaseVerse.objects.all()
-        verses = DatabaseVerse.objects.filter(id__lte=50)
+        verses = DatabaseVerse.objects.all()
+        # verses = DatabaseVerse.objects.filter(id__lte=50)
         worked, failed, worked_wo_dict = scan_verses(verses, "test_hexameter_scan_all")
         # canary test: over 91% of verses must succeed
         result = str(worked_wo_dict) + " worked without dict, " + str(worked) + " worked, " + str(failed) + " failed"

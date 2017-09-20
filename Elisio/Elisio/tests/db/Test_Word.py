@@ -401,6 +401,13 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
+    def test_word_split_semiv_enclitic(self):
+        """ scan word with final -e as anceps """
+        word = self.construct_word('cuique')
+        syllable_list = [Syllable('cui', False), Syllable('que')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
     def test_word_scan_identical_sound(self):
         """ check reworking of word-internal sounds """
         word = self.construct_word('memor')
