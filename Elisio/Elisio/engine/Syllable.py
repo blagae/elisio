@@ -116,8 +116,7 @@ class Syllable(object):
         """ special property of words ending in a vowel """
         return (self.ends_with_vowel() or
                 (self.sounds[-1] == SoundFactory.create('m') and
-                 (self.sounds[-2].is_vowel() or self.sounds[-2].is_semivowel()))
-                )
+                 (self.sounds[-2].is_vowel() or self.sounds[-2].is_semivowel())))
 
     def has_diphthong(self):
         return self.get_vowel().is_diphthong()
@@ -159,8 +158,7 @@ class Syllable(object):
         return (self.starts_with_consonant() and
                 ((len(self.sounds) > 1 and self.sounds[1].is_consonant()) or
                  self.makes_previous_heavy())
-                and self.sounds[0] != SoundFactory.create('gu')
-                )
+                and self.sounds[0] != SoundFactory.create('gu'))
 
     def makes_previous_heavy(self):
         """ first sound of the syllable is a double consonant letter """
@@ -220,8 +218,7 @@ class Syllable(object):
             return self.ends_with_vowel() and next_syllable.starts_with_vowel()
         return (self.ends_with_vowel() and
                 not self.get_vowel().is_diphthong() and
-                self.get_vowel().letters[0] in SyllableSplitter.shortEndVowels
-                )
+                self.get_vowel().letters[0] in SyllableSplitter.shortEndVowels)
 
     def add_sound(self, sound):
         """ add a sound to a syllable if the syllable stays
@@ -250,8 +247,7 @@ class Syllable(object):
         elif self.is_heavy(next_syllable):
             self.weight = Weight.HEAVY
             return Weight.HEAVY
-        else:
-            return Weight.ANCEPS
+        return Weight.ANCEPS
 
     @staticmethod
     def create_syllable_from_database(syll):

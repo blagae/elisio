@@ -17,9 +17,8 @@ class Word(object):
         self.syllables = []
         if not (isinstance(text, str) and text.isalpha()):
             raise WordException("Word not initialized with alphatic data")
-        self.sounds = []
-        self.text = None
-        self.find_sounds(text)
+        self.sounds = SoundFactory.find_sounds_for_text(text)
+        self.text = self.reconstruct_text()
         self.enclitic = None
         self.use_dict = use_dict
         self.name = text.istitle()
@@ -30,15 +29,14 @@ class Word(object):
     def __str__(self):
         return self.syllables
 
-    def find_sounds(self, text):
+    def reconstruct_text(self):
         """
         find the sequence of sounds from the textual representation of the word
         """
-        self.sounds = SoundFactory.find_sounds_for_text(text)
         local_text = ""
         for sound in self.sounds:
             local_text += sound.get_text()
-        self.text = local_text
+        return local_text
 
     def starts_with_proclitic(self):
         for proc in Word.proclitics:
@@ -119,12 +117,11 @@ class Word(object):
         deviant = DeviantWord.find(self.without_enclitic())
         if deviant:
             self.syllables = deviant.get_syllables()
-            txt = self.text
             for syll in self.syllables:
                 if len(syll.syllable) >= 1:
-                    txt = txt[len(syll.syllable):]
-            if len(txt) > 0:
-                wrd = Word(txt)
+                    self.text = self.text[len(syll.syllable):]
+            if len(self.text) > 0:
+                wrd = Word(self.text)
                 wrd.split(False)
                 for syllab in wrd.syllables:
                     self.syllables.append(syllab)
