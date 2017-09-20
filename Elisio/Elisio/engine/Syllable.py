@@ -22,12 +22,12 @@ class Syllable(object):
     """
     final_heavy = [re.compile('.*[ao]s$')]
 
-    def __init__(self, syllable, validate=True, weight=None):
+    def __init__(self, text, validate=True, weight=None):
         """ construct a Syllable by its contents """
         self.weight = weight
-        self.syllable = syllable
         self.stressed = False
-        self.sounds = self.fill_sounds(validate)
+        self.sounds = self.fill_sounds(text, validate)
+        self.text = Syllable.reconstruct_text(self.sounds)
 
     def __eq__(self, other):
         return self.sounds == other.sounds
@@ -35,16 +35,21 @@ class Syllable(object):
     def __repr__(self):
         return str(self.sounds)
 
-    def get_text(self):
+    def recalculate_text(self):
+        self.text = Syllable.reconstruct_text(self.sounds)
+
+    @staticmethod
+    def reconstruct_text(sounds):
         """ get String representation for output purposes """
         result = ""
-        for sound in self.sounds:
+        for sound in sounds:
             result += sound.get_text()
         return result
 
-    def fill_sounds(self, validate):
-        sounds = SoundFactory.find_sounds_for_text(self.syllable)
-        if validate and not self.is_valid(sounds):
+    @staticmethod
+    def fill_sounds(text, validate):
+        sounds = SoundFactory.find_sounds_for_text(text)
+        if validate and not Syllable.is_valid(sounds):
             raise SyllableException("invalid Syllable object")
         return sounds
 
@@ -104,7 +109,7 @@ class Syllable(object):
         if self.ends_with_heavymaker():
             return True
         for rgx in Syllable.final_heavy:
-            if rgx.match(self.get_text()):
+            if rgx.match(self.text):
                 return True
         return False
 
@@ -307,6 +312,8 @@ class SyllableSplitter(object):
                     pass
                 elif syllables[count + 1].starts_with_vowel(False):
                     SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], False)
+        for syll in syllables:
+            syll.recalculate_text()
         return syllables
 
     @staticmethod

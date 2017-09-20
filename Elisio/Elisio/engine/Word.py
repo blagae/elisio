@@ -14,11 +14,11 @@ class Word(object):
 
     def __init__(self, text, use_dict=False):
         """ construct a Word by its contents """
-        self.syllables = []
         if not (isinstance(text, str) and text.isalpha()):
             raise WordException("Word not initialized with alphatic data")
+        self.syllables = []
         self.sounds = SoundFactory.find_sounds_for_text(text)
-        self.text = self.reconstruct_text()
+        self.text = Word.reconstruct_text(self.sounds)
         self.enclitic = None
         self.use_dict = use_dict
         self.name = text.istitle()
@@ -29,12 +29,16 @@ class Word(object):
     def __str__(self):
         return self.syllables
 
-    def reconstruct_text(self):
+    def recalculate_text(self):
+        self.text = Word.reconstruct_text(self.sounds)
+
+    @staticmethod
+    def reconstruct_text(sounds):
         """
         find the sequence of sounds from the textual representation of the word
         """
         local_text = ""
-        for sound in self.sounds:
+        for sound in sounds:
             local_text += sound.get_text()
         return local_text
 
@@ -118,8 +122,8 @@ class Word(object):
         if deviant:
             self.syllables = deviant.get_syllables()
             for syll in self.syllables:
-                if len(syll.syllable) >= 1:
-                    self.text = self.text[len(syll.syllable):]
+                if len(syll.text) >= 1:
+                    self.text = self.text[len(syll.text):]
             if len(self.text) > 0:
                 wrd = Word(self.text)
                 wrd.split(False)
@@ -207,7 +211,7 @@ class Word(object):
                 return
         for syllable in self.syllables:
             if not Syllable.is_valid(syllable.sounds):
-                word = FallbackWord(syllable.get_text())
+                word = FallbackWord(syllable.text)
                 word.split()
                 index = self.syllables.index(syllable)
                 self.syllables.remove(syllable)
@@ -218,7 +222,7 @@ class Word(object):
             if len(syllable.sounds) == 1 and syllable.sounds[0].is_semivowel():
                 if count < len(self.syllables) - 1 and self.syllables[count + 1].starts_with_vowel():
                     try:
-                        syllable = Syllable(syllable.get_text() + self.syllables[count + 1].get_text())
+                        syllable = Syllable(syllable.text + self.syllables[count + 1].text)
                         self.syllables.remove(self.syllables[count + 1])
                         self.syllables[count] = syllable
                     except SyllableException:
