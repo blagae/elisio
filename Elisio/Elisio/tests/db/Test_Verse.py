@@ -151,7 +151,8 @@ class TestVerse(unittest.TestCase):
     def test_verse_letter_frequencies(self):
         """ routine created for scanning optimizations """
         letterlist = {}
-        db_verses = DatabaseVerse.objects.all()
+        # db_verses = DatabaseVerse.objects.all()
+        db_verses = DatabaseVerse.objects.filter(id__lte=50)
         for db_verse in db_verses:
             verse = db_verse.get_verse()
             words = VerseFactory.split(verse)
