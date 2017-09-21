@@ -9,8 +9,9 @@ class Word(object):
     A word is the representation of the Latin word
     It has extensive knowledge of its sounds, which it can join into syllables
     """
-    enclitics = ('que', 'ue')
-    proclitics = ('ab', 'ad', 'con', 'dis', 'in', 'ob', 'sub')  # circum?, de?, e-?,ob?per?prae?pro?
+    enclitics = (Syllable('que'), Syllable('ue'))
+    proclitics = (Syllable('ab'), Syllable('ad'), Syllable('con'), Syllable('dis'), Syllable('in')
+                  , Syllable('ob'), Syllable('sub'))  # circum?, de?, e-?,ob?per?prae?pro?
 
     def __init__(self, text, use_dict=False):
         """ construct a Word by its contents """
@@ -43,8 +44,8 @@ class Word(object):
 
     def starts_with_proclitic(self):
         for proc in Word.proclitics:
-            if self.text.startswith(proc) and self.text != proc:
-                return proc
+            if self.text.startswith(proc.text) and self.text != proc.text:
+                return proc.text
 
     def split(self, test_deviant=True):
         """
@@ -60,35 +61,38 @@ class Word(object):
         if test_deviant and len(self.syllables) == 1 and len(self.text) == 1:
             self.syllables[0].weight = Weight.HEAVY
         if self.use_dict:
-            from Elisio.models import WordOccurrence
-            structs = []
-            for hit in WordOccurrence.objects.filter(word=self.text):
-                strc = hit.struct
-                if len(strc) == 1 and strc[-1] == "0":
-                    continue
-                if len(strc) > 1 and (strc[-1] == "3" or strc[-1] == "0"):
-                    strc = strc[:-1]
-                if strc not in structs:
-                    structs.append(strc)
-            if len(structs) == 1:
-                for count, wght in enumerate(structs[0]):
-                    self.syllables[count].weight = Weight(int(wght))
-            if len(structs) > 1:
-                structs.sort(key=len, reverse=True)
-                for count in range(len(structs[0])):
-                    val = None
-                    for strc in structs:
-                        try:
-                            if not val and (strc[count] != "3" and strc[count] != "0"):
-                                val = strc[count]
-                            elif val != strc[count]:
-                                if strc[count] != "3" and strc[count] != "0":
-                                    val = "3"
-                                    break
-                        except IndexError:
-                            pass
-                    if val:
-                        self.syllables[count].weight = Weight(int(val))
+            self.use_dictionary()
+
+    def use_dictionary(self):
+        from Elisio.models import WordOccurrence
+        structs = []
+        for hit in WordOccurrence.objects.filter(word=self.text):
+            strc = hit.struct
+            if len(strc) == 1 and strc[-1] == "0":
+                continue
+            if len(strc) > 1 and (strc[-1] == "3" or strc[-1] == "0"):
+                strc = strc[:-1]
+            if strc not in structs:
+                structs.append(strc)
+        if len(structs) == 1:
+            for count, wght in enumerate(structs[0]):
+                self.syllables[count].weight = Weight(int(wght))
+        if len(structs) > 1:
+            structs.sort(key=len, reverse=True)
+            for count in range(len(structs[0])):
+                val = None
+                for strc in structs:
+                    try:
+                        if not val and (strc[count] != "3" and strc[count] != "0"):
+                            val = strc[count]
+                        elif val != strc[count]:
+                            if strc[count] != "3" and strc[count] != "0":
+                                val = "3"
+                                break
+                    except IndexError:
+                        pass
+                if val:
+                    self.syllables[count].weight = Weight(int(val))
 
     def ends_in_variable_declension(self):
         return len(self.syllables) > 1 and (self.text.endswith(("us", "a")))
@@ -97,11 +101,11 @@ class Word(object):
         if self.enclitic:
             return True
         # catch isolated -que
-        if self.text in Word.enclitics:
+        if len(self.syllables) == 1 and self.syllables[0] in Word.enclitics:
             return False
         for encl in Word.enclitics:
-            if self.text.endswith(encl):
-                self.enclitic = encl
+            if self.text.endswith(encl.text):
+                self.enclitic = encl.text
                 return True
         return False
 
