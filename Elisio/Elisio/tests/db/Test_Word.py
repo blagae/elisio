@@ -531,3 +531,18 @@ class TestWord(unittest.TestCase):
         weights = [Weight.ANCEPS, Weight.ANCEPS]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
+
+    def test_word_istitle(self):
+        word = self.construct_word('Lavinia')
+        self.assertTrue(word.istitle)
+
+    def test_word_single_que(self):
+        word = self.construct_word('que')
+        self.assertFalse(word.ends_in_enclitic())
+
+    def test_word_with_que(self):
+        word = self.construct_word('inque')
+        self.assertTrue(word.ends_in_enclitic())
+        self.assertEqual('in', word.without_enclitic())
+        self.assertEqual('que', word.enclitic)
+

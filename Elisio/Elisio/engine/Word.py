@@ -22,6 +22,7 @@ class Word(object):
         self.text = Word.reconstruct_text(self.sounds)
         self.enclitic = None
         self.use_dict = use_dict
+        self.istitle = text.istitle()
 
     def __repr__(self):
         return self.syllables
@@ -102,6 +103,8 @@ class Word(object):
             return True
         # catch isolated -que
         if len(self.syllables) == 1 and self.syllables[0] in Word.enclitics:
+            return False
+        elif not self.syllables and self.text in (x.text for x in Word.enclitics):
             return False
         for encl in Word.enclitics:
             if self.text.endswith(encl.text):
@@ -186,7 +189,7 @@ class Word(object):
                 syll_struct[-1] = Weight.HEAVY
             if last_syllable == Syllable('que') and syll_struct[-1] != Weight.NONE:
                 syll_struct[-1] = Weight.LIGHT
-        if self.text.istitle():
+        if self.istitle:
             for count in range(len(syll_struct) - 1):
                 if syll_struct[count] == Weight.LIGHT:
                     syll_struct[count] = Weight.ANCEPS
