@@ -13,9 +13,6 @@ class PentameterCreator(VerseCreator):
         self.min_syllables = PentameterCreator.MIN_SYLL
         self.list = lst
 
-    def get_type(self):
-        return VerseType.PENTAMETER
-
     def get_subtype(self):
         if len(self.list) > self.max_syllables:
             raise PentameterException("too many syllables")

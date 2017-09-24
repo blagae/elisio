@@ -66,7 +66,7 @@ class Verse(object):
         self.preparse()
         self.scan()
         self.save_structure()
-        self.structure = self.save_feet()
+        self.save_feet()
         if verse and not verse.saved:
             from Elisio.models import WordOccurrence
             entries = []
@@ -107,16 +107,10 @@ class Verse(object):
                     wrd.syllables[-3].stressed = True
 
     def preparse(self):
-        pass
+        raise Exception("must be overridden")
 
     def scan(self):
-        pass
-
-    def save_feet(self):
-        result = ""
-        for foot in self.feet:
-            result += str(foot.value)
-        return result
+        raise Exception("must be overridden")
 
     def save_structure(self):
         # control mechanism and syllable filler
@@ -142,6 +136,12 @@ class Verse(object):
                 if syll.weight != Weight.NONE:
                     syll.weight = self.flat_list[i]
                     i += 1
+
+    def save_feet(self):
+        result = ""
+        for foot in self.feet:
+            result += str(foot.value)
+        self.structure = result
 
     def get_zeleny_score(self):
         score = []

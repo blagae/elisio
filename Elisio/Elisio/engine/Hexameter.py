@@ -13,9 +13,6 @@ class HexameterCreator(VerseCreator):
         self.min_syllables = HexameterCreator.MIN_SYLL
         self.list = lst
 
-    def get_type(self):
-        return VerseType.HEXAMETER
-
     def get_subtype(self):
         if len(self.list) > self.max_syllables:
             raise HexameterException("too many syllables in first pass")
