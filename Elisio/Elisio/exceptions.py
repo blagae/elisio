@@ -5,7 +5,7 @@ class ScansionException(Exception):
     """description of class"""
 
     def __init__(self, message, *exceptions):
-        super(ScansionException, self).__init__(message, *exceptions)
+        super().__init__(message, *exceptions)
         self.message = message
         self.exceptions = []
         if exceptions:

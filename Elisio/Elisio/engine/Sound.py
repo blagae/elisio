@@ -87,7 +87,7 @@ class VowelSound(Sound):
     """
 
     def __init__(self, *letters):
-        super(VowelSound, self).__init__(*letters)
+        super().__init__(*letters)
 
     def is_vowel(self):
         """ override for type checking """
@@ -108,7 +108,7 @@ class Diphthong(VowelSound):
     """
 
     def __init__(self, *letters):
-        super(Diphthong, self).__init__(*letters)
+        super().__init__(*letters)
 
     def is_diphthong(self):
         """ override for type checking """
@@ -136,7 +136,7 @@ class SemivowelSound(Sound):
     """
 
     def __init__(self, *letters):
-        super(SemivowelSound, self).__init__(*letters)
+        super().__init__(*letters)
 
     def is_semivowel(self):
         """ override for type checking """
@@ -159,7 +159,7 @@ class ConsonantSound(Sound):
     """
 
     def __init__(self, *letters):
-        super(ConsonantSound, self).__init__(*letters)
+        super().__init__(*letters)
 
     def is_consonant(self):
         """ override for type checking """
@@ -212,7 +212,7 @@ class HeavyMakerSound(ConsonantSound):
     """
 
     def __init__(self, *letters):
-        super(HeavyMakerSound, self).__init__(*letters)
+        super().__init__(*letters)
 
     def is_heavy_making(self):
         """ override for type checking """

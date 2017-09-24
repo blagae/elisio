@@ -33,7 +33,7 @@ class PentameterCreator(VerseCreator):
 
 class Pentameter(Verse):
     def __init__(self, text):
-        super(Pentameter, self).__init__(text)
+        super().__init__(text)
         self.feet = [None, None, Foot.MACRON, Foot.DACTYLUS, Foot.DACTYLUS, Foot.MACRON]
 
     def preparse(self):
@@ -56,7 +56,7 @@ class Pentameter(Verse):
 
 class SpondaicPentameter(Pentameter):
     def __init__(self, text):
-        super(SpondaicPentameter, self).__init__(text)
+        super().__init__(text)
 
     def scan_first_half(self):
         for i in range(0, 4):
@@ -67,7 +67,7 @@ class SpondaicPentameter(Pentameter):
 
 class DactylicPentameter(Pentameter):
     def __init__(self, text):
-        super(DactylicPentameter, self).__init__(text)
+        super().__init__(text)
 
     def scan_first_half(self):
         if (self.flat_list[0] == Weight.LIGHT
@@ -82,7 +82,7 @@ class DactylicPentameter(Pentameter):
 
 class BalancedPentameter(Pentameter):
     def __init__(self, text):
-        super(BalancedPentameter, self).__init__(text)
+        super().__init__(text)
 
     def scan_first_half(self):
         for i in range(1, 5):

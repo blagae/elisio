@@ -238,7 +238,7 @@ class Word(object):
 
 class FallbackWord(Word):
     def __init__(self, text, use_dict=False):
-        super(FallbackWord, self).__init__(text, use_dict)
+        super().__init__(text, use_dict)
 
     def check_consistency(self):
         pass

@@ -49,7 +49,7 @@ class Hexameter(Verse):
     """ the most popular Latin verse type """
 
     def __init__(self, text):
-        super(Hexameter, self).__init__(text)
+        super().__init__(text)
         self.feet = [None] * 6
         self.hex = None
 
@@ -98,7 +98,7 @@ class SpondaicHexameter(Hexameter):
     """ a Hexameter with 4 Spondees in its first 4 feet """
 
     def __init__(self, text):
-        super(SpondaicHexameter, self).__init__(text)
+        super().__init__(text)
 
     def scan_for_real(self):
         for i in range(0, 4):
@@ -109,7 +109,7 @@ class DactylicHexameter(Hexameter):
     """ a Hexameter with 4 Dactyls in its first 4 feet """
 
     def __init__(self, text):
-        super(DactylicHexameter, self).__init__(text)
+        super().__init__(text)
 
     def scan_for_real(self):
         for i in range(0, 4):
@@ -120,7 +120,7 @@ class SpondaicDominantHexameter(Hexameter):
     """ a Hexameter with 3 Spondees and 1 Dactyl in its first 4 feet """
 
     def __init__(self, text):
-        super(SpondaicDominantHexameter, self).__init__(text)
+        super().__init__(text)
 
     def scan_for_real(self):
         dact = False
@@ -147,7 +147,7 @@ class DactylicDominantHexameter(Hexameter):
     """ a Hexameter with 3 Dactyls and 1 Spondee in its first 4 feet """
 
     def __init__(self, text):
-        super(DactylicDominantHexameter, self).__init__(text)
+        super().__init__(text)
 
     def __do_basic_checks(self):
         """ do easy pickings for DD hexameter """
@@ -203,7 +203,7 @@ class BalancedHexameter(Hexameter):
     """ a Hexameter with 2 Spondees and 2 Dactyls in its first 4 feet"""
 
     def __init__(self, text):
-        super(BalancedHexameter, self).__init__(text)
+        super().__init__(text)
         self.dactyls = 0
         self.spondees = 0
 

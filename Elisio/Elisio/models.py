@@ -223,7 +223,7 @@ class DatabaseBatchItem(BatchItem):
 
     def save(self, *args, **kwargs):
         self.pre_save_hook()
-        super(DatabaseBatchItem, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def pre_save_hook(self):
         # rules for relations
