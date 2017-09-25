@@ -1,7 +1,7 @@
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Verse, Foot
 from Elisio.exceptions import PentameterException
-from Elisio.engine.VerseFactory import VerseCreator, VerseType
+from Elisio.engine.VerseFactory import VerseCreator
 
 
 class PentameterCreator(VerseCreator):
@@ -14,11 +14,12 @@ class PentameterCreator(VerseCreator):
         self.list = lst
 
     def get_subtype(self):
-        if len(self.list) > self.max_syllables:
+        size = len(self.list)
+        if size > self.max_syllables:
             raise PentameterException("too many syllables")
-        elif len(self.list) < self.min_syllables:
+        elif size < self.min_syllables:
             raise PentameterException("too few syllables")
-        length = len(self.list) - self.min_syllables
+        length = size - self.min_syllables
         if length == 0:
             return SpondaicPentameter
         elif length == 1:
@@ -26,9 +27,8 @@ class PentameterCreator(VerseCreator):
         elif length == 2:
             return DactylicPentameter
         else:
-            raise PentameterException("{0} is an illegal number of"
-                                      "syllables in a Pentameter"
-                                      .format(len(self.list)))
+            raise PentameterException("{0} is an illegal number of syllables in a Pentameter"
+                                      .format(size))
 
 
 class Pentameter(Verse):
@@ -59,9 +59,9 @@ class SpondaicPentameter(Pentameter):
         super().__init__(text)
 
     def scan_first_half(self):
-        for i in range(0, 4):
+        for i in range(4):
             if self.flat_list[i] == Weight.LIGHT:
-                raise PentameterException("no light syllable allowed on pos " + str(i) + " of Spondaic Pentameter")
+                raise PentameterException("no light syllable allowed on pos {0} of Spondaic Pentameter".format(i))
         self.feet[0] = self.feet[1] = Foot.SPONDAEUS
 
 

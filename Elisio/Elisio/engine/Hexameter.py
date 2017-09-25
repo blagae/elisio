@@ -1,7 +1,7 @@
 ﻿from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Verse, Foot
 from Elisio.exceptions import HexameterException
-from Elisio.engine.VerseFactory import VerseCreator, VerseType
+from Elisio.engine.VerseFactory import VerseCreator
 
 
 class HexameterCreator(VerseCreator):
@@ -14,9 +14,10 @@ class HexameterCreator(VerseCreator):
         self.list = lst
 
     def get_subtype(self):
-        if len(self.list) > self.max_syllables:
+        size = len(self.list)
+        if size > self.max_syllables:
             raise HexameterException("too many syllables in first pass")
-        elif len(self.list) < self.min_syllables:
+        elif size < self.min_syllables:
             raise HexameterException("too few syllables in first pass")
         if (self.list[-3] == Weight.HEAVY or
             self.list[-4] == Weight.HEAVY or
@@ -24,11 +25,11 @@ class HexameterCreator(VerseCreator):
             self.max_syllables -= 1
         else:
             self.min_syllables += 1
-        if len(self.list) > self.max_syllables:
+        if size > self.max_syllables:
             raise HexameterException("too many syllables in second pass")
-        elif len(self.list) < self.min_syllables:
+        elif size < self.min_syllables:
             raise HexameterException("too few syllables in second pass")
-        length = len(self.list) - self.min_syllables
+        length = size - self.min_syllables
         if length == 0:
             return SpondaicHexameter
         elif length == 1:
@@ -40,9 +41,8 @@ class HexameterCreator(VerseCreator):
         elif length == 4:
             return DactylicHexameter
         else:
-            raise HexameterException("{0} is an illegal number of"
-                                     "syllables in a Hexameter"
-                                     .format(len(self.list)))
+            raise HexameterException("{0} is an illegal number of syllables in a Hexameter"
+                                     .format(size))
 
 
 class Hexameter(Verse):
@@ -55,7 +55,7 @@ class Hexameter(Verse):
 
     def preparse(self):
         try:
-            for i in range(0, len(self.flat_list)):
+            for i in range(len(self.flat_list)):
                 if self.flat_list[i] == Weight.HEAVY and self.flat_list[i + 2] == Weight.HEAVY:
                     if self.flat_list[i + 1] == Weight.LIGHT:
                         raise HexameterException("cannot assign HEAVY to LIGHT syllable #" + str(i + 1))
@@ -69,7 +69,6 @@ class Hexameter(Verse):
 
     def scan(self):
         """ main outward-facing method to be used for scanning purposes """
-        # should be refactored
         if (self.flat_list[-3] == Weight.HEAVY or
             self.flat_list[-4] == Weight.HEAVY or
                 self.flat_list[-5] == Weight.LIGHT):
@@ -86,8 +85,8 @@ class Hexameter(Verse):
 
     def fill_other_feet(self, from_foot, to_foot):
         """ only use after certifying that all necessary info is present """
-        for count, foot in enumerate(self.feet):
-            if count < 4 and foot != from_foot:
+        for count in range(4):
+            if self.feet[count] != from_foot:
                 self.feet[count] = to_foot
 
     def scan_for_real(self):
@@ -101,7 +100,7 @@ class SpondaicHexameter(Hexameter):
         super().__init__(text)
 
     def scan_for_real(self):
-        for i in range(0, 4):
+        for i in range(4):
             self.feet[i] = Foot.SPONDAEUS
 
 
@@ -112,7 +111,7 @@ class DactylicHexameter(Hexameter):
         super().__init__(text)
 
     def scan_for_real(self):
-        for i in range(0, 4):
+        for i in range(4):
             self.feet[i] = Foot.DACTYLUS
 
 
@@ -124,23 +123,22 @@ class SpondaicDominantHexameter(Hexameter):
 
     def scan_for_real(self):
         dact = False
-        for count, weight in enumerate(self.flat_list):
-            if 0 < count < 9 and weight == Weight.LIGHT:
+        for count in range(1, 9):
+            if self.flat_list[count] == Weight.LIGHT:
                 self.feet[(count - 1) // 2] = Foot.DACTYLUS
                 dact = True
                 break
         if dact:
             self.fill_other_feet(Foot.DACTYLUS, Foot.SPONDAEUS)
         else:
-            for count, weight in enumerate(self.flat_list):
-                if 0 < count < 9 and weight == Weight.HEAVY:
+            for count in range(1, 9):
+                if self.flat_list[count] == Weight.HEAVY:
                     self.feet[(count - 1) // 2] = Foot.SPONDAEUS
-            heavies = self.feet[0:4].count(Foot.SPONDAEUS)
+            heavies = self.feet[:4].count(Foot.SPONDAEUS)
             if heavies == 3:
                 self.fill_other_feet(Foot.SPONDAEUS, Foot.DACTYLUS)
             else:
-                raise HexameterException("cannot determine full foot structure" +
-                                         " of single dactylus verse")
+                raise HexameterException("cannot determine full foot structure of single dactylus verse")
 
 
 class DactylicDominantHexameter(Hexameter):
@@ -185,13 +183,13 @@ class DactylicDominantHexameter(Hexameter):
                 self.flat_list[10] == Weight.HEAVY or
               self.flat_list[8] == Weight.LIGHT):
             self.feet[3] = Foot.SPONDAEUS
-        for i in range(0, 4):
+        for i in range(4):
             if self.feet[i] == Foot.SPONDAEUS:
                 self.fill_other_feet(Foot.SPONDAEUS, Foot.DACTYLUS)
                 return
 
         self.__do_basic_checks()
-        dactyls = self.feet[0:4].count(Foot.DACTYLUS)
+        dactyls = self.feet[:4].count(Foot.DACTYLUS)
         if dactyls == 3:
             self.fill_other_feet(Foot.DACTYLUS, Foot.SPONDAEUS)
         else:
@@ -251,19 +249,9 @@ class BalancedHexameter(Hexameter):
         """ mother method for all partial algorithms """
         if self.__do_stab_in_the_dark():
             return
-
         self.__do_basic_checks()
-
         if self.__calculate():
             return
-
-        elif (self.flat_list[3] == Weight.HEAVY and
-              self.flat_list[5] == Weight.HEAVY and
-              self.flat_list[7] == Weight.HEAVY):
-            self.feet[0] = Foot.DACTYLUS
-            self.feet[1] = Foot.SPONDAEUS
-            self.feet[2] = Foot.SPONDAEUS
-            self.feet[3] = Foot.DACTYLUS
         elif ((self.feet[0] == Foot.SPONDAEUS or
                self.feet[1] == Foot.SPONDAEUS or
                self.feet[2] == Foot.DACTYLUS or
@@ -443,8 +431,8 @@ class BalancedHexameter(Hexameter):
 
     def __calculate(self):
         """ method that will try to fill the feet """
-        self.dactyls = self.feet[0:4].count(Foot.DACTYLUS)
-        self.spondees = self.feet[0:4].count(Foot.SPONDAEUS)
+        self.dactyls = self.feet[:4].count(Foot.DACTYLUS)
+        self.spondees = self.feet[:4].count(Foot.SPONDAEUS)
         if self.spondees > 2 or self.dactyls > 2:
             raise HexameterException(
                 "{0} spondaei and {1} dactyli in balanced verse".format(self.spondees, self.dactyls))

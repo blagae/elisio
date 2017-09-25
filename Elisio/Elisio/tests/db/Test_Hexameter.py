@@ -38,7 +38,7 @@ class TestHexameter(unittest.TestCase):
         save = WordOccurrence.objects.count() > 0
         threshold = 14 if save else 12
         verses = DatabaseVerse.objects.all()
-        # verses = DatabaseVerse.objects.filter(id__lte=50)
+        # verses = DatabaseVerse.objects.filter(id__lte=500)
         worked, failed, worked_wo_dict = scan_verses(verses, "test_hexameter_scan_all")
         # canary test: over 91% of verses must succeed
         result = str(worked_wo_dict) + " worked without dict, " + str(worked) + " worked, " + str(failed) + " failed"
