@@ -7,6 +7,11 @@ set_django()
 
 
 class TestTextDecorator(unittest.TestCase):
+
+    def test_dec_type_error(self):
+        with self.assertRaises(TypeError):
+            TextDecorator("Arma virumque cano, Troiae qui primus ab oris")
+
     def test_dec_basic(self):
         verse = VerseFactory.create("Arma virumque cano, Troiae qui primus ab oris", classes=VerseType.HEXAMETER)
         s = TextDecorator(verse).decorate()

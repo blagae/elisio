@@ -4,8 +4,9 @@ from Elisio.engine.Syllable import Weight
 
 class TextDecorator(object):
     def __init__(self, verse):
-        if isinstance(verse, Verse):
-            self.verse = verse
+        if not isinstance(verse, Verse):
+            raise TypeError("parameter must be a verse")
+        self.verse = verse
 
     def decorate(self):
         result = ''
@@ -21,7 +22,7 @@ class TextDecorator(object):
                         result += vrs[idx][lettercount]
                         lettercount += 1
                     if indx == syll.get_vowel_location():
-                        result += self.glyph(syll.weight)
+                        result += TextDecorator.glyph(syll.weight)
             if len(vrs[idx]) > lettercount:
                 result += vrs[idx][-1]
             result += ' '

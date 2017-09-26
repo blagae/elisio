@@ -170,16 +170,9 @@ class Syllable(object):
         return self.sounds[0].is_heavy_making()
 
     def get_vowel_location(self):
-        indx = None
         for idx, sound in enumerate(reversed(self.sounds)):
-            if sound.is_vowel():
-                indx = idx
-                break
-            if sound.is_semivowel():
-                indx = idx
-                break
-        if indx is not None:
-            return len(self.sounds) - indx - 1
+            if sound.is_vowel() or sound.is_semivowel():
+                return len(self.sounds) - idx - 1
         raise SyllableException("no vowel found in Syllable" + str(self.sounds))
 
     def get_vowel(self):

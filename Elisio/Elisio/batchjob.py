@@ -78,7 +78,7 @@ def fill_xml_object():
             count += 1
             verse_type_field = Et.SubElement(obj, "field",
                                              {'type': 'enum.EnumField',
-                                             'name': 'verseType'})
+                                              'name': 'verseType'})
             vf = poem.verseForm.get_verse_types()
             current_form = vf[count % len(vf)]
             verse_type_field.text = str(current_form.value)
