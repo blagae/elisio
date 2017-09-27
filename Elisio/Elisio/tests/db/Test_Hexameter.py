@@ -9,7 +9,8 @@ from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from Elisio.tests.db.Test_Verse import TYPICAL_VERSE
 
 
-from Elisio.models import DatabaseVerse, WordOccurrence
+from Elisio.models.metadata import DatabaseVerse
+from Elisio.models.scan import WordOccurrence
 
 
 class TestHexameter(unittest.TestCase):

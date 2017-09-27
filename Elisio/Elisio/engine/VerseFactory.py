@@ -97,7 +97,7 @@ class VersePreprocessor(object):
 
     @staticmethod
     def is_from_db(verse):
-        from Elisio.models import DatabaseVerse
+        from Elisio.models.metadata import DatabaseVerse
         return isinstance(verse, DatabaseVerse)
 
     def get_text(self):

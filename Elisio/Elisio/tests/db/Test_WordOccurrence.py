@@ -5,7 +5,7 @@ from Elisio.utils import set_django
 
 set_django()
 
-from Elisio.models import WordOccurrence
+from Elisio.models.scan import WordOccurrence
 
 
 class TestWordOccurrence(TestCase):

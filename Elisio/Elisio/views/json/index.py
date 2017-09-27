@@ -10,7 +10,7 @@ from django.http import HttpResponse, Http404
 from Elisio.engine.TextDecorator import TextDecorator
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from Elisio.exceptions import ScansionException
-from Elisio.models import Author, Book, Opus, Poem, DatabaseVerse
+from Elisio.models.metadata import Author, Book, Opus, Poem, DatabaseVerse
 from Elisio.numerals import int_to_roman
 
 

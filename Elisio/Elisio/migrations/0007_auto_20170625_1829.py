@@ -30,11 +30,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='databasebatchitem',
             name='object_type',
-            field=enumfields.fields.EnumField(enum=Elisio.models.ObjectType, max_length=10, null=True),
+            field=enumfields.fields.EnumField(enum=Elisio.models.scan.ObjectType, max_length=10, null=True),
         ),
         migrations.AlterField(
             model_name='databasebatchitem',
             name='relation',
-            field=enumfields.fields.EnumField(enum=Elisio.models.RelationType, max_length=10, null=True),
+            field=enumfields.fields.EnumField(enum=Elisio.models.scan.RelationType, max_length=10, null=True),
         ),
     ]

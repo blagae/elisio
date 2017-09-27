@@ -65,7 +65,7 @@ class Word(object):
             self.use_dictionary()
 
     def use_dictionary(self):
-        from Elisio.models import WordOccurrence
+        from Elisio.models.scan import WordOccurrence
         structs = []
         for hit in WordOccurrence.objects.filter(word=self.text):
             strc = hit.struct
@@ -123,7 +123,7 @@ class Word(object):
         if the word can be found the repository of Deviant Words,
         we should use that instead
         """
-        from Elisio.models import DeviantWord
+        from Elisio.models.deviant import DeviantWord
         deviant = DeviantWord.find(self.without_enclitic())
         if deviant:
             self.syllables = deviant.get_syllables()

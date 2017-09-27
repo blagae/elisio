@@ -2,7 +2,7 @@
 import xml.etree.ElementTree as Et
 import xml.dom.minidom as mini
 from Elisio.numerals import roman_to_int, int_to_roman
-from Elisio.models import DatabaseVerse, Author, Book, Opus, Poem
+from Elisio.models.metadata import DatabaseVerse, Author, Book, Opus, Poem
 from os import listdir, getcwd
 from os.path import isfile, join
 
@@ -166,7 +166,7 @@ def find_all_verses_containing(regex, must_be_parsed=False):
 def scan_verses(dbverses, initiator):
     from Elisio.engine.VerseFactory import VerseFactory
     from Elisio.exceptions import VerseException, ScansionException
-    from Elisio.models import ScanVerseResult, ScanSession, Batch, DatabaseBatchItem, ObjectType
+    from Elisio.models.scan import ScanVerseResult, ScanSession, Batch, DatabaseBatchItem, ObjectType
     worked = 0
     worked_without_dict = 0
     failed = 0

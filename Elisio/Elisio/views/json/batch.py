@@ -1,6 +1,6 @@
 import json
 from django.http import HttpResponse, Http404, HttpResponseForbidden
-from Elisio.models import Batch, DatabaseBatchItem, InputBatchItem, ScanSession, ObjectType, RelationType
+from Elisio.models.scan import Batch, DatabaseBatchItem, InputBatchItem, ScanSession, ObjectType, RelationType
 from random import randint
 from Elisio.engine.VerseFactory import VerseType
 from django.db.models import ObjectDoesNotExist

@@ -8,7 +8,7 @@ from Elisio.engine.VerseFactory import VerseFactory
 
 set_django()
 
-from Elisio.models import DatabaseVerse
+from Elisio.models.metadata import DatabaseVerse
 
 TYPICAL_VERSE = "Arma virumque cano, Troiae qui primus ab oris"
 WORDS = ['Arma', 'virumque', 'cano', 'Troiae', 'qui', 'primus', 'ab', 'oris']

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Elisio.models import Author, Genre, Opus, Book, Poem, Period
+from Elisio.models.metadata import Author, Genre, Opus, Book, Poem, Period
 
 # currently no need for admin classes
 admin.site.register(Period)
