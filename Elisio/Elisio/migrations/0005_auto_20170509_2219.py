@@ -4,7 +4,7 @@ import Elisio.utils
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import Elisio.engine.VerseFactory
+import Elisio.engine.VerseType
 import enumfields.fields
 
 
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='scanverseresult',
             name='scanned_as',
-            field=enumfields.fields.EnumField(default=1, enum=Elisio.engine.VerseFactory.VerseType, max_length=10),
+            field=enumfields.fields.EnumField(default=1, enum=Elisio.engine.VerseType.VerseType, max_length=10),
             preserve_default=False,
         ),
     ]

@@ -5,7 +5,8 @@ set_django()
 from Elisio.batchjob import scan_verses
 from Elisio.engine.Verse import Verse, Foot
 from Elisio.engine.Hexameter import Hexameter
-from Elisio.engine.VerseFactory import VerseFactory, VerseType
+from Elisio.engine.VerseType import VerseType
+from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.tests.db.Test_Verse import TYPICAL_VERSE
 
 

@@ -3,7 +3,7 @@ from enumfields import EnumField
 from Elisio.utils import get_commit
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from Elisio.engine.VerseFactory import VerseType
+from Elisio.engine.VerseType import VerseType
 from model_utils.managers import InheritanceManager
 import enum
 from functools import total_ordering

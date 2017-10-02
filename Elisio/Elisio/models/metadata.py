@@ -1,6 +1,6 @@
 from django.db.models import Model, CharField, ForeignKey, IntegerField, BooleanField, Max
 from enumfields import EnumField
-from Elisio.engine.VerseFactory import VerseType, VerseForm
+from Elisio.engine.VerseType import VerseType, VerseForm
 
 
 class Period(Model):
