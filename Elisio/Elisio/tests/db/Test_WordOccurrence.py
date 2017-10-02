@@ -5,6 +5,7 @@ from Elisio.utils import set_django
 
 set_django()
 
+from Elisio.engine.Bridge import use_dictionary
 from Elisio.models.scan import WordOccurrence
 
 
@@ -13,7 +14,7 @@ class TestWordOccurrence(TestCase):
         WordOccurrence.objects.create(word="se", struct="3")
         WordOccurrence.objects.create(word="se", struct="2")
         word = Word("se", True)
-        word.split()
+        word.split(use_dictionary=use_dictionary)
         weights = [Weight.HEAVY]
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -21,14 +22,14 @@ class TestWordOccurrence(TestCase):
         WordOccurrence.objects.create(word="se", struct="0")
         WordOccurrence.objects.create(word="se", struct="2")
         word = Word("se", True)
-        word.split()
+        word.split(use_dictionary=use_dictionary)
         weights = [Weight.HEAVY]
         self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_se_dict_heavy(self):
         WordOccurrence.objects.create(word="se", struct="2")
         word = Word("se", True)
-        word.split()
+        word.split(use_dictionary=use_dictionary)
         weights = [Weight.HEAVY]
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -36,7 +37,7 @@ class TestWordOccurrence(TestCase):
         WordOccurrence.objects.create(word="se", struct="2")
         WordOccurrence.objects.create(word="se", struct="3")
         word = Word("se", True)
-        word.split()
+        word.split(use_dictionary=use_dictionary)
         weights = [Weight.HEAVY]
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -44,7 +45,7 @@ class TestWordOccurrence(TestCase):
         WordOccurrence.objects.create(word="se", struct="3")
         WordOccurrence.objects.create(word="se", struct="2")
         word = Word("se", True)
-        word.split()
+        word.split(use_dictionary=use_dictionary)
         weights = [Weight.HEAVY]
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -52,7 +53,7 @@ class TestWordOccurrence(TestCase):
         WordOccurrence.objects.create(word="ait", struct="11")
         WordOccurrence.objects.create(word="ait", struct="13")
         word = Word("ait", True)
-        word.split()
+        word.split(use_dictionary=use_dictionary)
         weights = [Weight.LIGHT, Weight.LIGHT]
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -61,6 +62,6 @@ class TestWordOccurrence(TestCase):
         WordOccurrence.objects.create(word="et", struct="3")
         WordOccurrence.objects.create(word="et", struct="2")
         word = Word("et", True)
-        word.split()
+        word.split(use_dictionary=use_dictionary)
         weights = [Weight.ANCEPS]
         self.assertEqual(word.get_syllable_structure(), weights)

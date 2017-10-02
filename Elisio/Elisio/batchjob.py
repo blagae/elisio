@@ -141,11 +141,9 @@ def sync_db():
 
 
 def find_all_verses_containing(regex, must_be_parsed=False):
-    from Elisio.utils import set_django
     from Elisio.engine.VerseFactory import VerseFactory
     from Elisio.exceptions import ScansionException
     import re
-    set_django()
     dbverses = DatabaseVerse.objects.all()
     total = []
     for dbverse in dbverses:

@@ -117,14 +117,19 @@ class VersePreprocessor(object):
     def layer(self):
         """ get available weights of syllables """
         self.split()
-        result = []
+        from Elisio.engine.Bridge import split_from_deviant_word, use_dictionary
+        for word in self.words:
+            if self.use_dict:
+                word.analyze_structure(split_from_deviant_word, use_dictionary)
+            else:
+                word.analyze_structure(split_from_deviant_word)
         for count, word in enumerate(self.words):
             try:
-                syll_struct = word.get_syllable_structure(self.words[count + 1])
+                word.apply_word_contact(self.words[count + 1])
             except IndexError:
-                syll_struct = word.get_syllable_structure()
-            result.append(syll_struct)
-        return result
+                # last word in verse
+                pass
+        return [word.get_syllable_structure() for word in self.words]
 
     def get_flat_list(self):
         layers = self.layer()

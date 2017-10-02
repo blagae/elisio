@@ -83,18 +83,6 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.syllables, EXPECTED_SYLLABLE_LIST)
 
-    def test_word_create_deviant(self):
-        word = self.construct_word('lavinia')
-        word.split()
-        expected = [Syllable('la'), Syllable('vin'), Syllable('ia')]
-        self.assertEqual(word.syllables, expected)
-
-    def test_word_create_deviant_smvl(self):
-        word = self.construct_word('lauinja')
-        word.split()
-        expected = [Syllable('la'), Syllable('vin'), Syllable('ia')]
-        self.assertEqual(word.syllables, expected)
-
     def test_word_has_enclitic(self):
         word1 = self.construct_word()
         self.assertFalse(word1.ends_in_enclitic())
@@ -210,33 +198,12 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
-    def test_word_split_lexical(self):
-        """ common word must be in the dictionary """
-        word = self.construct_word('cui')
-        syllable_list = [Syllable('cui', False)]
-        word.split()
-        self.assertEqual(word.syllables, syllable_list)
-
-    def test_word_split_lexical_exc(self):
-        """ common word must be in the dictionary """
-        word = self.construct_word('huic')
-        syllable_list = [Syllable('huic', False)]
-        word.split()
-        self.assertEqual(word.syllables, syllable_list)
-
     def test_word_split_weird_word(self):
         """ common name must be in the dictionary """
         word = self.construct_word('troiae')
         syllable_list = [Syllable('tro'), Syllable('iae')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
-
-    def test_word_scan_weird_word(self):
-        """ common name must be in the dictionary """
-        word = self.construct_word('troiae')
-        weights = [Weight.HEAVY, Weight.HEAVY]
-        word.split()
-        self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_word_split_no_lexical_exc(self):
         """ diphthong way too rare for a rule """
@@ -401,13 +368,6 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
-    def test_word_split_semiv_enclitic(self):
-        """ scan word with final -e as anceps """
-        word = self.construct_word('cuique')
-        syllable_list = [Syllable('cui', False), Syllable('que')]
-        word.split()
-        self.assertEqual(word.syllables, syllable_list)
-
     def test_word_scan_identical_sound(self):
         """ check reworking of word-internal sounds """
         word = self.construct_word('memor')
@@ -425,13 +385,6 @@ class TestWord(unittest.TestCase):
     def test_word_scan_internal_nh(self):
         word = self.construct_word('inhumati')
         weights = [Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS, Weight.HEAVY]
-        word.split()
-        self.assertEqual(word.get_syllable_structure(), weights)
-
-    def test_word_scan_weird_word_two(self):
-        """ proper name scanning """
-        word = self.construct_word('troas')
-        weights = [Weight.HEAVY, Weight.HEAVY]
         word.split()
         self.assertEqual(word.get_syllable_structure(), weights)
 

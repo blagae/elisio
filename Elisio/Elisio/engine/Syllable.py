@@ -247,18 +247,6 @@ class Syllable(object):
             return Weight.HEAVY
         return Weight.ANCEPS
 
-    @staticmethod
-    def create_syllable_from_database(syll):
-        """
-        The factory method that will create a syllable from the database
-        with its given weight (if stored in the database)
-        """
-        from Elisio.models.deviant import DeviantSyllable
-        if not isinstance(syll, DeviantSyllable):
-            raise SyllableException("database error with Deviant Syllable")
-        result = Syllable(syll.contents, False, syll.weight)
-        return result
-
 
 class SyllableSplitter(object):
     shortEndVowels = []

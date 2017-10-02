@@ -27,7 +27,7 @@ class DeviantWord(Model):
         sylls = DeviantSyllable.objects.filter(word=self).order_by('sequence')
         result = []
         for syll in sylls:
-            result.append(Syllable.create_syllable_from_database(syll))
+            result.append(Syllable(syll.contents, False, syll.weight))
         return result
 
     @staticmethod

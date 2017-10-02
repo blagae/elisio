@@ -6,8 +6,17 @@ from Elisio.utils import set_django
 
 set_django()
 
+from Elisio.engine.Bridge import split_from_deviant_word
+
 
 class TestDeviantWord(unittest.TestCase):
+
+    @staticmethod
+    def construct_word(word):
+        """ Construct a word object from a given text """
+        constructed_word = Word(word)
+        return constructed_word
+
     # TODO: build tests for words that are actually deviant (i.e. not names)
     # ----
     # this test class requires that a DeviantWord named aene[ai].*
@@ -58,5 +67,53 @@ class TestDeviantWord(unittest.TestCase):
         word = Word('ianua')
         weights = [Weight.ANCEPS, Weight.LIGHT, Weight.ANCEPS]
         sylls = [Syllable('ia'), Syllable('nu'), Syllable('a')]
+        word.split(split_from_deviant_word)
         self.assertEqual(weights, word.get_syllable_structure())
         self.assertEqual(sylls, word.syllables)
+
+    def test_word_split_semiv_enclitic(self):
+        """ scan word with final -e as anceps """
+        word = self.construct_word('cuique')
+        syllable_list = [Syllable('cui', False), Syllable('que')]
+        word.split(split_from_deviant_word)
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_word_split_lexical(self):
+        """ common word must be in the dictionary """
+        word = self.construct_word('cui')
+        syllable_list = [Syllable('cui', False)]
+        word.split(split_from_deviant_word)
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_word_split_lexical_exc(self):
+        """ common word must be in the dictionary """
+        word = self.construct_word('huic')
+        syllable_list = [Syllable('huic', False)]
+        word.split(split_from_deviant_word)
+        self.assertEqual(word.syllables, syllable_list)
+
+    def test_word_scan_weird_word_two(self):
+        """ proper name scanning """
+        word = self.construct_word('troas')
+        weights = [Weight.HEAVY, Weight.HEAVY]
+        word.split(split_from_deviant_word)
+        self.assertEqual(word.get_syllable_structure(), weights)
+
+    def test_word_create_deviant(self):
+        word = self.construct_word('lavinia')
+        word.split(split_from_deviant_word)
+        expected = [Syllable('la'), Syllable('vin'), Syllable('ia')]
+        self.assertEqual(word.syllables, expected)
+
+    def test_word_create_deviant_smvl(self):
+        word = self.construct_word('lauinja')
+        word.split(split_from_deviant_word)
+        expected = [Syllable('la'), Syllable('vin'), Syllable('ia')]
+        self.assertEqual(word.syllables, expected)
+
+    def test_word_scan_weird_word(self):
+        """ common name must be in the dictionary """
+        word = self.construct_word('troiae')
+        weights = [Weight.HEAVY, Weight.HEAVY]
+        word.split(split_from_deviant_word)
+        self.assertEqual(word.get_syllable_structure(), weights)
