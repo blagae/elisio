@@ -1,7 +1,13 @@
+from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Word import Word
 from Elisio.models.deviant import DeviantWord
 from Elisio.models.scan import WordOccurrence
+from Elisio.models.metadata import DatabaseVerse
+
+
+def is_from_db(verse):
+    return isinstance(verse, DatabaseVerse)
 
 
 def split_from_deviant_word(word):
@@ -53,3 +59,31 @@ def use_dictionary(word):
                     pass
             if val:
                 word.syllables[count].weight = Weight(int(val))
+
+
+def save(verse, db_id):
+    entries = []
+    for count, wrd in enumerate(verse.words):
+        strct = ""
+        txt = wrd.text
+        for cnt, syll in enumerate(wrd.syllables):
+            strct += str(syll.weight.value)
+            if cnt == len(wrd.syllables) - 1 and count < len(verse.words) - 1:
+                if wrd.may_be_heavy_by_position(verse.words[count + 1]):
+                    if syll.weight != Weight.NONE:
+                        strct = strct[:-1]
+                        strct += str(Weight.ANCEPS.value)
+        if wrd.ends_in_enclitic():
+            strct = strct[:-1]
+            txt = wrd.without_enclitic()
+            if strct[-1] == str(Weight.HEAVY.value):
+                ltr = SoundFactory.create(txt[-1])
+                if ltr.is_consonant() and not ltr.is_heavy_making():
+                    strct = strct[:-1]
+                    strct += str(Weight.ANCEPS.value)
+        if wrd.ends_in_variable_declension():
+            strct = strct[:-1]
+            strct += str(Weight.ANCEPS.value)
+        entries.append(WordOccurrence(word=txt, struct=strct, verse_id=db_id))
+    if len(entries) > 0:
+        WordOccurrence.objects.bulk_create(entries)

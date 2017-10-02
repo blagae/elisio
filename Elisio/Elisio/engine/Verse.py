@@ -1,6 +1,5 @@
 ﻿""" the main module for parsing verses """
 import enum
-from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Weight
 from Elisio.exceptions import VerseException, IllegalFootException
 
@@ -62,38 +61,16 @@ class Verse(object):
         """ Verses are equal if they have exactly the same characters """
         return self.text == other.text
 
-    def parse(self, verse=None):
+    def parse(self, verse=None, save=None):
         self.preparse()
         self.scan()
         self.save_structure()
         self.save_feet()
-        if verse and not verse.saved:
-            from Elisio.models import WordOccurrence
-            entries = []
-            for count, wrd in enumerate(self.words):
-                strct = ""
-                txt = wrd.text
-                for cnt, syll in enumerate(wrd.syllables):
-                    strct += str(syll.weight.value)
-                    if cnt == len(wrd.syllables) - 1 and count < len(self.words) - 1:
-                        if wrd.may_be_heavy_by_position(self.words[count + 1]):
-                            if syll.weight != Weight.NONE:
-                                strct = strct[:-1]
-                                strct += str(Weight.ANCEPS.value)
-                if wrd.ends_in_enclitic():
-                    strct = strct[:-1]
-                    txt = wrd.without_enclitic()
-                    if strct[-1] == str(Weight.HEAVY.value):
-                        ltr = SoundFactory.create(txt[-1])
-                        if ltr.is_consonant() and not ltr.is_heavy_making():
-                            strct = strct[:-1]
-                            strct += str(Weight.ANCEPS.value)
-                if wrd.ends_in_variable_declension():
-                    strct = strct[:-1]
-                    strct += str(Weight.ANCEPS.value)
-                entries.append(WordOccurrence(word=txt, struct=strct, verse=verse))
-            if len(entries) > 0:
-                WordOccurrence.objects.bulk_create(entries)
+        try:
+            if verse and not verse.saved:
+                save(self, verse.id)
+        except TypeError:
+            pass
         self.add_accents()
 
     def add_accents(self):

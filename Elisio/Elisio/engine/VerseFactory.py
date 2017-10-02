@@ -3,6 +3,7 @@ import collections
 from Elisio.engine.Word import Word, Weight
 from Elisio.exceptions import ScansionException, VerseException
 from Elisio.engine.VerseType import VerseType
+from Elisio.engine.DatabaseBridge import split_from_deviant_word, use_dictionary, save, is_from_db
 
 
 class VerseFactory(object):
@@ -62,13 +63,8 @@ class VersePreprocessor(object):
         else:
             self.classes = VerseType.UNKNOWN.get_creators()
 
-    @staticmethod
-    def is_from_db(verse):
-        from Elisio.models.metadata import DatabaseVerse
-        return isinstance(verse, DatabaseVerse)
-
     def get_text(self):
-        if VersePreprocessor.is_from_db(self.verse):
+        if is_from_db(self.verse):
             return self.verse.contents
         return self.verse
 
@@ -84,7 +80,6 @@ class VersePreprocessor(object):
     def layer(self):
         """ get available weights of syllables """
         self.split()
-        from Elisio.engine.Bridge import split_from_deviant_word, use_dictionary
         for word in self.words:
             if self.use_dict:
                 word.analyze_structure(split_from_deviant_word, use_dictionary)
@@ -116,10 +111,10 @@ class VersePreprocessor(object):
             verse.words = self.words
             verse.flat_list = self.flat_list.copy()
             try:
-                if VersePreprocessor.is_from_db(self.verse):
-                    verse.parse(self.verse)
+                if is_from_db(self.verse):
+                    verse.parse(self.verse, save)
                 else:
-                    verse.parse()
+                    verse.parse(None, save)
                 return verse
             except ScansionException as exc:
                 problems.append(exc)

@@ -5,7 +5,7 @@ from Elisio.utils import set_django
 
 set_django()
 
-from Elisio.engine.Bridge import use_dictionary
+from Elisio.engine.DatabaseBridge import use_dictionary
 from Elisio.models.scan import WordOccurrence
 
 

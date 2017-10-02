@@ -6,7 +6,7 @@ from Elisio.utils import set_django
 
 set_django()
 
-from Elisio.engine.Bridge import split_from_deviant_word
+from Elisio.engine.DatabaseBridge import split_from_deviant_word
 
 
 class TestDeviantWord(unittest.TestCase):
