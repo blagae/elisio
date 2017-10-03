@@ -3,7 +3,6 @@ import unittest
 from Elisio.engine.Verse import Verse
 from Elisio.utils import set_django
 from Elisio.engine.Word import Word
-from Elisio.engine.Syllable import Weight
 from Elisio.engine.VerseFactory import VerseFactory
 
 set_django()

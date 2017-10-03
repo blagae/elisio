@@ -208,8 +208,6 @@ def scan_verses(dbverses, initiator):
                 except IndexError:
                     scan_result.failure = exc.message[:69]
                 scan_result.structure = ""
-            except SyllableException as exc:
-                print(dbverse.id)
             else:
                 worked += 1
         except ScansionException as exc:
