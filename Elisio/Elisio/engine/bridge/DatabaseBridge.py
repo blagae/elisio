@@ -1,7 +1,7 @@
 from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Word import Word
-from Elisio.engine.bridge.Bridge import Bridge
+from Elisio.engine.bridge.Bridge import Bridge, assign_weights_from_dict
 from Elisio.models.deviant import DeviantWord
 from Elisio.models.scan import WordOccurrence
 
@@ -42,25 +42,7 @@ class DatabaseBridge(Bridge):
                 strc = strc[:-1]
             if strc not in structs:
                 structs.append(strc)
-        if len(structs) == 1:
-            for count, wght in enumerate(structs[0]):
-                word.syllables[count].weight = Weight(int(wght))
-        if len(structs) > 1:
-            structs.sort(key=len, reverse=True)
-            for count in range(len(structs[0])):
-                val = None
-                for strc in structs:
-                    try:
-                        if not val and (strc[count] != "3" and strc[count] != "0"):
-                            val = strc[count]
-                        elif val != strc[count]:
-                            if strc[count] != "3" and strc[count] != "0":
-                                val = "3"
-                                break
-                    except IndexError:
-                        pass
-                if val:
-                    word.syllables[count].weight = Weight(int(val))
+        assign_weights_from_dict(word, structs)
 
     def save(self, verse, db_id):
         entries = []

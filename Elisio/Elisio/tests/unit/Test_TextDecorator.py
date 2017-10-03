@@ -1,10 +1,7 @@
 import unittest
 from Elisio.engine.TextDecorator import TextDecorator
-from Elisio.utils import set_django
 from Elisio.engine.VerseType import VerseType
 from Elisio.engine.VerseFactory import VerseFactory
-
-set_django()
 
 
 class TestTextDecorator(unittest.TestCase):

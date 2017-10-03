@@ -2,7 +2,6 @@
 
 import unittest
 from Elisio.engine.Verse import Weight
-from Elisio.utils import set_django
 from Elisio.engine.Syllable import Syllable
 from Elisio.engine.Word import Word
 from Elisio.exceptions import WordException
@@ -19,11 +18,6 @@ for syllable in SYLLABLES:
 
 class TestWord(unittest.TestCase):
     """ class for integration tests of Word """
-
-    @classmethod
-    def setUpClass(cls):
-        """ we need django for this class """
-        set_django()
 
     @staticmethod
     def construct_word(word=TYPICAL_WORD):
