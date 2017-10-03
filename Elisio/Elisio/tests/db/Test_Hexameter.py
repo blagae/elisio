@@ -1,4 +1,5 @@
 ﻿import unittest
+
 from Elisio.utils import set_django
 set_django()
 
@@ -9,6 +10,7 @@ from Elisio.engine.VerseType import VerseType
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.tests.db.Test_Verse import TYPICAL_VERSE
 
+from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
 
 from Elisio.models.metadata import DatabaseVerse
 from Elisio.models.scan import WordOccurrence
@@ -54,7 +56,7 @@ class TestHexameter(unittest.TestCase):
 
     def test_hexameter_scan_for_debug(self):
         """
-        21: hinc populum late regem belloque superbum
+        12811: nascetur pulchra Troianus origine Caesar,
         """
-        dbverse = DatabaseVerse.objects.get(pk=1)
-        VerseFactory.create(dbverse, classes=VerseType.HEXAMETER)
+        dbverse = DatabaseVerse.objects.get(pk=12811)
+        VerseFactory.create(dbverse, DatabaseBridge(), classes=VerseType.HEXAMETER)

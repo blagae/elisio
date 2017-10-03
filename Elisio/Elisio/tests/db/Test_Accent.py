@@ -6,6 +6,7 @@ set_django()
 
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.tests.db.Test_Verse import TYPICAL_VERSE
+from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
 
 
 class TestAccent(unittest.TestCase):
@@ -37,7 +38,7 @@ class TestAccent(unittest.TestCase):
         self.assertEqual(verse.words[7].syllables[1].stressed, False)
 
     def test_accent_lavinia(self):
-        verse = VerseFactory.create("Italiam fato profugus Laviniaque venit", classes=VerseType.HEXAMETER)
+        verse = VerseFactory.create("Italiam fato profugus Laviniaque venit", DatabaseBridge(), classes=VerseType.HEXAMETER)
         verse.parse()
         # italiam
         self.assertEqual(verse.words[0].syllables[0].stressed, False)

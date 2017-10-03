@@ -125,14 +125,14 @@ class TestVerse(unittest.TestCase):
         """ A regular verse must get all relevant scansion information
         Example:
         arma virumque cano troiae qui primus ab oris
-        _  x  x _   u  x _   _ _    _   x x  x  x _
+        _  x  x _   u  x _   x _    _   x x  x  x _
         Note that this archetypical verse does not test for a lot
         """
         layers = VerseFactory.layer(TYPICAL_VERSE)
         expected_result = [[Weight.HEAVY, Weight.ANCEPS, ],
                            [Weight.ANCEPS, Weight.HEAVY, Weight.LIGHT, ],
                            [Weight.ANCEPS, Weight.HEAVY, ],
-                           [Weight.HEAVY, Weight.HEAVY, ],
+                           [Weight.ANCEPS, Weight.HEAVY, ],
                            [Weight.HEAVY, ],
                            [Weight.ANCEPS, Weight.ANCEPS, ],
                            [Weight.ANCEPS, ],

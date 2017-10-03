@@ -5,7 +5,7 @@ from Elisio.utils import set_django
 
 set_django()
 
-from Elisio.engine.DatabaseBridge import use_dictionary
+from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
 from Elisio.models.scan import WordOccurrence
 
 
@@ -13,47 +13,47 @@ class TestWordOccurrence(TestCase):
     def test_se_dict_anceps(self):
         WordOccurrence.objects.create(word="se", struct="3")
         WordOccurrence.objects.create(word="se", struct="2")
-        word = Word("se", True)
-        word.split(use_dictionary=use_dictionary)
+        word = Word("se")
+        word.split(DatabaseBridge())
         weights = [Weight.HEAVY]
         self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_se_dict_elided(self):
         WordOccurrence.objects.create(word="se", struct="0")
         WordOccurrence.objects.create(word="se", struct="2")
-        word = Word("se", True)
-        word.split(use_dictionary=use_dictionary)
+        word = Word("se")
+        word.split(DatabaseBridge())
         weights = [Weight.HEAVY]
         self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_se_dict_heavy(self):
         WordOccurrence.objects.create(word="se", struct="2")
-        word = Word("se", True)
-        word.split(use_dictionary=use_dictionary)
+        word = Word("se")
+        word.split(DatabaseBridge())
         weights = [Weight.HEAVY]
         self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_se_dict_order1(self):
         WordOccurrence.objects.create(word="se", struct="2")
         WordOccurrence.objects.create(word="se", struct="3")
-        word = Word("se", True)
-        word.split(use_dictionary=use_dictionary)
+        word = Word("se")
+        word.split(DatabaseBridge())
         weights = [Weight.HEAVY]
         self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_se_dict_order2(self):
         WordOccurrence.objects.create(word="se", struct="3")
         WordOccurrence.objects.create(word="se", struct="2")
-        word = Word("se", True)
-        word.split(use_dictionary=use_dictionary)
+        word = Word("se")
+        word.split(DatabaseBridge())
         weights = [Weight.HEAVY]
         self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_ait_dict(self):
         WordOccurrence.objects.create(word="ait", struct="11")
         WordOccurrence.objects.create(word="ait", struct="13")
-        word = Word("ait", True)
-        word.split(use_dictionary=use_dictionary)
+        word = Word("ait")
+        word.split(DatabaseBridge())
         weights = [Weight.LIGHT, Weight.LIGHT]
         self.assertEqual(word.get_syllable_structure(), weights)
 
@@ -61,7 +61,7 @@ class TestWordOccurrence(TestCase):
         WordOccurrence.objects.create(word="et", struct="1")
         WordOccurrence.objects.create(word="et", struct="3")
         WordOccurrence.objects.create(word="et", struct="2")
-        word = Word("et", True)
-        word.split(use_dictionary=use_dictionary)
+        word = Word("et")
+        word.split(DatabaseBridge())
         weights = [Weight.ANCEPS]
         self.assertEqual(word.get_syllable_structure(), weights)

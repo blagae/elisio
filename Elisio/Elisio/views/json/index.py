@@ -9,6 +9,8 @@ from django.http import HttpResponse, Http404
 
 from Elisio.engine.TextDecorator import TextDecorator
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
+from Elisio.engine.bridge.Bridge import DummyBridge
+from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
 from Elisio.exceptions import ScansionException
 from Elisio.models.metadata import Author, Book, Opus, Poem, DatabaseVerse
 from Elisio.numerals import int_to_roman
@@ -73,7 +75,7 @@ def scan_verse_text(request, txt, metadata=None):
         metadata = {'verse': {'text': txt}}
     data = {}
     try:
-        dic = 'disableDict' not in request.GET
+        dic = DummyBridge() if 'disableDict' not in request.GET else DatabaseBridge()
         try:
             verse_type = VerseType[request.GET['type'].upper()]
         except KeyError:

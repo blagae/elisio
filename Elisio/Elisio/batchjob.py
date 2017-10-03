@@ -1,6 +1,8 @@
 """ module for creating an xml file from given input """
 import xml.etree.ElementTree as Et
 import xml.dom.minidom as mini
+
+from Elisio.exceptions import SyllableException
 from Elisio.numerals import roman_to_int, int_to_roman
 from Elisio.models.metadata import DatabaseVerse, Author, Book, Opus, Poem
 from os import listdir, getcwd
@@ -165,6 +167,7 @@ def scan_verses(dbverses, initiator):
     from Elisio.engine.VerseFactory import VerseFactory
     from Elisio.exceptions import VerseException, ScansionException
     from Elisio.models.scan import ScanVerseResult, ScanSession, Batch, DatabaseBatchItem, ObjectType
+    from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
     worked = 0
     worked_without_dict = 0
     failed = 0
@@ -187,13 +190,13 @@ def scan_verses(dbverses, initiator):
         scan_result.scanned_as = dbverse.verseType
         scan_result.batchItem = batch_item
         try:
-            verse = VerseFactory.create(dbverse, False, classes=dbverse.verseType)
+            verse = VerseFactory.create(dbverse, DatabaseBridge(False), classes=dbverse.verseType)
             dbverse.saved = True
             scan_result.structure = verse.structure
             worked_without_dict += 1
         except VerseException:
             try:
-                verse = VerseFactory.create(dbverse, True, classes=dbverse.verseType)
+                verse = VerseFactory.create(dbverse, DatabaseBridge(), classes=dbverse.verseType)
                 dbverse.saved = True
                 scan_result.structure = verse.structure
             except VerseException as exc:
@@ -205,6 +208,8 @@ def scan_verses(dbverses, initiator):
                 except IndexError:
                     scan_result.failure = exc.message[:69]
                 scan_result.structure = ""
+            except SyllableException as exc:
+                print(dbverse.id)
             else:
                 worked += 1
         except ScansionException as exc:

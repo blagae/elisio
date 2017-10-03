@@ -3,7 +3,7 @@ import collections
 from Elisio.engine.Word import Word, Weight
 from Elisio.exceptions import ScansionException, VerseException
 from Elisio.engine.VerseType import VerseType
-from Elisio.engine.DatabaseBridge import split_from_deviant_word, use_dictionary, save, is_from_db
+from Elisio.engine.bridge.Bridge import DummyBridge
 
 
 class VerseFactory(object):
@@ -13,28 +13,28 @@ class VerseFactory(object):
     """
 
     @staticmethod
-    def __create_preprocessor(text, use_dict=False, classes=None):
-        return VersePreprocessor(text, use_dict, classes)
+    def __create_preprocessor(text, bridge=DummyBridge(), classes=None):
+        return VersePreprocessor(text, bridge, classes)
 
     @staticmethod
-    def split(text):
-        return VerseFactory.__create_preprocessor(text).split()
+    def split(text, bridge=DummyBridge(), classes=None):
+        return VerseFactory.__create_preprocessor(text, bridge, classes).split()
 
     @staticmethod
-    def layer(text):
-        return VerseFactory.__create_preprocessor(text).layer()
+    def layer(text, bridge=DummyBridge(), classes=None):
+        return VerseFactory.__create_preprocessor(text, bridge, classes).layer()
 
     @staticmethod
-    def get_flat_list(text):
-        return VerseFactory.__create_preprocessor(text).get_flat_list()
+    def get_flat_list(text, bridge=DummyBridge(), classes=None):
+        return VerseFactory.__create_preprocessor(text, bridge, classes).get_flat_list()
 
     @staticmethod
-    def create(verse, use_dict=False, classes=None):
-        return VerseFactory.__create_preprocessor(verse, use_dict, classes).create_verse()
+    def create(verse, bridge=DummyBridge(), classes=None):
+        return VerseFactory.__create_preprocessor(verse, bridge, classes).create_verse()
 
     @staticmethod
-    def get_split_syllables(text):
-        return VerseFactory.__create_preprocessor(text).get_split_syllables()
+    def get_split_syllables(text, bridge=DummyBridge(), classes=None):
+        return VerseFactory.__create_preprocessor(text, bridge, classes).get_split_syllables()
 
 
 class VersePreprocessor(object):
@@ -48,9 +48,9 @@ class VersePreprocessor(object):
 
     In practice, the step that determines the subtype is delegated to a VerseCreator
     """
-    def __init__(self, verse, use_dict=False, classes=None):
+    def __init__(self, verse, bridge=DummyBridge(), classes=None):
         self.verse = verse
-        self.use_dict = use_dict
+        self.bridge = bridge
         self.words = []
         self.flat_list = []
         # https://docs.python.org/3/tutorial/controlflow.html#default-argument-values
@@ -64,9 +64,10 @@ class VersePreprocessor(object):
             self.classes = VerseType.UNKNOWN.get_creators()
 
     def get_text(self):
-        if is_from_db(self.verse):
+        try:
             return self.verse.contents
-        return self.verse
+        except AttributeError:
+            return self.verse
 
     def split(self):
         """ Split a Verse into Words, remembering only the letter characters """
@@ -74,17 +75,14 @@ class VersePreprocessor(object):
         array = re.split('[^a-zA-Z]+', txt)
         for word in array:
             if word.isalpha():
-                self.words.append(Word(word, self.use_dict))
+                self.words.append(Word(word))
         return self.words
 
     def layer(self):
         """ get available weights of syllables """
         self.split()
         for word in self.words:
-            if self.use_dict:
-                word.analyze_structure(split_from_deviant_word, use_dictionary)
-            else:
-                word.analyze_structure(split_from_deviant_word)
+            word.analyze_structure(self.bridge)
         for count, word in enumerate(self.words):
             try:
                 word.apply_word_contact(self.words[count + 1])
@@ -111,10 +109,10 @@ class VersePreprocessor(object):
             verse.words = self.words
             verse.flat_list = self.flat_list.copy()
             try:
-                if is_from_db(self.verse):
-                    verse.parse(self.verse, save)
-                else:
-                    verse.parse(None, save)
+                verse.parse(self.verse, self.bridge)
+                return verse
+            except AttributeError:
+                verse.parse(None, self.bridge)
                 return verse
             except ScansionException as exc:
                 problems.append(exc)

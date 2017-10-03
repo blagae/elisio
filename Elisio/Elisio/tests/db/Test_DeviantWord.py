@@ -6,7 +6,7 @@ from Elisio.utils import set_django
 
 set_django()
 
-from Elisio.engine.DatabaseBridge import split_from_deviant_word
+from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
 
 
 class TestDeviantWord(unittest.TestCase):
@@ -65,9 +65,9 @@ class TestDeviantWord(unittest.TestCase):
     def test_syllsplit_ianua(self):
         # TODO: deviant word ?
         word = Word('ianua')
-        weights = [Weight.ANCEPS, Weight.LIGHT, Weight.ANCEPS]
+        weights = [Weight.ANCEPS, Weight.LIGHT, Weight.HEAVY]
         sylls = [Syllable('ia'), Syllable('nu'), Syllable('a')]
-        word.split(split_from_deviant_word)
+        word.split(DatabaseBridge())
         self.assertEqual(weights, word.get_syllable_structure())
         self.assertEqual(sylls, word.syllables)
 
@@ -75,39 +75,39 @@ class TestDeviantWord(unittest.TestCase):
         """ scan word with final -e as anceps """
         word = self.construct_word('cuique')
         syllable_list = [Syllable('cui', False), Syllable('que')]
-        word.split(split_from_deviant_word)
+        word.split(DatabaseBridge())
         self.assertEqual(word.syllables, syllable_list)
 
     def test_word_split_lexical(self):
         """ common word must be in the dictionary """
         word = self.construct_word('cui')
         syllable_list = [Syllable('cui', False)]
-        word.split(split_from_deviant_word)
+        word.split(DatabaseBridge())
         self.assertEqual(word.syllables, syllable_list)
 
     def test_word_split_lexical_exc(self):
         """ common word must be in the dictionary """
         word = self.construct_word('huic')
         syllable_list = [Syllable('huic', False)]
-        word.split(split_from_deviant_word)
+        word.split(DatabaseBridge())
         self.assertEqual(word.syllables, syllable_list)
 
     def test_word_scan_weird_word_two(self):
         """ proper name scanning """
         word = self.construct_word('troas')
         weights = [Weight.HEAVY, Weight.HEAVY]
-        word.split(split_from_deviant_word)
+        word.split(DatabaseBridge())
         self.assertEqual(word.get_syllable_structure(), weights)
 
     def test_word_create_deviant(self):
         word = self.construct_word('lavinia')
-        word.split(split_from_deviant_word)
+        word.split(DatabaseBridge())
         expected = [Syllable('la'), Syllable('vin'), Syllable('ia')]
         self.assertEqual(word.syllables, expected)
 
     def test_word_create_deviant_smvl(self):
         word = self.construct_word('lauinja')
-        word.split(split_from_deviant_word)
+        word.split(DatabaseBridge())
         expected = [Syllable('la'), Syllable('vin'), Syllable('ia')]
         self.assertEqual(word.syllables, expected)
 
@@ -115,5 +115,5 @@ class TestDeviantWord(unittest.TestCase):
         """ common name must be in the dictionary """
         word = self.construct_word('troiae')
         weights = [Weight.HEAVY, Weight.HEAVY]
-        word.split(split_from_deviant_word)
+        word.split(DatabaseBridge())
         self.assertEqual(word.get_syllable_structure(), weights)

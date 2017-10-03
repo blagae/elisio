@@ -61,16 +61,13 @@ class Verse(object):
         """ Verses are equal if they have exactly the same characters """
         return self.text == other.text
 
-    def parse(self, verse=None, save=None):
+    def parse(self, verse=None, bridge=None):
         self.preparse()
         self.scan()
         self.save_structure()
         self.save_feet()
-        try:
-            if verse and not verse.saved:
-                save(self, verse.id)
-        except TypeError:
-            pass
+        if verse and not verse.saved:
+            bridge.save(self, verse.id)
         self.add_accents()
 
     def add_accents(self):

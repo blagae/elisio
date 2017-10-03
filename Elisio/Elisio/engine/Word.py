@@ -1,6 +1,7 @@
 ﻿""" processing unit for Words and lower entities """
 from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Syllable, SyllableSplitter, Weight
+from Elisio.engine.bridge.Bridge import DummyBridge
 from Elisio.exceptions import WordException, SyllableException
 
 
@@ -13,7 +14,7 @@ class Word(object):
     proclitics = (Syllable('ab'), Syllable('ad'), Syllable('con'), Syllable('dis'), Syllable('in')
                   , Syllable('ob'), Syllable('sub'))  # circum?, de?, e-?,ob?per?prae?pro?
 
-    def __init__(self, text, use_dict=False):
+    def __init__(self, text):
         """ construct a Word by its contents """
         if not (isinstance(text, str) and text.isalpha()):
             raise WordException("Word not initialized with alphatic data")
@@ -21,7 +22,6 @@ class Word(object):
         self.sounds = SoundFactory.find_sounds_for_text(text)
         self.text = Word.reconstruct_text(self.sounds)
         self.enclitic = None
-        self.use_dict = use_dict
         self.istitle = text.istitle()
 
     def __repr__(self):
@@ -48,26 +48,20 @@ class Word(object):
             if self.text.startswith(proc.text) and self.text != proc.text:
                 return proc.text
 
-    def split(self, test_deviant=None, use_dictionary=None):
+    def split(self, bridge=DummyBridge()):
         """
         splits a word into syllables by using a few static methods
         from the Syllable class
         """
-        try:
-            if test_deviant(self):
-                return
-        except TypeError:
-            pass
+        if bridge.split_from_deviant_word(self):
+            return
         if len(self.syllables) == 0:
             temporary_syllables = SyllableSplitter.join_into_syllables(self.sounds)
             self.syllables = SyllableSplitter.redistribute(temporary_syllables)
             self.check_consistency()
-        if test_deviant and len(self.syllables) == 1 and len(self.text) == 1:
+        if len(self.syllables) == 1 and len(self.text) == 1:
             self.syllables[0].weight = Weight.HEAVY
-        try:
-            use_dictionary(self)
-        except TypeError:
-            pass
+        bridge.use_dictionary(self)
 
     def ends_in_variable_declension(self):
         return len(self.syllables) > 1 and (self.text.endswith(("us", "a")))
@@ -107,11 +101,11 @@ class Word(object):
                   next_word.syllables[0].starts_with_consonant()
                   )))
 
-    def analyze_structure(self, test_deviant=None, use_dictionary=None):
+    def analyze_structure(self, bridge):
         """ Get the syllable structure, regardless of word contact """
         syll_struct = []
         if not self.syllables:
-            self.split(test_deviant, use_dictionary)
+            self.split(bridge)
         for count, syllable in enumerate(self.syllables):
             try:
                 syll_struct.append(syllable.get_weight(self.syllables[count + 1]))
@@ -200,8 +194,8 @@ class Word(object):
 
 
 class FallbackWord(Word):
-    def __init__(self, text, use_dict=False):
-        super().__init__(text, use_dict)
+    def __init__(self, text):
+        super().__init__(text)
 
     def check_consistency(self):
         pass
