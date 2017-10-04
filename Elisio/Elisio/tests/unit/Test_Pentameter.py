@@ -4,9 +4,6 @@ from Elisio.engine.Verse import Foot
 from Elisio.engine.VerseType import VerseType
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.exceptions import VerseException
-from Elisio.utils import set_django
-
-set_django()
 
 
 class TestPentameter(unittest.TestCase):
