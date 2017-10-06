@@ -2,11 +2,17 @@
 import xml.etree.ElementTree as Et
 import xml.dom.minidom as mini
 
-from Elisio.exceptions import SyllableException
-from Elisio.numerals import roman_to_int, int_to_roman
-from Elisio.models.metadata import DatabaseVerse, Author, Book, Opus, Poem
 from os import listdir, getcwd
 from os.path import isfile, join
+
+from Elisio.engine.VerseType import VerseType
+from Elisio.numerals import roman_to_int, int_to_roman
+from Elisio.models.metadata import DatabaseVerse, Author, Book, Opus, Poem
+from Elisio.engine.Verse import Foot
+from Elisio.engine.VerseFactory import VerseFactory
+from Elisio.exceptions import VerseException, ScansionException
+from Elisio.models.scan import ScanVerseResult, ScanSession, Batch, DatabaseBatchItem, ObjectType
+from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
 
 
 def create_output_file(tree):
@@ -143,8 +149,6 @@ def sync_db():
 
 
 def find_all_verses_containing(regex, must_be_parsed=False):
-    from Elisio.engine.VerseFactory import VerseFactory
-    from Elisio.exceptions import ScansionException
     import re
     dbverses = DatabaseVerse.objects.all()
     total = []
@@ -164,10 +168,6 @@ def find_all_verses_containing(regex, must_be_parsed=False):
 
 
 def scan_verses(dbverses, initiator):
-    from Elisio.engine.VerseFactory import VerseFactory
-    from Elisio.exceptions import VerseException, ScansionException
-    from Elisio.models.scan import ScanVerseResult, ScanSession, Batch, DatabaseBatchItem, ObjectType
-    from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
     worked = 0
     worked_without_dict = 0
     failed = 0
@@ -220,3 +220,22 @@ def scan_verses(dbverses, initiator):
             dbverse.save()
         scan_result.save()
     return worked, failed, worked_without_dict
+
+
+def scan_batch_from_flat_file(file):
+    # join(getcwd(), "../../../file.ext")
+    with open(file, "r") as file:
+        j = 0
+        for dbverse in file.readlines():
+            try:
+                verse = VerseFactory.create(dbverse, DatabaseBridge(), classes=VerseType.HEXAMETER)
+                d = "\t"
+                for i in range(4):
+                    if verse.feet[i] == Foot.DACTYLUS:
+                        d += "D"
+                    else:
+                        d += "S"
+                print(str(j) + d)
+            except:
+                print(str(j) + "\tfailed")
+            j += 1

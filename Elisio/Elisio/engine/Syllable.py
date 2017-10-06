@@ -1,5 +1,4 @@
-﻿import copy
-import enum
+﻿import enum
 import re
 from Elisio.engine.Sound import SoundFactory
 from Elisio.exceptions import SyllableException
@@ -38,6 +37,17 @@ class Syllable(object):
     def recalculate_text(self):
         self.text = Syllable.reconstruct_text(self.sounds)
 
+    def copy_me(self):
+        other = Syllable(self.text, False, self.weight)
+        other.stressed = self.stressed
+        other.sounds = Syllable.copy_sounds(self.sounds)
+        other.text = self.text
+        return other
+
+    @staticmethod
+    def copy_sounds(sounds):
+        return [x for x in sounds]
+
     @staticmethod
     def reconstruct_text(sounds):
         """ get String representation for output purposes """
@@ -64,7 +74,7 @@ class Syllable(object):
         if len(sounds) > 1 and sounds[0] == sounds[1] and sounds[0] == SoundFactory.create('i'):
             return False
         if sounds[0] == SoundFactory.create('gu'):
-            copied = copy.deepcopy(sounds)
+            copied = Syllable.copy_sounds(sounds)
             copied[0] = SoundFactory.create('u')
             valid = Syllable.is_valid(copied, test)
             if valid:
@@ -221,7 +231,7 @@ class Syllable(object):
     def add_sound(self, sound):
         """ add a sound to a syllable if the syllable stays
         valid by the addition """
-        test_syllable = copy.deepcopy(self)
+        test_syllable = self.copy_me()
         test_syllable.sounds.append(sound)
         if Syllable.is_valid(test_syllable.sounds, True):
             self.sounds.append(sound)
