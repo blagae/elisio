@@ -75,7 +75,7 @@ def scan_verse_text(request, txt, metadata=None):
         metadata = {'verse': {'text': txt}}
     data = {}
     try:
-        dic = DummyBridge() if 'disableDict' not in request.GET else DatabaseBridge()
+        dic = DummyBridge() if 'disableDict' in request.GET else DatabaseBridge()
         try:
             verse_type = VerseType[request.GET['type'].upper()]
         except KeyError:
