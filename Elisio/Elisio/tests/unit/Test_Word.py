@@ -350,6 +350,12 @@ class TestWord(unittest.TestCase):
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
+    def test_word_split_semivwl_new(self):
+        word = self.construct_word('ripio')
+        syllable_list = [Syllable('ri'), Syllable('pi'), Syllable('o')]
+        word.split()
+        self.assertEqual(word.syllables, syllable_list)
+
     def test_word_split_disregard_proclitic_cons(self):
         word = self.construct_word('conscia')
         syllable_list = [Syllable('con'), Syllable('sci'), Syllable('a')]
