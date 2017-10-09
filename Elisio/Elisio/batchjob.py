@@ -167,6 +167,22 @@ def find_all_verses_containing(regex, must_be_parsed=False):
     return total
 
 
+def get_location_string(dbverse):
+    result = ''
+    if not isinstance(dbverse, DatabaseVerse):
+        # dbverse is an id
+        dbverse = DatabaseVerse.objects.get(dbverse)
+    poem = dbverse.poem
+    book = poem.book
+    opus = book.opus
+    author = opus.author
+
+    result += str(dbverse.id) + "\t" + author.abbreviation + " " + opus.abbreviation + " " + str(int_to_roman(book.number)) + ", " + str(poem.number) + ", " + str(dbverse.number)
+    if dbverse.alternative:
+        result += " " + dbverse.alternative + "---"
+    return result
+
+
 def scan_verses(dbverses, initiator):
     worked = 0
     worked_without_dict = 0
@@ -219,11 +235,16 @@ def scan_verses(dbverses, initiator):
         if verse_saved != dbverse.saved or scan_result.failure:
             dbverse.save()
         scan_result.save()
+        """
+        if scan_result.structure:
+            print(get_location_string(dbverse) + ": " + scan_result.structure)
+        else:
+            print(get_location_string(dbverse) + ": failed")
+        """
     return worked, failed, worked_without_dict
 
 
 def scan_batch_from_flat_file(file):
-    # join(getcwd(), "../../../file.ext")
     with open(file, "r") as file:
         j = 0
         for dbverse in file.readlines():

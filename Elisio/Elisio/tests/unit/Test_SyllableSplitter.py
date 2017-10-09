@@ -1,5 +1,6 @@
 import unittest
 from Elisio.engine.Syllable import SyllableSplitter, Syllable, SoundFactory
+from Elisio.exceptions import SyllableException
 
 
 class TestSyllableSplitter(unittest.TestCase):
@@ -46,7 +47,7 @@ class TestSyllableSplitter(unittest.TestCase):
         txt = SoundFactory.find_sounds_for_text('volui')
         syll = SyllableSplitter.join_into_syllables(txt)
         syll = SyllableSplitter.redistribute(syll)
-        expected = [Syllable('vo'), Syllable('lu'), Syllable('i')]
+        expected = [Syllable('vol'), Syllable('vi')]
         self.assertEqual(syll, expected)
 
     def test_syllsplit_olio(self):
@@ -54,4 +55,15 @@ class TestSyllableSplitter(unittest.TestCase):
         syll = SyllableSplitter.join_into_syllables(txt)
         syll = SyllableSplitter.redistribute(syll)
         expected = [Syllable('o'), Syllable('li'), Syllable('o')]
+        self.assertEqual(syll, expected)
+
+    def test_syllsplit_bad_syll(self):
+        with self.assertRaises(SyllableException):
+            syll = SyllableSplitter.split_from_text('c')
+
+    def test_syllsplit_ianus(self):
+        txt = SoundFactory.find_sounds_for_text('ianus')
+        syll = SyllableSplitter.join_into_syllables(txt)
+        syll = SyllableSplitter.redistribute(syll)
+        expected = [Syllable('ia'), Syllable('nus')]
         self.assertEqual(syll, expected)

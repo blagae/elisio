@@ -263,6 +263,12 @@ class SyllableSplitter(object):
     longEndVowels = ['i', 'o', 'u']
 
     @staticmethod
+    def split_from_text(text):
+        sounds = SoundFactory.find_sounds_for_text(text)
+        sylls = SyllableSplitter.join_into_syllables(sounds)
+        return SyllableSplitter.redistribute(sylls)
+
+    @staticmethod
     def join_into_syllables(sounds):
         """
         join a list of sounds into a preliminary syllables
@@ -300,12 +306,25 @@ class SyllableSplitter(object):
                         len(syllables[count + 1].sounds) > 1 and
                         not syllables[count].ends_with_consonant_cluster() and
                         not syllables[count + 1].sounds[1].is_consonant()):
-                    pass
+                    if not syllables[count].sounds[-1] in [SoundFactory.create('r'), SoundFactory.create('l')]:
+                        SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], False)
                 elif syllables[count + 1].starts_with_vowel(False):
                     SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], False)
+        local_sylls = []
         for syll in syllables:
+            if not Syllable.is_valid(syll.sounds):
+                syll.recalculate_text()
+                sounds = SoundFactory.find_sounds_for_text(syll.text)
+                sylls = SyllableSplitter.join_into_syllables(sounds)
+                for s in sylls:
+                    if not Syllable.is_valid(s.sounds):
+                        raise SyllableException("unparseable syllable")
+                local_sylls.extend(sylls)
+            else:
+                local_sylls.append(syll)
+        for syll in local_sylls:
             syll.recalculate_text()
-        return syllables
+        return local_sylls
 
     @staticmethod
     def __switch_sound(syllable1, syllable2, to_first):
