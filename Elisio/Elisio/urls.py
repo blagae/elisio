@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^logout/$', pages.logout_page),
     url(r'^register/$', pages.register_page),
     url(r'^profile/$', pages.profile_page),
-    url(r'^manage/', pages.manage_page),
+    url(r'^manage/$', pages.manage_page),
     url(r'^admin/', admin.site.urls),
     url(r'^json/poem/([0-9]+)$', index.get_poem_length),
     url(r'^json/([a-zA-Z]+)/([0-9]+)$', index.get_list_type),  # author, opus, book
@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^json/verse/random/$', index.get_random_verse),
     url(r'^json/scan/dbverse/([0-9]+)/([0-9]+)$', index.scan_verse),
     url(r'^json/scan/text/(.+)$', index.scan_verse_text),
+    url(r'^json/manage/upload/$', manage.upload_text),
     url(r'^json/batch/clearcurrentsession$', batch.clear_batch_session),
     url(r'^json/batch/save', batch.save_batch),
     url(r'^json/batch/delete/([0-9]+)$', batch.delete_batch),

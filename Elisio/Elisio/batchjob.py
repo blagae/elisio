@@ -123,29 +123,33 @@ def sync_db():
     for filename in all_filenames:
         verses = [line for line in open(join(path, filename)) if line.rstrip()]
         poem = find_poem(filename)
-        db_lines = DatabaseVerse.objects.filter(poem=poem)
-        if len(verses) == db_lines.count():
-            continue
-        db_lines.delete()
-        count = 1
-        entries = []
-        for verse in verses:
-            item = DatabaseVerse()
-            item.poem = poem
-            parsed = verse.split('$')
-            if len(parsed) > 1:
-                try:
-                    count = int(parsed[0])
-                except (TypeError, ValueError):
-                    count = int(parsed[0][:-1])
-                    item.alternative = parsed[0][-1]
-            item.number = count
-            count += 1
-            item.contents = parsed[-1]
-            vf = poem.verseForm.get_verse_types()
-            item.verseType = vf[count % len(vf)]
-            entries.append(item)
-        DatabaseVerse.objects.bulk_create(entries)
+        create_verses(poem, verses)
+
+
+def create_verses(poem, verses):
+    db_lines = DatabaseVerse.objects.filter(poem=poem)
+    if len(verses) == db_lines.count():
+        return
+    db_lines.delete()
+    count = 1
+    entries = []
+    for verse in verses:
+        item = DatabaseVerse()
+        item.poem = poem
+        parsed = verse.split('$')
+        if len(parsed) > 1:
+            try:
+                count = int(parsed[0])
+            except (TypeError, ValueError):
+                count = int(parsed[0][:-1])
+                item.alternative = parsed[0][-1]
+        item.number = count
+        count += 1
+        item.contents = parsed[-1]
+        vf = poem.verseForm.get_verse_types()
+        item.verseType = vf[count % len(vf)]
+        entries.append(item)
+    DatabaseVerse.objects.bulk_create(entries)
 
 
 def find_all_verses_containing(regex, must_be_parsed=False):
