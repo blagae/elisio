@@ -36,7 +36,10 @@ def find_poem(file):
     poem = Poem.objects.filter(book=book)
     if len(poem) == 1:
         return poem[0]
-    return poem.get(number=split[3])
+    try:
+        return poem.get(number=split[3])
+    except Poem.DoesNotExist:
+        return Poem(book=book, number=1)
 
 
 def name_poem(poem):

@@ -23,7 +23,6 @@ urlpatterns = [
     url(r'^json/verse/random/$', index.get_random_verse),
     url(r'^json/scan/dbverse/([0-9]+)/([0-9]+)$', index.scan_verse),
     url(r'^json/scan/text/(.+)$', index.scan_verse_text),
-    url(r'^json/manage/upload/$', manage.upload_text),
     url(r'^json/batch/clearcurrentsession$', batch.clear_batch_session),
     url(r'^json/batch/save', batch.save_batch),
     url(r'^json/batch/delete/([0-9]+)$', batch.delete_batch),

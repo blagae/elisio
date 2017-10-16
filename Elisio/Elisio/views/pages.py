@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from Elisio.models.forms import AuthorForm, OpusForm, BookForm
+from Elisio.models import Author, Opus, Book, Poem
+import Elisio.batchjob
 
 
 def index_page(request):
@@ -71,6 +74,22 @@ def register_page(request):
 
 
 def manage_page(request):
-    if request.user.is_superuser:
+    if not request.user.is_superuser:
+        return HttpResponseRedirect('/')
+    if request.method == 'GET':
         return render(request, 'manage.html')
-    return HttpResponseRedirect('/')
+    poem_name = request.POST['poem']
+    try:
+        poem = Elisio.batchjob.find_poem(poem_name)
+        form = None
+    except Author.DoesNotExist:
+        form = AuthorForm()
+    except Opus.DoesNotExist:
+        form = OpusForm()
+    except Book.DoesNotExist:
+        form = BookForm()
+    if form:
+        return render(request, 'manage.html', {'form': form})
+    lines = request.POST['fulltext'].replace('\r\n', '\n').split('\n')
+    Elisio.batchjob.create_verses(poem, lines)
+    return render(request, 'manage.html')
