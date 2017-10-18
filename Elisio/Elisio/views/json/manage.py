@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseForbidden
@@ -26,3 +27,10 @@ def get_member_list(request):
         data = serializers.serialize('json', objects)
         return HttpResponse(data, content_type='application/json')
     return HttpResponseForbidden()
+
+
+def post_meta(request):
+    if not (request.user.is_superuser and request.method == 'POST'):
+        return HttpResponseForbidden()
+    x = json.loads(request.body)
+    return HttpResponse(status=200)

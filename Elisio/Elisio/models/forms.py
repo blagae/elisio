@@ -13,9 +13,3 @@ class OpusForm(ModelForm):
     class Meta:
         model = Opus
         exclude = ()
-
-
-class BookForm(ModelForm):
-    class Meta:
-        model = Book
-        exclude = ()

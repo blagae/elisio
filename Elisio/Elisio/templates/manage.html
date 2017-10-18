@@ -8,11 +8,19 @@
                 <input type="text" name="poem" />
                 <input type="submit" value="Add" />
                 {% csrf_token %}
+            </form>
+        </section>
+        {% if form %}
+        <section id="addMetadataSection">
+            <form id="postMetadataForm" method="post">
                 <table>
                     {{ form.as_table }}
                 </table>
+                <input id="postMetadataButton" type="submit" />
+                {# no csrf_token because handled in JavaScript #}
             </form>
         </section>
+        {% endif %}
         <section id="syncSection">
             <p>Syncing !</p>
             <button id="syncFilesButton">Sync files to database</button>

@@ -4,9 +4,10 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from Elisio.models.forms import AuthorForm, OpusForm, BookForm
+from Elisio.models.forms import AuthorForm, OpusForm
 from Elisio.models import Author, Opus, Book, Poem
 import Elisio.batchjob
+from Elisio.numerals import roman_to_int
 
 
 def index_page(request):
@@ -81,24 +82,30 @@ def manage_page(request):
     split = Elisio.batchjob.clean_name(request.POST['poem'])
     try:
         author = Elisio.batchjob.find_author(split[0])
+    except Author.DoesNotExist:
+        return render(request, 'manage.html', {'form': AuthorForm(data={'abbreviation': split[0]})})
+    try:
         opus = Elisio.batchjob.find_opus(author, split[1])
-        book = Elisio.batchjob.find_book(opus, split[2])
+    except Opus.DoesNotExist:
+        form = OpusForm(data={'author': author, 'abbreviation': split[1]})
+        return render(request, 'manage.html', {'form': form})
+    try:
+        book_number = roman_to_int(split[2])
+    except TypeError:
+        book_number = int(split[2])
+    try:
+        book = Elisio.batchjob.find_book(opus, book_number)
         try:
             poem = Elisio.batchjob.find_poem(book, split[3], True)
         except IndexError:
             poem = Elisio.batchjob.find_poem(book, create=True)
-        if poem.pk:
-            poem.save()
-        form = None
-    except Author.DoesNotExist:
-        form = AuthorForm()
-    except Opus.DoesNotExist:
-        form = OpusForm()
     except Book.DoesNotExist:
-        form = BookForm()
-    if form:
-        return render(request, 'manage.html', {'form': form})
+        book = Book(opus=opus, number=book_number)
+        book.save()
+        poem_number = int(split[3]) if len(split) > 3 else 1
+        poem = Poem(book=book, number=poem_number)
+    if poem and not poem.pk:
+        poem.save()
     lines = request.POST['fulltext'].replace('\r\n', '\n').split('\n')
-    # we only get here if poem is set
     Elisio.batchjob.create_verses(poem, lines)
     return render(request, 'manage.html')

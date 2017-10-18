@@ -161,7 +161,7 @@ def sync_db():
 
 def create_verses(poem, verses):
     db_lines = DatabaseVerse.objects.filter(poem=poem)
-    if len(verses) == db_lines.count():
+    if len(verses) <= db_lines.count():
         return
     db_lines.delete()
     count = 1
