@@ -31,7 +31,7 @@
   <object pk="1" model="Elisio.Author">
     <field type="CharField" name="full_name">Lucius Livius Andronicus</field>
     <field type="CharField" name="short_name">Livius Andronicus</field>
-    <field type="CharField" name="abbreviation">Liv. Andr.</field>
+    <field type="CharField" name="abbreviation">Andr</field>
     <field type="ForeignKey" name="period">1</field>
     <field type="IntegerField" name="birth_year">-270</field>
     <field type="IntegerField" name="dying_year">-200</field>
@@ -41,7 +41,7 @@
   <object pk="2" model="Elisio.Author">
     <field type="CharField" name="full_name">Titus Maccius Plautus</field>
     <field type="CharField" name="short_name">Plautus</field>
-    <field type="CharField" name="abbreviation">Plaut.</field>
+    <field type="CharField" name="abbreviation">Plaut</field>
     <field type="ForeignKey" name="period">2</field>
     <field type="IntegerField" name="birth_year">-254</field>
     <field type="IntegerField" name="dying_year">-184</field>
@@ -51,7 +51,7 @@
   <object pk="3" model="Elisio.Author">
     <field type="CharField" name="full_name">Gaius Valerius Catullus</field>
     <field type="CharField" name="short_name">Catullus</field>
-    <field type="CharField" name="abbreviation">Cat.</field>
+    <field type="CharField" name="abbreviation">Cat</field>
     <field type="ForeignKey" name="period">3</field>
     <field type="IntegerField" name="birth_year">-84</field>
     <field type="IntegerField" name="dying_year">-54</field>
@@ -61,7 +61,7 @@
   <object pk="4" model="Elisio.Author">
     <field type="CharField" name="full_name">Publius Vergilius Maro</field>
     <field type="CharField" name="short_name">Vergilius</field>
-    <field type="CharField" name="abbreviation">Verg.</field>
+    <field type="CharField" name="abbreviation">Verg</field>
     <field type="ForeignKey" name="period">3</field>
     <field type="IntegerField" name="birth_year">-70</field>
     <field type="IntegerField" name="dying_year">-19</field>
@@ -71,7 +71,7 @@
   <object pk="5" model="Elisio.Author">
     <field type="CharField" name="full_name">Marcus Valerius Martialis</field>
     <field type="CharField" name="short_name">Martialis</field>
-    <field type="CharField" name="abbreviation">Mart.</field>
+    <field type="CharField" name="abbreviation">Mart</field>
     <field type="ForeignKey" name="period">4</field>
     <field type="IntegerField" name="birth_year">41</field>
     <field type="IntegerField" name="dying_year">104</field>
@@ -81,7 +81,7 @@
   <object pk="6" model="Elisio.Author">
     <field type="CharField" name="full_name">Publius Ovidius Naso</field>
     <field type="CharField" name="short_name">Ovidius</field>
-    <field type="CharField" name="abbreviation">Ov.</field>
+    <field type="CharField" name="abbreviation">Ov</field>
     <field type="ForeignKey" name="period">3</field>
     <field type="IntegerField" name="birth_year">-43</field>
     <field type="IntegerField" name="dying_year">18</field>
@@ -114,7 +114,7 @@
   <!-- Opera -->
   <object pk="1" model="Elisio.Opus">
     <field type="CharField" name="full_name">Odusia</field>
-    <field type="CharField" name="abbreviation">Od.</field>
+    <field type="CharField" name="abbreviation">Od</field>
     <field type="CharField" name="alternative_name"></field>
     <field type="ForeignKey" name="author">1</field>
     <field type="IntegerField" name="publication">-240</field>
@@ -122,7 +122,7 @@
   </object>
   <object pk="2" model="Elisio.Opus">
     <field type="CharField" name="full_name">Aulularia</field>
-    <field type="CharField" name="abbreviation">Aulul.</field>
+    <field type="CharField" name="abbreviation">Aulul</field>
     <field type="CharField" name="alternative_name"></field>
     <field type="ForeignKey" name="author">2</field>
     <field type="IntegerField" name="publication">-200</field>
@@ -130,7 +130,7 @@
   </object>
   <object pk="3" model="Elisio.Opus">
     <field type="CharField" name="full_name">Truculentus</field>
-    <field type="CharField" name="abbreviation">Truc.</field>
+    <field type="CharField" name="abbreviation">Truc</field>
     <field type="CharField" name="alternative_name"></field>
     <field type="ForeignKey" name="author">2</field>
     <field type="IntegerField" name="publication">-200</field>
@@ -138,7 +138,7 @@
   </object>
   <object pk="4" model="Elisio.Opus">
     <field type="CharField" name="full_name">Carmina</field>
-    <field type="CharField" name="abbreviation">Carm.</field>
+    <field type="CharField" name="abbreviation">Carm</field>
     <field type="CharField" name="alternative_name"></field>
     <field type="ForeignKey" name="author">3</field>
     <field type="IntegerField" name="publication">-80</field>
@@ -146,7 +146,7 @@
   </object>
   <object pk="5" model="Elisio.Opus">
     <field type="CharField" name="full_name">Bucolica</field>
-    <field type="CharField" name="abbreviation">Buc.</field>
+    <field type="CharField" name="abbreviation">Buc</field>
     <field type="CharField" name="alternative_name">Ecloges</field>
     <field type="ForeignKey" name="author">4</field>
     <field type="IntegerField" name="publication">-42</field>
@@ -154,7 +154,7 @@
   </object>
   <object pk="6" model="Elisio.Opus">
     <field type="CharField" name="full_name">Aeneis</field>
-    <field type="CharField" name="abbreviation">Aen.</field>
+    <field type="CharField" name="abbreviation">Aen</field>
     <field type="CharField" name="alternative_name"></field>
     <field type="ForeignKey" name="author">4</field>
     <field type="IntegerField" name="publication">-18</field>
@@ -162,7 +162,7 @@
   </object>
   <object pk="7" model="Elisio.Opus">
     <field type="CharField" name="full_name">Epigrammata</field>
-    <field type="CharField" name="abbreviation">Ep.</field>
+    <field type="CharField" name="abbreviation">Ep</field>
     <field type="CharField" name="alternative_name"></field>
     <field type="ForeignKey" name="author">5</field>
     <field type="IntegerField" name="publication">90</field>
@@ -170,7 +170,7 @@
   </object>
   <object pk="8" model="Elisio.Opus">
     <field type="CharField" name="full_name">Metamorphoses</field>
-    <field type="CharField" name="abbreviation">Met.</field>
+    <field type="CharField" name="abbreviation">Met</field>
     <field type="CharField" name="alternative_name"></field>
     <field type="ForeignKey" name="author">6</field>
     <field type="IntegerField" name="publication">8</field>

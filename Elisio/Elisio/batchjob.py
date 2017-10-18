@@ -1,6 +1,7 @@
 """ module for creating an xml file from given input """
 import xml.etree.ElementTree as Et
 import xml.dom.minidom as mini
+import re
 
 from os import listdir, getcwd
 from os.path import isfile, join
@@ -25,21 +26,50 @@ def create_output_file(tree):
         raise IOError("Invalid XML Tree object")
 
 
-def find_poem(file):
-    # Verg. Aen. I
-    split = file.split('/')
-    split = split[-1].split()
-    split[-1] = split[-1].replace('.txt', '')
-    author = Author.objects.get(abbreviation=split[0])
-    opus = Opus.objects.get(abbreviation=split[1], author=author)
-    book = Book.objects.get(opus=opus, number=roman_to_int(split[2]))
+def find_author(abbr):
+    return Author.objects.get(abbreviation=abbr)
+
+
+def find_opus(author, abbr):
+    return Opus.objects.get(abbreviation=abbr, author=author)
+
+
+def find_book(opus, number):
+    try:
+        return Book.objects.get(opus=opus, number=roman_to_int(number))
+    except TypeError:
+        return Book.objects.get(opus=opus, number=number)
+
+
+def find_poem(book, number=None, create=False):
     poem = Poem.objects.filter(book=book)
     if len(poem) == 1:
         return poem[0]
     try:
-        return poem.get(number=split[3])
-    except Poem.DoesNotExist:
-        return Poem(book=book, number=1)
+        return poem.get(number=number)
+    except Poem.DoesNotExist as e:
+        if create:
+            return Poem(book=book, number=1)
+        raise e
+
+
+def clean_name(file):
+    # Verg. Aen. I
+    split = file.split('/')
+    split = re.split('[^a-zA-Z0-9]+', split[-1])
+    if 'txt' in split:
+        split = split[:-1]
+    return split
+
+
+def find_poem_for_file(file):
+    split = clean_name(file)
+    author = find_author(split[0])
+    opus = find_opus(author, split[1])
+    book = find_book(opus, split[2])
+    if len(split) > 3:
+        return find_poem(book, split[3])
+    return find_poem(book)
 
 
 def name_poem(poem):
@@ -63,7 +93,7 @@ def fill_xml_object():
     for filename in all_filenames:
         with open(join(path, filename), "r") as file:
             verses = [line.replace('\n', '').strip() for line in file.readlines()]
-        poem = find_poem(file.name)
+        poem = find_poem_for_file(file.name)
         count = 1
         for verse in verses:
             obj = Et.SubElement(root, "object",
@@ -125,7 +155,7 @@ def sync_db():
     all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
     for filename in all_filenames:
         verses = [line for line in open(join(path, filename)) if line.rstrip()]
-        poem = find_poem(filename)
+        poem = find_poem_for_file(filename)
         create_verses(poem, verses)
 
 

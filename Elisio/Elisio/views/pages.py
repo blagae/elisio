@@ -78,9 +78,17 @@ def manage_page(request):
         return HttpResponseRedirect('/')
     if request.method == 'GET':
         return render(request, 'manage.html')
-    poem_name = request.POST['poem']
+    split = Elisio.batchjob.clean_name(request.POST['poem'])
     try:
-        poem = Elisio.batchjob.find_poem(poem_name)
+        author = Elisio.batchjob.find_author(split[0])
+        opus = Elisio.batchjob.find_opus(author, split[1])
+        book = Elisio.batchjob.find_book(opus, split[2])
+        try:
+            poem = Elisio.batchjob.find_poem(book, split[3], True)
+        except IndexError:
+            poem = Elisio.batchjob.find_poem(book, create=True)
+        if poem.pk:
+            poem.save()
         form = None
     except Author.DoesNotExist:
         form = AuthorForm()
@@ -91,5 +99,6 @@ def manage_page(request):
     if form:
         return render(request, 'manage.html', {'form': form})
     lines = request.POST['fulltext'].replace('\r\n', '\n').split('\n')
+    # we only get here if poem is set
     Elisio.batchjob.create_verses(poem, lines)
     return render(request, 'manage.html')
