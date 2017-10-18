@@ -1,8 +1,8 @@
-import json
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseForbidden
 import Elisio.batchjob
+from Elisio.models import Author, Period, Opus, Genre
 
 
 def sync_files(request):
@@ -32,5 +32,13 @@ def get_member_list(request):
 def post_meta(request):
     if not (request.user.is_superuser and request.method == 'POST'):
         return HttpResponseForbidden()
-    x = json.loads(request.body)
+    dct = request.POST.dict()
+    if 'period' in dct:
+        dct['period'] = Period.objects.get(id=dct['period'])
+        model = Author(**dct)
+    else:
+        dct['author'] = Author.objects.get(id=dct['author'])
+        dct['genre'] = Genre.objects.get(id=dct['genre'])
+        model = Opus(**dct)
+    model.save()
     return HttpResponse(status=200)

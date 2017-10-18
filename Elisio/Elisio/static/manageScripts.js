@@ -13,13 +13,12 @@
     $('#postMetadataForm').submit(function(e) {
         e.preventDefault();
         var input = $(this).serialize();
-        input = JSON.stringify(input);
         $.ajax({
             url: "/json/admin/meta/",
             type: "POST",
             data: input,
             success: function () {
-                alert("new item created, try again to add the texts !");
+                alert("new item created, try to add the text again !");
             }
         });
     });
