@@ -75,7 +75,7 @@ def name_poem(poem):
     book = poem.book
     opus = book.opus
     author = opus.author
-    res = "{0} {1} {2}".format(author.abbreviation, opus.abbreviation, int_to_roman(book.number))
+    res = "{0}. {1}. {2}".format(author.abbreviation, opus.abbreviation, int_to_roman(book.number))
     poems = book.poem_set.count()
     if poems > 1:
         res += " " + str(poem.number)
