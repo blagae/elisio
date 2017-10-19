@@ -1,7 +1,8 @@
 ﻿""" the main module for parsing verses """
 import enum
+
 from Elisio.engine.Syllable import Weight
-from Elisio.exceptions import VerseException, IllegalFootException
+from Elisio.engine.exceptions import VerseException, IllegalFootException
 
 
 class Foot(enum.Enum):

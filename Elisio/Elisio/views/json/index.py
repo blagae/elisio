@@ -11,7 +11,7 @@ from Elisio.engine.TextDecorator import TextDecorator
 from Elisio.engine.VerseFactory import VerseFactory, VerseType
 from Elisio.engine.bridge.Bridge import DummyBridge
 from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
-from Elisio.exceptions import ScansionException
+from Elisio.engine.exceptions import ScansionException
 from Elisio.models.metadata import Author, Book, Opus, Poem, DatabaseVerse
 from Elisio.numerals import int_to_roman
 

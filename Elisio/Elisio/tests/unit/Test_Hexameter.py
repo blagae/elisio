@@ -1,10 +1,10 @@
 ﻿import unittest
 
-from Elisio.engine.Verse import Foot, Verse
 from Elisio.engine.Syllable import Weight
-from Elisio.engine.Hexameter import Hexameter, HexameterCreator
+from Elisio.engine.Verse import Foot, Verse
 from Elisio.engine.VerseFactory import VerseFactory
-from Elisio.engine.VerseType import VerseType
+from Elisio.engine.verse.Hexameter import Hexameter, HexameterCreator
+from Elisio.engine.verse.VerseType import VerseType
 from Elisio.tests.unit.Test_Verse import TYPICAL_VERSE
 
 

@@ -1,19 +1,18 @@
 """ module for creating an xml file from given input """
-import xml.etree.ElementTree as Et
-import xml.dom.minidom as mini
 import re
-
+import xml.dom.minidom as mini
+import xml.etree.ElementTree as Et
 from os import listdir, getcwd
 from os.path import isfile, join
 
-from Elisio.engine.VerseType import VerseType
-from Elisio.numerals import roman_to_int, int_to_roman
-from Elisio.models.metadata import DatabaseVerse, Author, Book, Opus, Poem
 from Elisio.engine.Verse import Foot
 from Elisio.engine.VerseFactory import VerseFactory
-from Elisio.exceptions import VerseException, ScansionException
-from Elisio.models.scan import ScanVerseResult, ScanSession, Batch, DatabaseBatchItem, ObjectType
 from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
+from Elisio.engine.exceptions import VerseException, ScansionException
+from Elisio.engine.verse.VerseType import VerseType
+from Elisio.models.metadata import DatabaseVerse, Author, Book, Opus, Poem
+from Elisio.models.scan import ScanVerseResult, ScanSession, Batch, DatabaseBatchItem, ObjectType
+from Elisio.numerals import roman_to_int, int_to_roman
 
 
 def create_output_file(tree):

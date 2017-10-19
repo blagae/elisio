@@ -1,7 +1,7 @@
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Verse, Foot
-from Elisio.exceptions import PentameterException
 from Elisio.engine.VerseFactory import VerseCreator
+from Elisio.engine.exceptions import PentameterException
 
 
 class PentameterCreator(VerseCreator):

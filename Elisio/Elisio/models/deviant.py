@@ -1,8 +1,10 @@
+import re
+
 from django.db.models import Model, CharField, ForeignKey, IntegerField
 from enumfields import EnumField
-import re
+
 from Elisio.engine.Syllable import Weight, Syllable
-from Elisio.exceptions import WordException
+from Elisio.engine.exceptions import WordException
 
 
 class DeviantWord(Model):

@@ -2,7 +2,7 @@
 from Elisio.engine.Sound import SoundFactory
 from Elisio.engine.Syllable import Syllable, SyllableSplitter, Weight
 from Elisio.engine.bridge.Bridge import DummyBridge
-from Elisio.exceptions import WordException, SyllableException
+from Elisio.engine.exceptions import WordException, SyllableException
 
 
 class Word(object):

@@ -5,7 +5,7 @@ from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Verse
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.engine.Word import Word
-from Elisio.exceptions import VerseException
+from Elisio.engine.exceptions import VerseException
 
 TYPICAL_VERSE = "Arma virumque cano, Troiae qui primus ab oris"
 WORDS = ['Arma', 'virumque', 'cano', 'Troiae', 'qui', 'primus', 'ab', 'oris']

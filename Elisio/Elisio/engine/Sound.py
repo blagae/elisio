@@ -1,6 +1,7 @@
 ﻿import re
+
 from Elisio.engine.Letter import Letter, LetterType
-from Elisio.exceptions import SoundException
+from Elisio.engine.exceptions import SoundException
 
 
 class Sound(object):

@@ -1,10 +1,11 @@
 ﻿""" unit tests for Word """
 
 import unittest
-from Elisio.engine.Verse import Weight
+
 from Elisio.engine.Syllable import Syllable
+from Elisio.engine.Verse import Weight
 from Elisio.engine.Word import Word
-from Elisio.exceptions import WordException
+from Elisio.engine.exceptions import WordException
 
 TYPICAL_WORD = "recentia"
 SYLLABLES = ['re', 'cen', 'ti', 'a']

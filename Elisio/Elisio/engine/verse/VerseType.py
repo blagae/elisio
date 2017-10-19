@@ -7,8 +7,8 @@ class VerseType(enum.Enum):
     PENTAMETER = 2
 
     def get_creators(self):
-        from Elisio.engine.Hexameter import HexameterCreator
-        from Elisio.engine.Pentameter import PentameterCreator
+        from Elisio.engine.verse.Hexameter import HexameterCreator
+        from Elisio.engine.verse.Pentameter import PentameterCreator
         if self == VerseType.HEXAMETER:
             return [HexameterCreator]
         if self == VerseType.PENTAMETER:

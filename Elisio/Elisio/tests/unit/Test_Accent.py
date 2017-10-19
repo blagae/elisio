@@ -1,6 +1,7 @@
 import unittest
-from Elisio.engine.VerseType import VerseType
+
 from Elisio.engine.VerseFactory import VerseFactory
+from Elisio.engine.verse.VerseType import VerseType
 from Elisio.tests.db.Test_Verse import TYPICAL_VERSE
 
 

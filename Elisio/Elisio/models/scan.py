@@ -1,12 +1,14 @@
-from django.db.models import Model, CharField, ForeignKey, IntegerField, DateTimeField
-from enumfields import EnumField
-from Elisio.utils import get_commit
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from Elisio.engine.VerseType import VerseType
-from model_utils.managers import InheritanceManager
 import enum
 from functools import total_ordering
+
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.db.models import Model, CharField, ForeignKey, IntegerField, DateTimeField
+from enumfields import EnumField
+from model_utils.managers import InheritanceManager
+
+from Elisio.engine.verse.VerseType import VerseType
+from Elisio.utils import get_commit
 from .metadata import DatabaseVerse, Poem, Book, Opus, Author
 
 

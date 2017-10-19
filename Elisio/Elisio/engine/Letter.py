@@ -1,5 +1,6 @@
 import enum
-from Elisio.exceptions import LetterException
+
+from Elisio.engine.exceptions import LetterException
 
 
 class LetterType(enum.Enum):

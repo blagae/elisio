@@ -1,9 +1,10 @@
-﻿import re
-import collections
+﻿import collections
+import re
+
 from Elisio.engine.Word import Word, Weight
-from Elisio.exceptions import ScansionException, VerseException
-from Elisio.engine.VerseType import VerseType
 from Elisio.engine.bridge.Bridge import DummyBridge
+from Elisio.engine.exceptions import ScansionException, VerseException
+from Elisio.engine.verse.VerseType import VerseType
 
 
 class VerseFactory(object):

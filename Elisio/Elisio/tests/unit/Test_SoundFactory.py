@@ -1,6 +1,7 @@
 import unittest
+
 from Elisio.engine.Sound import *
-from Elisio.exceptions import SoundException, LetterException
+from Elisio.engine.exceptions import SoundException, LetterException
 
 
 class TestSoundFactory(unittest.TestCase):

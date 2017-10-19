@@ -1,8 +1,9 @@
 """ Test classes for Syllable """
 import unittest
-from Elisio.engine.Syllable import Syllable
+
 from Elisio.engine.Sound import SoundFactory
-from Elisio.exceptions import SyllableException
+from Elisio.engine.Syllable import Syllable
+from Elisio.engine.exceptions import SyllableException
 
 
 class TestSyllable(unittest.TestCase):    
