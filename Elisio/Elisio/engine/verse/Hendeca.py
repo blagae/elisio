@@ -69,7 +69,7 @@ class PhalaecianHendeca(Hendeca):
         super().preparse()
         if self.flat_list[0] == Weight.ANCEPS and self.flat_list[1] == Weight.LIGHT:
             self.flat_list[0] = Weight.HEAVY
-        if self.flat_list[0] == Weight.LIGHT and self.flat_list[1] == Weight.ANCEPS:
+        elif self.flat_list[0] == Weight.LIGHT and self.flat_list[1] == Weight.ANCEPS:
             self.flat_list[1] = Weight.HEAVY
 
     def get_structure(self):

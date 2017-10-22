@@ -84,7 +84,7 @@ class Poem(Model):
         return self.book
 
     def __str__(self):
-        return self.number
+        return str(self.number)
 
 
 class DatabaseVerse(Model):

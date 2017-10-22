@@ -25,7 +25,6 @@ class VerseForm(enum.Enum):
     HEXAMETRIC = 1
     ELEGIAC_DISTICHON = 2
     HENDECASYLLABUS = 3
-    # SAPPHIC_STOPHE = 3
 
     def get_verse_types(self):
         if self == VerseForm.UNKNOWN:
@@ -36,5 +35,4 @@ class VerseForm(enum.Enum):
             return [VerseType.HEXAMETER, VerseType.PENTAMETER]
         if self == VerseForm.HENDECASYLLABUS:
             return [VerseType.HENDECASYLLABUS]
-        # if self == VerseForm.SAPPHIC_STOPHE:
         return [VerseType.UNKNOWN]
