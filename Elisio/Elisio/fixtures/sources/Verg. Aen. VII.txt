@@ -121,7 +121,8 @@ continuo «salve fatis mihi debita tellus
 vosque» ait «o fidi Troiae salvete penates:
 hic domus, haec patria est. genitor mihi talia namque
 (nunc repeto) Anchises fatorum arcana reliquit:
-"cum te, nate, fames ignota ad litora vectum"
+"cum te, nate, fames ignota ad litora vectum
+"
 accisis coget dapibus consumere mensas,
 tum sperare domos defessus, ibique memento
 prima locare manu molirique aggere tecta.
