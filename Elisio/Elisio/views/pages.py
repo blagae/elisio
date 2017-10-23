@@ -105,12 +105,12 @@ def manage_page(request):
         book = Book(opus=opus, number=book_number)
         book.save()
         poem_number = int(split[3]) if len(split) > 3 else 1
-        try:
-            verse_form = VerseForm[request.POST['verseForm']]
-        except KeyError:
-            verse_form = VerseForm.HEXAMETRIC
-        poem = Poem(book=book, number=poem_number, verseForm=verse_form)
+        poem = Poem(book=book, number=poem_number)
     if poem and not poem.pk:
+        try:
+            poem.verseForm = VerseForm[request.POST['verseForm']]
+        except KeyError:
+            poem.verseForm = VerseForm.HEXAMETRIC
         poem.save()
     lines = request.POST['fulltext'].replace('\r\n', '\n').split('\n')
     Elisio.batchjob.create_verses(poem, lines)

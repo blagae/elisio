@@ -48,7 +48,7 @@ def find_poem(book, number=None, create=False):
         return poem.get(number=number)
     except Poem.DoesNotExist as e:
         if create:
-            return Poem(book=book, number=1)
+            return Poem(book=book, number=number)
         raise e
 
 
