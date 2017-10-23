@@ -144,7 +144,7 @@ def sync_files():
             if verse.number != previous_verse + 1 or verse.alternative:
                 prefix = str(verse.number) + verse.alternative + '$'
                 item = prefix + item
-            f.write(item)
+            f.write(item + "\n")
             previous_verse = verse.number
         f.close()
 
@@ -177,7 +177,7 @@ def create_verses(poem, verses):
                 item.alternative = parsed[0][-1]
         item.number = count
         count += 1
-        item.contents = parsed[-1]
+        item.contents = parsed[-1].rstrip()
         vf = poem.verseForm.get_verse_types()
         item.verseType = vf[count % len(vf)]
         entries.append(item)
