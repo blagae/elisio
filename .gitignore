@@ -226,6 +226,6 @@ Elisio/*.config
 *.bat
 
 # Local session storage (in case of session storage on disk)
-/Elisio/sessions/*
-/Elisio/session/*
-/Elisio/cache/*
+Elisio/**/sessions/*
+Elisio/**/session/*
+Elisio/**/cache/*
