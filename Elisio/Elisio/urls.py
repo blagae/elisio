@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^json/authors/$', index.get_authors),
     url(r'^json/verse/([0-9]+)/([0-9]+)$', index.get_verse),
     url(r'^json/verse/random/$', index.get_random_verse),
+    url(r'^json/verse/forms/$', index.get_verse_forms),
     url(r'^json/scan/dbverse/([0-9]+)/([0-9]+)$', index.scan_verse),
     url(r'^json/scan/text/(.+)$', index.scan_verse_text),
     url(r'^json/batch/clearcurrentsession$', batch.clear_batch_session),

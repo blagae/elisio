@@ -5,10 +5,11 @@ import time
 from random import randint
 
 from django.core import serializers
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 
 from Elisio.engine.TextDecorator import TextDecorator
-from Elisio.engine.VerseFactory import VerseFactory, VerseType
+from Elisio.engine.VerseFactory import VerseFactory
+from Elisio.engine.verse.VerseType import VerseType, VerseForm
 from Elisio.engine.bridge.Bridge import DummyBridge
 from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
 from Elisio.engine.exceptions import ScansionException
@@ -113,6 +114,11 @@ def get_random_verse(request):
             pass
     metadata = get_metadata(verse)
     return HttpResponse(json.dumps(metadata), content_type='application/json')
+
+
+def get_verse_forms(request):
+    val = {num: {"name": x.name} for num, x in enumerate(VerseForm)}
+    return JsonResponse(val)
 
 
 def get_metadata(verse):

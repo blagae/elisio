@@ -6,6 +6,7 @@
             <form method="post" action="/manage/">
                 <textarea name="fulltext"></textarea>
                 <input type="text" name="poem" />
+                <select name="verseForm" id="verseFormField"></select>
                 <input type="submit" value="Add" />
                 {% csrf_token %}
             </form>

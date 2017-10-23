@@ -35,5 +35,14 @@
             content += "</tr>";
             $("#usersTable").append(content);
         });
-    })
+    });
+
+    $.getJSON("/json/verse/forms/", function(result) {
+        var objects = $("#verseFormField");
+        objects.empty();
+        $.each(result, function () {
+            objects.append($("<option />").val(this.name).text(this.name));
+        });
+        objects.find('option:eq(1)').attr("selected", "selected");
+    });
 });
