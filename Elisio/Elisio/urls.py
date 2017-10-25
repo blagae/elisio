@@ -1,9 +1,10 @@
 """ standard Django module """
 from django.conf.urls import include, url
 from django.contrib import admin
-admin.autodiscover()
 from Elisio.views import pages
 from Elisio.views.json import index, manage, batch
+
+admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', pages.index_page),

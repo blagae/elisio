@@ -224,7 +224,6 @@ def find_all_verses_containing(regex, must_be_parsed=False):
 
 
 def get_location_string(dbverse):
-    result = ''
     if not isinstance(dbverse, DatabaseVerse):
         # dbverse is an id
         dbverse = DatabaseVerse.objects.get(dbverse)
@@ -233,7 +232,8 @@ def get_location_string(dbverse):
     opus = book.opus
     author = opus.author
 
-    result += str(dbverse.id) + "\t" + author.abbreviation + " " + opus.abbreviation + " " + str(int_to_roman(book.number)) + ", " + str(poem.number) + ", " + str(dbverse.number)
+    result = "%s\t%s %s %s, %s, %s".format(dbverse.id, author.abbreviation, opus.abbreviation,
+                                           int_to_roman(book.number), poem.number, dbverse.number)
     if dbverse.alternative:
         result += " " + dbverse.alternative + "---"
     return result
@@ -313,6 +313,6 @@ def scan_batch_from_flat_file(file):
                     else:
                         d += "S"
                 print(str(j) + d)
-            except:
+            except VerseException:
                 print(str(j) + "\tfailed")
             j += 1

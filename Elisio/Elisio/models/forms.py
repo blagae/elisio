@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from Elisio.models.metadata import Author, Opus, Book
+from Elisio.models.metadata import Author, Opus
 
 
 class AuthorForm(ModelForm):

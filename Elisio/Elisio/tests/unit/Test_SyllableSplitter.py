@@ -60,7 +60,7 @@ class TestSyllableSplitter(unittest.TestCase):
 
     def test_syllsplit_bad_syll(self):
         with self.assertRaises(SyllableException):
-            syll = SyllableSplitter.split_from_text('c')
+            SyllableSplitter.split_from_text('c')
 
     def test_syllsplit_ianus(self):
         txt = SoundFactory.find_sounds_for_text('ianus')
