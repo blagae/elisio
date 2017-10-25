@@ -9,10 +9,19 @@ from Elisio.engine.Verse import Foot
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
 from Elisio.engine.exceptions import VerseException, ScansionException
-from Elisio.engine.verse.VerseType import VerseType
+from Elisio.engine.verse.VerseType import VerseType, VerseForm
 from Elisio.models.metadata import DatabaseVerse, Author, Book, Opus, Poem
 from Elisio.models.scan import ScanVerseResult, ScanSession, Batch, DatabaseBatchItem, ObjectType
 from Elisio.numerals import roman_to_int, int_to_roman
+
+
+form_extensions = {
+    'hen': VerseForm.HENDECASYLLABUS,
+    'dis': VerseForm.ELEGIAC_DISTICHON,
+    'hex': VerseForm.HEXAMETRIC  # default
+}
+
+extension_forms = {v: k for k, v in form_extensions.items()}
 
 
 def create_output_file(tree):
@@ -61,14 +70,25 @@ def clean_name(file):
     return split
 
 
+def get_extension(file):
+    split = file.split('.')
+    return form_extensions[split[-1]]
+
+
 def find_poem_for_file(file):
     split = clean_name(file)
+    frm = get_extension(file)
     author = find_author(split[0])
     opus = find_opus(author, split[1])
     book = find_book(opus, split[2])
     if len(split) > 3:
-        return find_poem(book, split[3])
-    return find_poem(book)
+        poem = find_poem(book, split[3], True)
+    else:
+        poem = find_poem(book, True)
+    if poem and not poem.pk:
+        poem.verseForm = frm
+        poem.save()
+    return poem
 
 
 def name_poem(poem):
@@ -133,7 +153,7 @@ def fill_xml_object():
 def sync_files():
     path = join(getcwd(), 'Elisio', 'fixtures', 'sources')
     for poem in Poem.objects.all():
-        name = join(path, name_poem(poem) + ".txt")
+        name = join(path, name_poem(poem) + "." + extension_forms[poem.verseForm])
         if isfile(name):
             continue
         f = open(name, 'w')
