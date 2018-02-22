@@ -17,6 +17,10 @@ def index_page(request):
     return render(request, 'index.html')
 
 
+def robots(request):
+    return render(request, 'robots.txt')
+
+
 def batch_page(request):
     """ return batch page """
     return render(request, 'batch.html')

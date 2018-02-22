@@ -8,6 +8,7 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', pages.index_page),
+    url(r'^robots\.txt$', pages.robots),
     url(r'^batch/$', pages.batch_page),
     url(r'^help/$', pages.help_page),
     url(r'^about/$', pages.about_page),
