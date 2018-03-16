@@ -217,6 +217,7 @@ Elisio/bin/**
 Elisio/obj/**
 Elisio/Elisio/*.pyc
 Elisio/Elisio/local.py
+Elisio/venv*
 Elisio/env*
 Elisio/ptvs*
 Elisio/Elisio/fixtures/omg.xml

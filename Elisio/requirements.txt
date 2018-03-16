@@ -4,5 +4,5 @@ pylint
 psycopg2>=2.6.2
 pymysql
 django-model-utils
-django-blog-zinnia
+django-blog-zinnia<0.19
 django-markdown
