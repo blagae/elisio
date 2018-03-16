@@ -109,7 +109,15 @@ def run_batch(request, batchid):
         return HttpResponseForbidden()
     if request.method != 'POST':
         return HttpResponse(status=405)
+    batch = Batch.objects.get(pk=batchid)
+    if request.user != batch.user:
+        return HttpResponseForbidden()
     # dummy method for now
+    for bi in batch.batchitem_set.all():
+        try:
+            print(bi.databasebatchitem.relation)
+        except AttributeError:
+            print(bi.inputbatchitem.contents)
     return HttpResponse(status=204)
 
 
