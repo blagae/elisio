@@ -115,8 +115,9 @@ def run_batch(request, batchid):
     # dummy method for now
     for bi in batch.batchitem_set.all():
         try:
-            print(bi.databasebatchitem.relation)
+            print(bi.databasebatchitem.get_verses().count())
         except AttributeError:
+            # to be revised if ever we have more than two batchitem types
             print(bi.inputbatchitem.contents)
     return HttpResponse(status=204)
 
@@ -128,14 +129,12 @@ def delete_batch(request, batchid):
         return HttpResponse(status=405)
     try:
         sess = Batch.objects.get(pk=batchid)
-        if sess.user == request.user:
-            sess.delete()
-            code = 204
-        else:
-            code = 401
+        if sess.user != request.user:
+            return HttpResponse(status=401)
+        sess.delete()
+        return HttpResponse(status=204)
     except ObjectDoesNotExist:
-        code = 404
-    return HttpResponse(status=code)
+        return HttpResponse(status=404)
 
 
 def delete_verse_hash(request, hashvalue):
