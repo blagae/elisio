@@ -137,20 +137,25 @@ class DatabaseBatchItem(BatchItem):
             return None
         raise ValidationError("Incorrect object type")
 
+    def get_verses(self):
+        if self.object_type == ObjectType.VERSE:
+            return DatabaseVerse.objects.filter(id=self.object_id)
+        if self.object_type == ObjectType.POEM:
+            return DatabaseVerse.objects.filter(poem_id=self.object_id)
+        if self.object_type == ObjectType.BOOK:
+            return DatabaseVerse.objects.filter(poem__book_id=self.object_id)
+        if self.object_type == ObjectType.OPUS:
+            return DatabaseVerse.objects.filter(poem__book__opus_id=self.object_id)
+        if self.object_type == ObjectType.AUTHOR:
+            if self.object_id == 0:
+                return DatabaseVerse.objects
+            return DatabaseVerse.objects.filter(poem__book__opus__author_id=self.object_id)
+        raise ValidationError("Incorrect object type")
+
     def get_verse_count(self):
         if self.object_type == ObjectType.VERSE:
             return 1
-        if self.object_type == ObjectType.POEM:
-            return DatabaseVerse.objects.filter(poem_id=self.object_id).count()
-        if self.object_type == ObjectType.BOOK:
-            return DatabaseVerse.objects.filter(poem__book_id=self.object_id).count()
-        if self.object_type == ObjectType.OPUS:
-            return DatabaseVerse.objects.filter(poem__book__opus_id=self.object_id).count()
-        if self.object_type == ObjectType.AUTHOR:
-            if self.object_id == 0:
-                return DatabaseVerse.objects.count()
-            return DatabaseVerse.objects.filter(poem__book__opus__author_id=self.object_id).count()
-        return 0
+        return self.get_verses().count()
 
 
 class InputBatchItem(BatchItem):
