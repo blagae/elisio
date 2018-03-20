@@ -6,7 +6,7 @@ from Elisio.utils import set_django
 
 set_django()
 
-from Elisio.batchjob import scan_verses
+from Elisio.batchutils import scan_verses
 from Elisio.engine.bridge.DatabaseBridge import DatabaseBridge
 from Elisio.models.metadata import DatabaseVerse
 from Elisio.models.scan import WordOccurrence

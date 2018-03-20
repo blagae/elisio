@@ -8,7 +8,8 @@ from django.shortcuts import render
 from Elisio.engine.verse.VerseType import VerseForm
 from Elisio.models.forms import AuthorForm, OpusForm
 from Elisio.models import Author, Opus, Book, Poem
-import Elisio.batchjob
+import Elisio.dbhandler
+import Elisio.filemanager
 from Elisio.numerals import roman_to_int
 
 
@@ -85,13 +86,13 @@ def manage_page(request):
         return HttpResponseRedirect('/')
     if request.method == 'GET':
         return render(request, 'manage.html')
-    split = Elisio.batchjob.clean_name(request.POST['poem'])
+    split = Elisio.filemanager.clean_name(request.POST['poem'])
     try:
-        author = Elisio.batchjob.find_author(split[0])
+        author = Elisio.dbhandler.find_author(split[0])
     except Author.DoesNotExist:
         return render(request, 'manage.html', {'form': AuthorForm(data={'abbreviation': split[0]})})
     try:
-        opus = Elisio.batchjob.find_opus(author, split[1])
+        opus = Elisio.dbhandler.find_opus(author, split[1])
     except Opus.DoesNotExist:
         form = OpusForm(data={'author': author, 'abbreviation': split[1]})
         return render(request, 'manage.html', {'form': form})
@@ -100,11 +101,11 @@ def manage_page(request):
     except TypeError:
         book_number = int(split[2])
     try:
-        book = Elisio.batchjob.find_book(opus, book_number)
+        book = Elisio.dbhandler.find_book(opus, book_number)
         try:
-            poem = Elisio.batchjob.find_poem(book, split[3], True)
+            poem = Elisio.dbhandler.find_poem(book, split[3], True)
         except IndexError:
-            poem = Elisio.batchjob.find_poem(book, create=True)
+            poem = Elisio.dbhandler.find_poem(book, create=True)
     except Book.DoesNotExist:
         book = Book(opus=opus, number=book_number)
         book.save()
@@ -117,5 +118,5 @@ def manage_page(request):
             poem.verseForm = VerseForm.HEXAMETRIC
         poem.save()
     lines = request.POST['fulltext'].replace('\r\n', '\n').split('\n')
-    Elisio.batchjob.create_verses(poem, lines)
+    Elisio.dbhandler.create_verses(poem, lines)
     return render(request, 'manage.html')

@@ -1,5 +1,7 @@
 import json
 from django.http import HttpResponse, Http404, HttpResponseForbidden
+
+from Elisio.dbhandler import get_location_string
 from Elisio.models.scan import Batch, DatabaseBatchItem, InputBatchItem, ScanSession, ObjectType, RelationType
 from random import randint
 from Elisio.engine.VerseFactory import VerseType
@@ -113,7 +115,6 @@ def run_batch(request, batchid):
     if request.user != batch.user:
         return HttpResponseForbidden()
     query = batch.get_verses()
-    from Elisio.batchjob import get_location_string
     for item in query:
         # dummy method for now
         print(get_location_string(item))
