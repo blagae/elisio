@@ -28,9 +28,6 @@ def find_all_verses_containing(regex, must_be_parsed=False):
 
 
 def scan_verses(dbverses, initiator):
-    worked = 0
-    worked_without_dict = 0
-    failed = 0
     batch = Batch()
     batch.save()
     batch_item = DatabaseBatchItem()
@@ -42,13 +39,19 @@ def scan_verses(dbverses, initiator):
     session.batch = batch
     session.initiator = initiator
     session.save()
+    return scan_session(dbverses, session)
+
+
+def scan_session(dbverses, session):
+    worked = 0
+    worked_without_dict = 0
+    failed = 0
     for dbverse in dbverses:
         verse_saved = dbverse.saved
         scan_result = ScanVerseResult()
         scan_result.session = session
         scan_result.verse = dbverse
         scan_result.scanned_as = dbverse.verseType
-        scan_result.batchItem = batch_item
         try:
             verse = VerseFactory.create(dbverse, DatabaseBridge(False), classes=dbverse.verseType)
             dbverse.saved = True

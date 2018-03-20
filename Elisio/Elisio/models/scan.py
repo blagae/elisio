@@ -196,7 +196,6 @@ class ScanSession(Model):
 class ScanVerseResult(Model):
     verse = ForeignKey(DatabaseVerse)
     session = ForeignKey(ScanSession)
-    batch_item = ForeignKey(BatchItem, null=True, default=None)
     failure = CharField(max_length=70, blank=True)
     structure = CharField(max_length=8, blank=True)
     zeleny = CharField(max_length=17, blank=True)

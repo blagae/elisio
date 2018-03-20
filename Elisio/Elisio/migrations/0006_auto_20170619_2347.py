@@ -93,10 +93,4 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE,
                                     to='Elisio.Batch'),
         ),
-        migrations.AddField(
-            model_name='scanverseresult',
-            name='batch_item',
-            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE,
-                                    to='Elisio.BatchItem'),
-        ),
     ]
