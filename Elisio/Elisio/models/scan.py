@@ -3,7 +3,7 @@ from functools import total_ordering
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.db.models import Model, CharField, ForeignKey, IntegerField, DateTimeField
+from django.db.models import Model, CharField, ForeignKey, IntegerField, DateTimeField, Q
 from enumfields import EnumField
 from model_utils.managers import InheritanceManager
 
@@ -26,6 +26,28 @@ class Batch(Model):
 
     def get_number_of_verses(self):
         return sum(x.get_number_of_verses() for x in self.batchitem_set.select_subclasses())
+
+    def build_batch_query(self):
+        query = None
+        for item in self.batchitem_set.all():
+            try:
+                dbitem = item.databasebatchitem
+                q = dbitem.get_verse_query()
+                if query is None:
+                    query = q
+                elif dbitem.relation == RelationType.EXCEPT:
+                    query &= ~dbitem.get_verse_query()
+                else:
+                    query |= dbitem.get_verse_query()
+            except AttributeError:
+                pass
+        return query
+
+    def get_verses(self):
+        return DatabaseVerse.objects.filter(self.build_batch_query())
+
+    def get_input_items(self):
+        return (item for item in self.batchitem_set.all() if hasattr(item, "contents"))
 
 
 class BatchItem(Model):
@@ -112,7 +134,7 @@ class DatabaseBatchItem(BatchItem):
         return False
 
     def get_number_of_verses(self):
-        result = self.get_verse_count()
+        result = self.get_verses().count()
         if self.relation == RelationType.EXCEPT:
             result *= -1
         return result
@@ -137,25 +159,23 @@ class DatabaseBatchItem(BatchItem):
             return None
         raise ValidationError("Incorrect object type")
 
-    def get_verses(self):
+    def get_verse_query(self):
         if self.object_type == ObjectType.VERSE:
-            return DatabaseVerse.objects.filter(id=self.object_id)
+            return Q(id=self.object_id)
         if self.object_type == ObjectType.POEM:
-            return DatabaseVerse.objects.filter(poem_id=self.object_id)
+            return Q(poem_id=self.object_id)
         if self.object_type == ObjectType.BOOK:
-            return DatabaseVerse.objects.filter(poem__book_id=self.object_id)
+            return Q(poem__book_id=self.object_id)
         if self.object_type == ObjectType.OPUS:
-            return DatabaseVerse.objects.filter(poem__book__opus_id=self.object_id)
+            return Q(poem__book__opus_id=self.object_id)
         if self.object_type == ObjectType.AUTHOR:
             if self.object_id == 0:
-                return DatabaseVerse.objects
-            return DatabaseVerse.objects.filter(poem__book__opus__author_id=self.object_id)
+                return Q()
+            return Q(poem__book__opus__author_id=self.object_id)
         raise ValidationError("Incorrect object type")
 
-    def get_verse_count(self):
-        if self.object_type == ObjectType.VERSE:
-            return 1
-        return self.get_verses().count()
+    def get_verses(self):
+        return DatabaseVerse.objects.filter(self.get_verse_query())
 
 
 class InputBatchItem(BatchItem):

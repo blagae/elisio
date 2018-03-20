@@ -112,13 +112,11 @@ def run_batch(request, batchid):
     batch = Batch.objects.get(pk=batchid)
     if request.user != batch.user:
         return HttpResponseForbidden()
-    # dummy method for now
-    for bi in batch.batchitem_set.all():
-        try:
-            print(bi.databasebatchitem.get_verses().count())
-        except AttributeError:
-            # to be revised if ever we have more than two batchitem types
-            print(bi.inputbatchitem.contents)
+    query = batch.get_verses()
+    from Elisio.batchjob import get_location_string
+    for item in query:
+        # dummy method for now
+        print(get_location_string(item))
     return HttpResponse(status=204)
 
 
