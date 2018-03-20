@@ -232,8 +232,8 @@ def get_location_string(dbverse):
     opus = book.opus
     author = opus.author
 
-    result = "%s\t%s %s %s, %s, %s" %(dbverse.id, author.abbreviation, opus.abbreviation,
-                                           int_to_roman(book.number), poem.number, dbverse.number)
+    result = "%s\t%s %s %s, %s, %s" % (dbverse.id, author.abbreviation, opus.abbreviation,
+                                       int_to_roman(book.number), poem.number, dbverse.number)
     if dbverse.alternative:
         result += " " + dbverse.alternative + "---"
     return result
