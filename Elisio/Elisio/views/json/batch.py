@@ -1,7 +1,7 @@
 import json
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 
-from Elisio.dbhandler import get_location_string
+from Elisio.batchutils import scan_session
 from Elisio.models.scan import Batch, DatabaseBatchItem, InputBatchItem, ScanSession, ObjectType, RelationType
 from random import randint
 from Elisio.engine.VerseFactory import VerseType
@@ -29,7 +29,7 @@ def get_batches(request):
             scans = ScanSession.objects.filter(batch=batch).order_by('timing')
             if scans.count() > 0:
                 data['scans'] = {'number': scans.count(),
-                                 'recent': scans[-1].timing
+                                 'recent': str(scans[scans.count() - 1].timing)
                                  }
             objects.append(data)
         return HttpResponse(json.dumps(objects), content_type='application/json')
@@ -114,11 +114,14 @@ def run_batch(request, batchid):
     batch = Batch.objects.get(pk=batchid)
     if request.user != batch.user:
         return HttpResponseForbidden()
-    query = batch.get_verses()
-    for item in query:
-        # dummy method for now
-        print(get_location_string(item))
-    return HttpResponse(status=204)
+    verses = batch.get_verses()
+    session = ScanSession()
+    session.batch = batch
+    session.initiator = batch.user.username
+    session.save()
+    worked, failed, wwd = scan_session(verses, session)
+    objects = {"worked": worked, "failed": failed, "wwd": wwd}
+    return HttpResponse(json.dumps(objects), content_type='application/json')
 
 
 def delete_batch(request, batchid):

@@ -113,7 +113,7 @@ function getAllBatches() {
                 url: '/json/batch/run/' + id,
                 type: 'POST',
                 complete: function (response) {
-                    alert("batch run:" + response.status);
+                    alert("batch run:" + response.responseJSON);
                 }
             });
         });
