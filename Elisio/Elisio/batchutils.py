@@ -74,6 +74,7 @@ def scan_session(dbverses, session):
             else:
                 worked += 1
         except ScansionException as exc:
+            failed += 1
             scan_result.failure = exc.message[:69]
             dbverse.saved = False
             scan_result.structure = ""
@@ -82,12 +83,6 @@ def scan_session(dbverses, session):
         if verse_saved != dbverse.saved or scan_result.failure:
             dbverse.save()
         scan_result.save()
-        """
-        if scan_result.structure:
-            print(get_location_string(dbverse) + ": " + scan_result.structure)
-        else:
-            print(get_location_string(dbverse) + ": failed")
-        """
     return worked, failed, worked_without_dict
 
 
