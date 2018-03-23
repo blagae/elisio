@@ -19,6 +19,7 @@
         <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="{% static 'universalScripts.js' %}" type="text/javascript"></script>
         {% block script %}{% endblock script %}
+        <script src="{% static 'bundle.js' %}" type="text/javascript"></script>
     </head>
     <body {% block bodytag %}{% endblock bodytag %}>
         <section id="menuSection">
@@ -50,6 +51,11 @@
         <section id="mainSection">
         {% block mainContent %}
         {% endblock %}
+        </section>
+        <section id="experimentalSection">
+            <div id="app">
+                [[ message ]]
+            </div>
         </section>
         <section id="footerSection">
             <p>This website's source code is licensed under the AGPL and available on <a href="//github.com/blagae/elisio">Github</a>.</p>
