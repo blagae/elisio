@@ -1,8 +1,9 @@
-django>=1.7,<1.11
+django>=1.7,<2.0
 django-enumfields
 pylint
 psycopg2>=2.6.2
 pymysql
 django-model-utils
-django-blog-zinnia<0.19
+django-blog-zinnia
 django-markdown
+git+https://github.com/blagae/open_words.git
