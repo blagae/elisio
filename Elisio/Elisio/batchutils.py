@@ -87,7 +87,7 @@ def scan_session(dbverses, session):
 
 
 def scan_batch_from_flat_file(file):
-    with open(file, "r") as file:
+    with open(file, "r", encoding='utf-8') as file:
         j = 0
         for dbverse in file.readlines():
             try:

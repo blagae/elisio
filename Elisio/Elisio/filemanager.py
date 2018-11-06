@@ -24,7 +24,7 @@ def create_output_file(tree):
     """ create the file from the given xml tree """
     if isinstance(tree, Et.Element):
         xml = mini.parseString(Et.tostring(tree)).toprettyxml()
-        with open('Elisio/fixtures/verses/initial_data.xml', "w") as file:
+        with open('Elisio/fixtures/verses/initial_data.xml', "w", encoding='utf-8') as file:
             file.writelines(xml)
     else:
         raise IOError("Invalid XML Tree object")
@@ -79,7 +79,7 @@ def fill_xml_object():
     all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
     # FYI if you get encoding exceptions with new files, manually set them to UTF-8
     for filename in all_filenames:
-        with open(join(path, filename), "r") as file:
+        with open(join(path, filename), "r", encoding='utf-8') as file:
             verses = [line.replace('\n', '').strip() for line in file.readlines()]
         poem = find_poem_for_file(file.name)
         count = 1
@@ -125,7 +125,7 @@ def sync_files():
         name = join(path, name_poem(poem) + "." + extension_forms[poem.verseForm])
         if isfile(name):
             continue
-        f = open(name, 'w')
+        f = open(name, 'w', encoding='utf-8')
         previous_verse = 0
         # force order in which they were inserted
         for verse in poem.databaseverse_set.order_by('id').all():
@@ -142,6 +142,6 @@ def sync_db():
     path = join(getcwd(), 'Elisio', 'fixtures', 'sources')
     all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
     for filename in all_filenames:
-        verses = [line for line in open(join(path, filename), "utf-8") if line.rstrip()]
+        verses = [line for line in open(join(path, filename), encoding='utf-8') if line.rstrip()]
         poem = find_poem_for_file(filename)
         create_verses(poem, verses)
