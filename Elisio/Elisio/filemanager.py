@@ -142,6 +142,6 @@ def sync_db():
     path = join(getcwd(), 'Elisio', 'fixtures', 'sources')
     all_filenames = [f for f in listdir(path) if isfile(join(path, f))]
     for filename in all_filenames:
-        verses = [line for line in open(join(path, filename)) if line.rstrip()]
+        verses = [line for line in open(join(path, filename), "utf-8") if line.rstrip()]
         poem = find_poem_for_file(filename)
         create_verses(poem, verses)
