@@ -6,4 +6,4 @@ pymysql
 django-model-utils
 django-blog-zinnia
 django-markdown
-git+https://github.com/blagae/open_words.git
+open_words
