@@ -50,6 +50,11 @@ class HexameterException(VerseException):
     pass
 
 
+class HexameterCreatorException(HexameterException):
+    """description of class"""
+    pass
+
+
 class PentameterException(VerseException):
     """description of class"""
     pass
