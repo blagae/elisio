@@ -249,20 +249,20 @@ class TestSpondaicDominantHexameter(unittest.TestCase):
         self.assertEqual(parse(sylls), feet)
 
     def test_hex_parse_spondaic_dom_heavy_1(self):
-        sylls = [Weight.ANCEPS, Weight.HEAVY,
-                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+        sylls = [Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.HEAVY,
                  Weight.HEAVY, Weight.ANCEPS,
                  Weight.ANCEPS, Weight.HEAVY,
                  Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
                  Weight.ANCEPS, Weight.ANCEPS]
-        feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        feet = [Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
         self.assertEqual(parse(sylls), feet)
 
     def test_hex_parse_spondaic_dom_heavy_2(self):
         sylls = [Weight.ANCEPS, Weight.HEAVY,
                  Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
-                 Weight.HEAVY, Weight.ANCEPS,
                  Weight.ANCEPS, Weight.HEAVY,
+                 Weight.HEAVY, Weight.ANCEPS,
                  Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
                  Weight.ANCEPS, Weight.ANCEPS]
         feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
@@ -270,23 +270,89 @@ class TestSpondaicDominantHexameter(unittest.TestCase):
 
     def test_hex_parse_spondaic_dom_heavy_3(self):
         sylls = [Weight.ANCEPS, Weight.HEAVY,
-                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
-                 Weight.HEAVY, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.HEAVY, Weight.ANCEPS, Weight.ANCEPS,
                  Weight.ANCEPS, Weight.HEAVY,
                  Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
                  Weight.ANCEPS, Weight.ANCEPS]
-        feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        feet = [Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
         self.assertEqual(parse(sylls), feet)
 
     def test_hex_parse_spondaic_dom_heavy_4(self):
         sylls = [Weight.ANCEPS, Weight.HEAVY,
-                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
-                 Weight.HEAVY, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.HEAVY,
                  Weight.ANCEPS, Weight.HEAVY,
                  Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
                  Weight.ANCEPS, Weight.ANCEPS]
-        feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        feet = [Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
         self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_spondaic_dom_fail_info_1(self):
+        sylls = [Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.HEAVY, Weight.HEAVY,
+                 Weight.HEAVY, Weight.HEAVY,
+                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS]
+        with self.assertRaises(HexameterException):
+            # not enough info, we may have dsss or sdss
+            parse(sylls)
+
+    def test_hex_parse_spondaic_dom_fail_info_2(self):
+        sylls = [Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.HEAVY, Weight.HEAVY,
+                 Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.HEAVY, Weight.HEAVY,
+                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS]
+        with self.assertRaises(HexameterException):
+            # not enough info, we may have dsss or ssds
+            parse(sylls)
+
+    def test_hex_parse_spondaic_dom_fail_info_3(self):
+        sylls = [Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.HEAVY, Weight.HEAVY,
+                 Weight.HEAVY, Weight.HEAVY,
+                 Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS]
+        with self.assertRaises(HexameterException):
+            # not enough info, we may have dsss or sssd
+            parse(sylls)
+
+    def test_hex_parse_spondaic_dom_fail_info_4(self):
+        sylls = [Weight.ANCEPS, Weight.HEAVY,
+                 Weight.HEAVY, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.HEAVY, Weight.HEAVY,
+                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS]
+        with self.assertRaises(HexameterException):
+            # not enough info, we may have sdss or ssds
+            parse(sylls)
+
+    def test_hex_parse_spondaic_dom_fail_info_5(self):
+        sylls = [Weight.ANCEPS, Weight.HEAVY,
+                 Weight.HEAVY, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.HEAVY,
+                 Weight.HEAVY, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS]
+        with self.assertRaises(HexameterException):
+            # not enough info, we may have sdss or sssd
+            parse(sylls)
+
+    def test_hex_parse_spondaic_dom_fail_info_6(self):
+        sylls = [Weight.ANCEPS, Weight.HEAVY,
+                 Weight.HEAVY, Weight.HEAVY,
+                 Weight.HEAVY, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS, Weight.ANCEPS,
+                 Weight.ANCEPS, Weight.ANCEPS]
+        with self.assertRaises(HexameterException):
+            # not enough info, we may have ssds or sssd
+            parse(sylls)
 
 
 class TestDactylicDominantHexameter(unittest.TestCase):
@@ -339,3 +405,23 @@ class TestDactylicDominantHexameter(unittest.TestCase):
         feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
         self.assertEqual(parse(sylls), feet)
 
+    def test_hex_parse_dactylic_dom_combo_2a(self):
+        sylls = [Weight.ANCEPS] * 16
+        sylls[4] = Weight.HEAVY
+        sylls[6] = Weight.LIGHT
+        feet = [Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_dactylic_dom_combo_2b(self):
+        sylls = [Weight.ANCEPS] * 16
+        sylls[4] = Weight.HEAVY
+        sylls[7] = Weight.LIGHT
+        feet = [Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_dactylic_dom_combo_3a(self):
+        sylls = [Weight.ANCEPS] * 16
+        sylls[5] = Weight.LIGHT
+        sylls[7] = Weight.HEAVY
+        feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
