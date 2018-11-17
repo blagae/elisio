@@ -405,6 +405,21 @@ class TestDactylicDominantHexameter(unittest.TestCase):
         feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
         self.assertEqual(parse(sylls), feet)
 
+    def test_hex_parse_dactylic_dom_fallback_1(self):
+        sylls = [Weight.ANCEPS] * 16
+        sylls[1] = Weight.LIGHT
+        sylls[4] = Weight.LIGHT
+        sylls[7] = Weight.LIGHT
+        feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_dactylic_dom_fallback_2(self):
+        sylls = [Weight.ANCEPS] * 16
+        sylls[6] = Weight.HEAVY
+        sylls[9] = Weight.LIGHT
+        feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
     def test_hex_parse_dactylic_dom_combo_1(self):
         sylls = [Weight.ANCEPS] * 16
         sylls[4] = Weight.LIGHT
@@ -460,6 +475,12 @@ class TestDactylicDominantHexameter(unittest.TestCase):
         sylls[8] = Weight.LIGHT
         feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
         self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_dactylic_dom_fail_info(self):
+        sylls = [Weight.ANCEPS] * 16
+        sylls[6] = Weight.HEAVY
+        with self.assertRaises(HexameterException):
+            parse(sylls)
 
 
 class TestBalancedHexameter(unittest.TestCase):
