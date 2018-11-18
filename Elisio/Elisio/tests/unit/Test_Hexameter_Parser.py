@@ -827,3 +827,25 @@ class TestBalancedHexameter(unittest.TestCase):
         sylls[9] = Weight.HEAVY
         feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
         self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_bal_stab(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[3] = Weight.HEAVY
+        sylls[5] = Weight.HEAVY
+        sylls[7] = Weight.HEAVY
+        feet = [Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_bal_fail_info_1(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.HEAVY
+        sylls[5] = Weight.HEAVY
+        with self.assertRaises(VerseException):
+            parse(sylls)
+
+    def test_hex_parse_bal_last_resort_1(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[4] = Weight.HEAVY
+        sylls[5] = Weight.HEAVY
+        with self.assertRaises(VerseException):
+            parse(sylls)

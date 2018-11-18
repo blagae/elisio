@@ -401,34 +401,6 @@ class BalancedHexameter(Hexameter):
             self.feet[2] = Foot.SPONDAEUS
             self.feet[3] = Foot.SPONDAEUS
 
-        elif self.flat_list[5] == Weight.HEAVY:
-            if ((self.feet[2] == Foot.DACTYLUS or
-                 self.feet[3] == Foot.SPONDAEUS) and
-                    self.flat_list[3] == Weight.HEAVY):
-                self.feet[0] = Foot.DACTYLUS
-                self.feet[1] = Foot.SPONDAEUS
-                self.feet[2] = Foot.DACTYLUS
-                self.feet[3] = Foot.SPONDAEUS
-
-            elif ((self.feet[0] == Foot.SPONDAEUS or
-                   self.feet[1] == Foot.DACTYLUS) and
-                    self.flat_list[5] == Weight.HEAVY):
-                self.feet[0] = Foot.SPONDAEUS
-                self.feet[1] = Foot.DACTYLUS
-                self.feet[2] = Foot.SPONDAEUS
-                self.feet[3] = Foot.DACTYLUS
-
-            elif (((self.feet[2] == Foot.SPONDAEUS or
-                    self.feet[3] == Foot.DACTYLUS) and
-                    self.flat_list[3] == Weight.HEAVY) or
-                  ((self.feet[0] == Foot.DACTYLUS or
-                    self.feet[1] == Foot.SPONDAEUS) and
-                    self.flat_list[7] == Weight.HEAVY)):
-                self.feet[0] = Foot.DACTYLUS
-                self.feet[1] = Foot.SPONDAEUS
-                self.feet[2] = Foot.SPONDAEUS
-                self.feet[3] = Foot.DACTYLUS
-
     def __calculate(self):
         """ method that will try to fill the feet """
         self.dactyls = self.feet[:4].count(Foot.DACTYLUS)
