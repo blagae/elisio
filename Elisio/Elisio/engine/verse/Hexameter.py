@@ -1,7 +1,7 @@
 ﻿from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Verse, Foot
 from Elisio.engine.VerseFactory import VerseCreator
-from Elisio.engine.exceptions import HexameterException, HexameterCreatorException
+from Elisio.engine.exceptions import HexameterException, VerseCreatorException
 
 
 class HexameterCreator(VerseCreator):
@@ -16,9 +16,9 @@ class HexameterCreator(VerseCreator):
     def get_subtype(self):
         size = len(self.list)
         if size > self.max_syllables:
-            raise HexameterCreatorException("too many syllables in first pass")
+            raise VerseCreatorException("too many syllables in first pass")
         elif size < self.min_syllables:
-            raise HexameterCreatorException("too few syllables in first pass")
+            raise VerseCreatorException("too few syllables in first pass")
         if (self.list[-3] == Weight.HEAVY or
             self.list[-4] == Weight.HEAVY or
                 self.list[-5] == Weight.LIGHT):
@@ -26,9 +26,9 @@ class HexameterCreator(VerseCreator):
         else:
             self.min_syllables += 1
         if size > self.max_syllables:
-            raise HexameterCreatorException("too many syllables in second pass")
+            raise VerseCreatorException("too many syllables in second pass")
         elif size < self.min_syllables:
-            raise HexameterCreatorException("too few syllables in second pass")
+            raise VerseCreatorException("too few syllables in second pass")
         length = size - self.min_syllables
         if length == 0:
             return SpondaicHexameter
@@ -41,7 +41,7 @@ class HexameterCreator(VerseCreator):
         elif length == 4:
             return DactylicHexameter
         else:
-            raise HexameterCreatorException("{0} is an illegal number of syllables in a Hexameter"
+            raise VerseCreatorException("{0} is an illegal number of syllables in a Hexameter"
                                             .format(size))
 
 

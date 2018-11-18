@@ -1,7 +1,7 @@
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Verse, Foot
 from Elisio.engine.VerseFactory import VerseCreator
-from Elisio.engine.exceptions import PentameterException
+from Elisio.engine.exceptions import PentameterException, VerseCreatorException
 
 
 class PentameterCreator(VerseCreator):
@@ -16,19 +16,15 @@ class PentameterCreator(VerseCreator):
     def get_subtype(self):
         size = len(self.list)
         if size > self.max_syllables:
-            raise PentameterException("too many syllables")
+            raise VerseCreatorException("too many syllables")
         elif size < self.min_syllables:
-            raise PentameterException("too few syllables")
+            raise VerseCreatorException("too few syllables")
         length = size - self.min_syllables
         if length == 0:
             return SpondaicPentameter
         elif length == 1:
             return BalancedPentameter
-        elif length == 2:
-            return DactylicPentameter
-        else:
-            raise PentameterException("{0} is an illegal number of syllables in a Pentameter"
-                                      .format(size))
+        return DactylicPentameter
 
 
 class Pentameter(Verse):

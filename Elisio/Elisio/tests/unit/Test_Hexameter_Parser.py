@@ -2,7 +2,7 @@
 
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Foot
-from Elisio.engine.exceptions import HexameterException, HexameterCreatorException, VerseException
+from Elisio.engine.exceptions import HexameterException, VerseCreatorException, VerseException
 from Elisio.engine.verse.Hexameter import HexameterCreator, SpondaicHexameter, SpondaicDominantHexameter, \
     DactylicDominantHexameter, DactylicHexameter, BalancedHexameter
 
@@ -24,33 +24,33 @@ class TestHexameterCreator(unittest.TestCase):
 
     def test_hex_create_edgecase_empty(self):
         sylls = []
-        with self.assertRaises(HexameterCreatorException):
+        with self.assertRaises(VerseCreatorException):
             get_subtype(sylls)
 
     def test_hex_create_toomany_firstpass(self):
         sylls = [Weight.ANCEPS] * 18
-        with self.assertRaises(HexameterCreatorException):
+        with self.assertRaises(VerseCreatorException):
             get_subtype(sylls)
 
     def test_hex_create_toofew_firstpass(self):
         sylls = [Weight.ANCEPS] * 11
-        with self.assertRaises(HexameterCreatorException):
+        with self.assertRaises(VerseCreatorException):
             get_subtype(sylls)
 
     def test_hex_create_toomany_secondpass(self):
         sylls = [Weight.HEAVY] * 17
-        with self.assertRaises(HexameterCreatorException):
+        with self.assertRaises(VerseCreatorException):
             get_subtype(sylls)
 
     def test_hex_create_toofew_secondpass(self):
         sylls = [Weight.LIGHT] * 12
         sylls[-5] = Weight.HEAVY
-        with self.assertRaises(HexameterCreatorException):
+        with self.assertRaises(VerseCreatorException):
             get_subtype(sylls)
 
     def test_hex_create_toofew_secondpass2(self):
         sylls = [Weight.ANCEPS] * 12
-        with self.assertRaises(HexameterCreatorException):
+        with self.assertRaises(VerseCreatorException):
             get_subtype(sylls)
 
     def test_hex_create_sssss(self):
