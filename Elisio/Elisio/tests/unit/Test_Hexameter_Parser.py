@@ -151,6 +151,14 @@ class TestHexameterBasicCases(unittest.TestCase):
         feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
         self.assertEqual(parse(sylls), feet)
 
+    def test_hex_parse_preparse_fail(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.HEAVY
+        sylls[2] = Weight.LIGHT
+        sylls[3] = Weight.HEAVY
+        with self.assertRaises(HexameterException):
+            parse(sylls)
+
 
 class TestDactylicHexameter(unittest.TestCase):
 
@@ -836,6 +844,11 @@ class TestBalancedHexameter(unittest.TestCase):
         feet = [Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
         self.assertEqual(parse(sylls), feet)
 
+    def test_hex_parse_no_info(self):
+        sylls = [Weight.ANCEPS] * 15
+        with self.assertRaises(VerseException):
+            parse(sylls)
+
     def test_hex_parse_bal_fail_info_1(self):
         sylls = [Weight.ANCEPS] * 15
         sylls[1] = Weight.HEAVY
@@ -847,6 +860,14 @@ class TestBalancedHexameter(unittest.TestCase):
         sylls = [Weight.ANCEPS] * 15
         sylls[4] = Weight.HEAVY
         sylls[5] = Weight.HEAVY
+        with self.assertRaises(VerseException):
+            parse(sylls)
+
+    def test_hex_parse_bal_fail_incorrect_1(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.HEAVY
+        sylls[6] = Weight.HEAVY
+        sylls[9] = Weight.HEAVY
         with self.assertRaises(VerseException):
             parse(sylls)
 
@@ -907,3 +928,186 @@ class TestBalancedHexameter(unittest.TestCase):
         sylls[9] = Weight.LIGHT
         feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
         self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_1(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[3] = Weight.HEAVY
+        sylls[6] = Weight.HEAVY
+        sylls[9] = Weight.LIGHT
+        feet = [Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_2(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[3] = Weight.LIGHT
+        sylls[7] = Weight.HEAVY
+        feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_13a(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.HEAVY
+        sylls[6] = Weight.LIGHT
+        sylls[7] = Weight.HEAVY
+        feet = [Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_13b(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.HEAVY
+        sylls[5] = Weight.HEAVY
+        sylls[6] = Weight.LIGHT
+        feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_13_fail(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.HEAVY
+        sylls[6] = Weight.LIGHT
+        with self.assertRaises(VerseException):
+            parse(sylls)
+
+    def test_hex_parse_guess_14a(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.HEAVY
+        sylls[3] = Weight.HEAVY
+        sylls[8] = Weight.LIGHT
+        feet = [Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_14b(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.HEAVY
+        sylls[5] = Weight.HEAVY
+        sylls[8] = Weight.LIGHT
+        feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_14_fail(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.HEAVY
+        sylls[8] = Weight.LIGHT
+        with self.assertRaises(VerseException):
+            parse(sylls)
+
+    def test_hex_parse_guess_23a(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[4] = Weight.HEAVY
+        sylls[6] = Weight.LIGHT
+        sylls[7] = Weight.HEAVY
+        feet = [Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_23b(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[4] = Weight.HEAVY
+        sylls[5] = Weight.HEAVY
+        sylls[6] = Weight.LIGHT
+        feet = [Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_23_fail(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[4] = Weight.HEAVY
+        sylls[6] = Weight.LIGHT
+        with self.assertRaises(VerseException):
+            parse(sylls)
+
+    def test_hex_parse_guess_24(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[4] = Weight.HEAVY
+        sylls[5] = Weight.HEAVY
+        sylls[8] = Weight.LIGHT
+        feet = [Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_24_fail(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[4] = Weight.HEAVY
+        sylls[8] = Weight.LIGHT
+        with self.assertRaises(VerseException):
+            parse(sylls)
+
+    def test_hex_parse_guess_con_13(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.LIGHT
+        sylls[5] = Weight.HEAVY
+        sylls[6] = Weight.HEAVY
+        feet = [Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_con_13_fail(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.LIGHT
+        sylls[6] = Weight.HEAVY
+        with self.assertRaises(VerseException):
+            parse(sylls)
+
+    def test_hex_parse_guess_con_14(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.LIGHT
+        sylls[7] = Weight.HEAVY
+        sylls[8] = Weight.HEAVY
+        feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_con_14_fail(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[1] = Weight.LIGHT
+        sylls[8] = Weight.HEAVY
+        with self.assertRaises(VerseException):
+            parse(sylls)
+
+    def test_hex_parse_guess_con_23a(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[3] = Weight.HEAVY
+        sylls[4] = Weight.LIGHT
+        sylls[6] = Weight.HEAVY
+        feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_con_23b(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[4] = Weight.LIGHT
+        sylls[5] = Weight.HEAVY
+        sylls[6] = Weight.HEAVY
+        feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_con_23_fail(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[4] = Weight.LIGHT
+        sylls[6] = Weight.HEAVY
+        with self.assertRaises(VerseException):
+            parse(sylls)
+
+    def test_hex_parse_guess_con_24a(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[3] = Weight.HEAVY
+        sylls[4] = Weight.LIGHT
+        sylls[8] = Weight.HEAVY
+        feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_con_24b(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[4] = Weight.LIGHT
+        sylls[5] = Weight.HEAVY
+        sylls[8] = Weight.HEAVY
+        feet = [Foot.SPONDAEUS, Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_con_24c(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[4] = Weight.LIGHT
+        sylls[7] = Weight.HEAVY
+        sylls[8] = Weight.HEAVY
+        feet = [Foot.DACTYLUS, Foot.DACTYLUS, Foot.SPONDAEUS, Foot.SPONDAEUS, Foot.DACTYLUS, Foot.BINARY_ANCEPS]
+        self.assertEqual(parse(sylls), feet)
+
+    def test_hex_parse_guess_con_24_fail(self):
+        sylls = [Weight.ANCEPS] * 15
+        sylls[4] = Weight.LIGHT
+        sylls[8] = Weight.HEAVY
+        with self.assertRaises(VerseException):
+            parse(sylls)
