@@ -63,3 +63,8 @@ class PentameterException(VerseException):
 class IllegalFootException(ScansionException):
     """description of class"""
     pass
+
+
+class HendecaException(VerseException):
+    """description of class"""
+    pass

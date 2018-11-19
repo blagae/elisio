@@ -1,11 +1,7 @@
 from Elisio.engine.Syllable import Weight
 from Elisio.engine.Verse import Verse
 from Elisio.engine.VerseFactory import VerseCreator
-from Elisio.engine.exceptions import VerseException
-
-
-class HendecaException(VerseException):
-    pass
+from Elisio.engine.exceptions import HendecaException, VerseCreatorException
 
 
 class HendecaCreator(VerseCreator):
@@ -16,7 +12,7 @@ class HendecaCreator(VerseCreator):
 
     def get_subtype(self):
         if len(self.list) != 11:
-            raise HendecaException("incorrect number of syllables: " + str(len(self.list)))
+            raise VerseCreatorException("incorrect number of syllables: " + str(len(self.list)))
         li = self.list
         """
         https://en.wikipedia.org/wiki/Hendecasyllable
@@ -42,7 +38,9 @@ class HendecaCreator(VerseCreator):
             poss.discard(SapphicHendeca)
         if len(poss) == 1:
             return poss.pop()
-        raise HendecaException("could not determine type")
+        if len(poss) > 1:
+            raise VerseCreatorException("could not determine Hendecasyllable subtype: not enough information")
+        raise VerseCreatorException("could not determine Hendecasyllable subtype: conflicting hints")
 
 
 class Hendeca(Verse):
@@ -67,9 +65,11 @@ class Hendeca(Verse):
 class PhalaecianHendeca(Hendeca):
     def preparse(self):
         super().preparse()
-        if self.flat_list[0] == Weight.ANCEPS and self.flat_list[1] == Weight.LIGHT:
+        if self.flat_list[0] == self.flat_list[1] == Weight.LIGHT:
+            raise HendecaException("Phalaecian Hendecasyllable cannot start with two light syllables")
+        if self.flat_list[1] == Weight.LIGHT:
             self.flat_list[0] = Weight.HEAVY
-        elif self.flat_list[0] == Weight.LIGHT and self.flat_list[1] == Weight.ANCEPS:
+        elif self.flat_list[0] == Weight.LIGHT:
             self.flat_list[1] = Weight.HEAVY
 
     def get_structure(self):
