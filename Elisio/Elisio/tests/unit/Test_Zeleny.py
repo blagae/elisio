@@ -2,7 +2,7 @@ import unittest
 
 from Elisio.engine.VerseFactory import VerseFactory
 from Elisio.engine.verse.VerseType import VerseType
-from Elisio.tests.db.Test_Verse import TYPICAL_VERSE
+from Elisio.tests.unit.Test_Verse import TYPICAL_VERSE
 
 
 class TestAccent(unittest.TestCase):
