@@ -6,4 +6,4 @@ pymysql
 django-model-utils
 django-blog-zinnia
 django-markdown
-open_words
+git+git://github.com/blagae/whitakers_words.git#egg=whitakers_words

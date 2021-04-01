@@ -1,8 +1,8 @@
 import unittest
-from open_words.parse import Parser
+from whitakers_words.parser import Parser
 
 
-class TestOpenWords(unittest.TestCase):
+class TestWhitakersWords(unittest.TestCase):
 
     def test_basic_itr(self):
         parse = Parser()

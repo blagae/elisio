@@ -212,6 +212,9 @@ $RECYCLE.BIN/
 # PyCharm
 *.idea/
 
+# venv
+venv/
+
 # Local
 Elisio/bin/**
 Elisio/obj/**
