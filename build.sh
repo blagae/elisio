@@ -1,4 +1,4 @@
 #!/bin/bash
-cd Elisio/Elisio/typescript
+cd elisio/typescript
 ./node_modules/typescript/bin/tsc
 npm run build
