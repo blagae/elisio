@@ -1,4 +1,4 @@
-# copy this file to elisio/elisio/local.py
+# copy this file to elisio/local.py
 
 # DO NOT CHANGE THE VARIABLE NAMES OF THE PROPERTIES
 

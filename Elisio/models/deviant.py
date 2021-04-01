@@ -1,6 +1,7 @@
 import re
 
 from django.db.models import Model, CharField, ForeignKey, IntegerField
+from django.db.models.deletion import CASCADE
 from enumfields import EnumField
 
 from elisio.engine.Syllable import Weight, Syllable
@@ -41,7 +42,7 @@ class DeviantWord(Model):
 
 class DeviantSyllable(Model):
     """ model class for the Engine: lowest level """
-    word = ForeignKey(DeviantWord)
+    word = ForeignKey(DeviantWord, CASCADE)
     weight = EnumField(Weight)
     contents = CharField(max_length=8)
     sequence = IntegerField()

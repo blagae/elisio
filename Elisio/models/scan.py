@@ -4,6 +4,7 @@ from functools import total_ordering
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db.models import Model, CharField, ForeignKey, IntegerField, DateTimeField, Q
+from django.db.models.deletion import CASCADE
 from enumfields import EnumField
 from model_utils.managers import InheritanceManager
 
@@ -13,14 +14,14 @@ from .metadata import DatabaseVerse, Poem, Book, Opus, Author
 
 
 class WordOccurrence(Model):
-    verse = ForeignKey(DatabaseVerse, null=True)
+    verse = ForeignKey(DatabaseVerse, CASCADE, null=True)
     word = CharField(max_length=20)
     struct = CharField(max_length=10)
 
 
 class Batch(Model):
     timing = DateTimeField(auto_now=True)
-    user = ForeignKey(User, null=True)
+    user = ForeignKey(User, CASCADE, null=True)
     items_at_creation_time = IntegerField(null=True)
     name = CharField(max_length=30)
 
@@ -51,7 +52,7 @@ class Batch(Model):
 
 
 class BatchItem(Model):
-    batch = ForeignKey(Batch)
+    batch = ForeignKey(Batch, CASCADE)
     objects = InheritanceManager()
 
     class Meta:
@@ -86,7 +87,7 @@ class DatabaseBatchItem(BatchItem):
     object_type = EnumField(ObjectType, null=True)
     object_id = IntegerField(blank=True)
     relation = EnumField(RelationType, null=True)
-    dependent_on = ForeignKey("self", null=True)
+    dependent_on = ForeignKey("self", CASCADE, null=True)
 
     def save(self, *args, **kwargs):
         self.pre_save_hook()
@@ -187,15 +188,15 @@ class InputBatchItem(BatchItem):
 
 
 class ScanSession(Model):
-    batch = ForeignKey(Batch, null=True, default=None)
+    batch = ForeignKey(Batch, CASCADE, null=True, default=None)
     timing = DateTimeField(auto_now=True)
     initiator = CharField(max_length=40, default='')
     commit = CharField(max_length=40, default=get_commit)
 
 
 class ScanVerseResult(Model):
-    verse = ForeignKey(DatabaseVerse)
-    session = ForeignKey(ScanSession)
+    verse = ForeignKey(DatabaseVerse, CASCADE)
+    session = ForeignKey(ScanSession, CASCADE)
     failure = CharField(max_length=70, blank=True)
     structure = CharField(max_length=8, blank=True)
     zeleny = CharField(max_length=17, blank=True)

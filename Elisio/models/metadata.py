@@ -1,4 +1,5 @@
 from django.db.models import Model, CharField, ForeignKey, IntegerField, BooleanField, Max
+from django.db.models.deletion import CASCADE
 from enumfields import EnumField
 
 from elisio.engine.verse.VerseType import VerseType, VerseForm
@@ -20,7 +21,7 @@ class Author(Model):
     full_name = CharField(max_length=45)
     short_name = CharField(max_length=18)
     abbreviation = CharField(max_length=10)
-    period = ForeignKey(Period)
+    period = ForeignKey(Period, CASCADE)
     birth_year = IntegerField()
     dying_year = IntegerField()
     floruit_start = IntegerField()
@@ -50,9 +51,9 @@ class Opus(Model):
     full_name = CharField(max_length=40)
     abbreviation = CharField(max_length=10)
     alternative_name = CharField(max_length=40)
-    author = ForeignKey(Author)
+    author = ForeignKey(Author, CASCADE)
     publication = IntegerField()
-    genre = ForeignKey(Genre)
+    genre = ForeignKey(Genre, CASCADE)
 
     def get_parent(self):
         return self.author
@@ -63,7 +64,7 @@ class Opus(Model):
 
 class Book(Model):
     """ model class that contains a Book """
-    opus = ForeignKey(Opus)
+    opus = ForeignKey(Opus, CASCADE)
     number = IntegerField()
 
     def get_parent(self):
@@ -75,7 +76,7 @@ class Book(Model):
 
 class Poem(Model):
     """ model class that contains a Poem """
-    book = ForeignKey(Book)
+    book = ForeignKey(Book, CASCADE)
     number = IntegerField()
     nickname = CharField(max_length=20)
     verseForm = EnumField(VerseForm, default=VerseForm.HEXAMETRIC)
@@ -89,7 +90,7 @@ class Poem(Model):
 
 class DatabaseVerse(Model):
     """ model class that contains a Verse """
-    poem = ForeignKey(Poem)
+    poem = ForeignKey(Poem, CASCADE)
     number = IntegerField()
     alternative = CharField(max_length=1)
     contents = CharField(max_length=70)

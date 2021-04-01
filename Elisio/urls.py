@@ -37,6 +37,6 @@ urlpatterns = [
     url(r'^json/admin/sync/db/$', manage.sync_db),
     url(r'^json/admin/users/$', manage.get_member_list),
     url(r'^json/admin/meta/$', manage.post_meta),
-    url(r'^blog/', include('zinnia.urls')),
+    #url(r'^blog/', include('zinnia.urls')),
     url(r'^comments/', include('django_comments.urls')),
 ]

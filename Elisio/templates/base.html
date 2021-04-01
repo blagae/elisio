@@ -1,6 +1,5 @@
 {% load i18n %}
-{% load zinnia %}
-{% load staticfiles %}
+{% load static %}
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}">
     <head>
@@ -44,7 +43,6 @@
         {% block sideContent %}
             <aside id="widget-recents" class="widget">
                 <h3>Recent blog entries</h3>
-                {% get_recent_entries %}
             </aside>
         {% endblock %}
         </section>

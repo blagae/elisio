@@ -219,8 +219,8 @@ venv/
 bin/**
 obj/**
 elisio/local.py
-elisio/elisio/fixtures/omg.xml
-elisio/elisio/fixtures/*.db
+elisio/fixtures/omg.xml
+elisio/fixtures/*.db
 elisio/*.config
 *.sh
 *.bat

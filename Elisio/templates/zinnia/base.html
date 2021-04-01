@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load zinnia %}
-{% load staticfiles %}
+{% load static %}
 
 {% block meta-keywords %}{% get_tags as entry_tags %}{{ entry_tags|join:", "}}{% endblock meta-keywords %}
 
