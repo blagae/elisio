@@ -1,5 +1,5 @@
 import unittest
-from elisio.numerals import roman_to_int, int_to_roman
+from elisio.util.numerals import roman_to_int, int_to_roman
 
 
 class TestNumerals(unittest.TestCase):

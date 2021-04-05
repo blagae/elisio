@@ -9,7 +9,7 @@ from enumfields import EnumField
 from model_utils.managers import InheritanceManager
 
 from elisio.engine.verse.VerseType import VerseType
-from elisio.utils import get_commit
+from elisio.util.utils import get_commit
 from .metadata import DatabaseVerse, Poem, Book, Opus, Author
 
 
@@ -190,8 +190,8 @@ class InputBatchItem(BatchItem):
 class ScanSession(Model):
     batch = ForeignKey(Batch, CASCADE, null=True, default=None)
     timing = DateTimeField(auto_now=True)
-    initiator = CharField(max_length=40, default='')
-    commit = CharField(max_length=40, default=get_commit)
+    initiator = CharField(max_length=80, default='')
+    commit = CharField(max_length=80, default=get_commit)
 
 
 class ScanVerseResult(Model):

@@ -36,8 +36,8 @@ def scan_verses(dbverses, initiator):
     batch_item.object_id = 0
     batch_item.save()
     session = ScanSession()
-    session.batch = batch
-    session.initiator = initiator
+    #session.batch = batch
+    #session.initiator = initiator
     session.save()
     return scan_session(dbverses, session)
 

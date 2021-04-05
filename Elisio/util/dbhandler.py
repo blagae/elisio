@@ -1,6 +1,6 @@
 """ module for creating an xml file from given input """
 from elisio.models.metadata import DatabaseVerse, Author, Book, Opus, Poem
-from elisio.numerals import roman_to_int, int_to_roman
+from elisio.util.numerals import roman_to_int, int_to_roman
 
 
 def find_author(abbr):

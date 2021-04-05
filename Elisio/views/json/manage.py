@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseForbidden
-import elisio.filemanager
+import elisio.util.filemanager
 from elisio.models import Author, Period, Opus, Genre
 
 

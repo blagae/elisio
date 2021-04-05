@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import migrations, models
 
 import elisio.engine.verse.VerseType
-import elisio.utils
+import elisio.util.utils
 
 
 class Migration(migrations.Migration):
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='scansession',
             name='commit',
-            field=models.CharField(default=elisio.utils.get_commit, max_length=40),
+            field=models.CharField(default=elisio.util.utils.get_commit, max_length=40),
         ),
         migrations.AlterField(
             model_name='scansession',

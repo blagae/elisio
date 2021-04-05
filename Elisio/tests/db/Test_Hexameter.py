@@ -2,11 +2,11 @@
 
 from elisio.engine.VerseFactory import VerseFactory
 from elisio.engine.verse.VerseType import VerseType
-from elisio.utils import set_django
+from elisio.util.utils import set_django
 
 set_django()
 
-from elisio.batchutils import scan_verses
+from elisio.util.batchutils import scan_verses
 from elisio.engine.bridge.DatabaseBridge import DatabaseBridge
 from elisio.models.metadata import DatabaseVerse
 from elisio.models.scan import WordOccurrence
@@ -35,5 +35,5 @@ class TestHexameter(unittest.TestCase):
         """
         12811: nascetur pulchra Troianus origine Caesar,
         """
-        dbverse = DatabaseVerse.objects.get(pk=12811)
+        dbverse = DatabaseVerse.objects.get(pk=3306)
         VerseFactory.create(dbverse, DatabaseBridge(), classes=VerseType.HEXAMETER)

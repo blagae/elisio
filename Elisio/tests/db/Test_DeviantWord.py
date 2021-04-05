@@ -2,7 +2,7 @@
 
 from elisio.engine.Syllable import Syllable
 from elisio.engine.Word import Word, Weight
-from elisio.utils import set_django
+from elisio.util.utils import set_django
 
 set_django()
 

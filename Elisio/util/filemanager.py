@@ -5,10 +5,10 @@ import xml.etree.ElementTree as Et
 from os import listdir, getcwd
 from os.path import isfile, join
 
-from elisio.dbhandler import create_verses, find_author, find_opus, find_book, find_poem
+from elisio.util.dbhandler import create_verses, find_author, find_opus, find_book, find_poem
 from elisio.engine.verse.VerseType import VerseForm
 from elisio.models.metadata import Poem
-from elisio.numerals import int_to_roman
+from elisio.util.numerals import int_to_roman
 
 
 form_extensions = {

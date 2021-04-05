@@ -1,7 +1,7 @@
 """ Test classes for Verse scanning """
 import unittest
 from elisio.engine.Verse import Verse
-from elisio.utils import set_django
+from elisio.util.utils import set_django
 from elisio.engine.Word import Word
 from elisio.engine.VerseFactory import VerseFactory
 

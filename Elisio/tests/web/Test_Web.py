@@ -1,6 +1,6 @@
 """ tests for the frontend """
 import unittest
-from elisio.utils import set_django
+from elisio.util.utils import set_django
 
 set_django()
 

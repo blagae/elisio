@@ -14,7 +14,7 @@ from elisio.engine.bridge.Bridge import DummyBridge
 from elisio.engine.bridge.DatabaseBridge import DatabaseBridge
 from elisio.engine.exceptions import ScansionException
 from elisio.models.metadata import Author, Book, Opus, Poem, DatabaseVerse
-from elisio.numerals import int_to_roman
+from elisio.util.numerals import int_to_roman
 
 
 def get_list_type(request, obj_type, key):

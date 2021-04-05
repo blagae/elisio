@@ -8,9 +8,9 @@ from django.shortcuts import render
 from elisio.engine.verse.VerseType import VerseForm
 from elisio.models.forms import AuthorForm, OpusForm
 from elisio.models import Author, Opus, Book, Poem
-import elisio.dbhandler
-import elisio.filemanager
-from elisio.numerals import roman_to_int
+import elisio.util.dbhandler
+import elisio.util.filemanager
+from elisio.util.numerals import roman_to_int
 
 
 def index_page(request):
@@ -86,13 +86,13 @@ def manage_page(request):
         return HttpResponseRedirect('/')
     if request.method == 'GET':
         return render(request, 'manage.html')
-    split = elisio.filemanager.clean_name(request.POST['poem'])
+    split = elisio.util.filemanager.clean_name(request.POST['poem'])
     try:
-        author = elisio.dbhandler.find_author(split[0])
+        author = elisio.util.dbhandler.find_author(split[0])
     except Author.DoesNotExist:
         return render(request, 'manage.html', {'form': AuthorForm(data={'abbreviation': split[0]})})
     try:
-        opus = elisio.dbhandler.find_opus(author, split[1])
+        opus = elisio.util.dbhandler.find_opus(author, split[1])
     except Opus.DoesNotExist:
         form = OpusForm(data={'author': author, 'abbreviation': split[1]})
         return render(request, 'manage.html', {'form': form})
@@ -101,11 +101,11 @@ def manage_page(request):
     except TypeError:
         book_number = int(split[2])
     try:
-        book = elisio.dbhandler.find_book(opus, book_number)
+        book = elisio.util.dbhandler.find_book(opus, book_number)
         try:
-            poem = elisio.dbhandler.find_poem(book, split[3], True)
+            poem = elisio.util.dbhandler.find_poem(book, split[3], True)
         except IndexError:
-            poem = elisio.dbhandler.find_poem(book, create=True)
+            poem = elisio.util.dbhandler.find_poem(book, create=True)
     except Book.DoesNotExist:
         book = Book(opus=opus, number=book_number)
         book.save()
@@ -118,5 +118,5 @@ def manage_page(request):
             poem.verseForm = VerseForm.HEXAMETRIC
         poem.save()
     lines = request.POST['fulltext'].replace('\r\n', '\n').split('\n')
-    elisio.dbhandler.create_verses(poem, lines)
+    elisio.util.dbhandler.create_verses(poem, lines)
     return render(request, 'manage.html')

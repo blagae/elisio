@@ -2,7 +2,7 @@ import unittest
 
 from elisio.engine.VerseFactory import VerseFactory
 from elisio.engine.verse.VerseType import VerseType
-from elisio.utils import set_django
+from elisio.util.utils import set_django
 
 set_django()
 
