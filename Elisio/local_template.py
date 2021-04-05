@@ -8,6 +8,7 @@ DB_SUPERUSER_PASSWORD = 'mp'
 # change database settings at will
 # if you use something other than SQLite, you will need to
 # consult the Django docs for database settings
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

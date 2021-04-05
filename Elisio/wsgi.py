@@ -1,24 +1,17 @@
 """
 WSGI config for elisio project.
 
-This module contains the WSGI application used by Django's development server
-and any production WSGI deployments. It should expose a module-level variable
-named ``application``. Django's ``runserver`` and ``runfcgi`` commands discover
-this application via the ``WSGI_APPLICATION`` setting.
+It exposes the WSGI callable as a module-level variable named ``application``.
 
-Usually you will have the standard Django WSGI application here, but it also
-might make sense to replace the whole Django WSGI application with a custom one
-that later delegates to the Django one. For example, you could introduce WSGI
-middleware here, or combine a Django application with an application of another
-framework.
-
+For more information on this file, see
+https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
 """
 import os
-
 import time
 import traceback
 import signal
 import sys
+
 from django.core.wsgi import get_wsgi_application
 
 
@@ -34,7 +27,3 @@ except Exception:
         traceback.print_exc()
         os.kill(os.getpid(), signal.SIGINT)
         time.sleep(2.5)
-
-# Apply WSGI middleware here.
-# from helloworld.wsgi import HelloWorldApplication
-# application = HelloWorldApplication(application)
