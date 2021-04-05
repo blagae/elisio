@@ -2,53 +2,15 @@
 
 This is a high-level list of tasks that are on the roadmap. There is no priority list as of this writing.
 
-## realistic TODOs
-
-### Project
-
-* build instructions: develop & deploy on Linux VM
-* Vagrant file
-* investigate whether session path requirement is prohibitive for users to complete builds
-
-### Engine
-
 * testing
     * unit testing specific hexameter cases (to prevent regressions)
     * unit test pentameter algorithm
     * code coverage analysis
 
-### Website
+* essentially teach it Latin
+    * investigate Whitaker's Words
+        * declensions: be able to correlate avo with avos
+        * conjugations: be able to correlate laborat with laboravit
 
-* beautify
-    * maybe go to angular, since we already have all JSON routes
-* security
-    * cookie warnings (when we start using cookies)
-* batch management
-    * kickass query builder
-    * editing batches
-    * scheduling batches
-
-## Pipe dreams
-
-### Engine
-
-essentially teach it Latin:
-
-* investigate Whitaker's Words
-    * declensions: be able to correlate avo with avos
-    * conjugations: be able to correlate laborat with laboravit
-
-parsing:
-
-* lyrical meters
-* dramatic meters (haha)
-
-### Website
-
-user interaction:
-
-* user feedback
-* user queries
-    * exporting results
-* build community
-* manual fixes by community
+* parsing
+    * dramatic meters (this is probably a pipe dream, given its complexities)

@@ -1,10 +1,1 @@
-django
-django-enumfields
-pylint
-psycopg2>=2.6.2
-pymysql
-six
-django-model-utils
-django-blog-zinnia
-django-markdown
 git+git://github.com/blagae/whitakers_words.git#egg=whitakers_words

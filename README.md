@@ -6,7 +6,7 @@ The Elisio project is an attempt to teach computers to scan Latin verses, and to
 Scanning a Latin verse means, in this technical context, to analyze its structural variation of light and heavy syllables.
 While this is an ancient art, practiced by the Romans themselves and almost ever since, this kind of data is hard to digitalize manually.
 
-With this scanning engine, we want to allow users to do batch scans of Latin verses,
+With this scanning engine, we want to allow users to do scans of Latin verses,
 in hopes that they can eventually retrieve previously unknown information from this heavily stylized use of the Latin language.
 
 ## Approach
@@ -20,8 +20,6 @@ In scanning a verse, this is a very high-level description of the approach that 
 5. try to determine syllable weights based on the basic weight rules
 6. try to see, from the syllable count, whether the verse can legally be a hexameter, pentameter, ... verse
 7. try to determine the full verse from the known weights
-    1. if this succeeds, store the resulting verse structure and word structures in the database
-    2. if this fails, use knowledge in the database from words from successfully parsed verses to determine more known syllables and reanalyze
 
 ## Problems and limitations
 
@@ -40,21 +38,15 @@ Less severe problems include:
 * words that have lots of possible declensions (adjectives and verbs), which makes exact word hits less likely
 
 The unique-word problem can be mitigated, hopefully, by teaching Elisio to recognize declensions and conjugations.
-This work is ongoing as of February 2017.
+This work is ongoing.
 
-The verse analysis algorithm is currently only implemented for hexameters and pentameters.
-The lyrical meters, and the scanning horror of the dramatic meters, are not on the realistic roadmap for now.
+The verse analysis algorithm is currently only implemented for hexameters, pentameters, and some common lyrical meters.
+The scanning horror of the dramatic meters is not on the realistic roadmap for now.
 
 ## Technology
 
-The Elisio engine is built using the programming language Python.
-For everything except database access, the implementation should be as framework-agnostic as possible.
-For the database itself, and for everything related to the front-end (web service and default client web application), Django is used.
-You will need a Django version that supports database migrations (1.7 and up).
-
-The project naturally requires a database connection (see [the BUILDING file](./BUILDING.md));
-there are no inherent restrictions on which database to use
-except those introduced by Django itself - and the availability of database connectors in Python 3.
+The Elisio engine is built using the programming language Python. It uses the project Whitaker's Words, which I am modifying
+heavily to suit the needs of this project.
 
 ## License
 
@@ -65,21 +57,18 @@ please check [the license terms](./LICENSE.md) to make yourself acquainted with 
 
 **Ignorance is not a valid excuse.**
 
+As mentioned in the header of `numerals.py`, that file is still available under its original PSF license.
+
 ## Code of Conduct
 
-This project includes a [code of conduct](./CODE_OF_CONDUCT.md)
-and tries to adhere to it strictly.
+This project includes a [code of conduct](./CODE_OF_CONDUCT.md) and tries to adhere to it strictly.
 
 ## Further developments
 
 If you're feeling Pythonic, you can look at [the CONTRIBUTING file](./CONTRIBUTING.md) for the contributor guide,
 and read [the TODO file](./TODO.md) to see the high-level features we'd like to work on next.
 
-## Building
-
-Please refer to [the BUILDING file](./BUILDING.md) for instructions on how to import and build your own version of the project.
-
 ## Major contributors
 
 This project was started by Benoit Lagae as a hobby assignment, coming from his background in Latin linguistics
-and his Master's thesis research. The engine and the REST interface are his work.
+and his Master's thesis research.
