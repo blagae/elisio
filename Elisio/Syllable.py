@@ -15,7 +15,7 @@ class Weight(enum.Enum):
     ANCEPS = 3
 
 
-class Syllable(object):
+class Syllable:
     """ Syllable class
     A syllable knows its sounds and can determine
     if the specific combination of them is a valid one
@@ -259,7 +259,7 @@ class Syllable(object):
         return Weight.ANCEPS
 
 
-class SyllableSplitter(object):
+class SyllableSplitter:
     shortEndVowels = []
     longEndVowels = ['i', 'o', 'u']
 

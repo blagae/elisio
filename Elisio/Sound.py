@@ -4,7 +4,7 @@ from elisio.Letter import Letter, LetterType
 from elisio.exceptions import SoundException
 
 
-class Sound(object):
+class Sound:
     """
     Sound class
     A sound is composed of one or several Letters
@@ -228,7 +228,7 @@ class HeavyMakerSound(ConsonantSound):
         return self.letters[0].get_type() == LetterType.HEAVYMAKER
 
 
-class SoundFactory(object):
+class SoundFactory:
     sound_dict = {}
 
     @staticmethod

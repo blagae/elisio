@@ -7,7 +7,7 @@ from elisio.exceptions import ScansionException, VerseException
 from elisio.verse.VerseType import VerseType
 
 
-class VerseFactory(object):
+class VerseFactory:
     """ Static factory method container for verse creation.
     The methods delegate pre-analysis work to the VersePreprocessor class,
     which in turn delegates actual Verse object creation to a VerseCreator class.
@@ -38,7 +38,7 @@ class VerseFactory(object):
         return VerseFactory.__create_preprocessor(text, bridge, classes).get_split_syllables()
 
 
-class VersePreprocessor(object):
+class VersePreprocessor:
     """ The verse preprocessor will do the heavy lifting of analyzing words and their structure.
     This happens in 5 steps:
     * split the verse into words
@@ -133,7 +133,7 @@ class VersePreprocessor(object):
         return result
 
 
-class VerseCreator(object):
+class VerseCreator:
     """ De facto interface that Verse Creator types must follow """
     def get_subtype(self):
         raise Exception("must be overridden")

@@ -5,7 +5,7 @@ from elisio.bridge.Bridge import DummyBridge
 from elisio.exceptions import WordException, SyllableException
 
 
-class Word(object):
+class Word:
     """ Word class
     A word is the representation of the Latin word
     It has extensive knowledge of its sounds, which it can join into syllables

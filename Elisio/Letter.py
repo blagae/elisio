@@ -13,7 +13,7 @@ class LetterType(enum.Enum):
     HEAVYMAKER = 3
 
 
-class Letter(object):
+class Letter:
     """
     The Letter class is mostly here to make sure
     only valid letters get passed to the Sound class

@@ -23,7 +23,7 @@ def assign_weights_from_dict(word, structs):
                 word.syllables[count].weight = Weight(int(val))
 
 
-class Bridge(object):
+class Bridge:
     def split_from_deviant_word(self, word):
         raise Exception("must be overridden")
 

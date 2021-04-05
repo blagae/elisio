@@ -2,7 +2,7 @@ from elisio.verse.Verse import Verse
 from elisio.Syllable import Weight
 
 
-class TextDecorator(object):
+class TextDecorator:
     def __init__(self, verse):
         if not isinstance(verse, Verse):
             raise TypeError("parameter must be a verse")

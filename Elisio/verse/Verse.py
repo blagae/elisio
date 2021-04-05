@@ -36,7 +36,7 @@ class Foot(enum.Enum):
         raise IllegalFootException("currently illegal foot structure: " + self.name)
 
 
-class Verse(object):
+class Verse:
     """ Verse class
     A verse is the representation of the Latin text of a verse
     It has no knowledge of its surroundings or context
