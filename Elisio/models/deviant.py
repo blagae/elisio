@@ -7,9 +7,9 @@ from enumfields import EnumField
 from elisio.engine.Syllable import Weight, Syllable
 from elisio.engine.exceptions import WordException
 
-#from elisio.util.utils import set_django
+from elisio.util.utils import set_django
 
-#set_django()
+set_django()
 
 class DeviantWord(Model):
     """ model class for the Engine: highest level """

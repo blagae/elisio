@@ -235,3 +235,4 @@ elisio/**/cache/*
 elisio/**/bundle.js
 elisio/**/typescript/src/*.js
 
+djangos/**

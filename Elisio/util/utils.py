@@ -9,9 +9,9 @@ def set_django():
     mod = 'DJANGO_SETTINGS_MODULE'
     if mod not in os.environ or os.environ[mod] != settings.__name__:
         os.environ[mod] = settings.__name__
-    import django
-    if django.VERSION[:2] >= (1, 7):
-        django.setup()
+        import django
+        if django.VERSION[:2] >= (1, 7):
+            django.setup()
 
 
 def recreate_db():

@@ -1,5 +1,5 @@
-﻿import collections
-import re
+﻿import re
+from collections.abc import Iterable
 
 from elisio.engine.Word import Word, Weight
 from elisio.engine.bridge.Bridge import DummyBridge
@@ -57,7 +57,7 @@ class VersePreprocessor(object):
         # https://docs.python.org/3/tutorial/controlflow.html#default-argument-values
         if isinstance(classes, VerseType):
             self.classes = classes.get_creators()
-        elif isinstance(classes, collections.Iterable):
+        elif isinstance(classes, Iterable):
             self.classes = set()
             for clazz in classes:
                 self.classes.update(clazz.get_creators())
