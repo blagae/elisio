@@ -1,4 +1,4 @@
-from setuptools import find_packages, setup
+from setuptools import find_namespace_packages, setup
 
 setup(
     author='Benoit Lagae',
@@ -24,7 +24,7 @@ setup(
     license='AGPL',
     long_description="""Elisio is a scanning engine for (classical) Latin verse""",
     name='elisio',
-    packages=find_packages(include=["elisio", "elisio.*"], exclude=["tests", "tests.*"]),
+    packages=find_namespace_packages(include=["elisio", "elisio.*"], exclude=["tests", "tests.*"]),
     url='https://github.com/blagae/elisio',
     version='0.1.0',
     zip_safe=True,
