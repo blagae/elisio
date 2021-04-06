@@ -1,5 +1,5 @@
-﻿from enum import Enum
-import re
+﻿import re
+from enum import Enum
 
 from elisio.exceptions import SyllableException
 from elisio.Sound import Sound, SoundFactory

@@ -1,6 +1,6 @@
-﻿from enum import Enum
-import re
+﻿import re
 from collections.abc import Iterable
+from enum import Enum
 from typing import Sequence, Type
 
 from elisio.bridge.Bridge import Bridge, DummyBridge
