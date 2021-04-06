@@ -1,11 +1,11 @@
-﻿import enum
+﻿from enum import Enum
 import re
 
-from elisio.Sound import SoundFactory
 from elisio.exceptions import SyllableException
+from elisio.Sound import Sound, SoundFactory
 
 
-class Weight(enum.Enum):
+class Weight(Enum):
     """
     The possible types of syllable weights
     """
@@ -22,23 +22,23 @@ class Syllable:
     """
     final_heavy = [re.compile('.*[ao]s$')]
 
-    def __init__(self, text, validate=True, weight=None):
+    def __init__(self, text: str, validate: bool = True, weight: Weight = None):
         """ construct a Syllable by its contents """
         self.weight = weight
         self.stressed = False
         self.sounds = self.fill_sounds(text, validate)
         self.text = Syllable.reconstruct_text(self.sounds)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         return self.sounds == other.sounds
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self.sounds)
 
-    def recalculate_text(self):
+    def recalculate_text(self) -> None:
         self.text = Syllable.reconstruct_text(self.sounds)
 
-    def copy_me(self):
+    def copy_me(self) -> 'Syllable':
         other = Syllable(self.text, False, self.weight)
         other.stressed = self.stressed
         other.sounds = Syllable.copy_sounds(self.sounds)
@@ -46,11 +46,11 @@ class Syllable:
         return other
 
     @staticmethod
-    def copy_sounds(sounds):
+    def copy_sounds(sounds: list[Sound]) -> list[Sound]:
         return [x for x in sounds]
 
     @staticmethod
-    def reconstruct_text(sounds):
+    def reconstruct_text(sounds: list[Sound]) -> str:
         """ get String representation for output purposes """
         result = ""
         for sound in sounds:
@@ -58,14 +58,14 @@ class Syllable:
         return result
 
     @staticmethod
-    def fill_sounds(text, validate):
+    def fill_sounds(text: str, validate: bool) -> list[Sound]:
         sounds = SoundFactory.find_sounds_for_text(text)
         if validate and not Syllable.is_valid(sounds):
             raise SyllableException("invalid Syllable object")
         return sounds
 
     @staticmethod
-    def is_valid(sounds, test=False):
+    def is_valid(sounds: list[Sound], test: bool = False) -> bool:
         """
         a syllable is valid if it contains:
             * at most one consonant after the vocalic sound, and
@@ -108,15 +108,15 @@ class Syllable:
                 only_consonants = False
         return contains_vowel or contains_semivowel or (only_consonants == test)
 
-    def ends_with_consonant(self):
+    def ends_with_consonant(self) -> bool:
         """ last sound of the syllable is consonantal """
         return self.sounds[-1].is_consonant()
 
-    def ends_with_consonant_cluster(self):
+    def ends_with_consonant_cluster(self) -> bool:
         return (len(self.sounds) > 1 and self.ends_with_consonant() and
                 self.sounds[-2].is_consonant())
 
-    def must_be_heavy(self):
+    def must_be_heavy(self) -> bool:
         if self.ends_with_heavymaker():
             return True
         for rgx in Syllable.final_heavy:
@@ -124,27 +124,27 @@ class Syllable:
                 return True
         return False
 
-    def ends_with_heavymaker(self):
+    def ends_with_heavymaker(self) -> bool:
         """ last sound of the syllable is consonantal """
         return self.sounds[-1].is_heavy_making()
 
-    def can_elide_if_final(self):
+    def can_elide_if_final(self) -> bool:
         """ special property of words ending in a vowel """
         return (self.ends_with_vowel() or
                 (self.sounds[-1] == SoundFactory.create('m') and
                  (self.sounds[-2].is_vowel() or self.sounds[-2].is_semivowel())))
 
-    def has_diphthong(self):
+    def has_diphthong(self) -> bool:
         return self.get_vowel().is_diphthong()
 
-    def ends_with_vowel(self):
+    def ends_with_vowel(self) -> bool:
         """
         last sound of the syllable is vocalic
         a final semivowel is always vocalic
         """
         return self.sounds[-1].is_vowel() or self.sounds[-1].is_semivowel()
 
-    def starts_with_vowel(self, initial=True):
+    def starts_with_vowel(self, initial: bool = True) -> bool:
         """
         first sound of the syllable is vocalic
         an initial semivowel is only vocalic if it is the syllable's only sound
@@ -162,35 +162,35 @@ class Syllable:
             return True
         return False
 
-    def starts_with_consonant(self, initial=True):
+    def starts_with_consonant(self, initial: bool = True) -> bool:
         """
         first sound of the syllable is consonantal
         an initial semivowel is consonantal if it is followed by a vowel
         """
         return not self.starts_with_vowel(initial)
 
-    def starts_with_consonant_cluster(self):
+    def starts_with_consonant_cluster(self) -> bool:
         """ first sounds of the syllable are all consonants """
         return (self.starts_with_consonant() and
                 ((len(self.sounds) > 1 and self.sounds[1].is_consonant()) or
                  self.makes_previous_heavy())
                 and self.sounds[0] != SoundFactory.create('gu'))
 
-    def makes_previous_heavy(self):
+    def makes_previous_heavy(self) -> bool:
         """ first sound of the syllable is a double consonant letter """
         return self.sounds[0].is_heavy_making()
 
-    def get_vowel_location(self):
+    def get_vowel_location(self) -> int:
         for idx, sound in enumerate(reversed(self.sounds)):
             if sound.is_vowel() or sound.is_semivowel():
                 return len(self.sounds) - idx - 1
         raise SyllableException("no vowel found in Syllable" + str(self.sounds))
 
-    def get_vowel(self):
+    def get_vowel(self) -> Sound:
         """ get the vocalic sound from a syllable """
         return self.sounds[self.get_vowel_location()]
 
-    def is_heavy(self, next_syllable=None):
+    def is_heavy(self, next_syllable: 'Syllable' = None) -> bool:
         """
         determines whether the syllable is inherently heavy or not
         a syllable is heavy if it ends in a consonant
@@ -209,14 +209,14 @@ class Syllable:
         return (self.ends_with_consonant() or vowel.is_diphthong() or
                 vowel.letters[0] in SyllableSplitter.longEndVowels)
 
-    def must_be_anceps(self, next_syllable=None):
+    def must_be_anceps(self, next_syllable: 'Syllable' = None) -> bool:
         if next_syllable and isinstance(next_syllable, Syllable):
             return (self.ends_with_vowel() and
                     self.get_vowel().is_diphthong() and
                     next_syllable.starts_with_vowel())
         return False
 
-    def is_light(self, next_syllable=None):
+    def is_light(self, next_syllable: 'Syllable' = None) -> bool:
         """
         determines whether the syllable is inherently light or not
         a syllable is always light if it ends in a vowel
@@ -229,7 +229,7 @@ class Syllable:
                 not self.get_vowel().is_diphthong() and
                 self.get_vowel().letters[0] in SyllableSplitter.shortEndVowels)
 
-    def add_sound(self, sound):
+    def add_sound(self, sound: Sound) -> None:
         """ add a sound to a syllable if the syllable stays
         valid by the addition """
         test_syllable = self.copy_me()
@@ -239,7 +239,7 @@ class Syllable:
         else:
             raise SyllableException("syllable invalidated by last addition")
 
-    def get_weight(self, next_syllable=None):
+    def get_weight(self, next_syllable: 'Syllable' = None) -> Weight:
         """
         try to determine the weight of the syllable
         in the light of the next syllable
@@ -260,17 +260,17 @@ class Syllable:
 
 
 class SyllableSplitter:
-    shortEndVowels = []
+    shortEndVowels: list[str] = []
     longEndVowels = ['i', 'o', 'u']
 
     @staticmethod
-    def split_from_text(text):
+    def split_from_text(text: str) -> list[Syllable]:
         sounds = SoundFactory.find_sounds_for_text(text)
         sylls = SyllableSplitter.join_into_syllables(sounds)
         return SyllableSplitter.redistribute(sylls)
 
     @staticmethod
-    def join_into_syllables(sounds):
+    def join_into_syllables(sounds: list[Sound]) -> list[Syllable]:
         """
         join a list of sounds into a preliminary syllables
         keep adding sounds to the syllable until it becomes illegal
@@ -290,7 +290,7 @@ class SyllableSplitter:
         return syllables
 
     @staticmethod
-    def redistribute(syllables):
+    def redistribute(syllables: list[Syllable]) -> list[Syllable]:
         """
         redistribute the sounds of a list of syllables
         in order to use the correct syllables, not the longest possible
@@ -328,7 +328,7 @@ class SyllableSplitter:
         return local_sylls
 
     @staticmethod
-    def __switch_sound(syllable1, syllable2, to_first):
+    def __switch_sound(syllable1: Syllable, syllable2: Syllable, to_first: bool) -> None:
         """ switch sounds from one syllable to another
         if toFirst is True, switch from the second to the first
         if toFirst is False, switch from the first to the second

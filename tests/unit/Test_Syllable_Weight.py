@@ -1,4 +1,5 @@
 import unittest
+
 from elisio.Syllable import Syllable
 
 

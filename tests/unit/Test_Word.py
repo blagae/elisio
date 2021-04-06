@@ -2,10 +2,10 @@
 
 import unittest
 
+from elisio.exceptions import WordException
 from elisio.Syllable import Syllable
 from elisio.verse.Verse import Weight
 from elisio.Word import Word
-from elisio.exceptions import WordException
 
 TYPICAL_WORD = "recentia"
 SYLLABLES = ['re', 'cen', 'ti', 'a']
@@ -499,4 +499,3 @@ class TestWord(unittest.TestCase):
         self.assertTrue(word.ends_in_enclitic())
         self.assertEqual('in', word.without_enclitic())
         self.assertEqual('que', word.enclitic)
-

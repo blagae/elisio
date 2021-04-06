@@ -1,8 +1,10 @@
 import unittest
 
-from elisio.verse.Pentameter import PentameterCreator, SpondaicPentameter, BalancedPentameter, DactylicPentameter
-from elisio.exceptions import VerseCreatorException, PentameterException, VerseException
+from elisio.exceptions import (PentameterException, VerseCreatorException,
+                               VerseException)
 from elisio.Syllable import Weight
+from elisio.verse.Pentameter import (BalancedPentameter, DactylicPentameter,
+                                     PentameterCreator, SpondaicPentameter)
 from elisio.verse.Verse import Foot
 
 

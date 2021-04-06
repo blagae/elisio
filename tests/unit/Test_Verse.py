@@ -1,11 +1,11 @@
 """ Test classes for Verse scanning """
 import unittest
 
+from elisio.exceptions import VerseException
 from elisio.Syllable import Weight
 from elisio.verse.Verse import Verse
 from elisio.verse.VerseFactory import VerseFactory
 from elisio.Word import Word
-from elisio.exceptions import VerseException
 
 TYPICAL_VERSE = "Arma virumque cano, Troiae qui primus ab oris"
 WORDS = ['Arma', 'virumque', 'cano', 'Troiae', 'qui', 'primus', 'ab', 'oris']

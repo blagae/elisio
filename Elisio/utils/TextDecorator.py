@@ -1,14 +1,16 @@
-from elisio.verse.Verse import Verse
+from typing import Union
+
 from elisio.Syllable import Weight
+from elisio.verse.Verse import Verse
 
 
 class TextDecorator:
-    def __init__(self, verse):
+    def __init__(self, verse: Verse):
         if not isinstance(verse, Verse):
             raise TypeError("parameter must be a verse")
         self.verse = verse
 
-    def decorate(self):
+    def decorate(self) -> str:
         result = ''
         vrs = self.verse.text.split(' ')
         for idx, word in enumerate(self.verse.words):
@@ -29,7 +31,7 @@ class TextDecorator:
         return result.strip()
 
     @staticmethod
-    def glyph(weight):
+    def glyph(weight: Union[None, Weight]) -> str:
         if weight == Weight.HEAVY:
             return u'\u0331'
         elif weight == Weight.LIGHT:

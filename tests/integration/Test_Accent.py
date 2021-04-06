@@ -1,8 +1,6 @@
 import unittest
 
-from elisio.verse.VerseFactory import VerseFactory
-from elisio.verse.VerseType import VerseType
-
+from elisio.verse.VerseFactory import VerseFactory, VerseType
 
 TYPICAL_VERSE = "Arma virumque cano, Troiae qui primus ab oris"
 

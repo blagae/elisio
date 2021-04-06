@@ -1,9 +1,8 @@
 import unittest
 
-from elisio.verse.Verse import Foot
-from elisio.verse.VerseFactory import VerseFactory
 from elisio.exceptions import VerseException
-from elisio.verse.VerseType import VerseType
+from elisio.verse.Verse import Foot
+from elisio.verse.VerseFactory import VerseFactory, VerseType
 
 
 class TestPentameter(unittest.TestCase):
@@ -15,7 +14,7 @@ class TestPentameter(unittest.TestCase):
                          Foot.DACTYLUS, Foot.MACRON]
         verse = VerseFactory.create("tres sumus; hoc illi praetulit auctor opus", classes=VerseType.PENTAMETER)
         self.assertEqual(verse.feet, expected_feet)
-        
+
     def test_pentameter_scan_incorrect_heavy_in_fourth(self):
         with self.assertRaises(VerseException):
             VerseFactory.create("tres sumus hoc illi praetullit auctor opus", classes=VerseType.PENTAMETER)

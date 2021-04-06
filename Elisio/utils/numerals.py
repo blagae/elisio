@@ -3,7 +3,7 @@
 # This file includes minor porting alterations for Python 3
 
 
-def int_to_roman(input_int):
+def int_to_roman(input_int: int) -> str:
     """
     Convert an integer to Roman numerals.
 
@@ -61,10 +61,10 @@ def int_to_roman(input_int):
     return result
 
 
-def roman_to_int(input_roman):
+def roman_to_int(input_roman: str) -> int:
     """
     Convert a roman numeral to an integer.
-   
+
     >>> r = range(1, 4000)
     >>> nums = [int_to_roman(i) for i in r]
     >>> ints = [roman_to_int(n) for n in nums]

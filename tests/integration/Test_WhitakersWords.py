@@ -1,4 +1,5 @@
 import unittest
+
 from whitakers_words.parser import Parser
 
 

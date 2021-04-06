@@ -1,16 +1,18 @@
+from typing import Type
+
+from elisio.exceptions import HendecaException, VerseCreatorException
 from elisio.Syllable import Weight
 from elisio.verse.Verse import Verse
 from elisio.verse.VerseFactory import VerseCreator
-from elisio.exceptions import HendecaException, VerseCreatorException
 
 
 class HendecaCreator(VerseCreator):
     SYLL = 11
 
-    def __init__(self, lst):
-        self.list = lst
+    def __init__(self, lst: list[Weight]):
+        super().__init__(lst)
 
-    def get_subtype(self):
+    def get_subtype(self) -> Type['Hendeca']:
         if len(self.list) != 11:
             raise VerseCreatorException("incorrect number of syllables: " + str(len(self.list)))
         li = self.list
@@ -44,7 +46,7 @@ class HendecaCreator(VerseCreator):
 
 
 class Hendeca(Verse):
-    def preparse(self):
+    def preparse(self) -> None:
         for count, x in enumerate(self.get_structure()):
             if x == '-':
                 if self.flat_list[count] == Weight.LIGHT:
@@ -55,15 +57,15 @@ class Hendeca(Verse):
                     raise HendecaException("cannot be heavy")
                 self.flat_list[count] = Weight.LIGHT
 
-    def scan(self):
+    def scan(self) -> None:
         pass
 
-    def get_structure(self):
+    def get_structure(self) -> str:
         raise HendecaException("must be overridden")
 
 
 class PhalaecianHendeca(Hendeca):
-    def preparse(self):
+    def preparse(self) -> None:
         super().preparse()
         if self.flat_list[0] == self.flat_list[1] == Weight.LIGHT:
             raise HendecaException("Phalaecian Hendecasyllable cannot start with two light syllables")
@@ -72,15 +74,15 @@ class PhalaecianHendeca(Hendeca):
         elif self.flat_list[0] == Weight.LIGHT:
             self.flat_list[1] = Weight.HEAVY
 
-    def get_structure(self):
+    def get_structure(self) -> str:
         return "xx-uu-u-u-x"
 
 
 class AlcaicHendeca(Hendeca):
-    def get_structure(self):
+    def get_structure(self) -> str:
         return "x-u-x-uu-u-"
 
 
 class SapphicHendeca(Hendeca):
-    def get_structure(self):
+    def get_structure(self) -> str:
         return "-x-x-uu-u--"

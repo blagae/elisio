@@ -4,25 +4,20 @@
 class ScansionException(Exception):
     """description of class"""
 
-    def __init__(self, message, *exceptions):
+    def __init__(self, message: str, *exceptions: Exception):
         super().__init__(message, *exceptions)
         self.message = message
         self.exceptions = []
         if exceptions:
             self.exceptions = list(exceptions)
 
-    def __str__(self):
+    def __str__(self) -> str:
         result = self.message
         if self.exceptions:
             for excepts in self.exceptions:
                 for exc in excepts:
                     result += str("\n{0}: {1}".format(exc.__class__.__name__, exc))
         return result
-
-
-class LetterException(ScansionException):
-    """description of class"""
-    pass
 
 
 class SoundException(ScansionException):

@@ -1,5 +1,6 @@
 """ test module for Sound """
 import unittest
+
 from elisio.Sound import SoundFactory
 
 
@@ -64,7 +65,7 @@ class TestSound(unittest.TestCase):
         self.assertTrue(sound.is_consonant())
         self.assertFalse(sound.is_heavy_making())
         self.assertFalse(sound.is_h())
-        
+
     def test_sound_get_type_hm(self):
         sound = SoundFactory.create('x')
         self.assertFalse(sound.is_vowel())

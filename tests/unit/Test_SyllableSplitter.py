@@ -1,11 +1,11 @@
 import unittest
 
-from elisio.Syllable import SyllableSplitter, Syllable, SoundFactory
 from elisio.exceptions import SyllableException
+from elisio.Syllable import SoundFactory, Syllable, SyllableSplitter
 
 
 class TestSyllableSplitter(unittest.TestCase):
-    
+
     def test_syllsplit_basic(self):
         txt = SoundFactory.find_sounds_for_text('athos')
         syll = SyllableSplitter.join_into_syllables(txt)

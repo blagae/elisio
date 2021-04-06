@@ -1,11 +1,14 @@
 ﻿""" the main module for parsing verses """
-import enum
+from enum import Enum
+from typing import Union
 
+from elisio.bridge.Bridge import Bridge, DummyBridge
+from elisio.exceptions import IllegalFootException, VerseException
 from elisio.Syllable import Weight
-from elisio.exceptions import VerseException, IllegalFootException
+from elisio.Word import Word
 
 
-class Foot(enum.Enum):
+class Foot(Enum):
     """ Types of verse foot """
     UNKNOWN = 0
     MACRON = 1
@@ -17,11 +20,11 @@ class Foot(enum.Enum):
     PYRRHICUS = 7
     DACTYLUS = 8
 
-    def get_length(self):
+    def get_length(self) -> int:
         """ number of syllables in the foot """
         return len(self.get_structure())
 
-    def get_structure(self):
+    def get_structure(self) -> list[Weight]:
         """ available foot structures """
         if self == Foot.DACTYLUS:
             return [Weight.HEAVY, Weight.LIGHT, Weight.LIGHT]
@@ -42,27 +45,27 @@ class Verse:
     It has no knowledge of its surroundings or context
     """
 
-    def __init__(self, text):
+    def __init__(self, text: str):
         """ construct a Verse by its contents """
         if not isinstance(text, str):
             raise VerseException("Verse must be initialized with text data")
         self.text = text
-        self.words = []
-        self.flat_list = []
-        self.feet = []
-        self.structure = None
+        self.words: list[Word] = []
+        self.flat_list: list[Weight] = []
+        self.feet: list[Union[None, Foot]] = []
+        self.structure = ''
 
-    def __repr__(self):
-        return self.words
+    def __repr__(self) -> str:
+        return ''.join(str(x) for x in self.words)
 
-    def __str__(self):
-        return self.words
+    def __str__(self) -> str:
+        return self.__repr__()
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """ Verses are equal if they have exactly the same characters """
         return self.text == other.text
 
-    def parse(self, verse=None, bridge=None):
+    def parse(self, verse: str = None, bridge: Bridge = DummyBridge()) -> None:
         self.preparse()
         self.scan()
         self.save_structure()
@@ -71,7 +74,7 @@ class Verse:
             bridge.save(self, verse.id)
         self.add_accents()
 
-    def add_accents(self):
+    def add_accents(self) -> None:
         for wrd in self.words:
             if len(wrd.syllables) < 3:
                 wrd.syllables[0].stressed = True
@@ -81,13 +84,13 @@ class Verse:
                 else:
                     wrd.syllables[-3].stressed = True
 
-    def preparse(self):
+    def preparse(self) -> None:
         raise Exception("must be overridden")
 
-    def scan(self):
+    def scan(self) -> None:
         raise Exception("must be overridden")
 
-    def save_structure(self):
+    def save_structure(self) -> None:
         # control mechanism and syllable filler
         start = 0
         for feet_num, foot in enumerate(self.feet):
@@ -112,13 +115,16 @@ class Verse:
                     syll.weight = self.flat_list[i]
                     i += 1
 
-    def save_feet(self):
+    def save_feet(self) -> None:
         result = ""
         for foot in self.feet:
-            result += str(foot.value)
+            if foot:
+                result += str(foot.value)
+            else:
+                result += ' '
         self.structure = result
 
-    def get_zeleny_score(self):
+    def get_zeleny_score(self) -> list[int]:
         score = []
         current = 0
         for word in self.words:

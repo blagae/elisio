@@ -1,8 +1,8 @@
 import unittest
 
-from elisio.Word import Word
-from elisio.verse.Verse import Weight
 from elisio.bridge.Bridge import LocalDictionaryBridge
+from elisio.verse.Verse import Weight
+from elisio.Word import Word
 
 
 class TestWordOccurrence(unittest.TestCase):

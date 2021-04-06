@@ -1,9 +1,11 @@
 import unittest
 from copy import deepcopy
 
-from elisio.Syllable import Weight
 from elisio.exceptions import VerseCreatorException
-from elisio.verse.Hendeca import HendecaCreator, AlcaicHendeca, PhalaecianHendeca, SapphicHendeca, HendecaException
+from elisio.Syllable import Weight
+from elisio.verse.Hendeca import (AlcaicHendeca, HendecaCreator,
+                                  HendecaException, PhalaecianHendeca,
+                                  SapphicHendeca)
 
 
 def get_subtype(lst):
