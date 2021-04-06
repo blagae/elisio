@@ -1,9 +1,10 @@
 ﻿""" the main module for parsing verses """
 from enum import Enum
-from typing import Union
+from typing import Any, Union
 
 from elisio.bridge.Bridge import Bridge, DummyBridge
 from elisio.exceptions import IllegalFootException, VerseException
+from elisio.Sound import SoundFactory
 from elisio.Syllable import Weight
 from elisio.Word import Word
 
@@ -71,8 +72,38 @@ class Verse:
         self.save_structure()
         self.save_feet()
         if verse and not verse.saved:
-            bridge.save(self, verse.id)
+            self.save(verse.id, bridge)
         self.add_accents()
+
+    def save(self, db_id: int, bridge: Bridge) -> None:
+        entries: list[Any] = []
+        for count, wrd in enumerate(self.words):
+            strct = ""
+            txt = wrd.text
+            for cnt, syll in enumerate(wrd.syllables):
+                if syll.weight:
+                    strct += str(syll.weight.value)
+                else:
+                    strct += ' '
+                if cnt == len(wrd.syllables) - 1 and count < len(self.words) - 1:
+                    if wrd.may_be_heavy_by_position(self.words[count + 1]):
+                        if syll.weight != Weight.NONE:
+                            strct = strct[:-1]
+                            strct += str(Weight.ANCEPS.value)
+            if wrd.ends_in_enclitic():
+                strct = strct[:-1]
+                txt = wrd.without_enclitic()
+                if strct[-1] == str(Weight.HEAVY.value):
+                    ltr = SoundFactory.create(txt[-1])
+                    if ltr.is_consonant() and not ltr.is_heavy_making():
+                        strct = strct[:-1]
+                        strct += str(Weight.ANCEPS.value)
+            if wrd.ends_in_variable_declension():
+                strct = strct[:-1]
+                strct += str(Weight.ANCEPS.value)
+            entries.append(bridge.make_entry(txt, strct, db_id))
+        if len(entries) > 0:
+            bridge.dump(entries)
 
     def add_accents(self) -> None:
         for wrd in self.words:

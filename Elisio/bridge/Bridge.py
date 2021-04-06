@@ -1,5 +1,6 @@
+from typing import Any
+
 from elisio.Syllable import Syllable
-# from elisio.verse.Verse import Verse
 
 
 class Bridge:
@@ -9,7 +10,10 @@ class Bridge:
     def use_dictionary(self, word: str) -> list[str]:
         raise Exception("must be overridden")
 
-    def save(self, verse, db_id: int) -> None:
+    def make_entry(self, txt: str, struct: str, db_id: int) -> Any:
+        raise Exception("must be overridden")
+
+    def dump(self, entries: list[Any]) -> None:
         raise Exception("must be overridden")
 
 
@@ -20,7 +24,10 @@ class DummyBridge(Bridge):
     def use_dictionary(self, word: str) -> list[str]:
         return []
 
-    def save(self, verse, db_id: int) -> None:
+    def make_entry(self, txt: str, struct: str, db_id: int) -> Any:
+        return {}
+
+    def dump(self, entries: list[Any]) -> None:
         pass
 
 
