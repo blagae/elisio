@@ -28,4 +28,5 @@ setup(
     url='https://github.com/blagae/elisio',
     version='0.1.0',
     zip_safe=True,
+    install_requires=['whitakers_words']
 )
