@@ -161,7 +161,7 @@ class VersePreprocessor:
             for syll in word.syllables:
                 for snd in syll.sounds:
                     for ltr in snd.letters:
-                        result += ltr.letter
+                        result += ltr
                 result += "-"
             result = result[:-1] + " "
         return result
