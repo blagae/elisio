@@ -3,9 +3,9 @@
 import unittest
 
 from elisio.exceptions import WordException
-from elisio.Syllable import Syllable
-from elisio.verse.Verse import Weight
-from elisio.Word import Word
+from elisio.parser.verse import Weight
+from elisio.syllable import Syllable
+from elisio.word import Word
 
 TYPICAL_WORD = "recentia"
 SYLLABLES = ['re', 'cen', 'ti', 'a']

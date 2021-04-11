@@ -2,13 +2,13 @@
 
 from elisio.exceptions import (HexameterException, VerseCreatorException,
                                VerseException)
-from elisio.Syllable import Weight
-from elisio.verse.Hexameter import (BalancedHexameter,
-                                    DactylicDominantHexameter,
-                                    DactylicHexameter, HexameterCreator,
-                                    SpondaicDominantHexameter,
-                                    SpondaicHexameter)
-from elisio.verse.Verse import Foot
+from elisio.parser.hexameter import (BalancedHexameter,
+                                     DactylicDominantHexameter,
+                                     DactylicHexameter, HexameterCreator,
+                                     SpondaicDominantHexameter,
+                                     SpondaicHexameter)
+from elisio.parser.verse import Foot
+from elisio.syllable import Weight
 
 
 def get_subtype(lst):

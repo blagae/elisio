@@ -1,7 +1,7 @@
 """ test module for Sound """
 import unittest
 
-from elisio.Sound import SoundFactory
+from elisio.sound import SoundFactory
 
 
 class TestSound(unittest.TestCase):

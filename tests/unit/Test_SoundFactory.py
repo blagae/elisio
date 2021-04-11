@@ -1,7 +1,7 @@
 import unittest
 
 from elisio.exceptions import SoundException
-from elisio.Sound import (ConsonantSound, Diphthong, HeavyMakerSound,
+from elisio.sound import (ConsonantSound, Diphthong, HeavyMakerSound,
                           SemivowelSound, Sound, SoundFactory, VowelSound)
 
 

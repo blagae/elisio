@@ -2,10 +2,10 @@ import unittest
 
 from elisio.exceptions import (PentameterException, VerseCreatorException,
                                VerseException)
-from elisio.Syllable import Weight
-from elisio.verse.Pentameter import (BalancedPentameter, DactylicPentameter,
-                                     PentameterCreator, SpondaicPentameter)
-from elisio.verse.Verse import Foot
+from elisio.parser.pentameter import (BalancedPentameter, DactylicPentameter,
+                                      PentameterCreator, SpondaicPentameter)
+from elisio.parser.verse import Foot
+from elisio.syllable import Weight
 
 
 def get_subtype(lst):

@@ -1,7 +1,7 @@
 from typing import Union
 
-from elisio.Syllable import Weight
-from elisio.verse.Verse import Verse
+from elisio.parser.verse import Verse
+from elisio.syllable import Weight
 
 
 class TextDecorator:

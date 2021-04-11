@@ -1,8 +1,8 @@
 import unittest
 
 from elisio.exceptions import IllegalFootException
-from elisio.Syllable import Weight
-from elisio.verse.Verse import Foot
+from elisio.parser.verse import Foot
+from elisio.syllable import Weight
 
 
 class TestFoot(unittest.TestCase):

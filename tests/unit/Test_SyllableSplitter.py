@@ -1,7 +1,7 @@
 import unittest
 
 from elisio.exceptions import SyllableException
-from elisio.Syllable import SoundFactory, Syllable, SyllableSplitter
+from elisio.syllable import SoundFactory, Syllable, SyllableSplitter
 
 
 class TestSyllableSplitter(unittest.TestCase):

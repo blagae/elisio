@@ -2,8 +2,8 @@
 import unittest
 
 from elisio.exceptions import SyllableException
-from elisio.Sound import SoundFactory
-from elisio.Syllable import Syllable
+from elisio.sound import SoundFactory
+from elisio.syllable import Syllable
 
 
 class TestSyllable(unittest.TestCase):

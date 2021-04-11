@@ -3,10 +3,10 @@ from collections.abc import Iterable
 from enum import Enum
 from typing import Sequence, Type
 
-from elisio.bridge.Bridge import Bridge, DummyBridge
+from elisio.bridge import Bridge, DummyBridge
 from elisio.exceptions import ScansionException, VerseException
-from elisio.verse.Verse import Verse
-from elisio.Word import Weight, Word
+from elisio.parser.verse import Verse
+from elisio.word import Weight, Word
 
 
 class VerseType(Enum):
@@ -16,9 +16,9 @@ class VerseType(Enum):
     HENDECASYLLABUS = 3
 
     def get_creators(self) -> list[Type['VerseCreator']]:
-        from elisio.verse.Hendeca import HendecaCreator
-        from elisio.verse.Hexameter import HexameterCreator
-        from elisio.verse.Pentameter import PentameterCreator
+        from elisio.parser.hendeca import HendecaCreator
+        from elisio.parser.hexameter import HexameterCreator
+        from elisio.parser.pentameter import PentameterCreator
         if self == VerseType.HEXAMETER:
             return [HexameterCreator]
         if self == VerseType.PENTAMETER:

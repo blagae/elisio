@@ -1,7 +1,7 @@
 import unittest
 
-from elisio.utils.TextDecorator import TextDecorator
-from elisio.verse.VerseFactory import VerseFactory, VerseType
+from elisio.parser.versefactory import VerseFactory, VerseType
+from elisio.utils.textdecorator import TextDecorator
 
 
 class TestTextDecorator(unittest.TestCase):

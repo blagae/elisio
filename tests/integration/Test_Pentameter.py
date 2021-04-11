@@ -1,8 +1,8 @@
 import unittest
 
 from elisio.exceptions import VerseException
-from elisio.verse.Verse import Foot
-from elisio.verse.VerseFactory import VerseFactory, VerseType
+from elisio.parser.verse import Foot
+from elisio.parser.versefactory import VerseFactory, VerseType
 
 
 class TestPentameter(unittest.TestCase):

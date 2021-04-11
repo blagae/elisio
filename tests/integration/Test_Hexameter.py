@@ -1,8 +1,8 @@
 ﻿import unittest
 
-from elisio.verse.Hexameter import Hexameter
-from elisio.verse.Verse import Foot, Verse
-from elisio.verse.VerseFactory import VerseFactory, VerseType
+from elisio.parser.hexameter import Hexameter
+from elisio.parser.verse import Foot, Verse
+from elisio.parser.versefactory import VerseFactory, VerseType
 
 TYPICAL_VERSE = "Arma virumque cano, Troiae qui primus ab oris"
 

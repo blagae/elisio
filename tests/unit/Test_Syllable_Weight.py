@@ -1,6 +1,6 @@
 import unittest
 
-from elisio.Syllable import Syllable
+from elisio.syllable import Syllable
 
 
 class TestSyllableWeight(unittest.TestCase):

@@ -2,10 +2,10 @@
 import unittest
 
 from elisio.exceptions import VerseException
-from elisio.Syllable import Weight
-from elisio.verse.Verse import Verse
-from elisio.verse.VerseFactory import VerseFactory
-from elisio.Word import Word
+from elisio.parser.verse import Verse
+from elisio.parser.versefactory import VerseFactory
+from elisio.syllable import Weight
+from elisio.word import Word
 
 TYPICAL_VERSE = "Arma virumque cano, Troiae qui primus ab oris"
 WORDS = ['Arma', 'virumque', 'cano', 'Troiae', 'qui', 'primus', 'ab', 'oris']

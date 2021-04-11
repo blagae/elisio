@@ -1,8 +1,8 @@
 ﻿""" processing unit for Words and lower entities """
-from elisio.bridge.Bridge import Bridge, DummyBridge
+from elisio.bridge import Bridge, DummyBridge
 from elisio.exceptions import SyllableException, WordException
-from elisio.Sound import Sound, SoundFactory
-from elisio.Syllable import Syllable, SyllableSplitter, Weight
+from elisio.sound import Sound, SoundFactory
+from elisio.syllable import Syllable, SyllableSplitter, Weight
 
 
 class Word:

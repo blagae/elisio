@@ -1,9 +1,9 @@
 from typing import Type, Union
 
 from elisio.exceptions import PentameterException, VerseCreatorException
-from elisio.Syllable import Weight
-from elisio.verse.Verse import Foot, Verse
-from elisio.verse.VerseFactory import VerseCreator
+from elisio.parser.verse import Foot, Verse
+from elisio.parser.versefactory import VerseCreator
+from elisio.syllable import Weight
 
 
 class PentameterCreator(VerseCreator):
