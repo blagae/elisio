@@ -7,4 +7,5 @@ class TestWhitakersWords(unittest.TestCase):
 
     def test_basic_itr(self):
         parse = Parser()
-        print(parse.parse("volvit"))
+        result = parse.parse("conderet")
+        self.assertNotEqual(result, None)
