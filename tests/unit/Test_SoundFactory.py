@@ -1,7 +1,7 @@
 import unittest
 
 from elisio.exceptions import SoundException
-from elisio.sound import (ConsonantSound, Diphthong, HeavyMakerSound,
+from elisio.sound import (ConsonantSound, Diphthong, HeavymakerSound,
                           SemivowelSound, Sound, SoundFactory, VowelSound)
 
 
@@ -23,8 +23,8 @@ class TestSoundFactory(unittest.TestCase):
         """ a valid Letter """
         self.assertTrue(isinstance(construct_sound('i'), SemivowelSound))
         self.assertTrue(isinstance(construct_sound('u'), SemivowelSound))
-        self.assertTrue(isinstance(construct_sound('x'), HeavyMakerSound))
-        self.assertTrue(isinstance(construct_sound('z'), HeavyMakerSound))
+        self.assertTrue(isinstance(construct_sound('x'), HeavymakerSound))
+        self.assertTrue(isinstance(construct_sound('z'), HeavymakerSound))
 
     def test_sound_constr_diph(self):
         """ a valid list of Letters """

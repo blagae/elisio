@@ -54,7 +54,7 @@ class Syllable:
         """ get String representation for output purposes """
         result = ""
         for sound in sounds:
-            result += sound.get_text()
+            result += sound.letters
         return result
 
     @staticmethod

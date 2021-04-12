@@ -40,7 +40,7 @@ class Word:
         """
         local_text = ""
         for sound in sounds:
-            local_text += sound.get_text()
+            local_text += sound.letters
         return local_text
 
     def starts_with_proclitic(self) -> str:

@@ -54,16 +54,15 @@ class Sound:
 
     def __init__(self, *letters: str):
         """ construct a Sound from a list of letters, or (a list of) text(s) """
-        self.letters = []
+        if not letters:
+            raise SoundException("Sound constructor cannot have empty argument list")
+        local_letters = ''
         for letter in letters:
             if letter in latin_letters:
-                self.letters.append(letter)
+                local_letters += letter
             else:
-                raise SoundException("invalid constructor: " + str(self.letters))
-
-    def get_text(self) -> str:
-        """ get String representation for output purposes """
-        return ''.join(self.letters)
+                raise SoundException(f"invalid constructor arguments: {letters}")
+        self.letters = local_letters
 
     def is_valid_sound(self) -> bool:
         """ is a given sound a valid sound
@@ -140,9 +139,9 @@ class VowelSound(Sound):
         """
         double vowel sounds should be checked immediately as Diphthong instances
         """
-        if len(self.letters) != 1:
-            return False
-        return latin_letters[self.letters[0]] == LetterType.VOWEL
+        if len(self.letters) == 1:
+            return latin_letters[self.letters] == LetterType.VOWEL
+        return False
 
 
 class Diphthong(VowelSound):
@@ -170,6 +169,10 @@ class Diphthong(VowelSound):
                 # lazy and: second is more likely to fail
                 (second == 'e' and (first == 'a' or first == 'o')))
 
+    def get_type(self) -> LetterType:
+        """ general API method for getting the type """
+        return LetterType.VOWEL
+
 
 class SemivowelSound(Sound):
     """
@@ -189,9 +192,9 @@ class SemivowelSound(Sound):
         """
         Semivowel Sounds are always single Sounds
         """
-        if len(self.letters) != 1:
-            return False
-        return latin_letters[self.letters[0]] == LetterType.SEMIVOWEL
+        if len(self.letters) == 1:
+            return latin_letters[self.letters] == LetterType.SEMIVOWEL
+        return False
 
 
 class ConsonantSound(Sound):
@@ -212,9 +215,9 @@ class ConsonantSound(Sound):
         """
         the only valid double Sounds are listed below
         """
-        if len(self.letters) != 1:
-            return self.is_valid_double_sound()
-        return latin_letters[self.letters[0]] == LetterType.CONSONANT
+        if len(self.letters) == 1:
+            return latin_letters[self.letters] == LetterType.CONSONANT
+        return self.is_valid_double_sound()
 
     def is_h(self) -> bool:
         """
@@ -226,9 +229,9 @@ class ConsonantSound(Sound):
         """
         MCL is a sequence of a stop or f and a liquid sound
         """
-        if len(self.letters) < 2:
-            return False
-        return (self.letters[0] in muta) and (self.letters[1] in liquida)
+        if len(self.letters) == 2:
+            return (self.letters[0] in muta) and (self.letters[1] in liquida)
+        return False
 
     def is_valid_double_sound(self) -> bool:
         """
@@ -247,9 +250,9 @@ class ConsonantSound(Sound):
                  (first == 'r' or first in hard_muta)))
 
 
-class HeavyMakerSound(ConsonantSound):
+class HeavymakerSound(ConsonantSound):
     """
-    HeavyMakerSounds are ConsonantSounds that
+    HeavymakerSounds are ConsonantSounds that
     inherently make the previous Syllable heavy
     because they essentially are two Sounds in one Letter
     """
@@ -265,29 +268,26 @@ class HeavyMakerSound(ConsonantSound):
         """
         a HeavyMaker is never part of a one-sound Consonant cluster
         """
-        if len(self.letters) != 1:
-            return False
-        return latin_letters[self.letters[0]] == LetterType.HEAVYMAKER
+        if len(self.letters) == 1:
+            return latin_letters[self.letters] == LetterType.HEAVYMAKER
+        return False
+
+
+constructors = {LetterType.HEAVYMAKER: HeavymakerSound,
+                LetterType.SEMIVOWEL: SemivowelSound,
+                LetterType.CONSONANT: ConsonantSound,
+                LetterType.VOWEL: VowelSound}
 
 
 class SoundFactory:
-    sound_dict: dict[str, Sound] = {}
+    sound_dict = {letter: globals()[str.title(typ.name) + "Sound"](letter) for (letter, typ) in latin_letters.items()}
 
     @staticmethod
     def create_single_letter(letter: str) -> Sound:
         try:
-            lettertype = latin_letters[letter]
+            return SoundFactory.sound_dict[letter]
         except KeyError:
-            raise SoundException("not a valid letter: " + str(letter))
-        if lettertype == LetterType.VOWEL:
-            return VowelSound(letter)
-        elif lettertype == LetterType.CONSONANT:
-            return ConsonantSound(letter)
-        elif lettertype == LetterType.SEMIVOWEL:
-            return SemivowelSound(letter)
-        elif lettertype == LetterType.HEAVYMAKER:
-            return HeavyMakerSound(letter)
-        raise SoundException("not a valid letter: " + str(letter))
+            raise SoundException(f"not a valid letter: {letter}")
 
     @staticmethod
     def create(letters: str) -> Sound:
@@ -295,25 +295,24 @@ class SoundFactory:
         outward-facing factory which preparses its parameters
         and passes them to the internal factory method
         """
-        first = True
-        for letter in letters:
+        if letters.lower() in SoundFactory.sound_dict:
+            return SoundFactory.sound_dict[letters.lower()]
+        for count, letter in enumerate(letters):
             item = letter.lower()
             if item == 'v':
                 item = 'u'
             elif item == 'j':
                 item = 'i'
-            if first:
+            if not count:
                 sound = SoundFactory.create_single_letter(item)
-                # set looping consonant to False
-                first = False
             else:
                 if sound.is_vowel() or sound.is_semivowel():
                     sound = Diphthong(sound.letters[0], item)
                 if sound.is_consonant():
-                    sound.letters.append(item)
+                    sound = ConsonantSound(sound.letters[0], item)
         if not sound.is_valid_sound():
             raise SoundException("not a valid sound given in factory method")
-        SoundFactory.sound_dict[sound.get_text()] = sound
+        SoundFactory.sound_dict[sound.letters] = sound
         return sound
 
     @staticmethod
@@ -323,6 +322,8 @@ class SoundFactory:
         this is a static method because it acts as a (super-)Factory
         returns an array of sounds
         """
+        if ' ' in text:
+            raise SoundException("argument cannot contain spaces")
         if len(text) > 3:
             raise SoundException("too many letters in this text sample")
         elif len(text) == 3:
@@ -331,7 +332,7 @@ class SoundFactory:
                 sounds = []
                 for i in text:
                     snd = SoundFactory.create(i)
-                    sounds.append(snd)
+                    sounds.append(snd)  # TODO validation logic
                 return sounds
         try:
             sound = SoundFactory.create(text[0:2])
@@ -348,7 +349,7 @@ class SoundFactory:
             added_sounds = SoundFactory.create_sounds_from_text(text[i:i + 3])
             for sound in added_sounds:
                 # dirty hack to prevent 'novae' type of word from being analyzed as 'no-va-e'
-                if sounds and sound.letters == ['e'] and sounds[-1].letters == ['a']:
+                if sounds and sound.letters == 'e' and sounds[-1].letters == 'a':
                     sound = SoundFactory.create('ae')
                     sounds.pop()
                 sounds.append(sound)
