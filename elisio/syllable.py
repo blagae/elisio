@@ -22,6 +22,7 @@ class Syllable:
         """ construct a Syllable by its contents """
         self.weight = weight
         self.stressed = False
+        self.text = text
         self.fill_sounds(text, validate)
         self.recalculate_text()
 
@@ -44,25 +45,25 @@ class Syllable:
         other.text = self.text
         return other
 
-    def fill_sounds(self, text: str, validate: bool) -> list[Sound]:
+    def fill_sounds(self, text: str, validate: bool) -> None:
         self.sounds = SoundFactory.find_sounds_for_text(text)
-        if validate and not Syllable.is_valid(self.sounds):
+        if validate and not self.is_valid():
             raise SyllableException("invalid Syllable object")
 
-    @staticmethod
-    def is_valid(sounds: list[Sound], test: bool = False) -> bool:
+    def is_valid(self, test: bool = False) -> bool:
         """
         a syllable is valid if it contains:
             * at most one consonant after the vocalic sound, and
             * a single vowel or semivowel
             * a semivowel and a vowel in that order
         """
-        if len(sounds) > 1 and sounds[0] == sounds[1] and sounds[0] == SoundFactory.create('i'):
+        sounds = self.sounds
+        if len(sounds) > 1 and sounds[0] == sounds[1] and sounds[0].letters == 'i':
             return False
-        if sounds[0] == SoundFactory.create('gu'):
-            copied = [x for x in sounds]
-            copied[0] = SoundFactory.create('u')
-            valid = Syllable.is_valid(copied, test)
+        if sounds[0].letters == 'gu':
+            copied = self.copy_me()
+            copied.sounds[0] = SoundFactory.create('u')
+            valid = copied.is_valid(test)
             if valid:
                 sounds[0] = SoundFactory.create('g')
                 sounds.insert(1, SoundFactory.create('u'))
@@ -72,7 +73,7 @@ class Syllable:
         for count, sound in enumerate(sounds):
             if sound.is_consonant():
                 if contains_vowel or contains_semivowel:
-                    if sound == SoundFactory.create('gu'):
+                    if sound.letters == 'gu':
                         return False
                     contains_final_consonant = True
             elif sound.is_vowel():
@@ -113,7 +114,7 @@ class Syllable:
     def can_elide_if_final(self) -> bool:
         """ special property of words ending in a vowel """
         return (self.ends_with_vowel() or
-                (self.sounds[-1] == SoundFactory.create('m') and
+                (self.sounds[-1].letters == 'm' and
                  (self.sounds[-2].is_vowel() or self.sounds[-2].is_semivowel())))
 
     def has_diphthong(self) -> bool:
@@ -156,7 +157,7 @@ class Syllable:
         return (self.starts_with_consonant() and
                 ((len(self.sounds) > 1 and self.sounds[1].is_consonant()) or
                  self.makes_previous_heavy())
-                and self.sounds[0] != SoundFactory.create('gu'))
+                and self.sounds[0].letters != 'gu')
 
     def makes_previous_heavy(self) -> bool:
         """ first sound of the syllable is a double consonant letter """
@@ -183,7 +184,7 @@ class Syllable:
         """
         vowel = self.get_vowel()
         if next_syllable and isinstance(next_syllable, Syllable):
-            if next_syllable.sounds[0] == SoundFactory.create('h'):
+            if next_syllable.sounds[0].is_h():
                 return self.ends_with_consonant_cluster() or self.ends_with_heavymaker()
             return ((self.ends_with_consonant() or
                      next_syllable.makes_previous_heavy()) or
@@ -216,7 +217,7 @@ class Syllable:
         valid by the addition """
         test_syllable = self.copy_me()
         test_syllable.sounds.append(sound)
-        if Syllable.is_valid(test_syllable.sounds, True):
+        if test_syllable.is_valid(True):
             self.sounds.append(sound)
         else:
             raise SyllableException("syllable invalidated by last addition")
@@ -235,7 +236,7 @@ class Syllable:
         if self.is_light(next_syllable):
             self.weight = Weight.LIGHT
             return Weight.LIGHT
-        elif self.is_heavy(next_syllable):
+        if self.is_heavy(next_syllable):
             self.weight = Weight.HEAVY
             return Weight.HEAVY
         return Weight.ANCEPS
@@ -285,22 +286,22 @@ class SyllableSplitter:
                     syllables[count + 1].starts_with_consonant_cluster()):
                 SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], True)
             elif syllables[count].ends_with_consonant():
-                if (syllables[count + 1].sounds[0] == SoundFactory.create('u') and
+                if (syllables[count + 1].sounds[0].letters == 'u' and
                         len(syllables[count + 1].sounds) > 1 and
                         not syllables[count].ends_with_consonant_cluster() and
                         not syllables[count + 1].sounds[1].is_consonant()):
-                    if not syllables[count].sounds[-1] in [SoundFactory.create('r'), SoundFactory.create('l')]:
+                    if not syllables[count].sounds[-1].letters in ['r', 'l']:
                         SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], False)
                 elif syllables[count + 1].starts_with_vowel(False):
                     SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], False)
         local_sylls = []
         for syll in syllables:
-            if not Syllable.is_valid(syll.sounds):
+            if not syll.is_valid():
                 syll.recalculate_text()
                 sounds = SoundFactory.find_sounds_for_text(syll.text)
                 sylls = SyllableSplitter.join_into_syllables(sounds)
                 for s in sylls:
-                    if not Syllable.is_valid(s.sounds):
+                    if not s.is_valid():
                         raise SyllableException("unparseable syllable")
                 local_sylls.extend(sylls)
             else:

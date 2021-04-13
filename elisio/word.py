@@ -208,7 +208,7 @@ class Word:
                 self.syllables += wrd.syllables
                 return
         for syllable in self.syllables:
-            if not Syllable.is_valid(syllable.sounds):
+            if not syllable.is_valid():
                 word = FallbackWord(syllable.text)
                 word.split()
                 index = self.syllables.index(syllable)
