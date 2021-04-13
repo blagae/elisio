@@ -283,13 +283,6 @@ class SoundFactory:
     sound_dict = {letter: globals()[str.title(typ.name) + "Sound"](letter) for (letter, typ) in latin_letters.items()}
 
     @staticmethod
-    def create_single_letter(letter: str) -> Sound:
-        try:
-            return SoundFactory.sound_dict[letter]
-        except KeyError:
-            raise SoundException(f"not a valid letter: {letter}")
-
-    @staticmethod
     def create(letters: str) -> Sound:
         """
         outward-facing factory which preparses its parameters
@@ -304,7 +297,10 @@ class SoundFactory:
             elif item == 'j':
                 item = 'i'
             if not count:
-                sound = SoundFactory.create_single_letter(item)
+                try:
+                    sound = SoundFactory.sound_dict[item]
+                except KeyError:
+                    raise SoundException(f"not a valid letter: {item}")
             else:
                 if sound.is_vowel() or sound.is_semivowel():
                     sound = Diphthong(sound.letters[0], item)
@@ -329,11 +325,7 @@ class SoundFactory:
         elif len(text) == 3:
             # detect intervocalic semivowels
             if re.match("^[aeijouvy][ijuv][aeijouvy]$", text):
-                sounds = []
-                for i in text:
-                    snd = SoundFactory.create(i)
-                    sounds.append(snd)  # TODO validation logic
-                return sounds
+                return [SoundFactory.create(text[0]), SoundFactory.create(text[1])]
         try:
             sound = SoundFactory.create(text[0:2])
         except SoundException:
@@ -348,10 +340,6 @@ class SoundFactory:
         while i < len(text):
             added_sounds = SoundFactory.create_sounds_from_text(text[i:i + 3])
             for sound in added_sounds:
-                # dirty hack to prevent 'novae' type of word from being analyzed as 'no-va-e'
-                if sounds and sound.letters == 'e' and sounds[-1].letters == 'a':
-                    sound = SoundFactory.create('ae')
-                    sounds.pop()
                 sounds.append(sound)
                 i += len(sound.letters)
         return sounds
