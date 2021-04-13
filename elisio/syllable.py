@@ -16,15 +16,14 @@ class Weight(Enum):
 
 class Syllable:
     """ Syllable class
-    A syllable knows its sounds and can determine
-    if the specific combination of them is a valid one
+    A syllable knows its sounds and can determine if the specific combination of them is a valid one
     """
     def __init__(self, text: str, validate: bool = True, weight: Weight = None):
         """ construct a Syllable by its contents """
         self.weight = weight
         self.stressed = False
-        self.sounds = self.fill_sounds(text, validate)
-        self.text = Syllable.reconstruct_text(self.sounds)
+        self.fill_sounds(text, validate)
+        self.recalculate_text()
 
     def __eq__(self, other: object) -> bool:
         return self.sounds == other.sounds
@@ -33,33 +32,22 @@ class Syllable:
         return str(self.sounds)
 
     def recalculate_text(self) -> None:
-        self.text = Syllable.reconstruct_text(self.sounds)
+        result = ""
+        for sound in self.sounds:
+            result += sound.letters
+        self.text = result
 
     def copy_me(self) -> 'Syllable':
         other = Syllable(self.text, False, self.weight)
         other.stressed = self.stressed
-        other.sounds = Syllable.copy_sounds(self.sounds)
+        other.sounds = [x for x in self.sounds]
         other.text = self.text
         return other
 
-    @staticmethod
-    def copy_sounds(sounds: list[Sound]) -> list[Sound]:
-        return [x for x in sounds]
-
-    @staticmethod
-    def reconstruct_text(sounds: list[Sound]) -> str:
-        """ get String representation for output purposes """
-        result = ""
-        for sound in sounds:
-            result += sound.letters
-        return result
-
-    @staticmethod
-    def fill_sounds(text: str, validate: bool) -> list[Sound]:
-        sounds = SoundFactory.find_sounds_for_text(text)
-        if validate and not Syllable.is_valid(sounds):
+    def fill_sounds(self, text: str, validate: bool) -> list[Sound]:
+        self.sounds = SoundFactory.find_sounds_for_text(text)
+        if validate and not Syllable.is_valid(self.sounds):
             raise SyllableException("invalid Syllable object")
-        return sounds
 
     @staticmethod
     def is_valid(sounds: list[Sound], test: bool = False) -> bool:
@@ -72,7 +60,7 @@ class Syllable:
         if len(sounds) > 1 and sounds[0] == sounds[1] and sounds[0] == SoundFactory.create('i'):
             return False
         if sounds[0] == SoundFactory.create('gu'):
-            copied = Syllable.copy_sounds(sounds)
+            copied = [x for x in sounds]
             copied[0] = SoundFactory.create('u')
             valid = Syllable.is_valid(copied, test)
             if valid:
