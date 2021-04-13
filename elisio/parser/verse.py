@@ -2,7 +2,7 @@
 from enum import Enum
 from typing import Any, Union
 
-from elisio.bridge import Bridge, DummyBridge
+from elisio.bridge import Bridge
 from elisio.exceptions import IllegalFootException, VerseException
 from elisio.sound import SoundFactory
 from elisio.syllable import Weight
@@ -66,13 +66,11 @@ class Verse:
         """ Verses are equal if they have exactly the same characters """
         return self.text == other.text
 
-    def parse(self, verse: str = None, bridge: Bridge = DummyBridge()) -> None:
+    def parse(self) -> None:
         self.preparse()
         self.scan()
         self.save_structure()
         self.save_feet()
-        if verse and not verse.saved:
-            self.save(verse.id, bridge)
         self.add_accents()
 
     def save(self, db_id: int, bridge: Bridge) -> None:

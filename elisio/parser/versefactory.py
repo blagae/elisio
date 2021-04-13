@@ -70,8 +70,8 @@ class VerseFactory:
         return VerseFactory.__create_preprocessor(text, bridge, classes).get_flat_list()
 
     @staticmethod
-    def create(text: str, bridge: Bridge = DummyBridge(), classes: Sequence[VerseType] = []) -> Verse:
-        return VerseFactory.__create_preprocessor(text, bridge, classes).create_verse()
+    def create(text: str, db_id: int = 0, bridge: Bridge = DummyBridge(), classes: Sequence[VerseType] = []) -> Verse:
+        return VerseFactory.__create_preprocessor(text, bridge, classes).create_verse(db_id)
 
     @staticmethod
     def get_split_syllables(text: str, bridge: Bridge = DummyBridge(), classes: Sequence[VerseType] = []) -> str:
@@ -134,20 +134,19 @@ class VersePreprocessor:
                     self.flat_list.append(weight)
         return self.flat_list
 
-    def create_verse(self) -> Verse:
+    def create_verse(self, verse_id: int) -> Verse:
         self.get_flat_list()
         problems = []
         for creator in self.classes:
             item = creator(self.flat_list)
-            cls = item.get_subtype()  # returns e.g. the SpondaicHexameter type
-            verse = cls(self.verse)
+            verseClassType = item.get_subtype()  # returns e.g. the SpondaicHexameter type
+            verse = verseClassType(self.verse)
             verse.words = self.words
             verse.flat_list = self.flat_list.copy()
             try:
-                verse.parse(self.verse, self.bridge)
-                return verse
-            except AttributeError:
-                verse.parse(None, self.bridge)
+                verse.parse()
+                if verse_id:
+                    verse.save(verse_id, self.bridge)
                 return verse
             except ScansionException as exc:
                 problems.append(exc)
