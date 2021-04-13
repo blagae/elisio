@@ -144,7 +144,7 @@ class TestVerse(unittest.TestCase):
         expected_result = [[Weight.ANCEPS],
                            [Weight.HEAVY, Weight.HEAVY, Weight.ANCEPS],
                            [Weight.ANCEPS, Weight.HEAVY],
-                           [Weight.HEAVY, Weight.ANCEPS, Weight.HEAVY],
+                           [Weight.HEAVY, Weight.ANCEPS, Weight.ANCEPS],
                            [Weight.HEAVY, Weight.ANCEPS, Weight.ANCEPS],
                            [Weight.ANCEPS, Weight.HEAVY]]
         self.assertEqual(layers, expected_result)

@@ -1,5 +1,4 @@
-﻿import re
-from enum import Enum
+﻿from enum import Enum
 
 from elisio.exceptions import SyllableException
 from elisio.sound import Sound, SoundFactory
@@ -20,8 +19,6 @@ class Syllable:
     A syllable knows its sounds and can determine
     if the specific combination of them is a valid one
     """
-    final_heavy = [re.compile('.*[ao]s$')]
-
     def __init__(self, text: str, validate: bool = True, weight: Weight = None):
         """ construct a Syllable by its contents """
         self.weight = weight
@@ -119,9 +116,6 @@ class Syllable:
     def must_be_heavy(self) -> bool:
         if self.ends_with_heavymaker():
             return True
-        for rgx in Syllable.final_heavy:
-            if rgx.match(self.text):
-                return True
         return False
 
     def ends_with_heavymaker(self) -> bool:
