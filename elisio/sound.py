@@ -161,13 +161,7 @@ class Diphthong(VowelSound):
         the recognized diphthongs are AU, AE, and OE
         there are several more, but they are rare and lexically determined
         """
-        if len(self.letters) == 1:
-            return False
-        first = self.letters[0]
-        second = self.letters[1]
-        return ((first == 'a' and second == 'u') or
-                # lazy and: second is more likely to fail
-                (second == 'e' and (first == 'a' or first == 'o')))
+        return self.letters in ('au', 'ae', 'oe')
 
     def get_type(self) -> LetterType:
         """ general API method for getting the type """

@@ -77,16 +77,12 @@ class Syllable:
                         return False
                     contains_final_consonant = True
             elif sound.is_vowel():
-                if (contains_vowel or
-                        (contains_final_consonant and
-                         contains_semivowel)):
+                if contains_vowel or (contains_final_consonant and contains_semivowel):
                     return False
                 contains_vowel = True
                 only_consonants = False
             elif sound.is_semivowel():
-                if (contains_vowel or
-                        (contains_final_consonant and
-                         contains_semivowel)):
+                if contains_vowel or (contains_final_consonant and contains_semivowel):
                     return False
                 if count > 0:
                     contains_vowel = True
@@ -99,8 +95,7 @@ class Syllable:
         return self.sounds[-1].is_consonant()
 
     def ends_with_consonant_cluster(self) -> bool:
-        return (len(self.sounds) > 1 and self.ends_with_consonant() and
-                self.sounds[-2].is_consonant())
+        return len(self.sounds) > 1 and self.ends_with_consonant() and self.sounds[-2].is_consonant()
 
     def must_be_heavy(self) -> bool:
         if self.ends_with_heavymaker():
@@ -113,9 +108,10 @@ class Syllable:
 
     def can_elide_if_final(self) -> bool:
         """ special property of words ending in a vowel """
-        return (self.ends_with_vowel() or
-                (self.sounds[-1].letters == 'm' and
-                 (self.sounds[-2].is_vowel() or self.sounds[-2].is_semivowel())))
+        return self.ends_with_vowel() or self.ends_with_vowel_and_m()
+
+    def ends_with_vowel_and_m(self) -> bool:
+        return self.sounds[-1].letters == 'm' and (self.sounds[-2].is_vowel() or self.sounds[-2].is_semivowel())
 
     def has_diphthong(self) -> bool:
         return self.get_vowel().is_diphthong()
@@ -135,13 +131,9 @@ class Syllable:
         """
         if self.sounds[0].is_vowel():
             return True
-        if (self.sounds[0].is_h() and
-            len(self.sounds) > 1 and
-                not self.sounds[1].is_consonant()):
+        if self.sounds[0].is_h() and len(self.sounds) > 1 and not self.sounds[1].is_consonant():
             return True
-        if (self.sounds[0].is_semivowel() and
-                (not initial or (len(self.sounds) == 1 or
-                                 self.sounds[1].is_consonant()))):
+        if self.sounds[0].is_semivowel() and (not initial or (len(self.sounds) == 1 or self.sounds[1].is_consonant())):
             return True
         return False
 
@@ -154,10 +146,8 @@ class Syllable:
 
     def starts_with_consonant_cluster(self) -> bool:
         """ first sounds of the syllable are all consonants """
-        return (self.starts_with_consonant() and
-                ((len(self.sounds) > 1 and self.sounds[1].is_consonant()) or
-                 self.makes_previous_heavy())
-                and self.sounds[0].letters != 'gu')
+        return (self.starts_with_consonant() and self.sounds[0].letters != 'gu' and
+                ((len(self.sounds) > 1 and self.sounds[1].is_consonant()) or self.makes_previous_heavy()))
 
     def makes_previous_heavy(self) -> bool:
         """ first sound of the syllable is a double consonant letter """
@@ -186,17 +176,13 @@ class Syllable:
         if next_syllable and isinstance(next_syllable, Syllable):
             if next_syllable.sounds[0].is_h():
                 return self.ends_with_consonant_cluster() or self.ends_with_heavymaker()
-            return ((self.ends_with_consonant() or
-                     next_syllable.makes_previous_heavy()) or
+            return ((self.ends_with_consonant() or next_syllable.makes_previous_heavy()) or
                     (not self.is_light(next_syllable) and vowel.is_diphthong()))
-        return (self.ends_with_consonant() or vowel.is_diphthong() or
-                vowel.letters[0] in SyllableSplitter.longEndVowels)
+        return self.ends_with_consonant() or vowel.is_diphthong() or vowel.letters[0] in SyllableSplitter.longEndVowels
 
     def must_be_anceps(self, next_syllable: 'Syllable' = None) -> bool:
         if next_syllable and isinstance(next_syllable, Syllable):
-            return (self.ends_with_vowel() and
-                    self.get_vowel().is_diphthong() and
-                    next_syllable.starts_with_vowel())
+            return self.ends_with_vowel() and self.get_vowel().is_diphthong() and next_syllable.starts_with_vowel()
         return False
 
     def is_light(self, next_syllable: 'Syllable' = None) -> bool:
@@ -208,8 +194,7 @@ class Syllable:
         """
         if next_syllable and isinstance(next_syllable, Syllable):
             return self.ends_with_vowel() and next_syllable.starts_with_vowel()
-        return (self.ends_with_vowel() and
-                not self.get_vowel().is_diphthong() and
+        return (self.ends_with_vowel() and not self.get_vowel().is_diphthong() and
                 self.get_vowel().letters[0] in SyllableSplitter.shortEndVowels)
 
     def add_sound(self, sound: Sound) -> None:
@@ -286,8 +271,7 @@ class SyllableSplitter:
                     syllables[count + 1].starts_with_consonant_cluster()):
                 SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], True)
             elif syllables[count].ends_with_consonant():
-                if (syllables[count + 1].sounds[0].letters == 'u' and
-                        len(syllables[count + 1].sounds) > 1 and
+                if (syllables[count + 1].sounds[0].letters == 'u' and len(syllables[count + 1].sounds) > 1 and
                         not syllables[count].ends_with_consonant_cluster() and
                         not syllables[count + 1].sounds[1].is_consonant()):
                     if not syllables[count].sounds[-1].letters in ['r', 'l']:
