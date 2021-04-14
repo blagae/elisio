@@ -100,7 +100,7 @@ class TestVerse(unittest.TestCase):
         """ special cases should be not so special """
         layers = VerseFactory.layer('multo hillo')
         expected_result = [[Weight.HEAVY, Weight.NONE],
-                           [Weight.HEAVY, Weight.HEAVY]]
+                           [Weight.HEAVY, Weight.ANCEPS]]
         self.assertEqual(layers, expected_result)
 
     def test_verse_scan_elis_semivwl_h(self):
@@ -136,7 +136,7 @@ class TestVerse(unittest.TestCase):
         """ initial cluster makes previous syllable heavy """
         layers = VerseFactory.layer('esse strabo')
         expected_result = [[Weight.HEAVY, Weight.HEAVY],
-                           [Weight.ANCEPS, Weight.HEAVY]]
+                           [Weight.ANCEPS, Weight.ANCEPS]]
         self.assertEqual(layers, expected_result)
 
     def test_verse_scan_contact(self):
@@ -146,7 +146,7 @@ class TestVerse(unittest.TestCase):
                            [Weight.ANCEPS, Weight.HEAVY],
                            [Weight.HEAVY, Weight.ANCEPS, Weight.ANCEPS],
                            [Weight.HEAVY, Weight.ANCEPS, Weight.ANCEPS],
-                           [Weight.ANCEPS, Weight.HEAVY]]
+                           [Weight.ANCEPS, Weight.ANCEPS]]
         self.assertEqual(layers, expected_result)
 
     def test_verse_scan_full(self):
@@ -159,9 +159,9 @@ class TestVerse(unittest.TestCase):
         layers = VerseFactory.layer(TYPICAL_VERSE)
         expected_result = [[Weight.HEAVY, Weight.ANCEPS, ],
                            [Weight.ANCEPS, Weight.HEAVY, Weight.LIGHT, ],
+                           [Weight.ANCEPS, Weight.ANCEPS, ],
                            [Weight.ANCEPS, Weight.HEAVY, ],
-                           [Weight.ANCEPS, Weight.HEAVY, ],
-                           [Weight.HEAVY, ],
+                           [Weight.ANCEPS, ],
                            [Weight.ANCEPS, Weight.ANCEPS, ],
                            [Weight.ANCEPS, ],
                            [Weight.ANCEPS, Weight.HEAVY]]

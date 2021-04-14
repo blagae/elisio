@@ -133,9 +133,7 @@ class Syllable:
             return True
         if self.sounds[0].is_h() and len(self.sounds) > 1 and not self.sounds[1].is_consonant():
             return True
-        if self.sounds[0].is_semivowel() and (not initial or (len(self.sounds) == 1 or self.sounds[1].is_consonant())):
-            return True
-        return False
+        return self.sounds[0].is_semivowel() and (not initial or len(self.sounds) == 1 or self.sounds[1].is_consonant())
 
     def starts_with_consonant(self, initial: bool = True) -> bool:
         """
@@ -178,7 +176,7 @@ class Syllable:
                 return self.ends_with_consonant_cluster() or self.ends_with_heavymaker()
             return ((self.ends_with_consonant() or next_syllable.makes_previous_heavy()) or
                     (not self.is_light(next_syllable) and vowel.is_diphthong()))
-        return self.ends_with_consonant() or vowel.is_diphthong() or vowel.letters[0] in SyllableSplitter.longEndVowels
+        return self.ends_with_consonant() or vowel.is_diphthong()
 
     def must_be_anceps(self, next_syllable: 'Syllable' = None) -> bool:
         if next_syllable and isinstance(next_syllable, Syllable):
@@ -194,8 +192,7 @@ class Syllable:
         """
         if next_syllable and isinstance(next_syllable, Syllable):
             return self.ends_with_vowel() and next_syllable.starts_with_vowel()
-        return (self.ends_with_vowel() and not self.get_vowel().is_diphthong() and
-                self.get_vowel().letters[0] in SyllableSplitter.shortEndVowels)
+        return False
 
     def add_sound(self, sound: Sound) -> None:
         """ add a sound to a syllable if the syllable stays
@@ -228,8 +225,6 @@ class Syllable:
 
 
 class SyllableSplitter:
-    shortEndVowels: list[str] = []
-    longEndVowels = ['i', 'o', 'u']
 
     @staticmethod
     def split_from_text(text: str) -> list[Syllable]:
@@ -264,11 +259,9 @@ class SyllableSplitter:
         in order to use the correct syllables, not the longest possible
         """
         for count in range(len(syllables) - 1):
-            if (count == len(syllables) - 2 and
-                    syllables[count + 1] == Syllable('ve')):
+            if (count == len(syllables) - 2 and syllables[count + 1] == Syllable('ve')):
                 continue
-            if (syllables[count].ends_with_vowel() and
-                    syllables[count + 1].starts_with_consonant_cluster()):
+            if (syllables[count].ends_with_vowel() and syllables[count + 1].starts_with_consonant_cluster()):
                 SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], True)
             elif syllables[count].ends_with_consonant():
                 if (syllables[count + 1].sounds[0].letters == 'u' and len(syllables[count + 1].sounds) > 1 and

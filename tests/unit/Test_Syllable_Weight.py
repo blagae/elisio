@@ -11,9 +11,9 @@ class TestSyllableWeight(unittest.TestCase):
         self.assertTrue(Syllable('ras').is_heavy())
         self.assertTrue(Syllable('dax').is_heavy())
         self.assertTrue(Syllable('tae').is_heavy())
-        self.assertTrue(Syllable('u').is_heavy())
-        self.assertTrue(Syllable('o').is_heavy())
-        self.assertTrue(Syllable('i').is_heavy())
+        self.assertFalse(Syllable('u').is_heavy())
+        self.assertFalse(Syllable('o').is_heavy())
+        self.assertFalse(Syllable('i').is_heavy())
         self.assertFalse(Syllable('e').is_heavy())
         self.assertFalse(Syllable('a').is_heavy())
 

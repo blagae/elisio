@@ -18,7 +18,7 @@ class TestTextDecorator(unittest.TestCase):
     def test_dec_bracket(self):
         verse = VerseFactory.create("Urbs antiqua fuit (Tyrii tenuere coloni)", classes=VerseType.HEXAMETER)
         s = TextDecorator(verse).decorate()
-        self.assertEqual(s, "U̱rbs a̱nti̱qua̯ fu̯i̱t (Ty̯ri̯i̱ te̯nu̯e̱re̯ co̯lo̱ni̱)")
+        self.assertEqual(s, "U̱rbs a̱nti̱qua̯ fu̯i̱t (Ty̯ri̯i̱ te̯nu̯e̱re̯ co̯lo̱ni)")
 
     def test_dec_ancepsfinal(self):
         verse = VerseFactory.create("nos patriae finis et dulcia linquimus arva.", classes=VerseType.HEXAMETER)

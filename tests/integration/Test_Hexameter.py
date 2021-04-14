@@ -4,14 +4,12 @@ from elisio.parser.hexameter import Hexameter
 from elisio.parser.verse import Foot, Verse
 from elisio.parser.versefactory import VerseFactory, VerseType
 
-TYPICAL_VERSE = "Arma virumque cano, Troiae qui primus ab oris"
-
 
 class TestHexameter(unittest.TestCase):
     """ testing specifically for the hexameter """
 
     @staticmethod
-    def construct_hexameter(text=TYPICAL_VERSE):
+    def construct_hexameter(text="Arma virumque cano, Troiae qui primus ab oris"):
         """ Construct a Hexameter object from a given text """
         constructed_verse = VerseFactory.create(text, classes=VerseType.HEXAMETER)
         return constructed_verse

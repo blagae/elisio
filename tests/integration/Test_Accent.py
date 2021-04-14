@@ -2,12 +2,10 @@ import unittest
 
 from elisio.parser.versefactory import VerseFactory, VerseType
 
-TYPICAL_VERSE = "Arma virumque cano, Troiae qui primus ab oris"
-
 
 class TestAccent(unittest.TestCase):
     def test_accent_armavirumque(self):
-        verse = VerseFactory.create(TYPICAL_VERSE, classes=VerseType.HEXAMETER)
+        verse = VerseFactory.create("Arma virumque cano, Troiae qui primus ab oris", classes=VerseType.HEXAMETER)
         verse.parse()
         # arma
         self.assertEqual(verse.words[0].syllables[0].stressed, True)
