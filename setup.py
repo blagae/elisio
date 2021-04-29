@@ -27,6 +27,5 @@ setup(
     packages=find_namespace_packages(include=["elisio", "elisio.*"], exclude=["tests", "tests.*"]),
     url='https://github.com/blagae/elisio',
     version='0.1.0',
-    zip_safe=True,
     install_requires=['whitakers_words @ git+git://github.com/blagae/whitakers_words.git#egg=whitakers_words']
 )

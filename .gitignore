@@ -231,5 +231,6 @@ $RECYCLE.BIN/
 *.idea/
 
 # venv
+whitakers_words/
 venv/
 *.egg-info

@@ -259,6 +259,7 @@ class SyllableSplitter:
         in order to use the correct syllables, not the longest possible
         """
         for count in range(len(syllables) - 1):
+            # TODO good location for whitaker (enclitic finder) ?
             if (count == len(syllables) - 2 and syllables[count + 1] == Syllable('ve')):
                 continue
             if (syllables[count].ends_with_vowel() and syllables[count + 1].starts_with_consonant_cluster()):

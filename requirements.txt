@@ -1,2 +1,4 @@
 pytest
+tox
+wheel
 git+git://github.com/blagae/whitakers_words.git#egg=whitakers_words

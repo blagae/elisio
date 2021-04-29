@@ -3,6 +3,7 @@ from elisio.bridge import Bridge, DummyBridge
 from elisio.exceptions import SyllableException, WordException
 from elisio.sound import Sound, SoundFactory
 from elisio.syllable import Syllable, SyllableSplitter, Weight
+from whitakers_words.parser import Parser
 
 
 class Word:
@@ -10,18 +11,15 @@ class Word:
     A word is the representation of the Latin word
     It has extensive knowledge of its sounds, which it can join into syllables
     """
-    enclitics = (Syllable('que'), Syllable('ue'))
-    proclitics = (Syllable('ab'), Syllable('ad'), Syllable('con'), Syllable('dis'), Syllable('in'),
-                  Syllable('ob'), Syllable('sub'))  # circum?, de?, e-?,ob?per?prae?pro?
-
-    def __init__(self, text: str):
+    def __init__(self, text: str, parser: Parser = Parser(frequency="X")):
         """ construct a Word by its contents """
         if not (isinstance(text, str) and text.isalpha()):
-            raise WordException("Word not initialized with alphatic data")
+            raise WordException("Word not initialized with alphabetic data")
+        self.whitaker = parser.parse(text)
         self.syllables: list[Syllable] = []
         self.sounds = SoundFactory.find_sounds_for_text(text)
         self.text = Word.reconstruct_text(self.sounds)
-        self.enclitic = ''
+        self.enclitic = self.put_enclitic()
         self.istitle = text.istitle()
 
     def __repr__(self) -> str:
@@ -29,6 +27,15 @@ class Word:
 
     def __str__(self) -> str:
         return self.__repr__()
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Words are equal if they have exactly the same characters
+        Case insensitivity is enforced by the constructor
+        """
+        if not isinstance(other, Word):
+            return False
+        return self.syllables == other.syllables and self.enclitic == other.enclitic
 
     def recalculate_text(self) -> None:
         self.text = Word.reconstruct_text(self.sounds)
@@ -44,7 +51,10 @@ class Word:
         return local_text
 
     def starts_with_proclitic(self) -> str:
-        for proc in Word.proclitics:
+        # TODO to be solved by whitaker, after "reduce" logic is implemented
+        proclitics = (Syllable('ab'), Syllable('ad'), Syllable('con'), Syllable('dis'), Syllable('in'),
+                      Syllable('ob'), Syllable('sub'))  # circum?, de?, e-?,ob?per?prae?pro?
+        for proc in proclitics:
             if self.text.startswith(proc.text) and self.text != proc.text:
                 return proc.text
         return ''
@@ -101,39 +111,23 @@ class Word:
         return len(self.syllables) > 1 and (self.text.endswith(("us", "a")))
 
     def ends_in_enclitic(self) -> bool:
-        if self.enclitic:
-            return True
-        # catch isolated -que
-        if len(self.syllables) == 1 and self.syllables[0] in Word.enclitics:
-            return False
-        elif not self.syllables and self.text in (x.text for x in Word.enclitics):
-            return False
-        for encl in Word.enclitics:
-            if self.text.endswith(encl.text):
-                self.enclitic = encl.text
-                return True
-        return False
+        """ for now, use the longest enclitic that can be analyzed """
+        return any((x.enclitic for x in self.whitaker.forms))
 
     def without_enclitic(self) -> str:
-        if self.ends_in_enclitic():
-            stem = self.text[:-len(self.enclitic)]
-            return stem
+        """ for now, use the longest enclitic that can be analyzed """
+        if self.enclitic:
+            return self.text[:-len(self.enclitic)]
         return self.text
 
-    def __eq__(self, other: object) -> bool:
-        """
-        Words are equal if they have exactly the same characters
-        Case insensitivity is enforced by the constructor
-        """
-        return self.__dict__ == other.__dict__
+    def put_enclitic(self) -> str:
+        """ for now, use the longest enclitic that can be analyzed """
+        return max([x.enclitic.text for x in self.whitaker.forms if x.enclitic], key=len, default='')
 
     def may_be_heavy_by_position(self, next_word: 'Word') -> bool:
         return (self.syllables[-1].is_heavy() and
-                ((next_word.syllables[0].starts_with_consonant_cluster() and
-                  self.syllables[-1].ends_with_vowel()) or
-                 (self.syllables[-1].ends_with_consonant() and
-                  next_word.syllables[0].starts_with_consonant()
-                  )))
+                ((next_word.syllables[0].starts_with_consonant_cluster() and self.syllables[-1].ends_with_vowel()) or
+                 (self.syllables[-1].ends_with_consonant() and next_word.syllables[0].starts_with_consonant())))
 
     def analyze_structure(self, bridge: Bridge) -> None:
         """ Get the syllable structure, regardless of word contact """
