@@ -1,9 +1,10 @@
 ﻿""" processing unit for Words and lower entities """
-from elisio.bridge import Bridge, DummyBridge
-from elisio.exceptions import SyllableException, WordException
-from elisio.sound import Sound, SoundFactory
-from elisio.syllable import Syllable, SyllableSplitter, Weight
 from whitakers_words.parser import Parser
+
+from .bridge import Bridge, DummyBridge
+from .exceptions import SyllableException, WordException
+from .sound import Sound, SoundFactory
+from .syllable import Syllable, SyllableSplitter, Weight
 
 
 class Word:

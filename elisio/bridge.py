@@ -1,6 +1,6 @@
 from typing import Any
 
-from elisio.syllable import Syllable
+from .syllable import Syllable
 
 
 class Bridge:

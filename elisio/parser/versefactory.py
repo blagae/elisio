@@ -3,10 +3,10 @@ from collections.abc import Iterable
 from enum import Enum
 from typing import Sequence, Type
 
-from elisio.bridge import Bridge, DummyBridge
-from elisio.exceptions import ScansionException, VerseException
-from elisio.parser.verse import Verse
-from elisio.word import Weight, Word
+from ..bridge import Bridge, DummyBridge
+from ..exceptions import ScansionException, VerseException
+from ..word import Weight, Word
+from .verse import Verse
 
 
 class VerseType(Enum):

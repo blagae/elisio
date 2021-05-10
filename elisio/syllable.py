@@ -1,7 +1,7 @@
 ﻿from enum import Enum
 
-from elisio.exceptions import SyllableException
-from elisio.sound import Sound, SoundFactory
+from .exceptions import SyllableException
+from .sound import Sound, SoundFactory
 
 
 class Weight(Enum):

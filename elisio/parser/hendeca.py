@@ -1,9 +1,9 @@
 from typing import Type
 
-from elisio.exceptions import HendecaException, VerseCreatorException
-from elisio.parser.verse import Verse
-from elisio.parser.versefactory import VerseCreator
-from elisio.syllable import Weight
+from ..exceptions import HendecaException, VerseCreatorException
+from ..syllable import Weight
+from .verse import Verse
+from .versefactory import VerseCreator
 
 
 class HendecaCreator(VerseCreator):

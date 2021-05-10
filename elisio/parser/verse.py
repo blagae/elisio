@@ -2,11 +2,11 @@
 from enum import Enum
 from typing import Any, Union
 
-from elisio.bridge import Bridge
-from elisio.exceptions import IllegalFootException, VerseException
-from elisio.sound import SoundFactory
-from elisio.syllable import Weight
-from elisio.word import Word
+from ..bridge import Bridge
+from ..exceptions import IllegalFootException, VerseException
+from ..sound import SoundFactory
+from ..syllable import Weight
+from ..word import Word
 
 
 class Foot(Enum):

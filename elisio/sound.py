@@ -1,7 +1,7 @@
 ﻿import re
 from enum import Enum
 
-from elisio.exceptions import SoundException
+from .exceptions import SoundException
 
 
 class LetterType(Enum):
