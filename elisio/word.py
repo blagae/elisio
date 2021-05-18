@@ -203,14 +203,6 @@ class Word:
                 self.syllables = [syl]
                 self.syllables += wrd.syllables
                 return
-        for syllable in self.syllables:
-            if not syllable.is_valid():
-                word = FallbackWord(syllable.sounds)
-                word.split()
-                index = self.syllables.index(syllable)
-                self.syllables.remove(syllable)
-                for syll in reversed(word.syllables):
-                    self.syllables.insert(index, syll)
         # recheck to catch a-chi-u-is type errors
         for count, syllable in enumerate(self.syllables):
             if len(syllable.sounds) == 1 and syllable.sounds[0].is_semivowel():
@@ -221,11 +213,3 @@ class Word:
                         self.syllables[count] = syllable
                     except SyllableException:
                         pass
-
-
-class FallbackWord(Word):
-    def __init__(self, text: list[Sound]):
-        super().__init__(''.join(sound.letters for sound in text))
-
-    def check_consistency(self) -> None:
-        pass
