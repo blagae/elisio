@@ -108,7 +108,7 @@ class TestWord(unittest.TestCase):
     def test_word_split_initial_cluster(self):
         """ clusters are not a problem """
         word = self.construct_word('sphrostrurbs')
-        syllable_list = [Syllable('sphros'), Syllable('trurbs', False)]
+        syllable_list = [Syllable('sphros'), Syllable('trurbs')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 
@@ -266,7 +266,7 @@ class TestWord(unittest.TestCase):
     def test_word_split_multiconsonant(self):
         """ several final consonants do not invalidate a syllable """
         word = self.construct_word('Urbs')
-        syllable_list = [Syllable('urbs', False)]
+        syllable_list = [Syllable('urbs')]
         word.split()
         self.assertEqual(word.syllables, syllable_list)
 

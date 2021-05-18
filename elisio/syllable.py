@@ -1,4 +1,5 @@
 ﻿from enum import Enum
+from typing import Optional, Union
 
 from .exceptions import SyllableException
 from .sound import Sound, SoundFactory
@@ -18,13 +19,16 @@ class Syllable:
     """ Syllable class
     A syllable knows its sounds and can determine if the specific combination of them is a valid one
     """
-    def __init__(self, text: str, validate: bool = True, weight: Weight = None):
+    def __init__(self, text: Union[str, list[Sound]]):
         """ construct a Syllable by its contents """
-        self.weight = weight
+        self.weight: Optional[Weight] = None
         self.stressed = False
-        self.text = text
-        self.fill_sounds(text, validate)
-        self.recalculate_text()
+        if isinstance(text, str):
+            self.sounds = SoundFactory.find_sounds_for_text(text)
+        else:
+            self.sounds = list(text)  # copy the list
+        if not self.is_valid():
+            raise SyllableException("invalid Syllable object")
 
     def __eq__(self, other: object) -> bool:
         return self.sounds == other.sounds
@@ -32,63 +36,40 @@ class Syllable:
     def __repr__(self) -> str:
         return str(self.sounds)
 
-    def recalculate_text(self) -> None:
-        result = ""
-        for sound in self.sounds:
-            result += sound.letters
-        self.text = result
-
-    def copy_me(self) -> 'Syllable':
-        other = Syllable(self.text, False, self.weight)
-        other.stressed = self.stressed
-        other.sounds = [x for x in self.sounds]
-        other.text = self.text
-        return other
-
-    def fill_sounds(self, text: str, validate: bool) -> None:
-        self.sounds = SoundFactory.find_sounds_for_text(text)
-        if validate and not self.is_valid():
-            raise SyllableException("invalid Syllable object")
-
-    def is_valid(self, test: bool = False) -> bool:
+    def is_valid(self) -> bool:
         """
-        a syllable is valid if it contains:
-            * at most one consonant after the vocalic sound, and
+        a syllable can only be valid if it contains either:
             * a single vowel or semivowel
             * a semivowel and a vowel in that order
         """
-        sounds = self.sounds
-        if len(sounds) > 1 and sounds[0] == sounds[1] and sounds[0].letters == 'i':
+        if len(self.sounds) > 1 and self.sounds[0].letters == 'i' and self.sounds[1].letters == 'i':
             return False
-        if sounds[0].letters == 'gu':
-            copied = self.copy_me()
-            copied.sounds[0] = SoundFactory.create('u')
-            valid = copied.is_valid(test)
-            if valid:
-                sounds[0] = SoundFactory.create('g')
-                sounds.insert(1, SoundFactory.create('u'))
-            return valid
+        if self.sounds[0].letters == 'gu':
+            try:
+                copied = Syllable([SoundFactory.create('u')] + self.sounds[1:])
+                if copied.starts_with_vowel():
+                    self.sounds[0] = SoundFactory.create('g')
+                    self.sounds.insert(1, SoundFactory.create('u'))
+                return True
+            except SyllableException:
+                return False
         contains_final_consonant = contains_vowel = contains_semivowel = False
-        only_consonants = True
-        for count, sound in enumerate(sounds):
+        for count, sound in enumerate(self.sounds):
             if sound.is_consonant():
                 if contains_vowel or contains_semivowel:
                     if sound.letters == 'gu':
                         return False
                     contains_final_consonant = True
-            elif sound.is_vowel():
+            else:
                 if contains_vowel or (contains_final_consonant and contains_semivowel):
                     return False
-                contains_vowel = True
-                only_consonants = False
-            elif sound.is_semivowel():
-                if contains_vowel or (contains_final_consonant and contains_semivowel):
-                    return False
-                if count > 0:
+                if sound.is_vowel():
                     contains_vowel = True
-                contains_semivowel = True
-                only_consonants = False
-        return contains_vowel or contains_semivowel or (only_consonants == test)
+                elif sound.is_semivowel():
+                    if count > 0:
+                        contains_vowel = True
+                    contains_semivowel = True
+        return contains_vowel or contains_semivowel
 
     def ends_with_consonant(self) -> bool:
         """ last sound of the syllable is consonantal """
@@ -98,9 +79,7 @@ class Syllable:
         return len(self.sounds) > 1 and self.ends_with_consonant() and self.sounds[-2].is_consonant()
 
     def must_be_heavy(self) -> bool:
-        if self.ends_with_heavymaker():
-            return True
-        return False
+        return self.ends_with_heavymaker() or self.ends_with_consonant_cluster() or self.has_diphthong()
 
     def ends_with_heavymaker(self) -> bool:
         """ last sound of the syllable is consonantal """
@@ -144,7 +123,7 @@ class Syllable:
 
     def starts_with_consonant_cluster(self) -> bool:
         """ first sounds of the syllable are all consonants """
-        return (self.starts_with_consonant() and self.sounds[0].letters != 'gu' and
+        return (self.starts_with_consonant() and
                 ((len(self.sounds) > 1 and self.sounds[1].is_consonant()) or self.makes_previous_heavy()))
 
     def makes_previous_heavy(self) -> bool:
@@ -163,12 +142,11 @@ class Syllable:
 
     def is_heavy(self, next_syllable: 'Syllable' = None) -> bool:
         """
-        determines whether the syllable is inherently heavy or not
-        a syllable is heavy if it ends in a consonant
-        or if the next syllable starts with a heavy-making consonant
-        or if it contains a final diphthong which isn't shortened
-        by the next syllable (with vocalic start)
-        final syllables are long if they are O, U, or I, or a diphthong
+        determines whether the syllable is inherently heavy or not.
+        A syllable is heavy if any of these conditions is true:
+            * it ends in a consonant
+            * if it contains a final diphthong which isn't shortened by the next syllable (with vocalic start)
+            * if the next syllable starts with a heavy-making consonant
         """
         vowel = self.get_vowel()
         if next_syllable and isinstance(next_syllable, Syllable):
@@ -197,18 +175,17 @@ class Syllable:
     def add_sound(self, sound: Sound) -> None:
         """ add a sound to a syllable if the syllable stays
         valid by the addition """
-        test_syllable = self.copy_me()
+        test_syllable = Syllable(self.sounds)
         test_syllable.sounds.append(sound)
-        if test_syllable.is_valid(True):
+        if test_syllable.is_valid():
             self.sounds.append(sound)
         else:
             raise SyllableException("syllable invalidated by last addition")
 
     def get_weight(self, next_syllable: 'Syllable' = None) -> Weight:
         """
-        try to determine the weight of the syllable
-        in the light of the next syllable
-        if this doesn't succeed, assign the weight ANCEPS = undetermined
+        try to determine the weight of the syllable in the light of the next syllable, and cache it
+        if this doesn't succeed, assign the weight ANCEPS = undetermined (and don't cache it)
         """
         if self.weight:
             return self.weight
@@ -235,22 +212,32 @@ class SyllableSplitter:
     @staticmethod
     def join_into_syllables(sounds: list[Sound]) -> list[Syllable]:
         """
-        join a list of sounds into a preliminary syllables
-        keep adding sounds to the syllable until it becomes illegal
-        or the word ends.
-        at either point, save the syllable
+        join a list of sounds into a preliminary syllable
+        keep adding sounds to the syllable until it becomes illegal, or the word ends.
+        at either point, save the syllable and start building a new syllable
         """
         syllables = []
-        current_syllable = Syllable("", False)
-        for sound in sounds:
+        current_syllable = SyllableSplitter._first_sounds(sounds)
+        counter = len(current_syllable.sounds)
+        while counter < len(sounds):
             try:
-                current_syllable.add_sound(sound)
+                current_syllable.add_sound(sounds[counter])
+                counter += 1
             except SyllableException:
                 syllables.append(current_syllable)
-                current_syllable = Syllable("", False)
-                current_syllable.add_sound(sound)
+                current_syllable = SyllableSplitter._first_sounds(sounds[counter:])
+                counter += len(current_syllable.sounds)
         syllables.append(current_syllable)
         return syllables
+
+    @staticmethod
+    def _first_sounds(sounds: list[Sound]) -> Syllable:
+        result = []
+        for sound in sounds:
+            result.append(sound)
+            if not sound.is_consonant():
+                break
+        return Syllable(result)
 
     @staticmethod
     def redistribute(syllables: list[Syllable]) -> list[Syllable]:
@@ -274,18 +261,11 @@ class SyllableSplitter:
                     SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], False)
         local_sylls = []
         for syll in syllables:
-            if not syll.is_valid():
-                syll.recalculate_text()
-                sounds = SoundFactory.find_sounds_for_text(syll.text)
-                sylls = SyllableSplitter.join_into_syllables(sounds)
-                for s in sylls:
-                    if not s.is_valid():
-                        raise SyllableException("unparseable syllable")
-                local_sylls.extend(sylls)
-            else:
+            if syll.is_valid():
                 local_sylls.append(syll)
-        for syll in local_sylls:
-            syll.recalculate_text()
+            else:  # this is a valid path because we have modified the syllables after constructing
+                sylls = SyllableSplitter.join_into_syllables(syll.sounds)
+                local_sylls.extend(sylls)
         return local_sylls
 
     @staticmethod
@@ -296,7 +276,7 @@ class SyllableSplitter:
         """
         if to_first:
             given_sound = syllable2.sounds[0]
-            syllable2.sounds.remove(given_sound)
+            syllable2.sounds = syllable2.sounds[1:]
             syllable1.sounds.append(given_sound)
         else:
             given_sound = syllable1.sounds[-1]

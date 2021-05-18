@@ -267,12 +267,6 @@ class HeavymakerSound(ConsonantSound):
         return False
 
 
-constructors = {LetterType.HEAVYMAKER: HeavymakerSound,
-                LetterType.SEMIVOWEL: SemivowelSound,
-                LetterType.CONSONANT: ConsonantSound,
-                LetterType.VOWEL: VowelSound}
-
-
 class SoundFactory:
     sound_dict = {letter: globals()[str.title(typ.name) + "Sound"](letter) for (letter, typ) in latin_letters.items()}
 

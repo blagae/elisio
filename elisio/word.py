@@ -53,11 +53,10 @@ class Word:
 
     def starts_with_proclitic(self) -> str:
         # TODO to be solved by whitaker, after "reduce" logic is implemented
-        proclitics = (Syllable('ab'), Syllable('ad'), Syllable('con'), Syllable('dis'), Syllable('in'),
-                      Syllable('ob'), Syllable('sub'))  # circum?, de?, e-?,ob?per?prae?pro?
+        proclitics = ('ab', 'ad', 'con', 'dis', 'in', 'ob', 'sub')  # circum?, de?, e-?,ob?per?prae?pro?
         for proc in proclitics:
-            if self.text.startswith(proc.text) and self.text != proc.text:
-                return proc.text
+            if self.text.startswith(proc) and self.text != proc:
+                return proc
         return ''
 
     def split(self, bridge: Bridge = DummyBridge()) -> None:
@@ -68,11 +67,13 @@ class Word:
         deviant_syllables = bridge.split_from_deviant_word(self.without_enclitic())
         if deviant_syllables:
             self.syllables = deviant_syllables
+            text = self.text
+            num = 0
             for syll in self.syllables:
-                if len(syll.text) >= 1:
-                    self.text = self.text[len(syll.text):]
-            if len(self.text) > 0:
-                wrd = Word(self.text)
+                num += sum(len(x.letters) for x in syll.sounds)
+            text = text[num:]
+            if len(text) > 0:
+                wrd = Word(text)
                 wrd.split()
                 for syllab in wrd.syllables:
                     self.syllables.append(syllab)
@@ -204,7 +205,7 @@ class Word:
                 return
         for syllable in self.syllables:
             if not syllable.is_valid():
-                word = FallbackWord(syllable.text)
+                word = FallbackWord(syllable.sounds)
                 word.split()
                 index = self.syllables.index(syllable)
                 self.syllables.remove(syllable)
@@ -215,7 +216,7 @@ class Word:
             if len(syllable.sounds) == 1 and syllable.sounds[0].is_semivowel():
                 if count < len(self.syllables) - 1 and self.syllables[count + 1].starts_with_vowel():
                     try:
-                        syllable = Syllable(syllable.text + self.syllables[count + 1].text)
+                        syllable = Syllable(syllable.sounds + self.syllables[count + 1].sounds)
                         self.syllables.remove(self.syllables[count + 1])
                         self.syllables[count] = syllable
                     except SyllableException:
@@ -223,8 +224,8 @@ class Word:
 
 
 class FallbackWord(Word):
-    def __init__(self, text: str):
-        super().__init__(text)
+    def __init__(self, text: list[Sound]):
+        super().__init__(''.join(sound.letters for sound in text))
 
     def check_consistency(self) -> None:
         pass

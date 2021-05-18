@@ -295,11 +295,6 @@ class TestSyllable(unittest.TestCase):
         self.assertEqual(Syllable('io').get_vowel(), SoundFactory.create('o'))
         self.assertEqual(Syllable('sprau').get_vowel(), SoundFactory.create('au'))
 
-    def test_syll_get_vowel_fail(self):
-        syll = Syllable('qu', False)
-        with self.assertRaises(SyllableException):
-            syll.get_vowel()
-
     def test_syll_add_sound(self):
         syll = Syllable('tho')
         syll.add_sound(SoundFactory.create('c'))
