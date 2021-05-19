@@ -76,9 +76,6 @@ class Sound:
         return self.__dict__ == other.__dict__
 
     def __repr__(self) -> str:
-        return self.__str__()
-
-    def __str__(self) -> str:
         return str(self.letters)
 
     def is_vowel(self) -> bool:

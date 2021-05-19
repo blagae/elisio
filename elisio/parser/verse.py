@@ -59,9 +59,6 @@ class Verse:
     def __repr__(self) -> str:
         return ''.join(str(x) for x in self.words)
 
-    def __str__(self) -> str:
-        return self.__repr__()
-
     def __eq__(self, other: object) -> bool:
         """ Verses are equal if they have exactly the same characters """
         return self.text == other.text

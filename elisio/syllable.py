@@ -31,6 +31,8 @@ class Syllable:
             raise SyllableException("invalid Syllable object")
 
     def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Syllable):
+            return False
         return self.sounds == other.sounds
 
     def __repr__(self) -> str:
@@ -145,8 +147,8 @@ class Syllable:
         determines whether the syllable is inherently heavy or not.
         A syllable is heavy if any of these conditions is true:
             * it ends in a consonant
-            * if it contains a final diphthong which isn't shortened by the next syllable (with vocalic start)
-            * if the next syllable starts with a heavy-making consonant
+            * it contains a final diphthong which isn't shortened by the next syllable (with vocalic start)
+            * the next syllable starts with a heavy-making consonant
         """
         vowel = self.get_vowel()
         if next_syllable and isinstance(next_syllable, Syllable):

@@ -26,9 +26,6 @@ class Word:
     def __repr__(self) -> str:
         return ''.join(str(x) for x in self.syllables)
 
-    def __str__(self) -> str:
-        return self.__repr__()
-
     def __eq__(self, other: object) -> bool:
         """
         Words are equal if they have exactly the same characters
@@ -46,10 +43,7 @@ class Word:
         """
         find the sequence of sounds from the textual representation of the word
         """
-        local_text = ""
-        for sound in sounds:
-            local_text += sound.letters
-        return local_text
+        return ''.join(sound.letters for sound in sounds)
 
     def starts_with_proclitic(self) -> str:
         # TODO to be solved by whitaker, after "reduce" logic is implemented
@@ -66,7 +60,7 @@ class Word:
         """
         deviant_syllables = bridge.split_from_deviant_word(self.without_enclitic())
         if deviant_syllables:
-            self.syllables = deviant_syllables
+            self.syllables = list(deviant_syllables)
             text = self.text
             num = 0
             for syll in self.syllables:
@@ -110,7 +104,7 @@ class Word:
                     self.syllables[count].weight = Weight(int(val))
 
     def ends_in_variable_declension(self) -> bool:
-        return len(self.syllables) > 1 and (self.text.endswith(("us", "a")))
+        return len(self.syllables) > 1 and (self.text.endswith(("us", "a")))  # TODO whitaker
 
     def ends_in_enclitic(self) -> bool:
         """ for now, use the longest enclitic that can be analyzed """

@@ -37,7 +37,7 @@ class LocalDictionaryBridge(DummyBridge):
     def __init__(self, cache: dict[str, list[str]] = {}):
         if not cache:
             cache = dict()
-        self.cache = cache
+        self.cache = cache  # TODO deepcopy
 
     def use_dictionary(self, word: str) -> list[str]:
         return self.cache[word]

@@ -11,7 +11,7 @@ class ScansionException(Exception):
         if exceptions:
             self.exceptions = list(exceptions)
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         result = self.message
         if self.exceptions:
             for excepts in self.exceptions:
