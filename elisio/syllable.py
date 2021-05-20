@@ -38,6 +38,9 @@ class Syllable:
     def __repr__(self) -> str:
         return str(self.sounds)
 
+    def __len__(self) -> int:
+        return sum(len(sound) for sound in self.sounds)
+
     def is_valid(self) -> bool:
         """
         a syllable can only be valid if it contains either:

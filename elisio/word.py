@@ -16,6 +16,7 @@ class Word:
         """ construct a Word by its contents """
         if not (isinstance(text, str) and text.isalpha()):
             raise WordException("Word not initialized with alphabetic data")
+        # TODO determine if we need all these properties
         self.whitaker = parser.parse(text)
         self.syllables: list[Syllable] = []
         self.sounds = SoundFactory.find_sounds_for_text(text)
@@ -35,6 +36,11 @@ class Word:
             return False
         return self.syllables == other.syllables and self.enclitic == other.enclitic
 
+    def __len__(self) -> int:
+        if self.syllables:
+            return sum(len(syllable) for syllable in self.syllables)
+        return sum(len(sound) for sound in self.sounds)
+
     def recalculate_text(self) -> None:
         self.text = Word.reconstruct_text(self.sounds)
 
@@ -45,9 +51,9 @@ class Word:
         """
         return ''.join(sound.letters for sound in sounds)
 
-    def starts_with_proclitic(self) -> str:
+    def find_proclitic(self) -> str:
         # TODO to be solved by whitaker, after "reduce" logic is implemented
-        proclitics = ('ab', 'ad', 'con', 'dis', 'in', 'ob', 'sub')  # circum?, de?, e-?,ob?per?prae?pro?
+        proclitics = ('ab', 'ad', 'con', 'dis', 'in', 'ob', 'sub')
         for proc in proclitics:
             if self.text.startswith(proc) and self.text != proc:
                 return proc
@@ -55,22 +61,16 @@ class Word:
 
     def split(self, bridge: Bridge = DummyBridge()) -> None:
         """
-        splits a word into syllables by using a few static methods
-        from the Syllable class
+        splits a word into syllables by using a few static methods from the Syllable class
         """
         deviant_syllables = bridge.split_from_deviant_word(self.without_enclitic())
         if deviant_syllables:
             self.syllables = list(deviant_syllables)
-            text = self.text
-            num = 0
-            for syll in self.syllables:
-                num += sum(len(x.letters) for x in syll.sounds)
-            text = text[num:]
-            if len(text) > 0:
+            text = self.text[len(self):]
+            if len(text):
                 wrd = Word(text)
                 wrd.split()
-                for syllab in wrd.syllables:
-                    self.syllables.append(syllab)
+                self.syllables += wrd.syllables
             self.recalculate_text()
             return
         if len(self.syllables) == 0:
@@ -183,27 +183,29 @@ class Word:
         see that all syllables are valid
         or fix if necessary
         """
-        proc = self.starts_with_proclitic()
+        proc = self.find_proclitic()
         if proc:
-            mainword = self.text.replace(proc, '', 1)
-            snd = SoundFactory.create(mainword[0])
-            if (snd.is_consonant() or
-                    (snd.is_semivowel() and len(mainword) > 1 and not SoundFactory.create(mainword[1]).is_consonant())):
-                wrd = Word(mainword)
-                wrd.split()
-                syl = Syllable(proc)
-                self.sounds = syl.sounds.copy()
-                self.sounds += wrd.sounds
-                self.syllables = [syl]
-                self.syllables += wrd.syllables
-                return
-        # recheck to catch a-chi-u-is type errors
-        for count, syllable in enumerate(self.syllables):
-            if len(syllable.sounds) == 1 and syllable.sounds[0].is_semivowel():
-                if count < len(self.syllables) - 1 and self.syllables[count + 1].starts_with_vowel():
+            self.split_proclitic(proc)
+        else:
+            # recheck to catch a-chi-u-is type errors
+            for count, syllable in enumerate(self.syllables):
+                if (len(syllable.sounds) == 1 and syllable.sounds[0].is_semivowel() and
+                        count < len(self.syllables) - 1 and self.syllables[count + 1].starts_with_vowel()):
                     try:
                         syllable = Syllable(syllable.sounds + self.syllables[count + 1].sounds)
                         self.syllables.remove(self.syllables[count + 1])
                         self.syllables[count] = syllable
                     except SyllableException:
                         pass
+
+    def split_proclitic(self, proc: str) -> None:
+        # try to maintain the morpheme boundary
+        mainword = self.text.replace(proc, '', 1)
+        snd = SoundFactory.create(mainword[0])
+        if (snd.is_consonant() or
+                (snd.is_semivowel() and len(mainword) > 1 and not SoundFactory.create(mainword[1]).is_consonant())):
+            wrd = Word(mainword)
+            wrd.split()
+            syl = Syllable(proc)
+            self.sounds = syl.sounds.copy() + wrd.sounds
+            self.syllables = [syl] + wrd.syllables

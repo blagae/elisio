@@ -78,6 +78,9 @@ class Sound:
     def __repr__(self) -> str:
         return str(self.letters)
 
+    def __len__(self) -> int:
+        return len(self.letters)
+
     def is_vowel(self) -> bool:
         """ determine whether a sound is unambiguously vocalic """
         return False

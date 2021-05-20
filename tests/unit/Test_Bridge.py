@@ -27,7 +27,6 @@ class TestBridgeDeviant(unittest.TestCase):
         self.assertEqual(word.syllables, deviant_result + [Syllable("u"), Syllable("rus")])
 
     def test_bridge_deviant_fail(self):
-        result = [Syllable("a"), Syllable("mat")]
         word = Word("amatss")
         with self.assertRaises(SyllableException):
             word.split(LocalDeviantBridge())
