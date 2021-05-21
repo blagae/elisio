@@ -1,6 +1,6 @@
 ﻿""" the main module for parsing verses """
 from enum import Enum
-from typing import Any, Union
+from typing import Any, Optional
 
 from ..bridge import Bridge
 from ..exceptions import IllegalFootException, VerseException
@@ -21,7 +21,7 @@ class Foot(Enum):
     PYRRHICUS = 7
     DACTYLUS = 8
 
-    def get_length(self) -> int:
+    def __len__(self) -> int:
         """ number of syllables in the foot """
         return len(self.get_structure())
 
@@ -45,7 +45,6 @@ class Verse:
     A verse is the representation of the Latin text of a verse
     It has no knowledge of its surroundings or context
     """
-
     def __init__(self, text: str):
         """ construct a Verse by its contents """
         if not isinstance(text, str):
@@ -53,8 +52,7 @@ class Verse:
         self.text = text
         self.words: list[Word] = []
         self.flat_list: list[Weight] = []
-        self.feet: list[Union[None, Foot]] = []
-        self.structure = ''
+        self.feet: list[Optional[Foot]] = []
 
     def __repr__(self) -> str:
         return ''.join(str(x) for x in self.words)
@@ -67,8 +65,69 @@ class Verse:
         self.preparse()
         self.scan()
         self.save_structure()
-        self.save_feet()
         self.add_accents()
+
+    def preparse(self) -> None:
+        raise Exception("must be overridden")
+
+    def scan(self) -> None:
+        raise Exception("must be overridden")
+
+    def save_structure(self) -> None:
+        # control mechanism and syllable filler
+        start = 0
+        for feet_num, foot in enumerate(self.feet):
+            if foot is None:
+                raise VerseException(f"impossible to determine foot number {feet_num}")
+            for count, weight in enumerate(foot.get_structure()):
+                if (weight != Weight.ANCEPS and self.flat_list[count + start] != Weight.ANCEPS and
+                        weight != self.flat_list[count + start]):
+                    raise VerseException(f"weight #{count + start} was already {str(self.flat_list[count + start])},"
+                                         " tried to assign {str(weight)}")
+                self.flat_list[count + start] = weight
+            start += len(foot)
+        i = 0
+        for word in self.words:
+            for syll in word.syllables:
+                if syll.weight != Weight.NONE:
+                    syll.weight = self.flat_list[i]
+                    i += 1
+
+    def add_accents(self) -> None:
+        for wrd in self.words:
+            if len(wrd.syllables) < 3:
+                wrd.syllables[0].stressed = True
+            else:
+                if wrd.syllables[-2].weight == Weight.HEAVY:
+                    wrd.syllables[-2].stressed = True
+                else:
+                    wrd.syllables[-3].stressed = True
+
+    def structure(self) -> str:
+        result = ""
+        for foot in self.feet:
+            if foot:
+                result += str(foot.value)
+            else:
+                result += ' '
+        return result
+
+    def get_zeleny_score(self) -> list[int]:
+        score = []
+        current = 0
+        for word in self.words:
+            for syll in word.syllables:
+                if current > 0 and syll.stressed:
+                    score.append(current)
+                    current = 0
+                if syll.weight == Weight.NONE:
+                    continue
+                elif syll.weight == Weight.LIGHT:
+                    current += 1
+                else:
+                    current += 2
+        score.append(current)
+        return score
 
     def save(self, db_id: int, bridge: Bridge) -> None:
         entries: list[Any] = []
@@ -99,70 +158,3 @@ class Verse:
             entries.append(bridge.make_entry(txt, strct, db_id))
         if len(entries) > 0:
             bridge.dump(entries)
-
-    def add_accents(self) -> None:
-        for wrd in self.words:
-            if len(wrd.syllables) < 3:
-                wrd.syllables[0].stressed = True
-            else:
-                if wrd.syllables[-2].weight == Weight.HEAVY:
-                    wrd.syllables[-2].stressed = True
-                else:
-                    wrd.syllables[-3].stressed = True
-
-    def preparse(self) -> None:
-        raise Exception("must be overridden")
-
-    def scan(self) -> None:
-        raise Exception("must be overridden")
-
-    def save_structure(self) -> None:
-        # control mechanism and syllable filler
-        start = 0
-        for feet_num, foot in enumerate(self.feet):
-            if foot is None:
-                raise VerseException("impossible to determine foot"
-                                     " number {0}".format(feet_num))
-            for count, weight in enumerate(foot.get_structure()):
-                if (weight != Weight.ANCEPS and
-                    self.flat_list[count + start] != Weight.ANCEPS and
-                        weight != self.flat_list[count + start]):
-                    raise VerseException("weight #{0} was already {1}"
-                                         ", tried to assign {2}"
-                                         .format(count + start,
-                                                 str(self.flat_list[count + start]),
-                                                 str(weight)))
-                self.flat_list[count + start] = weight
-            start += foot.get_length()
-        i = 0
-        for word in self.words:
-            for syll in word.syllables:
-                if syll.weight != Weight.NONE:
-                    syll.weight = self.flat_list[i]
-                    i += 1
-
-    def save_feet(self) -> None:
-        result = ""
-        for foot in self.feet:
-            if foot:
-                result += str(foot.value)
-            else:
-                result += ' '
-        self.structure = result
-
-    def get_zeleny_score(self) -> list[int]:
-        score = []
-        current = 0
-        for word in self.words:
-            for syll in word.syllables:
-                if current > 0 and syll.stressed:
-                    score.append(current)
-                    current = 0
-                if syll.weight == Weight.NONE:
-                    continue
-                elif syll.weight == Weight.LIGHT:
-                    current += 1
-                else:
-                    current += 2
-        score.append(current)
-        return score
