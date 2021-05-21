@@ -3,18 +3,13 @@ import unittest
 from elisio.exceptions import (PentameterException, VerseCreatorException,
                                VerseException)
 from elisio.parser.pentameter import (BalancedPentameter, DactylicPentameter,
-                                      PentameterCreator, SpondaicPentameter)
+                                      SpondaicPentameter, get_penta_subtype)
 from elisio.parser.verse import Foot
 from elisio.syllable import Weight
 
 
-def get_subtype(lst):
-    pent_creator = PentameterCreator(lst)
-    return pent_creator.get_subtype()
-
-
 def parse(lst):
-    pent_class = get_subtype(lst)
+    pent_class = get_penta_subtype(lst)
     pent_obj = pent_class('')
     pent_obj.flat_list = lst
     pent_obj.parse()
@@ -25,29 +20,29 @@ class TestPentameterCreator(unittest.TestCase):
     def test_pent_create_edgecase_empty(self):
         sylls = []
         with self.assertRaises(VerseCreatorException):
-            get_subtype(sylls)
+            get_penta_subtype(sylls)
 
     def test_pent_create_toomany_firstpass(self):
         sylls = [Weight.ANCEPS] * 15
         with self.assertRaises(VerseCreatorException):
-            get_subtype(sylls)
+            get_penta_subtype(sylls)
 
     def test_pent_create_toofew_firstpass(self):
         sylls = [Weight.ANCEPS] * 11
         with self.assertRaises(VerseCreatorException):
-            get_subtype(sylls)
+            get_penta_subtype(sylls)
 
     def test_pent_create_ss(self):
         sylls = [Weight.ANCEPS] * 12
-        self.assertEqual(get_subtype(sylls), SpondaicPentameter)
+        self.assertEqual(get_penta_subtype(sylls), SpondaicPentameter)
 
     def test_pent_create_sd(self):
         sylls = [Weight.ANCEPS] * 13
-        self.assertEqual(get_subtype(sylls), BalancedPentameter)
+        self.assertEqual(get_penta_subtype(sylls), BalancedPentameter)
 
     def test_pent_create_dd(self):
         sylls = [Weight.ANCEPS] * 14
-        self.assertEqual(get_subtype(sylls), DactylicPentameter)
+        self.assertEqual(get_penta_subtype(sylls), DactylicPentameter)
 
 
 class TestDactylicPentameter(unittest.TestCase):

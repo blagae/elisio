@@ -12,21 +12,21 @@ class TestPentameter(unittest.TestCase):
         expected_feet = [Foot.DACTYLUS, Foot.SPONDAEUS,
                          Foot.MACRON, Foot.DACTYLUS,
                          Foot.DACTYLUS, Foot.MACRON]
-        verse = VerseFactory.create("tres sumus; hoc illi praetulit auctor opus", classes=VerseType.PENTAMETER)
+        verse = VerseFactory.create("tres sumus; hoc illi praetulit auctor opus", creators=VerseType.PENTAMETER)
         self.assertEqual(verse.feet, expected_feet)
 
     def test_pentameter_scan_incorrect_heavy_in_fourth(self):
         with self.assertRaises(VerseException):
-            VerseFactory.create("tres sumus hoc illi praetullit auctor opus", classes=VerseType.PENTAMETER)
+            VerseFactory.create("tres sumus hoc illi praetullit auctor opus", creators=VerseType.PENTAMETER)
 
     def test_pentameter_scan_incorrect_heavy_in_fifth(self):
         with self.assertRaises(VerseException):
-            VerseFactory.create("tres sumus hoc illi praetulit auctor copus", classes=VerseType.PENTAMETER)
+            VerseFactory.create("tres sumus hoc illi praetulit auctor copus", creators=VerseType.PENTAMETER)
 
     def test_pentameter_scan_incorrect_light_in_fourth(self):
         with self.assertRaises(VerseException):
-            VerseFactory.create("tres sumus hoc illi praetul ataor opus", classes=VerseType.PENTAMETER)
+            VerseFactory.create("tres sumus hoc illi praetul ataor opus", creators=VerseType.PENTAMETER)
 
     def test_pentameter_scan_incorrect_light_in_fifth(self):
         with self.assertRaises(VerseException):
-            VerseFactory.create("tres sumus hoc illi praotul auctor opus", classes=VerseType.PENTAMETER)
+            VerseFactory.create("tres sumus hoc illi praotul auctor opus", creators=VerseType.PENTAMETER)

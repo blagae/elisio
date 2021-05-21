@@ -5,7 +5,6 @@ from elisio.exceptions import SyllableException
 from elisio.syllable import Syllable
 from elisio.word import Word
 
-
 deviant_result = [Syllable("a"), Syllable("mat")]
 
 

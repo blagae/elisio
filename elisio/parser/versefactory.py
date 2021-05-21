@@ -1,12 +1,18 @@
 ﻿import re
 from collections.abc import Iterable
 from enum import Enum
-from typing import Sequence, Type
+from typing import Callable, Sequence, Type
 
 from ..bridge import Bridge, DummyBridge
 from ..exceptions import ScansionException, VerseException
 from ..word import Weight, Word
+from .hendeca import get_hendeca_subtype
+from .hexameter import get_hexa_subtype
+from .pentameter import get_penta_subtype
 from .verse import Verse
+
+
+VerseCreator = Callable[[list[Weight]], Type[Verse]]
 
 
 class VerseType(Enum):
@@ -15,17 +21,14 @@ class VerseType(Enum):
     PENTAMETER = 2
     HENDECASYLLABUS = 3
 
-    def get_creators(self) -> list[Type['VerseCreator']]:
-        from elisio.parser.hendeca import HendecaCreator
-        from elisio.parser.hexameter import HexameterCreator
-        from elisio.parser.pentameter import PentameterCreator
+    def get_creators(self) -> list[VerseCreator]:
         if self == VerseType.HEXAMETER:
-            return [HexameterCreator]
+            return [get_hexa_subtype]
         if self == VerseType.PENTAMETER:
-            return [PentameterCreator]
+            return [get_penta_subtype]
         if self == VerseType.HENDECASYLLABUS:
-            return [HendecaCreator]
-        return [HexameterCreator, PentameterCreator]
+            return [get_hendeca_subtype]
+        return [get_hexa_subtype, get_penta_subtype]
 
 
 class VerseForm(Enum):
@@ -51,31 +54,21 @@ class VerseFactory:
     The methods delegate pre-analysis work to the VersePreprocessor class,
     which in turn delegates actual Verse object creation to a VerseCreator class.
     """
+    @staticmethod
+    def split(text: str, bridge: Bridge = DummyBridge(), creators: Sequence[VerseType] = []) -> list[Word]:
+        return VersePreprocessor(text, bridge, creators).split()
 
     @staticmethod
-    def __create_preprocessor(text: str, bridge: Bridge = DummyBridge(),
-                              classes: Sequence[VerseType] = []) -> 'VersePreprocessor':
-        return VersePreprocessor(text, bridge, classes)
+    def layer(text: str, bridge: Bridge = DummyBridge(), creators: Sequence[VerseType] = []) -> list[list[Weight]]:
+        return VersePreprocessor(text, bridge, creators).layer()
 
     @staticmethod
-    def split(text: str, bridge: Bridge = DummyBridge(), classes: Sequence[VerseType] = []) -> list[Word]:
-        return VerseFactory.__create_preprocessor(text, bridge, classes).split()
+    def get_flat_list(text: str, bridge: Bridge = DummyBridge(), creators: Sequence[VerseType] = []) -> list[Weight]:
+        return VersePreprocessor(text, bridge, creators).get_flat_list()
 
     @staticmethod
-    def layer(text: str, bridge: Bridge = DummyBridge(), classes: Sequence[VerseType] = []) -> list[list[Weight]]:
-        return VerseFactory.__create_preprocessor(text, bridge, classes).layer()
-
-    @staticmethod
-    def get_flat_list(text: str, bridge: Bridge = DummyBridge(), classes: Sequence[VerseType] = []) -> list[Weight]:
-        return VerseFactory.__create_preprocessor(text, bridge, classes).get_flat_list()
-
-    @staticmethod
-    def create(text: str, db_id: int = 0, bridge: Bridge = DummyBridge(), classes: Sequence[VerseType] = []) -> Verse:
-        return VerseFactory.__create_preprocessor(text, bridge, classes).create_verse(db_id)
-
-    @staticmethod
-    def get_split_syllables(text: str, bridge: Bridge = DummyBridge(), classes: Sequence[VerseType] = []) -> str:
-        return VerseFactory.__create_preprocessor(text, bridge, classes).get_split_syllables()
+    def create(text: str, db_id: int = 0, bridge: Bridge = DummyBridge(), creators: Sequence[VerseType] = []) -> Verse:
+        return VersePreprocessor(text, bridge, creators).create_verse(db_id)
 
 
 class VersePreprocessor:
@@ -89,25 +82,25 @@ class VersePreprocessor:
 
     In practice, the step that determines the subtype is delegated to a VerseCreator
     """
-    def __init__(self, verse: str, bridge: Bridge = DummyBridge(), classes: Sequence[VerseType] = []):
+    def __init__(self, verse: str, bridge: Bridge = DummyBridge(), creators: Sequence[VerseType] = []):
         self.verse = verse
         self.bridge = bridge
         self.words: list[Word] = []
         self.flat_list: list[Weight] = []
-        self.classes: set[Type[VerseCreator]] = set()
+        self.creators: set[VerseCreator]
         # https://docs.python.org/3/tutorial/controlflow.html#default-argument-values
-        if isinstance(classes, VerseType):
-            self.classes = set(classes.get_creators())
-        elif isinstance(classes, Iterable):
-            for clazz in classes:
-                self.classes.update(clazz.get_creators())
+        if isinstance(creators, VerseType):
+            self.creators = set(creators.get_creators())
+        elif isinstance(creators, Iterable):
+            self.creators = set()
+            for creator in creators:
+                self.creators.update(creator.get_creators())
         else:
-            self.classes = set(VerseType.UNKNOWN.get_creators())
+            self.creators = set(VerseType.UNKNOWN.get_creators())
 
     def split(self) -> list[Word]:
         """ Split a Verse into Words, remembering only the letter characters """
-        txt = self.verse.strip()
-        array = re.split('[^a-zA-Z]+', txt)
+        array = re.split('[^a-zA-Z]+', self.verse.strip())
         for word in array:
             if word.isalpha():
                 self.words.append(Word(word))
@@ -118,28 +111,21 @@ class VersePreprocessor:
         self.split()
         for word in self.words:
             word.analyze_structure(self.bridge)
-        for count, word in enumerate(self.words):
-            try:
-                word.apply_word_contact(self.words[count + 1])
-            except IndexError:
-                # last word in verse
-                pass
+        for count, word in enumerate(self.words[:-1]):
+            word.apply_word_contact(self.words[count + 1])
         return [word.get_syllable_structure() for word in self.words]
 
     def get_flat_list(self) -> list[Weight]:
         layers = self.layer()
         for word in layers:
-            for weight in word:
-                if weight != Weight.NONE:
-                    self.flat_list.append(weight)
+            self.flat_list += [weight for weight in word if weight != Weight.NONE]
         return self.flat_list
 
     def create_verse(self, verse_id: int) -> Verse:
         self.get_flat_list()
         problems = []
-        for creator in self.classes:
-            item = creator(self.flat_list)
-            verseClassType = item.get_subtype()  # returns e.g. the SpondaicHexameter type
+        for creator in self.creators:
+            verseClassType = creator(self.flat_list)  # returns e.g. the SpondaicHexameter type
             verse = verseClassType(self.verse)
             verse.words = self.words
             verse.flat_list = self.flat_list.copy()
@@ -151,25 +137,3 @@ class VersePreprocessor:
             except ScansionException as exc:
                 problems.append(exc)
         raise VerseException("parsing did not succeed", *problems)
-
-    def get_split_syllables(self) -> str:
-        result = ""
-        if not self.words:
-            self.layer()
-        for word in self.words:
-            for syll in word.syllables:
-                for snd in syll.sounds:
-                    for ltr in snd.letters:
-                        result += ltr
-                result += "-"
-            result = result[:-1] + " "
-        return result
-
-
-class VerseCreator:
-    """ De facto interface that Verse Creator types must follow """
-    def __init__(self, lst: list[Weight]):
-        self.list = lst
-
-    def get_subtype(self) -> Type[Verse]:
-        raise Exception("must be overridden")

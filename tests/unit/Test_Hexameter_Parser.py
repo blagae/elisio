@@ -4,20 +4,15 @@ from elisio.exceptions import (HexameterException, VerseCreatorException,
                                VerseException)
 from elisio.parser.hexameter import (BalancedHexameter,
                                      DactylicDominantHexameter,
-                                     DactylicHexameter, HexameterCreator,
+                                     DactylicHexameter,
                                      SpondaicDominantHexameter,
-                                     SpondaicHexameter)
+                                     SpondaicHexameter, get_hexa_subtype)
 from elisio.parser.verse import Foot
 from elisio.syllable import Weight
 
 
-def get_subtype(lst):
-    hex_creator = HexameterCreator(lst)
-    return hex_creator.get_subtype()
-
-
 def parse(lst):
-    hex_class = get_subtype(lst)
+    hex_class = get_hexa_subtype(lst)
     hex_obj = hex_class('')
     hex_obj.flat_list = lst
     hex_obj.parse()
@@ -29,98 +24,98 @@ class TestHexameterCreator(unittest.TestCase):
     def test_hex_create_edgecase_empty(self):
         sylls = []
         with self.assertRaises(VerseCreatorException):
-            get_subtype(sylls)
+            get_hexa_subtype(sylls)
 
     def test_hex_create_toomany_firstpass(self):
         sylls = [Weight.ANCEPS] * 18
         with self.assertRaises(VerseCreatorException):
-            get_subtype(sylls)
+            get_hexa_subtype(sylls)
 
     def test_hex_create_toofew_firstpass(self):
         sylls = [Weight.ANCEPS] * 11
         with self.assertRaises(VerseCreatorException):
-            get_subtype(sylls)
+            get_hexa_subtype(sylls)
 
     def test_hex_create_toomany_secondpass(self):
         sylls = [Weight.HEAVY] * 17
         with self.assertRaises(VerseCreatorException):
-            get_subtype(sylls)
+            get_hexa_subtype(sylls)
 
     def test_hex_create_toofew_secondpass(self):
         sylls = [Weight.LIGHT] * 12
         sylls[-5] = Weight.HEAVY
         with self.assertRaises(VerseCreatorException):
-            get_subtype(sylls)
+            get_hexa_subtype(sylls)
 
     def test_hex_create_toofew_secondpass2(self):
         sylls = [Weight.ANCEPS] * 12
         with self.assertRaises(VerseCreatorException):
-            get_subtype(sylls)
+            get_hexa_subtype(sylls)
 
     def test_hex_create_sssss(self):
         sylls = [Weight.HEAVY] * 12
-        self.assertEqual(get_subtype(sylls), SpondaicHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), SpondaicHexameter)
 
     def test_hex_create_ssssd(self):
         sylls = [Weight.LIGHT] * 13
         sylls[-5] = Weight.HEAVY
-        self.assertEqual(get_subtype(sylls), SpondaicHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), SpondaicHexameter)
 
     def test_hex_create_ssssd2(self):
         sylls = [Weight.ANCEPS] * 13
-        self.assertEqual(get_subtype(sylls), SpondaicHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), SpondaicHexameter)
 
     def test_hex_create_sssds(self):
         sylls = [Weight.HEAVY] * 13
-        self.assertEqual(get_subtype(sylls), SpondaicDominantHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), SpondaicDominantHexameter)
 
     def test_hex_create_sssdd(self):
         sylls = [Weight.LIGHT] * 14
         sylls[-5] = Weight.HEAVY
-        self.assertEqual(get_subtype(sylls), SpondaicDominantHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), SpondaicDominantHexameter)
 
     def test_hex_create_sssdd2(self):
         sylls = [Weight.ANCEPS] * 14
-        self.assertEqual(get_subtype(sylls), SpondaicDominantHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), SpondaicDominantHexameter)
 
     def test_hex_create_ssdds(self):
         sylls = [Weight.HEAVY] * 14
-        self.assertEqual(get_subtype(sylls), BalancedHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), BalancedHexameter)
 
     def test_hex_create_ssddd(self):
         sylls = [Weight.LIGHT] * 15
         sylls[-5] = Weight.HEAVY
-        self.assertEqual(get_subtype(sylls), BalancedHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), BalancedHexameter)
 
     def test_hex_create_ssddd2(self):
         sylls = [Weight.ANCEPS] * 15
-        self.assertEqual(get_subtype(sylls), BalancedHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), BalancedHexameter)
 
     def test_hex_create_sddds(self):
         sylls = [Weight.HEAVY] * 15
-        self.assertEqual(get_subtype(sylls), DactylicDominantHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), DactylicDominantHexameter)
 
     def test_hex_create_sdddd(self):
         sylls = [Weight.LIGHT] * 16
         sylls[-5] = Weight.HEAVY
-        self.assertEqual(get_subtype(sylls), DactylicDominantHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), DactylicDominantHexameter)
 
     def test_hex_create_sdddd2(self):
         sylls = [Weight.ANCEPS] * 16
-        self.assertEqual(get_subtype(sylls), DactylicDominantHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), DactylicDominantHexameter)
 
     def test_hex_create_dddds(self):
         sylls = [Weight.HEAVY] * 16
-        self.assertEqual(get_subtype(sylls), DactylicHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), DactylicHexameter)
 
     def test_hex_create_ddddd(self):
         sylls = [Weight.LIGHT] * 17
         sylls[-5] = Weight.HEAVY
-        self.assertEqual(get_subtype(sylls), DactylicHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), DactylicHexameter)
 
     def test_hex_create_ddddd2(self):
         sylls = [Weight.ANCEPS] * 17
-        self.assertEqual(get_subtype(sylls), DactylicHexameter)
+        self.assertEqual(get_hexa_subtype(sylls), DactylicHexameter)
 
 
 class TestHexameterBasicCases(unittest.TestCase):

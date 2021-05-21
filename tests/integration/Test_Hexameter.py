@@ -11,7 +11,7 @@ class TestHexameter(unittest.TestCase):
     @staticmethod
     def construct_hexameter(text="Arma virumque cano, Troiae qui primus ab oris"):
         """ Construct a Hexameter object from a given text """
-        constructed_verse = VerseFactory.create(text, classes=VerseType.HEXAMETER)
+        constructed_verse = VerseFactory.create(text, creators=VerseType.HEXAMETER)
         return constructed_verse
 
     def test_hexameter_construct(self):

@@ -47,7 +47,7 @@ class Syllable:
             * a single vowel or semivowel
             * a semivowel and a vowel in that order
         """
-        if len(self.sounds) > 1 and self.sounds[0].letters == 'i' and self.sounds[1].letters == 'i':
+        if len(self.sounds) > 1 and self.sounds[0].letters == self.sounds[1].letters == 'i':
             return False
         if self.sounds[0].letters == 'gu':
             try:
@@ -139,7 +139,7 @@ class Syllable:
         for idx, sound in enumerate(reversed(self.sounds)):
             if sound.is_vowel() or sound.is_semivowel():
                 return len(self.sounds) - idx - 1
-        raise SyllableException("no vowel found in Syllable" + str(self.sounds))
+        raise SyllableException(f"no vowel found in Syllable {self}")
 
     def get_vowel(self) -> Sound:
         """ get the vocalic sound from a syllable """

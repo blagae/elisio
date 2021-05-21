@@ -37,7 +37,7 @@ class Foot(Enum):
             return [Weight.HEAVY, Weight.ANCEPS]
         elif self == Foot.MACRON:
             return [Weight.HEAVY]
-        raise IllegalFootException("currently illegal foot structure: " + self.name)
+        raise IllegalFootException(f"currently illegal foot structure: {self.name}")
 
 
 class Verse:

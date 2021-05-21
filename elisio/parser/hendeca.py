@@ -3,46 +3,9 @@ from typing import Type
 from ..exceptions import HendecaException, VerseCreatorException
 from ..syllable import Weight
 from .verse import Verse
-from .versefactory import VerseCreator
 
 
-class HendecaCreator(VerseCreator):
-    SYLL = 11
-
-    def __init__(self, lst: list[Weight]):
-        super().__init__(lst)
-
-    def get_subtype(self) -> Type['Hendeca']:
-        if len(self.list) != 11:
-            raise VerseCreatorException("incorrect number of syllables: " + str(len(self.list)))
-        li = self.list
-        """
-        https://en.wikipedia.org/wiki/Hendecasyllable
-        xx-uu-u-u-x : Phalaecian
-        x-u-x-uu-u- : Alcaic
-        -x-x-uu-u-- : Sapphic
-        """
-        # unambiguous
-        if li[10] == Weight.LIGHT:
-            return PhalaecianHendeca
-        if li[2] == Weight.LIGHT or li[7] == Weight.LIGHT or li[8] == Weight.HEAVY or li[9] == Weight.LIGHT:
-            return AlcaicHendeca
-        if li[5] == Weight.LIGHT:
-            return SapphicHendeca
-        # elimination game
-        poss = {PhalaecianHendeca, AlcaicHendeca, SapphicHendeca}
-        if li[3] == Weight.HEAVY or li[4] == Weight.HEAVY:
-            poss.discard(PhalaecianHendeca)
-        if (li[1] == Weight.LIGHT or li[2] == Weight.HEAVY or li[3] == Weight.LIGHT or
-                li[7] == Weight.HEAVY or li[8] == Weight.LIGHT or li[9] == Weight.HEAVY):
-            poss.discard(AlcaicHendeca)
-        if li[0] == Weight.LIGHT or li[4] == Weight.LIGHT or li[5] == Weight.HEAVY:
-            poss.discard(SapphicHendeca)
-        if len(poss) == 1:
-            return poss.pop()
-        if len(poss) > 1:
-            raise VerseCreatorException("could not determine Hendecasyllable subtype: not enough information")
-        raise VerseCreatorException("could not determine Hendecasyllable subtype: conflicting hints")
+SYLL = 11
 
 
 class Hendeca(Verse):
@@ -62,6 +25,38 @@ class Hendeca(Verse):
 
     def get_structure(self) -> str:
         raise HendecaException("must be overridden")
+
+
+def get_hendeca_subtype(li: list[Weight]) -> Type[Hendeca]:
+    if len(li) != SYLL:
+        raise VerseCreatorException(f"incorrect number of syllables: {len(li)}")
+    """
+    https://en.wikipedia.org/wiki/Hendecasyllable
+    xx-uu-u-u-x : Phalaecian
+    x-u-x-uu-u- : Alcaic
+    -x-x-uu-u-- : Sapphic
+    """
+    # unambiguous
+    if li[10] == Weight.LIGHT:
+        return PhalaecianHendeca
+    if li[2] == Weight.LIGHT or li[7] == Weight.LIGHT or li[8] == Weight.HEAVY or li[9] == Weight.LIGHT:
+        return AlcaicHendeca
+    if li[5] == Weight.LIGHT:
+        return SapphicHendeca
+    # elimination game
+    poss = {PhalaecianHendeca, AlcaicHendeca, SapphicHendeca}
+    if li[3] == Weight.HEAVY or li[4] == Weight.HEAVY:
+        poss.discard(PhalaecianHendeca)
+    if (li[1] == Weight.LIGHT or li[2] == Weight.HEAVY or li[3] == Weight.LIGHT or
+            li[7] == Weight.HEAVY or li[8] == Weight.LIGHT or li[9] == Weight.HEAVY):
+        poss.discard(AlcaicHendeca)
+    if li[0] == Weight.LIGHT or li[4] == Weight.LIGHT or li[5] == Weight.HEAVY:
+        poss.discard(SapphicHendeca)
+    if len(poss) == 1:
+        return poss.pop()
+    if len(poss) > 1:
+        raise VerseCreatorException("could not determine Hendecasyllable subtype: not enough information")
+    raise VerseCreatorException("could not determine Hendecasyllable subtype: conflicting hints")
 
 
 class PhalaecianHendeca(Hendeca):

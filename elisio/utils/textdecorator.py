@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional
 
 from ..parser.verse import Verse
 from ..syllable import Weight
@@ -31,7 +31,7 @@ class TextDecorator:
         return result.strip()
 
     @staticmethod
-    def glyph(weight: Union[None, Weight]) -> str:
+    def glyph(weight: Optional[Weight]) -> str:
         if weight == Weight.HEAVY:
             return u'\u0331'
         elif weight == Weight.LIGHT:

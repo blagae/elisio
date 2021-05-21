@@ -5,7 +5,7 @@ from elisio.parser.versefactory import VerseFactory, VerseType
 
 class TestAccent(unittest.TestCase):
     def test_accent_armavirumque(self):
-        verse = VerseFactory.create("Arma virumque cano, Troiae qui primus ab oris", classes=VerseType.HEXAMETER)
+        verse = VerseFactory.create("Arma virumque cano, Troiae qui primus ab oris", creators=VerseType.HEXAMETER)
         verse.parse()
         # arma
         self.assertEqual(verse.words[0].syllables[0].stressed, True)
@@ -32,7 +32,7 @@ class TestAccent(unittest.TestCase):
         self.assertEqual(verse.words[7].syllables[1].stressed, False)
 
     def test_accent_litora(self):
-        verse = VerseFactory.create("litora, multum ille et terris iactatus et alto", classes=VerseType.HEXAMETER)
+        verse = VerseFactory.create("litora, multum ille et terris iactatus et alto", creators=VerseType.HEXAMETER)
         verse.parse()
         # litora
         self.assertEqual(verse.words[0].syllables[0].stressed, True)
