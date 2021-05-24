@@ -1,6 +1,7 @@
 ﻿import re
 from collections.abc import Iterable
 from enum import Enum
+from itertools import product as cartesian_product
 from typing import Callable, Sequence, Type
 
 from ..bridge import Bridge, DummyBridge
@@ -113,12 +114,21 @@ class VersePreprocessor:
         return [word.get_syllable_structure() for word in self.words]
 
     def get_flat_lists(self) -> list[Weight]:
-        layers = self.layer()
+        self.layer()
         flat_lists: list[list[Weight]] = []
-        flat_list: list[Weight] = []
-        for word in layers:
-            flat_list += [weight for weight in word if weight != Weight.NONE]
-        return [flat_list]
+        flat_list: list[Syllable] = []
+
+        for word in self.words:
+            flat_list += [syll for syll in word.syllables]
+        permutations = [idx for idx, syll in enumerate(flat_list) if syll.get_alternative_weight()]
+        for a in range(2**len(permutations)):
+            flat_lists.append(list(syll.weight for syll in flat_list))
+        prod = list(cartesian_product(*[[False, True]] * len(permutations)))
+        for count, lst in enumerate(flat_lists):
+            for x, perm in enumerate(permutations):
+                if prod[count][x]:
+                    lst[perm] = flat_list[perm].get_alternative_weight()
+        return flat_lists
 
     def create_verse(self, verse_id: int) -> Verse:
         flat_lists = self.get_flat_lists()
