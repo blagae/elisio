@@ -63,10 +63,6 @@ class VerseFactory:
         return VersePreprocessor(text, bridge, creators).layer()
 
     @staticmethod
-    def get_flat_list(text: str, bridge: Bridge = DummyBridge(), creators: Sequence[VerseType] = []) -> list[Weight]:
-        return VersePreprocessor(text, bridge, creators).get_flat_list()
-
-    @staticmethod
     def create(text: str, db_id: int = 0, bridge: Bridge = DummyBridge(), creators: Sequence[VerseType] = []) -> Verse:
         return VersePreprocessor(text, bridge, creators).create_verse(db_id)
 
@@ -86,7 +82,6 @@ class VersePreprocessor:
         self.verse = verse
         self.bridge = bridge
         self.words: list[Word] = []
-        self.flat_list: list[Weight] = []
         self.creators: set[VerseCreator]
         # https://docs.python.org/3/tutorial/controlflow.html#default-argument-values
         if isinstance(creators, VerseType):
@@ -112,28 +107,33 @@ class VersePreprocessor:
         for word in self.words:
             word.analyze_structure(self.bridge)
         for count, word in enumerate(self.words[:-1]):
-            word.apply_word_contact(self.words[count + 1])
+            new_weight = word.apply_word_contact(self.words[count + 1])
+            if new_weight:
+                word.syllables[-1].weight = new_weight
         return [word.get_syllable_structure() for word in self.words]
 
-    def get_flat_list(self) -> list[Weight]:
+    def get_flat_lists(self) -> list[Weight]:
         layers = self.layer()
+        flat_lists: list[list[Weight]] = []
+        flat_list: list[Weight] = []
         for word in layers:
-            self.flat_list += [weight for weight in word if weight != Weight.NONE]
-        return self.flat_list
+            flat_list += [weight for weight in word if weight != Weight.NONE]
+        return [flat_list]
 
     def create_verse(self, verse_id: int) -> Verse:
-        self.get_flat_list()
+        flat_lists = self.get_flat_lists()
         problems = []
         for creator in self.creators:
-            verseClassType = creator(self.flat_list)  # returns e.g. the SpondaicHexameter type
-            verse = verseClassType(self.verse)
-            verse.words = self.words
-            verse.flat_list = self.flat_list.copy()
-            try:
-                verse.parse()
-                if verse_id:
-                    verse.save(verse_id, self.bridge)
-                return verse
-            except ScansionException as exc:
-                problems.append(exc)
+            for flat_list in flat_lists:
+                verseClassType = creator(flat_list)  # returns e.g. the SpondaicHexameter type
+                verse = verseClassType(self.verse)
+                verse.words = self.words
+                verse.flat_list = list(flat_list)
+                try:
+                    verse.parse()
+                    if verse_id:
+                        verse.save(verse_id, self.bridge)
+                    return verse
+                except ScansionException as exc:
+                    problems.append(exc)
         raise VerseException("parsing did not succeed", *problems)

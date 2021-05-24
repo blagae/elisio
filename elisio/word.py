@@ -1,4 +1,5 @@
 ﻿""" processing unit for Words and lower entities """
+from typing import Optional
 from whitakers_words.parser import Parser
 
 from .bridge import Bridge, DummyBridge
@@ -126,41 +127,37 @@ class Word:
 
     def analyze_structure(self, bridge: Bridge) -> None:
         """ Get the syllable structure, regardless of word contact """
-        syll_struct = []
         if not self.syllables:
             self.split(bridge)
         for count, syllable in enumerate(self.syllables):
             try:
-                syll_struct.append(syllable.get_weight(self.syllables[count + 1]))
+                syllable.weight = syllable.get_weight(self.syllables[count + 1])
             except IndexError:
-                syll_struct.append(syllable.get_weight())
+                syllable.weight = syllable.get_weight()
         if self.can_be_name:
-            for count in range(len(syll_struct) - 1):
-                if syll_struct[count] == Weight.LIGHT:
-                    syll_struct[count] = Weight.ANCEPS
-        for count, syll in enumerate(self.syllables):
-            syll.weight = syll_struct[count]
+            for syllable in self.syllables[:-1]:
+                if syllable.weight == Weight.LIGHT:
+                    syllable.weight = Weight.ANCEPS
 
-    def apply_word_contact(self, next_word: 'Word') -> None:
+    def apply_word_contact(self, next_word: 'Word') -> Optional[Weight]:
         """ See if next word has any influence on the syllable structure """
         final = self.syllables[-1]
         first = next_word.syllables[0]
         if (final.can_elide_if_final() and first.starts_with_vowel()):
-            # elision
-            final.weight = Weight.NONE
-        elif final.must_be_heavy():
-            final.weight = Weight.HEAVY
-        elif final.ends_with_consonant():
+            final.alternative_weight = final.weight  # keep the possibility of hiatus alive
+            return Weight.NONE  # elision
+        if final.must_be_heavy() or (final.ends_with_vowel() and first.starts_with_consonant_cluster()):
+            return Weight.HEAVY
+        if final.ends_with_consonant():
             if (not final.ends_with_consonant_cluster() and not final.has_diphthong() and first.starts_with_vowel()):
                 # consonant de facto redistributed
                 if final.get_weight() != Weight.LIGHT:
-                    final.weight = Weight.ANCEPS
-            elif first.starts_with_consonant():
-                final.weight = Weight.HEAVY
-        elif final.ends_with_vowel() and first.starts_with_consonant_cluster():
-            final.weight = Weight.HEAVY
+                    return Weight.ANCEPS
+            if first.starts_with_consonant():
+                return Weight.HEAVY
         if final == Syllable('que') and final.get_weight() != Weight.NONE:
-            final.weight = Weight.LIGHT
+            return Weight.LIGHT
+        return None
 
     def get_syllable_structure(self) -> list[Weight]:
         result = []
@@ -200,5 +197,5 @@ class Word:
             wrd = Word(mainword)
             wrd.split()
             syl = Syllable(proc)
-            self.sounds = syl.sounds.copy() + wrd.sounds
+            self.sounds = list(syl.sounds) + wrd.sounds
             self.syllables = [syl] + wrd.syllables
