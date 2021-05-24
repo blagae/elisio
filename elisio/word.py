@@ -4,7 +4,7 @@ from whitakers_words.parser import Parser
 
 from .bridge import Bridge, DummyBridge
 from .exceptions import SyllableException, WordException
-from .sound import Sound, SoundFactory
+from .sound import SoundFactory
 from .syllable import Syllable, SyllableSplitter, Weight
 
 

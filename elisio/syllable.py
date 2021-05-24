@@ -205,10 +205,11 @@ class Syllable:
             return Weight.HEAVY
         return Weight.ANCEPS
 
-    def get_alternative_weight(self) -> Weight:
+    def get_alternative_weight(self) -> Optional[Weight]:
         if hasattr(self, "alternative_weight"):
             return self.alternative_weight
         return None
+
 
 class SyllableSplitter:
 

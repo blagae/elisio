@@ -2,10 +2,11 @@
 from collections.abc import Iterable
 from enum import Enum
 from itertools import product as cartesian_product
-from typing import Callable, Sequence, Type
+from typing import Callable, Optional, Sequence, Type
 
 from ..bridge import Bridge, DummyBridge
 from ..exceptions import ScansionException, VerseException
+from ..syllable import Syllable
 from ..word import Weight, Word
 from .hendeca import get_hendeca_subtype
 from .hexameter import get_hexa_subtype
@@ -113,9 +114,9 @@ class VersePreprocessor:
                 word.syllables[-1].weight = new_weight
         return [word.get_syllable_structure() for word in self.words]
 
-    def get_flat_lists(self) -> list[Weight]:
+    def get_flat_lists(self) -> list[list[Optional[Weight]]]:
         self.layer()
-        flat_lists: list[list[Weight]] = []
+        flat_lists: list[list[Optional[Weight]]] = []
         flat_list: list[Syllable] = []
 
         for word in self.words:
@@ -128,12 +129,16 @@ class VersePreprocessor:
             for x, perm in enumerate(permutations):
                 if prod[count][x]:
                     lst[perm] = flat_list[perm].get_alternative_weight()
+        for i in range(len(flat_lists)):
+            flat_lists[i] = [weight for weight in flat_lists[i] if weight != Weight.NONE]
         return flat_lists
 
     def create_verse(self, verse_id: int) -> Verse:
         flat_lists = self.get_flat_lists()
         problems = []
         for creator in self.creators:
+            local_problems = []
+            worked = False
             for flat_list in flat_lists:
                 verseClassType = creator(flat_list)  # returns e.g. the SpondaicHexameter type
                 verse = verseClassType(self.verse)
@@ -141,9 +146,12 @@ class VersePreprocessor:
                 verse.flat_list = list(flat_list)
                 try:
                     verse.parse()
+                    worked = True
                     if verse_id:
                         verse.save(verse_id, self.bridge)
-                    return verse
+                    return verse  # TODO what if multiple options are viable
                 except ScansionException as exc:
-                    problems.append(exc)
+                    local_problems.append(exc)
+            if not worked:
+                problems += local_problems
         raise VerseException("parsing did not succeed", *problems)
