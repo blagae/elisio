@@ -117,7 +117,7 @@ class Verse:
         current = 0
         for word in self.words:
             for syll in word.syllables:
-                if current > 0 and syll.stressed:
+                if current and syll.stressed:
                     score.append(current)
                     current = 0
                 if syll.weight == Weight.NONE:
@@ -156,5 +156,5 @@ class Verse:
                 strct = strct[:-1]
                 strct += str(Weight.ANCEPS.value)
             entries.append(bridge.make_entry(txt, strct, db_id))
-        if len(entries) > 0:
+        if len(entries):
             bridge.dump(entries)

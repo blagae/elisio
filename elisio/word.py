@@ -18,11 +18,11 @@ class Word:
             raise WordException("Word not initialized with alphabetic data")
         # TODO determine if we need all these properties
         self.whitaker = parser.parse(text)
+        self.can_be_name = text.istitle()
         self.syllables: list[Syllable] = []
-        self.sounds = SoundFactory.find_sounds_for_text(text)
-        self.text = Word.reconstruct_text(self.sounds)
+        self.find_sounds(text)
+        self.reconstruct_text()
         self.enclitic = self.put_enclitic()
-        self.istitle = text.istitle()
 
     def __repr__(self) -> str:
         return ''.join(str(x) for x in self.syllables)
@@ -41,15 +41,14 @@ class Word:
             return sum(len(syllable) for syllable in self.syllables)
         return sum(len(sound) for sound in self.sounds)
 
-    def recalculate_text(self) -> None:
-        self.text = Word.reconstruct_text(self.sounds)
+    def find_sounds(self, text: str) -> None:
+        self.sounds = SoundFactory.find_sounds_for_text(text)
 
-    @staticmethod
-    def reconstruct_text(sounds: list[Sound]) -> str:
+    def reconstruct_text(self) -> None:
         """
         find the sequence of sounds from the textual representation of the word
         """
-        return ''.join(sound.letters for sound in sounds)
+        self.text = ''.join(sound.letters for sound in self.sounds)
 
     def find_proclitic(self) -> str:
         # TODO to be solved by whitaker, after "reduce" logic is implemented
@@ -71,9 +70,9 @@ class Word:
                 wrd = Word(text)
                 wrd.split()
                 self.syllables += wrd.syllables
-            self.recalculate_text()
+            self.reconstruct_text()
             return
-        if len(self.syllables) == 0:
+        if not len(self.syllables):
             temporary_syllables = SyllableSplitter.join_into_syllables(self.sounds)
             self.syllables = SyllableSplitter.redistribute(temporary_syllables)
             self.check_consistency()
@@ -135,7 +134,7 @@ class Word:
                 syll_struct.append(syllable.get_weight(self.syllables[count + 1]))
             except IndexError:
                 syll_struct.append(syllable.get_weight())
-        if self.istitle:
+        if self.can_be_name:
             for count in range(len(syll_struct) - 1):
                 if syll_struct[count] == Weight.LIGHT:
                     syll_struct[count] = Weight.ANCEPS
@@ -144,30 +143,24 @@ class Word:
 
     def apply_word_contact(self, next_word: 'Word') -> None:
         """ See if next word has any influence on the syllable structure """
-        if not isinstance(next_word, Word):
-            raise WordException("Cannot compare if next_word is not a Word")
-        last_syllable = self.syllables[-1]
-        first_syllable = next_word.syllables[0]
-        if (last_syllable.can_elide_if_final() and
-                first_syllable.starts_with_vowel()):
+        final = self.syllables[-1]
+        first = next_word.syllables[0]
+        if (final.can_elide_if_final() and first.starts_with_vowel()):
             # elision
-            last_syllable.weight = Weight.NONE
-        elif last_syllable.must_be_heavy():
-            last_syllable.weight = Weight.HEAVY
-        elif last_syllable.ends_with_consonant():
-            if (not last_syllable.ends_with_consonant_cluster() and
-                    not last_syllable.has_diphthong() and
-                    first_syllable.starts_with_vowel()):
+            final.weight = Weight.NONE
+        elif final.must_be_heavy():
+            final.weight = Weight.HEAVY
+        elif final.ends_with_consonant():
+            if (not final.ends_with_consonant_cluster() and not final.has_diphthong() and first.starts_with_vowel()):
                 # consonant de facto redistributed
-                if last_syllable.get_weight() != Weight.LIGHT:
-                    last_syllable.weight = Weight.ANCEPS
-            elif first_syllable.starts_with_consonant():
-                last_syllable.weight = Weight.HEAVY
-        elif (last_syllable.ends_with_vowel() and
-              first_syllable.starts_with_consonant_cluster()):
-            last_syllable.weight = Weight.HEAVY
-        if last_syllable == Syllable('que') and last_syllable.get_weight() != Weight.NONE:
-            last_syllable.weight = Weight.LIGHT
+                if final.get_weight() != Weight.LIGHT:
+                    final.weight = Weight.ANCEPS
+            elif first.starts_with_consonant():
+                final.weight = Weight.HEAVY
+        elif final.ends_with_vowel() and first.starts_with_consonant_cluster():
+            final.weight = Weight.HEAVY
+        if final == Syllable('que') and final.get_weight() != Weight.NONE:
+            final.weight = Weight.LIGHT
 
     def get_syllable_structure(self) -> list[Weight]:
         result = []

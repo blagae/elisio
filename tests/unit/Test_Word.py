@@ -488,7 +488,7 @@ class TestWord(unittest.TestCase):
 
     def test_word_istitle(self):
         word = self.construct_word('Lavinia')
-        self.assertTrue(word.istitle)
+        self.assertTrue(word.can_be_name)
 
     def test_word_single_que(self):
         word = self.construct_word('que')
