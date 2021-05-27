@@ -114,7 +114,7 @@ class VersePreprocessor:
                 word.syllables[-1].weight = new_weight
         return [word.get_syllable_structure() for word in self.words]
 
-    def get_flat_lists(self) -> list[list[Optional[Weight]]]:
+    def get_flat_lists(self) -> list[list[Weight]]:
         self.layer()
         flat_lists: list[list[Optional[Weight]]] = []
         flat_list: list[Syllable] = []
@@ -129,17 +129,14 @@ class VersePreprocessor:
             for x, perm in enumerate(permutations):
                 if prod[count][x]:
                     lst[perm] = flat_list[perm].get_alternative_weight()
-        for i in range(len(flat_lists)):
-            flat_lists[i] = [weight for weight in flat_lists[i] if weight != Weight.NONE]
-        return flat_lists
+        return [[weight for weight in lst if weight and weight != Weight.NONE] for lst in flat_lists]
 
     def create_verse(self, verse_id: int) -> Verse:
-        flat_lists = self.get_flat_lists()
         problems = []
         for creator in self.creators:
             local_problems = []
             worked = False
-            for flat_list in flat_lists:
+            for flat_list in self.get_flat_lists():
                 verseClassType = creator(flat_list)  # returns e.g. the SpondaicHexameter type
                 verse = verseClassType(self.verse)
                 verse.words = self.words
