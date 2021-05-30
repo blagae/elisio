@@ -23,12 +23,20 @@ class Syllable:
         """ construct a Syllable by its contents """
         self.weight: Optional[Weight] = None
         self.stressed = False
-        if isinstance(text, str):
-            self.sounds = SoundFactory.find_sounds_for_text(text)
-        else:
-            self.sounds = list(text)  # copy the list
-        if not self.is_valid():
-            raise SyllableException("invalid Syllable object")
+        if text:
+            if isinstance(text, str):
+                self.sounds = SoundFactory.find_sounds_for_text(text)
+            else:
+                self.sounds = list(text)  # copy the list
+            if not self.is_valid():
+                raise SyllableException("invalid Syllable object")
+
+    @classmethod
+    def make_empty_syllable(cls, text: str, weight: Weight = None) -> 'Syllable':
+        result = cls('')
+        result.sounds = SoundFactory.find_sounds_for_text(text)
+        result.weight = weight
+        return result
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Syllable):
@@ -113,6 +121,8 @@ class Syllable:
         an initial semivowel is only vocalic if it is the syllable's only sound
         or if it is followed directly by a consonant
         """
+        if self.sounds[0] == SoundFactory.create('ë'):
+            return False
         if self.sounds[0].is_vowel():
             return True
         if self.sounds[0].is_h() and len(self.sounds) > 1 and not self.sounds[1].is_consonant():
@@ -271,6 +281,8 @@ class SyllableSplitter:
                     SyllableSplitter.__switch_sound(syllables[count], syllables[count + 1], False)
         local_sylls = []
         for syll in syllables:
+            if not syll.sounds:
+                continue
             if syll.is_valid():
                 local_sylls.append(syll)
             else:  # this is a valid path because we have modified the syllables after constructing

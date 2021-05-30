@@ -292,7 +292,7 @@ class SoundFactory:
             else:
                 if sound.is_vowel() or sound.is_semivowel():
                     sound = Diphthong(sound.letters[0], item)
-                if sound.is_consonant():
+                elif sound.is_consonant():
                     sound = ConsonantSound(sound.letters[0], item)
         if not sound.is_valid_sound():
             raise SoundException("not a valid sound given in factory method")

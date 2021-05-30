@@ -97,7 +97,7 @@ class VersePreprocessor:
 
     def split(self) -> list[Word]:
         """ Split a Verse into Words, remembering only the letter characters """
-        array = re.split('[^a-zA-Z]+', self.verse.strip())
+        array = re.split('[^a-zA-Zë]+', self.verse.strip())
         for word in array:
             if word.isalpha():
                 self.words.append(Word(word))

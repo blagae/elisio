@@ -68,3 +68,10 @@ class TestSyllableSplitter(unittest.TestCase):
         syll = SyllableSplitter.redistribute(syll)
         expected = [Syllable('ia'), Syllable('nus')]
         self.assertEqual(syll, expected)
+
+    def test_syllsplit_diaeresis(self):
+        txt = SoundFactory.find_sounds_for_text('aërii')
+        syll = SyllableSplitter.join_into_syllables(txt)
+        syll = SyllableSplitter.redistribute(syll)
+        expected = [Syllable('a'), Syllable('ë'), Syllable('ri'), Syllable('i')]
+        self.assertEqual(syll, expected)

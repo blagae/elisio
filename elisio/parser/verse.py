@@ -83,7 +83,7 @@ class Verse:
                 if (weight != Weight.ANCEPS and self.flat_list[count + start] != Weight.ANCEPS and
                         weight != self.flat_list[count + start]):
                     raise VerseException(f"weight #{count + start} was already {str(self.flat_list[count + start])},"
-                                         " tried to assign {str(weight)}")
+                                         f" tried to assign {str(weight)}")
                 self.flat_list[count + start] = weight
             start += len(foot)
         i = 0
@@ -146,7 +146,7 @@ class Verse:
                             strct += str(Weight.ANCEPS.value)
             if wrd.ends_in_enclitic():
                 strct = strct[:-1]
-                txt = wrd.without_enclitic()
+                txt = wrd.without_enclitic()  # TODO multi-syllable enclitics (e.g. -cumque)
                 if strct[-1] == str(Weight.HEAVY.value):
                     ltr = SoundFactory.create(txt[-1])
                     if ltr.is_consonant() and not ltr.is_heavy_making():

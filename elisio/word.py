@@ -18,8 +18,8 @@ class Word:
         if not (isinstance(text, str) and text.isalpha()):
             raise WordException("Word not initialized with alphabetic data")
         # TODO determine if we need all these properties
-        self.whitaker = parser.parse(text)
         self.can_be_name = text.istitle()
+        self.whitaker = parser.parse(text, not self.can_be_name)
         self.syllables: list[Syllable] = []
         self.find_sounds(text)
         self.reconstruct_text()

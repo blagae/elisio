@@ -87,6 +87,12 @@ class TestSoundFactory(unittest.TestCase):
         self.assertEqual(sound[0], SoundFactory.create('u'))
         self.assertEqual(len(sound), 1)
 
+    def test_sound_fail_diaeresis(self):
+        """ not a normally recognized diphthong """
+        sound = SoundFactory.create_sounds_from_text('aë')
+        self.assertEqual(sound[0], SoundFactory.create('a'))
+        self.assertEqual(len(sound), 1)
+
     def test_sound_fail_constr_nonexist(self):
         """ creating sounds from text does not accept any input """
         sound = SoundFactory.create_sounds_from_text('ou')
