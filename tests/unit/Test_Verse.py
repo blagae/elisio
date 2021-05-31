@@ -15,11 +15,6 @@ for word in WORDS:
 
 
 class TestVerse(unittest.TestCase):
-    """ Test_verse class
-    Unit tests for splitting a verse into words
-    commit 1 (blagae): BLI 9
-    reason: creation
-    """
     @staticmethod
     def construct_verse(text=TYPICAL_VERSE):
         """ Construct a verse object from a given text """

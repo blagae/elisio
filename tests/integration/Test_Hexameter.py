@@ -28,7 +28,6 @@ class TestHexameter(unittest.TestCase):
         self.assertEqual(verse.feet, expected_feet)
 
     def test_hexameter_scan_diaeresis(self):
-        """ Aen. 1, 1 must scan correctly imo """
         expected_feet = [Foot.SPONDAEUS, Foot.DACTYLUS,
                          Foot.SPONDAEUS, Foot.SPONDAEUS,
                          Foot.DACTYLUS, Foot.BINARY_ANCEPS]

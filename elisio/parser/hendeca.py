@@ -44,6 +44,7 @@ def get_hendeca_subtype(li: list[Weight]) -> Type[Hendeca]:
     if li[5] == Weight.LIGHT:
         return SapphicHendeca
     # elimination game
+    error = "could not determine Hendecasyllable subtype:"
     poss = {PhalaecianHendeca, AlcaicHendeca, SapphicHendeca}
     if li[3] == Weight.HEAVY or li[4] == Weight.HEAVY:
         poss.discard(PhalaecianHendeca)
@@ -55,8 +56,8 @@ def get_hendeca_subtype(li: list[Weight]) -> Type[Hendeca]:
     if len(poss) == 1:
         return poss.pop()
     if len(poss) > 1:
-        raise VerseCreatorException("could not determine Hendecasyllable subtype: not enough information")
-    raise VerseCreatorException("could not determine Hendecasyllable subtype: conflicting hints")
+        raise VerseCreatorException(f"{error} not enough information")
+    raise VerseCreatorException(f"{error} conflicting hints")
 
 
 class PhalaecianHendeca(Hendeca):
