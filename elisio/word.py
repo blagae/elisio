@@ -67,41 +67,37 @@ class Word:
         if deviant_syllables:
             self.syllables = list(deviant_syllables)
             text = self.text[len(self):]
-            if len(text):
+            if text:
                 wrd = Word(text)
                 wrd.split()
                 self.syllables += wrd.syllables
             self.reconstruct_text()
             return
-        if not len(self.syllables):
+        if not self.syllables:
             temporary_syllables = SyllableSplitter.join_into_syllables(self.sounds)
             self.syllables = SyllableSplitter.redistribute(temporary_syllables)
             self.check_consistency()
         if len(self.syllables) == 1 and len(self.text) == 1:
             self.syllables[0].weight = Weight.HEAVY
-        structs = bridge.use_dictionary(self.text)
-        self.assign_weights_from_dict(structs)
+        stored_structures = bridge.use_dictionary(self.text)
+        self.assign_weights_from_dict(stored_structures)
 
-    def assign_weights_from_dict(self, structs: list[str]) -> None:
-        if len(structs) == 1:
-            for count, wght in enumerate(structs[0]):
-                self.syllables[count].weight = Weight(int(wght))
-        if len(structs) > 1:
-            structs.sort(key=len, reverse=True)
-            for count in range(len(structs[0])):
-                val = None
-                for strc in structs:
+    def assign_weights_from_dict(self, stored_structures: list[str]) -> None:
+        if len(stored_structures):
+            for count in range(len(max(stored_structures, key=len))):
+                weight = None
+                for struct in stored_structures:
                     try:
-                        if not val and (strc[count] != "3" and strc[count] != "0"):
-                            val = strc[count]
-                        elif val != strc[count]:
-                            if strc[count] != "3" and strc[count] != "0":
-                                val = "3"
+                        if not weight and struct[count] != "3" and struct[count] != "0":
+                            weight = struct[count]
+                        elif weight != struct[count]:
+                            if struct[count] != "3" and struct[count] != "0":
+                                weight = "3"
                                 break
                     except IndexError:
                         pass
-                if val:
-                    self.syllables[count].weight = Weight(int(val))
+                if weight and count < len(self.syllables):
+                    self.syllables[count].weight = Weight(int(weight))
 
     def ends_in_variable_declension(self) -> bool:
         return len(self.syllables) > 1 and (self.text.endswith(("us", "a")))  # TODO whitaker
