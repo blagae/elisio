@@ -1,7 +1,7 @@
 ﻿import unittest
 
 from elisio.parser.hendeca import Hendeca, PhalaecianHendeca
-from elisio.parser.verse import Foot, Verse
+from elisio.parser.verse import Verse
 from elisio.parser.versefactory import VerseFactory, VerseType
 
 

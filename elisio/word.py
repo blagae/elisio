@@ -21,7 +21,7 @@ class Word:
         self.can_be_name = text.istitle()
         self.whitaker = parser.parse(text, not self.can_be_name)
         self.syllables: list[Syllable] = []
-        self.find_sounds(text)
+        self.sounds = SoundFactory.find_sounds_for_text(text)
         self.reconstruct_text()
         self.enclitic = self.put_enclitic()
 
@@ -41,9 +41,6 @@ class Word:
         if self.syllables:
             return sum(len(syllable) for syllable in self.syllables)
         return sum(len(sound) for sound in self.sounds)
-
-    def find_sounds(self, text: str) -> None:
-        self.sounds = SoundFactory.find_sounds_for_text(text)
 
     def reconstruct_text(self) -> None:
         """
@@ -67,7 +64,7 @@ class Word:
         if deviant_syllables:
             self.syllables = list(deviant_syllables)
             text = self.text[len(self):]
-            if text:
+            if text:  # if only part of a word has been overruled by the bridge
                 wrd = Word(text)
                 wrd.split()
                 self.syllables += wrd.syllables
@@ -87,13 +84,12 @@ class Word:
             for count in range(len(max(stored_structures, key=len))):
                 weight = None
                 for struct in stored_structures:
-                    try:
+                    try:  # Weight[3] == Anceps
                         if not weight and struct[count] != "3" and struct[count] != "0":
                             weight = struct[count]
-                        elif weight != struct[count]:
-                            if struct[count] != "3" and struct[count] != "0":
-                                weight = "3"
-                                break
+                        elif weight != struct[count] and struct[count] not in ("3", "0"):
+                            weight = "3"
+                            break
                     except IndexError:
                         pass
                 if weight and count < len(self.syllables):
@@ -104,7 +100,7 @@ class Word:
 
     def ends_in_enclitic(self) -> bool:
         """ for now, use the longest enclitic that can be analyzed """
-        return any((x.enclitic for x in self.whitaker.forms))
+        return any(x.enclitic for x in self.whitaker.forms)
 
     def without_enclitic(self) -> str:
         """ for now, use the longest enclitic that can be analyzed """
@@ -121,15 +117,13 @@ class Word:
                 ((next_word.syllables[0].starts_with_consonant_cluster() and self.syllables[-1].ends_with_vowel()) or
                  (self.syllables[-1].ends_with_consonant() and next_word.syllables[0].starts_with_consonant())))
 
-    def analyze_structure(self, bridge: Bridge) -> None:
+    def analyze_structure(self, bridge: Bridge = DummyBridge()) -> None:
         """ Get the syllable structure, regardless of word contact """
         if not self.syllables:
             self.split(bridge)
-        for count, syllable in enumerate(self.syllables):
-            try:
-                syllable.weight = syllable.get_weight(self.syllables[count + 1])
-            except IndexError:
-                syllable.weight = syllable.get_weight()
+        for count, syllable in enumerate(self.syllables[:-1]):
+            syllable.weight = syllable.get_weight(self.syllables[count + 1])
+        self.syllables[-1].weight = self.syllables[-1].get_weight()
         if self.can_be_name:
             for syllable in self.syllables[:-1]:
                 if syllable.weight == Weight.LIGHT:
@@ -145,7 +139,7 @@ class Word:
         if final.must_be_heavy() or (final.ends_with_vowel() and first.starts_with_consonant_cluster()):
             return Weight.HEAVY
         if final.ends_with_consonant():
-            if (not final.ends_with_consonant_cluster() and not final.has_diphthong() and first.starts_with_vowel()):
+            if not final.ends_with_consonant_cluster() and not final.has_diphthong() and first.starts_with_vowel():
                 # consonant de facto redistributed
                 if final.get_weight() != Weight.LIGHT:
                     return Weight.ANCEPS
@@ -156,13 +150,9 @@ class Word:
         return None
 
     def get_syllable_structure(self) -> list[Weight]:
-        result = []
-        for count, syll in enumerate(self.syllables):
-            try:
-                result.append(syll.get_weight(self.syllables[count+1]))
-            except IndexError:
-                result.append(syll.get_weight())
-        return result
+        if not self.syllables or None in [x.weight for x in self.syllables]:
+            self.analyze_structure()
+        return [syll.weight for syll in self.syllables if syll.weight]
 
     def check_consistency(self) -> None:
         """
