@@ -1,6 +1,6 @@
 ﻿""" processing unit for Words and lower entities """
 from typing import Optional
-from whitakers_words.parser import Parser
+from whitakers_words.parser import Analysis, Parser
 
 from .bridge import Bridge, DummyBridge
 from .exceptions import SyllableException, WordException
@@ -185,3 +185,53 @@ class Word:
             syl = Syllable(proc)
             self.sounds = list(syl.sounds) + wrd.sounds
             self.syllables = [syl] + wrd.syllables
+
+
+def split_morphemes(word: Word) -> list[dict[str, list[tuple[int, list[Weight]]]]]:
+    woot = list()
+    if len(word.whitaker.forms) == 1:
+        weights = word.get_syllable_structure()
+        for analysis in word.whitaker.forms[0].analyses.values():
+            result: dict[str, list[tuple[int, list[Weight]]]] = dict()
+            if not analysis.inflections[0].affix:
+                result["root"] = [(analysis.lexeme.id, weights)]
+            else:
+                # split morphemes
+                result["inflections"] = []
+                morphemes = get_morphemes(analysis)
+                try:
+                    ending = Word(morphemes[-1])
+                    ending.split()
+                    for count, syll in enumerate(reversed(ending.syllables)):
+                        syll.weight = weights[-(1 + count)]
+                    for inflection in analysis.inflections:
+                        result["inflections"].append((inflection.id, ending.get_syllable_structure()))
+                    try:
+                        root = Word(morphemes[0])
+                        root.split()
+                        for count, syll in enumerate(root.syllables):
+                            syll.weight = weights[count]
+                        result["root"] = [(analysis.lexeme.id, root.get_syllable_structure())]
+                    except WordException:
+                        pass  # what scenario is this ?
+                except WordException:
+                    root = Word(morphemes[0])
+                    root.split()
+                    for count, syll in enumerate(root.syllables):
+                        syll.weight = weights[count]
+                    result["root"] = [(analysis.lexeme.id, root.get_syllable_structure())]
+                    try:
+                        ending = Word(morphemes[-1][1:])
+                        ending.split()
+                        for count, syll in enumerate(reversed(ending.syllables)):
+                            syll.weight = weights[-(1 + count)]
+                        for inflection in analysis.inflections:
+                            result["inflections"].append((inflection.id, ending.get_syllable_structure()))
+                    except WordException:
+                        pass  # what scenario is this ?
+            woot.append(result)
+    return woot
+
+
+def get_morphemes(analysis: Analysis) -> list[str]:
+    return [analysis.inflections[0].stem, analysis.inflections[0].affix]
