@@ -1,8 +1,7 @@
 ﻿import re
-from collections.abc import Iterable
 from enum import Enum
 from itertools import product as cartesian_product
-from typing import Callable, Optional, Sequence, Type
+from typing import Callable, Optional, Sequence, Type, Union
 
 from ..bridge import Bridge, DummyBridge
 from ..exceptions import ScansionException, VerseException
@@ -40,8 +39,6 @@ class VerseForm(Enum):
     HENDECASYLLABUS = 3
 
     def get_verse_types(self) -> list[VerseType]:
-        if self == VerseForm.UNKNOWN:
-            return [VerseType.UNKNOWN]
         if self == VerseForm.HEXAMETRIC:
             return [VerseType.HEXAMETER]
         if self == VerseForm.ELEGIAC_DISTICHON:
@@ -80,7 +77,8 @@ class VersePreprocessor:
 
     In practice, the step that determines the subtype is delegated to a VerseCreator
     """
-    def __init__(self, verse: str, bridge: Bridge = DummyBridge(), creators: Sequence[VerseType] = []):
+    def __init__(self, verse: str, bridge: Bridge = DummyBridge(),
+                 creators: Union[VerseType, Sequence[VerseType]] = []):
         self.verse = verse
         self.bridge = bridge
         self.words: list[Word] = []
@@ -88,12 +86,10 @@ class VersePreprocessor:
         # https://docs.python.org/3/tutorial/controlflow.html#default-argument-values
         if isinstance(creators, VerseType):
             self.creators = set(creators.get_creators())
-        elif isinstance(creators, Iterable):
+        else:
             self.creators = set()
             for creator in creators:
                 self.creators.update(creator.get_creators())
-        else:
-            self.creators = set(VerseType.UNKNOWN.get_creators())
 
     def split(self) -> list[Word]:
         """ Split a Verse into Words, remembering only the letter characters """

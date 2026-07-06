@@ -32,7 +32,7 @@ class Syllable:
                 raise SyllableException("invalid Syllable object")
 
     @classmethod
-    def make_empty_syllable(cls, text: str, weight: Weight = None) -> 'Syllable':
+    def make_empty_syllable(cls, text: str, weight: Optional[Weight] = None) -> 'Syllable':
         result = cls('')
         result.sounds = SoundFactory.find_sounds_for_text(text)
         result.weight = weight
@@ -155,7 +155,7 @@ class Syllable:
         """ get the vocalic sound from a syllable """
         return self.sounds[self.get_vowel_location()]
 
-    def is_heavy(self, next_syllable: 'Syllable' = None) -> bool:
+    def is_heavy(self, next_syllable: Optional['Syllable'] = None) -> bool:
         """
         determines whether the syllable is inherently heavy or not.
         A syllable is heavy if any of these conditions is true:
@@ -171,12 +171,12 @@ class Syllable:
                     (not self.is_light(next_syllable) and vowel.is_diphthong()))
         return self.ends_with_consonant() or vowel.is_diphthong()
 
-    def must_be_anceps(self, next_syllable: 'Syllable' = None) -> bool:
+    def must_be_anceps(self, next_syllable: Optional['Syllable'] = None) -> bool:
         if next_syllable and isinstance(next_syllable, Syllable):
             return self.ends_with_vowel() and self.get_vowel().is_diphthong() and next_syllable.starts_with_vowel()
         return False
 
-    def is_light(self, next_syllable: 'Syllable' = None) -> bool:
+    def is_light(self, next_syllable: Optional['Syllable'] = None) -> bool:
         """
         determines whether the syllable is inherently light or not
         a syllable is always light if it ends in a vowel
@@ -197,7 +197,7 @@ class Syllable:
         else:
             raise SyllableException("syllable invalidated by last addition")
 
-    def get_weight(self, next_syllable: 'Syllable' = None) -> Weight:
+    def get_weight(self, next_syllable: Optional['Syllable'] = None) -> Weight:
         """
         try to determine the weight of the syllable in the light of the next syllable, and cache it
         if this doesn't succeed, assign the weight ANCEPS = undetermined (and don't cache it)

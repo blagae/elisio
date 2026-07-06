@@ -19,7 +19,7 @@ class Word:
             raise WordException("Word not initialized with alphabetic data")
         # TODO determine if we need all these properties
         self.can_be_name = text.istitle()
-        self.whitaker = parser.parse(text, not self.can_be_name)
+        self.whitaker = parser.parse(text)
         self.syllables: list[Syllable] = []
         self.sounds = SoundFactory.find_sounds_for_text(text)
         self.reconstruct_text()
